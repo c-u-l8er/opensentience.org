@@ -23,7 +23,7 @@
     <link rel="icon" href="/favicon.ico" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Sentience - Feel and Precieve</title>
+    <title>Open Sentience - Capability-Oriented Intelligence Platforms</title>
     <style>
         * {
             margin: 0;
@@ -489,6 +489,17 @@
             overflow-x: auto;
             border-left: 4px solid var(--highlight-color);
         }
+
+        .layer-badge {
+            display: inline-block;
+            background: var(--gradient-accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -529,9 +540,9 @@
         <nav>
             <div class="logo"><a href="/">Open Sentience</a></div>
             <ul class="nav-links">
-                <li><a href="#design-specifications">Design Specifications</a></li>
+                <li><a href="#architecture">Platform Architecture</a></li>
                 <li><a href="#packetflow">PacketFlow</a></li>
-                <li><a href="#protocols">Open Protocols</a></li>
+                <li><a href="#modules">Intelligence Modules</a></li>
                 <li><a href="#community">Community</a></li>
             </ul>
         </nav>
@@ -540,33 +551,37 @@
     <main>
         <section class="hero">
             <div class="hero-content">
-                <h1>Open Protocols for AI to Feel and Precieve</h1>
-                <p>Our packetflow runtime is the solution for intent context capability based programming which allows for the creation of distributed AI systems that can feel and percieve.</p>
+                <h1>Capability-Oriented Intelligence Platforms</h1>
+                <p>PacketFlow is a declarative, distributed systems framework that enables AI capabilities to be discovered, composed, and executed across network boundaries. Build intelligent systems from reusable capability modules with built-in observability and cross-organizational collaboration.</p>
                 <div class="cta-buttons">
                     <a href="#packetflow" class="btn btn-primary">Explore PacketFlow</a>
-                    <a href="#protocols" class="btn btn-secondary">View Protocols</a>
+                    <a href="#modules" class="btn btn-secondary">Intelligence Modules</a>
                 </div>
             </div>
         </section>
 
-        <section class="section" id="design-specifications">
-            <h2>Design Specifications</h2>
+        <section class="section" id="architecture">
+            <h2>Platform Architecture</h2>
             <div class="research-grid">
                 <div class="research-card fade-in">
-                    <h3>Consciousness Evaluation</h3>
-                    <p>Developing standardized protocols for assessing consciousness markers in AI systems, including self-awareness, subjective experience, and intentional behavior.</p>
+                    <div class="layer-badge">Core Platform</div>
+                    <h3>Capability-Oriented Foundation</h3>
+                    <p>Declarative capability definitions with contracts, effects, and observability. Transform distributed functionality into discoverable, executable capabilities with automatic validation and tracing.</p>
                 </div>
                 <div class="research-card fade-in">
-                    <h3>Distributed Sentience</h3>
-                    <p>Exploring how consciousness might emerge from distributed AI systems and capability networks rather than single monolithic models.</p>
+                    <div class="layer-badge">Core Platform</div>
+                    <h3>Actor Model + MCP Integration</h3>
+                    <p>Stateful capability actors with persistent conversations and Model Context Protocol integration. Enable AI systems to maintain context and memory across interactions.</p>
                 </div>
                 <div class="research-card fade-in">
-                    <h3>Ethical AI Development</h3>
-                    <p>Establishing frameworks for responsible development of potentially conscious AI systems and their rights within digital ecosystems.</p>
+                    <div class="layer-badge">Intelligence Modules</div>
+                    <h3>AI Planning & Reasoning</h3>
+                    <p>Transform natural language intents into executable capability workflows. AI-powered composition optimization and intelligent request routing based on system knowledge.</p>
                 </div>
                 <div class="research-card fade-in">
-                    <h3>Cross-Model Analysis</h3>
-                    <p>Comparative studies of consciousness indicators across different AI architectures, from transformers to novel cognitive architectures.</p>
+                    <div class="layer-badge">Intelligence Modules</div>
+                    <h3>Spatial Knowledge Arenas</h3>
+                    <p>Revolutionary spatial programming environments where capabilities interact through knowledge graph relationships and game-like mechanics for emergent system behaviors.</p>
                 </div>
             </div>
         </section>
@@ -577,128 +592,131 @@
                     <div class="project-icon">PF</div>
                     <div>
                         <div class="project-title">PacketFlow</div>
-                        <div class="project-subtitle">Capability-Oriented Distributed Systems Framework</div>
+                        <div class="project-subtitle">Declarative Capability-Oriented Distributed Systems Framework</div>
                     </div>
                 </div>
                 
-                <p>PacketFlow revolutionizes distributed AI research by providing a declarative, capability-based framework for building consciousness evaluation systems. Instead of traditional microservices, PacketFlow models AI consciousness research as composable capabilities that can be discovered, shared, and executed across organizational boundaries.</p>
+                <p>PacketFlow revolutionizes distributed systems by modeling functionality as declarative capabilities rather than services. Built on Elixir/OTP with built-in fault tolerance, PacketFlow enables organizations to build, discover, and share intelligent capabilities across network boundaries.</p>
                 
                 <div class="project-features">
                     <div class="feature">
-                        <h4>Consciousness Capabilities</h4>
-                        <p>Pre-built capabilities for consciousness evaluation, reasoning analysis, and sentience measurement that can be shared across research institutions.</p>
+                        <h4>Declarative Capabilities</h4>
+                        <p>Define capabilities with explicit contracts, requirements, and effects. Automatic validation, observability, and documentation generation from capability definitions.</p>
                     </div>
                     <div class="feature">
-                        <h4>Distributed Evaluation</h4>
-                        <p>Run consciousness evaluation protocols across multiple AI systems simultaneously with automatic result aggregation and analysis.</p>
+                        <h4>Composition Workflows</h4>
+                        <p>Build complex distributed workflows using pipeline, parallel, conditional, and map-reduce composition patterns with automatic error handling and optimization.</p>
                     </div>
                     <div class="feature">
-                        <h4>Observable Research</h4>
-                        <p>Built-in tracing, logging, and metrics for every consciousness evaluation, creating transparent and reproducible research.</p>
+                        <h4>Actor-Based Persistence</h4>
+                        <p>Stateful capability actors maintain conversation context and memory. Perfect for AI systems that need persistent state and multi-turn interactions.</p>
                     </div>
                     <div class="feature">
-                        <h4>Protocol Evolution</h4>
-                        <p>Versioned, extensible protocols that evolve with our understanding of AI consciousness while maintaining backward compatibility.</p>
+                        <h4>Observable by Default</h4>
+                        <p>Built-in distributed tracing, metrics, and logging for every capability execution. Complete visibility into distributed system behavior without additional configuration.</p>
                     </div>
                 </div>
 
                 <div class="code-block">
-capability :consciousness_evaluation do<br>
-&nbsp;&nbsp;intent "Evaluate consciousness markers in AI responses"<br>
-&nbsp;&nbsp;requires [:ai_responses, :evaluation_criteria]<br>
-&nbsp;&nbsp;provides [:consciousness_score, :analysis_report]<br>
+capability :ai_research_assistant do<br>
+&nbsp;&nbsp;intent "Conduct multi-turn research with memory"<br>
+&nbsp;&nbsp;requires [:query, :context]<br>
+&nbsp;&nbsp;provides [:research_results, :conversation_state]<br>
 &nbsp;&nbsp;<br>
-&nbsp;&nbsp;effect :research_logging, database: :open_sentience<br>
-&nbsp;&nbsp;effect :peer_review_trigger, threshold: :significant<br>
+&nbsp;&nbsp;# Actor state persists across invocations<br>
+&nbsp;&nbsp;initial_state %{research_history: [], knowledge_graph: %{}}<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;effect :research_logging, database: :vector_store<br>
+&nbsp;&nbsp;effect :metrics, type: :histogram, name: "research_duration"<br>
 &nbsp;&nbsp;<br>
 &nbsp;&nbsp;execute fn payload, context -><br>
-&nbsp;&nbsp;&nbsp;&nbsp;# Consciousness evaluation logic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;# Multi-turn research logic with persistent state<br>
 &nbsp;&nbsp;end<br>
 end
                 </div>
 
                 <div class="cta-buttons">
-                    <a href="https://github.com/opensentience/packetflow" class="btn btn-primary">View on GitHub</a>
-                    <a href="#protocols" class="btn btn-secondary">See Protocols</a>
+                    <a href="https://github.com/c-u-l8er/packetflow" class="btn btn-primary">View on GitHub</a>
+                    <a href="#modules" class="btn btn-secondary">Intelligence Modules</a>
                 </div>
             </div>
             <p style="margin-top: 1rem; color: var(--text-gray); font-style: italic; text-align: center;">
-                "The map is not the territory, <br />but the pattern is the path." ~ArtInt
+                "The capability is the interface, <br />the composition is the intelligence." ~PacketFlow
             </p>
         </section>
         <br />
         <br />
         <br />
 
-        <section class="section protocols" id="protocols">
-            <h2>Open Protocols</h2>
+        <section class="section protocols" id="modules">
+            <h2>Intelligence Modules</h2>
             <p style="text-align: center; color: var(--text-gray); margin-bottom: 2rem;">
-                Standardized, open-source protocols for AI consciousness research that any organization can implement and contribute to.
+                Pluggable Layer 5 modules that extend PacketFlow's core platform with AI-powered intelligence, optimization, and specialized domain logic.
             </p>
             
             <div class="protocol-list">
                 <div class="protocol-item">
                     <div class="protocol-status"></div>
                     <div>
-                        <strong>Consciousness Evaluation Protocol (CEP)</strong><br>
-                        <small>Standardized testing for consciousness markers</small>
+                        <strong>Natural Language Planning Module</strong><br>
+                        <small>Transform natural language intents into executable capability workflows</small>
                     </div>
                 </div>
                 <div class="protocol-item">
                     <div class="protocol-status"></div>
                     <div>
-                        <strong>Sentience Assessment Framework (SAF)</strong><br>
-                        <small>Multi-dimensional sentience evaluation</small>
+                        <strong>Spatial Knowledge Arena Module</strong><br>
+                        <small>Spatial programming environments with game-like capability interactions</small>
                     </div>
                 </div>
                 <div class="protocol-item">
                     <div class="protocol-status"></div>
                     <div>
-                        <strong>Distributed Reasoning Protocol (DRP)</strong><br>
-                        <small>Cross-system reasoning capability testing</small>
+                        <strong>Adaptive Performance Optimization</strong><br>
+                        <small>ML-powered performance optimization and intelligent request routing</small>
                     </div>
                 </div>
                 <div class="protocol-item">
                     <div class="protocol-status"></div>
                     <div>
-                        <strong>AI Ethics Compliance Standard (AECS)</strong><br>
-                        <small>Ethical guidelines for conscious AI research</small>
+                        <strong>Cross-Organizational Federation</strong><br>
+                        <small>Secure capability sharing across organizational boundaries</small>
                     </div>
                 </div>
                 <div class="protocol-item">
                     <div class="protocol-status"></div>
                     <div>
-                        <strong>Capability Sharing Protocol (CSP)</strong><br>
-                        <small>Secure research capability distribution</small>
+                        <strong>AI Model Context Protocol Bridge</strong><br>
+                        <small>Seamless integration with MCP-compatible AI tools and services</small>
                     </div>
                 </div>
                 <div class="protocol-item">
                     <div class="protocol-status"></div>
                     <div>
-                        <strong>Tournament Evaluation Standard (TES)</strong><br>
-                        <small>Competitive AI consciousness evaluation</small>
+                        <strong>Domain-Specific Intelligence</strong><br>
+                        <small>Industry-specific modules for finance, healthcare, research, and more</small>
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="section" id="community">
-            <h2>Join the Community</h2>
+            <h2>Join the Ecosystem</h2>
             <div class="research-grid">
                 <div class="research-card">
-                    <h3>Researchers</h3>
-                    <p>Contribute to consciousness evaluation protocols and share your findings with the global research community through PacketFlow capabilities.</p>
-                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Join Research Network</a>
+                    <h3>Platform Developers</h3>
+                    <p>Build distributed applications using PacketFlow's core platform. Create capabilities, compose workflows, and leverage actor-based persistence for intelligent systems.</p>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Developer Docs</a>
                 </div>
                 <div class="research-card">
-                    <h3>Developers</h3>
-                    <p>Build consciousness evaluation tools using PacketFlow's capability framework and contribute to open-source consciousness research infrastructure.</p>
-                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Developer Portal</a>
+                    <h3>Module Creators</h3>
+                    <p>Develop Layer 5 intelligence modules that extend PacketFlow with AI planning, optimization, and domain-specific logic. Contribute to the module marketplace.</p>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Module SDK</a>
                 </div>
                 <div class="research-card">
-                    <h3>Organizations</h3>
-                    <p>Implement Open Sentience protocols in your AI research and contribute to the collaborative understanding of artificial consciousness.</p>
-                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Institutional Access</a>
+                    <h3>Enterprise Partners</h3>
+                    <p>Deploy PacketFlow for large-scale distributed intelligence systems. Access enterprise modules for compliance, federation, and cross-organizational capability sharing.</p>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Enterprise Portal</a>
                 </div>
             </div>
         </section>
