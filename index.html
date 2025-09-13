@@ -585,13 +585,49 @@
             }
         }
         
+        /* Powered by section */
+        .powered-by {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.2s forwards;
+        }
+
+        .powered-by a {
+            color: #64ffda;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .powered-by a:hover {
+            color: #ffffff;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Animation for scroll reveal */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.8s ease;
         }
-        
+
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
@@ -631,6 +667,9 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
+            <div class="powered-by">
+                Powered by <a href="https://traaviis.com" target="_blank">TRAAVVIIS</a>
+            </div>
             <h1>GEO-GOTO</h1>
             <h2>Revolutionary AI Architecture for the Next Era</h2>
             <p>The first language model architecture to make 70B+ parameter models run efficiently on single GPUs through spatial reasoning and direct attention jumps. Experience 1000x speedup for long contexts while using 4x less memory.</p>
