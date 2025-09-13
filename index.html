@@ -20,456 +20,563 @@
     />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <link rel="icon" href="/favicon.ico" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Sentience - Capability-Oriented Intelligence Platforms</title>
+    <title>OpenSentience | GEO-GOTO: Revolutionary AI Architecture</title>
+    <meta name="description" content="OpenSentience introduces GEO-GOTO LLM: Spatial-pointer architecture enabling 70B+ models on single GPUs with 1000x speedup for long contexts">
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        :root {
-            --primary-color: #1a1a2e;
-            --secondary-color: #16213e;
-            --accent-color: #0f3460;
-            --highlight-color: #e94560;
-            --text-light: #ffffff;
-            --text-gray: #b8c1ec;
-            --gradient-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            --gradient-accent: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
-        }
-
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--gradient-primary);
-            color: var(--text-light);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(ellipse at top, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            color: white;
             line-height: 1.6;
-            min-height: 100vh;
             overflow-x: hidden;
         }
-
-        /* Animated background particles */
-        .bg-animation {
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Floating particles background */
+        .particles {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
         }
-
+        
         .particle {
             position: absolute;
             width: 2px;
             height: 2px;
-            background: rgba(233, 69, 96, 0.3);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
+            background: #64ffda;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
         }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
-        }
-
         
-        .header {
-            background: #000;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            text-align: center;
-            padding: 0;
-            z-index: 1000; /* Ensure header stays on top */
-            
-            font-family:
-                    Courier New,
-                    monospace;
-                    
-            line-height: 1.2;
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0px); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
         }
-
-        a {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .domain-nav {
-            background: #000;
-            color: #ccc;
-            margin-bottom: 0;
-        }
-
-        .domain-container {
-            width: 1150px;
-            margin: 0 auto;
-            padding: 4px;
-            font-size: 16px;
-            text-align: left;
-        }
-
-        .domain-nav a {
-            color: #ccc !important;
-            font-size: 1em !important;
-            font-weight: normal !important;
-            margin: 0 !important;
-        }
-
-        .domain-nav a:hover {
-            color: #fff !important;
-            text-decoration: underline;
-        }
-
+        
         /* Header */
         header {
-            position: fixed;
-            top: 26px;
-            width: 100%;
-            background: rgba(26, 26, 46, 0.95);
+            position: relative;
+            z-index: 100;
+            padding: 20px 0;
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(233, 69, 96, 0.2);
-            z-index: 1000;
-            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
+        
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
         }
-
+        
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            background: var(--gradient-accent);
+            background: linear-gradient(45deg, #64ffda, #ff6b6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
+        
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #64ffda;
+        }
+        
+        .cta-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 10;
+            padding: 120px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #64ffda, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        
+        .hero h2 {
+            font-size: 1.5rem;
+            color: #b3b3b3;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #d4d4d8;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 60px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #64ffda;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #b3b3b3;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Demo Section */
+        .demo-section {
+            position: relative;
+            z-index: 10;
+            padding: 100px 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .demo-content h3 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #64ffda;
+        }
+        
+        .demo-content p {
+            font-size: 1.1rem;
+            color: #d4d4d8;
+            margin-bottom: 30px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #e4e4e7;
+        }
+        
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        
+        .demo-visual {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .architecture-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .state-box {
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 120px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .state-grounded { background: linear-gradient(45deg, #ff6b6b, #ff8a80); }
+        .state-escaped { background: linear-gradient(45deg, #4ecdc4, #81e6d9); }
+        .state-orbiting { background: linear-gradient(45deg, #ffd93d, #ffeb3b); color: #333; }
+        .state-goto { background: linear-gradient(45deg, #a8e6cf, #7fcdcd); }
+        
+        .arrow {
+            font-size: 2rem;
+            color: #64ffda;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* Performance Section */
+        .performance {
+            padding: 100px 0;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .performance h3 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #64ffda);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .perf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .perf-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .perf-card:hover {
+            transform: translateY(-10px);
+            border-color: #64ffda;
+        }
+        
+        .perf-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .perf-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #64ffda;
+        }
+        
+        .perf-metric {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+        
+        /* Use Cases */
+        .use-cases {
+            padding: 100px 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .use-cases h3 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 60px;
+            color: #64ffda;
+        }
+        
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .use-case {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 4px solid #ff6b6b;
+            transition: all 0.3s ease;
+        }
+        
+        .use-case:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .use-case h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #64ffda;
+        }
+        
+        .use-case p {
+            color: #d4d4d8;
+            margin-bottom: 15px;
+        }
+        
+        .use-case-stat {
+            font-size: 0.9rem;
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .cta-section h3 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #64ffda, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #d4d4d8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-primary {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            padding: 15px 40px;
+            font-size: 1.1rem;
+        }
+        
+        .cta-secondary {
+            background: transparent;
+            border: 2px solid #64ffda;
+            color: #64ffda;
+            padding: 15px 40px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-secondary:hover {
+            background: #64ffda;
+            color: #1a1a2e;
         }
 
-        .nav-links a {
-            color: var(--text-gray);
-            text-decoration: none;
-            transition: color 0.3s ease;
+        /* Contact Form Styles */
+        .contact-form {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-form label {
+            display: block;
+            margin-bottom: 15px;
+            color: #d4d4d8;
             font-weight: 500;
         }
 
-        .nav-links a:hover {
-            color: var(--highlight-color);
-        }
-
-        /* Main content */
-        main {
-            margin-top: 80px;
-        }
-
-        .hero {
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            animation: fadeInUp 1s ease;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #e94560 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-gray);
-            margin-bottom: 2rem;
-            line-height: 1.8;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--gradient-accent);
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
             color: white;
-            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.4);
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #64ffda;
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-light);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: #b3b3b3;
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--highlight-color);
-        }
-
-        /* Sections */
-        .section {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, #ffffff 0%, #e94560 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Featured Project - PacketFlow */
-        .featured-project {
-            background: rgba(22, 33, 62, 0.6);
-            border-radius: 20px;
-            padding: 3rem;
-            margin: 3rem 0;
-            border: 1px solid rgba(233, 69, 96, 0.2);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .featured-project::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-accent);
-        }
-
-        .project-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .project-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-accent);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .project-title {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        .project-subtitle {
-            color: var(--text-gray);
+        .contact-form button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
             font-size: 1.1rem;
-        }
-
-        .project-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .feature {
-            padding: 1.5rem;
-            background: rgba(15, 52, 96, 0.3);
-            border-radius: 10px;
-            border-left: 4px solid var(--highlight-color);
-        }
-
-        .feature h4 {
-            color: var(--highlight-color);
-            margin-bottom: 0.5rem;
             font-weight: 600;
-        }
-
-        /* Research Areas */
-        .research-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .research-card {
-            background: rgba(22, 33, 62, 0.6);
-            border-radius: 15px;
-            padding: 2rem;
-            border: 1px solid rgba(233, 69, 96, 0.1);
+            cursor: pointer;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            width: 100%;
         }
 
-        .research-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--highlight-color);
-            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.2);
+        .contact-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
         }
-
-        .research-card h3 {
-            color: var(--highlight-color);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        /* Protocols section */
-        .protocols {
-            background: rgba(15, 52, 96, 0.3);
-            border-radius: 20px;
-            padding: 3rem;
-            /* margin: 3rem 0; */
-        }
-
-        .protocol-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .protocol-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(26, 26, 46, 0.5);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .protocol-item:hover {
-            background: rgba(233, 69, 96, 0.1);
-        }
-
-        .protocol-status {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--highlight-color);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
+        
         /* Footer */
         footer {
-            background: rgba(26, 26, 46, 0.9);
-            padding: 2rem;
-            text-align: center;
-            border-top: 1px solid rgba(233, 69, 96, 0.2);
-            color: #aaa;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 60px 0 30px;
+            position: relative;
+            z-index: 10;
         }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
         }
-
-        .footer-links a {
-            color: var(--text-gray);
+        
+        .footer-section h4 {
+            color: #64ffda;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section a {
+            color: #d4d4d8;
             text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
             transition: color 0.3s ease;
         }
-
-        .footer-links a:hover {
-            color: var(--highlight-color);
+        
+        .footer-section a:hover {
+            color: #64ffda;
         }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+            color: #b3b3b3;
         }
-
-        .fade-in {
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
+        
         /* Responsive */
         @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                gap: 30px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .architecture-diagram {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+            
             .nav-links {
                 display: none;
-            }
-            
-            .hero {
-                min-height: 70vh;
-            }
-            
-            .section {
-                padding: 3rem 1rem;
-            }
-            
-            .featured-project {
-                padding: 2rem;
             }
             
             .cta-buttons {
@@ -477,302 +584,286 @@
                 align-items: center;
             }
         }
-
-        /* Code styling */
-        .code-block {
-            background: rgba(15, 52, 96, 0.6);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.9rem;
-            overflow-x: auto;
-            border-left: 4px solid var(--highlight-color);
+        
+        /* Animation for scroll reveal */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
         }
-
-        .layer-badge {
-            display: inline-block;
-            background: var(--gradient-accent);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    
-    <div class="header">
-        <div class="domain-nav">
-            <div class="domain-container">
-                <a href="https://c-u-l8er.link">IDEATION</a> (<a href="https://watermark.wrand.cc">DESIGN</a> &#x2022;
-                <a
-                    href="https://wrand.cc"
-                    >R&D</a
-                >
-                &#x2022;
-                
-                <a href="https://opensentience.org">PRODUCTION</a>)
-                <div style="float: right">
-                    &#123;
-                    <a href="https://istrav.com">WEB SOLUTIONS</a> &#x2022;
-                    <a href="https://subvind.com">COMMUNITY SOLUTIONS</a>
-                    &#125;
-                    <a
-                        href="https://ticktickclock.com"
-                        style="
-                            font-family: Helvetica, sans-serif;
-                            line-height: 0.85em;
-                            font-size: 0.85em !important;
-                        "
-                        >!!</a
-                    >
-                </div>
-            </div>
-        </div>
+    <!-- Floating Particles Background -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 1.5s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 3.5s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div>
     </div>
 
-    <div class="bg-animation" id="bgAnimation"></div>
-    
+    <!-- Header -->
     <header>
-        <nav>
-            <div class="logo"><a href="/">Open Sentience</a></div>
-            <ul class="nav-links">
-                <li><a href="#architecture">Platform Architecture</a></li>
-                <li><a href="#packetflow">PacketFlow</a></li>
-                <li><a href="#modules">Intelligence Modules</a></li>
-                <li><a href="#community">Community</a></li>
-            </ul>
-        </nav>
+        <div class="container">
+            <nav>
+                <div class="logo">OpenSentience</div>
+                <ul class="nav-links">
+                    <li><a href="#demo">Technology</a></li>
+                    <li><a href="#performance">Performance</a></li>
+                    <li><a href="#use-cases">Use Cases</a></li>
+                    <li><a href="#research">Research</a></li>
+                </ul>
+                <a href="#get-started" class="cta-button">Get Started</a>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Capability-Oriented Intelligence Platforms</h1>
-                <p>PacketFlow is a declarative, distributed systems framework that enables AI capabilities to be discovered, composed, and executed across network boundaries. Build intelligent systems from reusable capability modules with built-in observability and cross-organizational collaboration.</p>
-                <div class="cta-buttons">
-                    <a href="#packetflow" class="btn btn-primary">Explore PacketFlow</a>
-                    <a href="#modules" class="btn btn-secondary">Intelligence Modules</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="architecture">
-            <h2>Platform Architecture</h2>
-            <div class="research-grid">
-                <div class="research-card fade-in">
-                    <div class="layer-badge">Core Platform</div>
-                    <h3>Capability-Oriented Foundation</h3>
-                    <p>Declarative capability definitions with contracts, effects, and observability. Transform distributed functionality into discoverable, executable capabilities with automatic validation and tracing.</p>
-                </div>
-                <div class="research-card fade-in">
-                    <div class="layer-badge">Core Platform</div>
-                    <h3>Actor Model + MCP Integration</h3>
-                    <p>Stateful capability actors with persistent conversations and Model Context Protocol integration. Enable AI systems to maintain context and memory across interactions.</p>
-                </div>
-                <div class="research-card fade-in">
-                    <div class="layer-badge">Intelligence Modules</div>
-                    <h3>AI Planning & Reasoning</h3>
-                    <p>Transform natural language intents into executable capability workflows. AI-powered composition optimization and intelligent request routing based on system knowledge.</p>
-                </div>
-                <div class="research-card fade-in">
-                    <div class="layer-badge">Intelligence Modules</div>
-                    <h3>Spatial Knowledge Arenas</h3>
-                    <p>Revolutionary spatial programming environments where capabilities interact through knowledge graph relationships and game-like mechanics for emergent system behaviors.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="packetflow">
-            <div class="featured-project">
-                <div class="project-header">
-                    <div class="project-icon">PF</div>
-                    <div>
-                        <div class="project-title">PacketFlow</div>
-                        <div class="project-subtitle">Declarative Capability-Oriented Distributed Systems Framework</div>
-                    </div>
-                </div>
-                
-                <p>PacketFlow revolutionizes distributed systems by modeling functionality as declarative capabilities rather than services. Built on Elixir/OTP with built-in fault tolerance, PacketFlow enables organizations to build, discover, and share intelligent capabilities across network boundaries.</p>
-                
-                <div class="project-features">
-                    <div class="feature">
-                        <h4>Declarative Capabilities</h4>
-                        <p>Define capabilities with explicit contracts, requirements, and effects. Automatic validation, observability, and documentation generation from capability definitions.</p>
-                    </div>
-                    <div class="feature">
-                        <h4>Composition Workflows</h4>
-                        <p>Build complex distributed workflows using pipeline, parallel, conditional, and map-reduce composition patterns with automatic error handling and optimization.</p>
-                    </div>
-                    <div class="feature">
-                        <h4>Actor-Based Persistence</h4>
-                        <p>Stateful capability actors maintain conversation context and memory. Perfect for AI systems that need persistent state and multi-turn interactions.</p>
-                    </div>
-                    <div class="feature">
-                        <h4>Observable by Default</h4>
-                        <p>Built-in distributed tracing, metrics, and logging for every capability execution. Complete visibility into distributed system behavior without additional configuration.</p>
-                    </div>
-                </div>
-
-                <div class="code-block">
-capability :ai_research_assistant do<br>
-&nbsp;&nbsp;intent "Conduct multi-turn research with memory"<br>
-&nbsp;&nbsp;requires [:query, :context]<br>
-&nbsp;&nbsp;provides [:research_results, :conversation_state]<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;# Actor state persists across invocations<br>
-&nbsp;&nbsp;initial_state %{research_history: [], knowledge_graph: %{}}<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;effect :research_logging, database: :vector_store<br>
-&nbsp;&nbsp;effect :metrics, type: :histogram, name: "research_duration"<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;execute fn payload, context -><br>
-&nbsp;&nbsp;&nbsp;&nbsp;# Multi-turn research logic with persistent state<br>
-&nbsp;&nbsp;end<br>
-end
-                </div>
-
-                <div class="cta-buttons">
-                    <a href="https://github.com/c-u-l8er/packetflow" class="btn btn-primary">View on GitHub</a>
-                    <a href="#modules" class="btn btn-secondary">Intelligence Modules</a>
-                </div>
-            </div>
-            <p style="margin-top: 1rem; color: var(--text-gray); font-style: italic; text-align: center;">
-                "The map is not the territory,<br />
-                but the pattern is the path." ~ArtInt
-            </p>
-        </section>
-        <br />
-        <br />
-        <br />
-
-        <section class="section protocols" id="modules">
-            <h2>Intelligence Modules</h2>
-            <p style="text-align: center; color: var(--text-gray); margin-bottom: 2rem;">
-                Pluggable Layer 5 modules that extend PacketFlow's core platform with AI-powered intelligence, optimization, and specialized domain logic.
-            </p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>GEO-GOTO</h1>
+            <h2>Revolutionary AI Architecture for the Next Era</h2>
+            <p>The first language model architecture to make 70B+ parameter models run efficiently on single GPUs through spatial reasoning and direct attention jumps. Experience 1000x speedup for long contexts while using 4x less memory.</p>
             
-            <div class="protocol-list">
-                <div class="protocol-item">
-                    <div class="protocol-status"></div>
-                    <div>
-                        <strong>Natural Language Planning Module</strong><br>
-                        <small>Transform natural language intents into executable capability workflows</small>
-                    </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">1000x</span>
+                    <span class="stat-label">Speedup for Long Contexts</span>
                 </div>
-                <div class="protocol-item">
-                    <div class="protocol-status"></div>
-                    <div>
-                        <strong>Spatial Knowledge Arena Module</strong><br>
-                        <small>Spatial programming environments with game-like capability interactions</small>
-                    </div>
+                <div class="stat">
+                    <span class="stat-number">4x</span>
+                    <span class="stat-label">Memory Compression</span>
                 </div>
-                <div class="protocol-item">
-                    <div class="protocol-status"></div>
-                    <div>
-                        <strong>Adaptive Performance Optimization</strong><br>
-                        <small>ML-powered performance optimization and intelligent request routing</small>
-                    </div>
+                <div class="stat">
+                    <span class="stat-number">10M+</span>
+                    <span class="stat-label">Token Context Window</span>
                 </div>
-                <div class="protocol-item">
-                    <div class="protocol-status"></div>
-                    <div>
-                        <strong>Cross-Organizational Federation</strong><br>
-                        <small>Secure capability sharing across organizational boundaries</small>
-                    </div>
-                </div>
-                <div class="protocol-item">
-                    <div class="protocol-status"></div>
-                    <div>
-                        <strong>AI Model Context Protocol Bridge</strong><br>
-                        <small>Seamless integration with MCP-compatible AI tools and services</small>
-                    </div>
-                </div>
-                <div class="protocol-item">
-                    <div class="protocol-status"></div>
-                    <div>
-                        <strong>Domain-Specific Intelligence</strong><br>
-                        <small>Industry-specific modules for finance, healthcare, research, and more</small>
-                    </div>
+                <div class="stat">
+                    <span class="stat-number">1</span>
+                    <span class="stat-label">GPU for 70B Model</span>
                 </div>
             </div>
-        </section>
-
-        <section class="section" id="community">
-            <h2>Join the Ecosystem</h2>
-            <div class="research-grid">
-                <div class="research-card">
-                    <h3>Platform Developers</h3>
-                    <p>Build distributed applications using PacketFlow's core platform. Create capabilities, compose workflows, and leverage actor-based persistence for intelligent systems.</p>
-                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Developer Docs</a>
-                </div>
-                <div class="research-card">
-                    <h3>Module Creators</h3>
-                    <p>Develop Layer 5 intelligence modules that extend PacketFlow with AI planning, optimization, and domain-specific logic. Contribute to the module marketplace.</p>
-                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Module SDK</a>
-                </div>
-                <div class="research-card">
-                    <h3>Enterprise Partners</h3>
-                    <p>Deploy PacketFlow for large-scale distributed intelligence systems. Access enterprise modules for compliance, federation, and cross-organizational capability sharing.</p>
-                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Enterprise Portal</a>
-                </div>
-            </div>
-        </section>
-    </main>
-    <br />
-    <br />
-    <br />
-
-    <footer>
-        <p>
-            &copy; 
-            <script>
-                document.write(new Date().getFullYear());
-            </script>
-            Open Sentience. All rights reserved.
-        </p>
-    </footer>
-
-    <div style="background: #000; padding: 2em 0 1em">
-        <div style="margin: 0 auto; width: 728px">
-            <iframe
-                src="https://watermark.wrand.cc/advertisements/leaderboard-watermark.html"
-                width="728"
-                height="90"
-                frameborder="0"
-                scrolling="no"
-                style="border: none; overflow: hidden"
-                title="WaterMark Branding Design Agency Advertisement"
-            >
-            </iframe>
-            <div style="text-align: right; color: #ccc; font-size: 0.75em">
-                ^ADVERTISEMENT
+            
+            <div class="cta-buttons">
+                <a href="#demo" class="cta-button cta-primary">See It In Action</a>
+                <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-secondary">View on GitHub</a>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo-section fade-in">
+        <div class="container">
+            <div class="demo-grid">
+                <div class="demo-content">
+                    <h3>Four States, Infinite Possibilities</h3>
+                    <p>GEO-GOTO revolutionizes language models through spatial intelligence. Instead of expensive attention across all tokens, our architecture uses smart spatial states and direct pointer jumps.</p>
+                    
+                    <ul class="feature-list">
+                        <li><strong>Grounded:</strong> Local, specific relationships (32-128 tokens)</li>
+                        <li><strong>Escaped:</strong> Global, abstract patterns (full sequence)</li>
+                        <li><strong>Orbiting:</strong> Contextual connections (128-1024 tokens)</li>
+                        <li><strong>Goto:</strong> Direct jumps to relevant positions</li>
+                    </ul>
+                    
+                    <a href="#performance" class="cta-button">Explore Performance</a>
+                </div>
+                
+                <div class="demo-visual">
+                    <h4 style="margin-bottom: 30px; color: #64ffda;">Spatial-Pointer Architecture</h4>
+                    <div class="architecture-diagram">
+                        <div class="state-box state-grounded">🏠 Grounded</div>
+                        <div class="arrow">→</div>
+                        <div class="state-box state-orbiting">🔄 Orbiting</div>
+                        <div class="arrow">→</div>
+                        <div class="state-box state-escaped">🌍 Escaped</div>
+                        <div class="arrow">→</div>
+                        <div class="state-box state-goto">➡️ Goto</div>
+                    </div>
+                    <p style="margin-top: 20px; font-size: 0.9rem; color: #b3b3b3;">
+                        Traditional: O(n²) attention complexity<br>
+                        GEO-GOTO: O(n) linear complexity with smart shortcuts
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section id="performance" class="performance fade-in">
+        <div class="container">
+            <h3>Breakthrough Performance</h3>
+            
+            <div class="perf-grid">
+                <div class="perf-card">
+                    <span class="perf-icon">⚡</span>
+                    <div class="perf-title">Context Speed</div>
+                    <div class="perf-metric">600x</div>
+                    <p>Faster processing for 1M+ token contexts compared to traditional transformers</p>
+                </div>
+                
+                <div class="perf-card">
+                    <span class="perf-icon">💾</span>
+                    <div class="perf-title">Memory Usage</div>
+                    <div class="perf-metric">77GB</div>
+                    <p>Total memory for 70B parameter training vs 610GB traditional (88% reduction)</p>
+                </div>
+                
+                <div class="perf-card">
+                    <span class="perf-icon">🎯</span>
+                    <div class="perf-title">Accuracy</div>
+                    <div class="perf-metric">95%</div>
+                    <p>Maintains high accuracy even at extreme context lengths through direct pointers</p>
+                </div>
+                
+                <div class="perf-card">
+                    <span class="perf-icon">🖥️</span>
+                    <div class="perf-title">Hardware</div>
+                    <div class="perf-metric">1 GPU</div>
+                    <p>Single A100 can handle what previously required 8+ GPUs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section id="use-cases" class="use-cases fade-in">
+        <div class="container">
+            <h3>Revolutionary Applications</h3>
+            
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <h4>📚 Document Analysis</h4>
+                    <p>Process entire books, research papers, and legal documents with perfect cross-references and citations.</p>
+                    <div class="use-case-stat">→ Handle 1000+ page documents instantly</div>
+                </div>
+                
+                <div class="use-case">
+                    <h4>💻 Code Understanding</h4>
+                    <p>Analyze complete codebases with function dependencies, import relationships, and architectural patterns.</p>
+                    <div class="use-case-stat">→ Process 10M+ token repositories</div>
+                </div>
+                
+                <div class="use-case">
+                    <h4>🔬 Scientific Research</h4>
+                    <p>Simultaneous analysis of hundreds of research papers with concept linking and knowledge synthesis.</p>
+                    <div class="use-case-stat">→ Compare 100+ papers at once</div>
+                </div>
+                
+                <div class="use-case">
+                    <h4>⚖️ Legal Intelligence</h4>
+                    <p>Complete case file analysis with precedent tracking, cross-references, and temporal reasoning.</p>
+                    <div class="use-case-stat">→ Entire legal libraries accessible</div>
+                </div>
+                
+                <div class="use-case">
+                    <h4>🏥 Medical Records</h4>
+                    <p>Comprehensive patient history analysis with temporal connections and diagnostic pattern recognition.</p>
+                    <div class="use-case-stat">→ Lifetime medical records in context</div>
+                </div>
+                
+                <div class="use-case">
+                    <h4>💼 Business Intelligence</h4>
+                    <p>Multi-year financial analysis, trend identification, and strategic insight generation from vast datasets.</p>
+                    <div class="use-case-stat">→ Years of reports in single analysis</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="get-started" class="cta-section fade-in">
+        <div class="container">
+            <h3>Join the Revolution</h3>
+            <p>Be part of the community building the future of efficient, accessible AI. GEO-GOTO makes cutting-edge language models available to everyone, not just tech giants.</p>
+            
+            <div class="contact-form">
+                <form action="https://formspree.io/f/xldwvvde" method="POST">
+                    <label>
+                        Your email:
+                        <input type="email" name="email" placeholder="your.email@example.com" required>
+                    </label>
+                    <label>
+                        Your message:
+                        <textarea name="message" placeholder="Tell us about your project or partnership idea..." rows="5" required></textarea>
+                    </label>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Technology</h4>
+                    <a href="#demo">Architecture Overview</a>
+                    <a href="#performance">Performance Benchmarks</a>
+                    <a href="https://github.com/opensentience/geo-goto">Open Source Code</a>
+                    <a href="/docs">Technical Documentation</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Research</h4>
+                    <a href="/papers">Research Papers</a>
+                    <a href="/benchmarks">Benchmark Results</a>
+                    <a href="/blog">Development Blog</a>
+                    <a href="/collaborate">Academic Collaboration</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <a href="https://discord.gg/opensentience">Discord Community</a>
+                    <a href="https://twitter.com/opensentience">Twitter Updates</a>
+                    <a href="/contribute">Contributing Guide</a>
+                    <a href="/events">Events & Workshops</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Organization</h4>
+                    <a href="/about">About OpenSentience</a>
+                    <a href="/team">Research Team</a>
+                    <a href="/mission">Our Mission</a>
+                    <a href="mailto:contact@opensentience.org">Contact Us</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p id="copyright">&copy; <span id="current-year">2024</span> OpenSentience.org - Making advanced AI accessible to everyone</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // Background animation
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 6 + 's';
-            particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
-            return particle;
+        // Scroll reveal animation
+        function revealOnScroll() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight * 0.8) {
+                    element.classList.add('visible');
+                }
+            });
         }
-
-        // Create background particles
-        const bgAnimation = document.getElementById('bgAnimation');
-        for (let i = 0; i < 50; i++) {
-            bgAnimation.appendChild(createParticle());
-        }
-
-        // Smooth scrolling for navigation links
+        
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Run on page load
+        
+        // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -785,59 +876,30 @@ end
                 }
             });
         });
-
-        // Scroll animation for research cards
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all research cards
-        document.querySelectorAll('.research-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            card.style.transition = 'all 0.6s ease';
-            observer.observe(card);
-        });
-
+        
         // Dynamic particle generation
-        setInterval(() => {
-            if (bgAnimation.children.length < 60) {
-                bgAnimation.appendChild(createParticle());
-            }
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
             
-            // Remove old particles
-            const particles = bgAnimation.children;
-            if (particles.length > 80) {
-                bgAnimation.removeChild(particles[0]);
-            }
-        }, 3000);
+            document.querySelector('.particles').appendChild(particle);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 25000);
+        }
+        
+        // Create particles periodically
+        setInterval(createParticle, 3000);
 
-        // Protocol status animation
-        document.querySelectorAll('.protocol-status').forEach((status, index) => {
-            status.style.animationDelay = (index * 0.2) + 's';
-        });
-
-        // Featured project interaction
-        const featuredProject = document.querySelector('.featured-project');
-        featuredProject.addEventListener('mouseenter', () => {
-            featuredProject.style.transform = 'translateY(-5px)';
-            featuredProject.style.boxShadow = '0 25px 50px rgba(233, 69, 96, 0.3)';
-        });
-
-        featuredProject.addEventListener('mouseleave', () => {
-            featuredProject.style.transform = 'translateY(0)';
-            featuredProject.style.boxShadow = 'none';
-        });
+        // Update copyright year dynamically
+        document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
