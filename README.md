@@ -1,307 +1,328 @@
-# GEO-GOTO LLM 🌍➡️
+# OpenSentience Platform 🌍📍
 
-> **Grounded-Escaped-Orbiting-Goto Large Language Model**  
-> Revolutionary spatial-pointer architecture for efficient long-context language modeling
+> **Democratizing Geospatial Intelligence**  
+> Real-time location awareness platform for developers and businesses
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status: Research](https://img.shields.io/badge/Status-Research-orange.svg)](https://github.com/yourusername/geo-goto-llm)
-[![Context: 10M+ Tokens](https://img.shields.io/badge/Context-10M%2B%20Tokens-blue.svg)](#performance)
+[![Elixir](https://img.shields.io/badge/Elixir-1.14+-purple.svg)](https://elixir-lang.org/)
+[![Phoenix](https://img.shields.io/badge/Phoenix-1.7+-red.svg)](https://www.phoenixframework.org/)
+[![Tile38](https://img.shields.io/badge/Tile38-1.30+-blue.svg)](https://tile38.com/)
 
 ---
 
-## 🚀 What is GEO-GOTO?
+## 🚀 What is OpenSentience?
 
-GEO-GOTO LLM introduces a novel **spatial-pointer quantization scheme** that combines hierarchical spatial reasoning with direct attention jumps. Instead of expensive O(n²) attention computation, our architecture uses **smart shortcuts** to achieve:
+OpenSentience is a comprehensive geospatial intelligence platform that makes sophisticated location-based applications accessible to every developer. Built on a foundation of secure, scalable infrastructure, it combines advanced geospatial processing with an intuitive Domain Specific Language (DSL) to enable rapid development of location-aware applications.
 
-- **📉 4x Memory Compression**: 2-bit weight quantization
-- **⚡ 100-1000x Speed**: Linear attention complexity  
-- **🎯 Perfect Long-Range**: Direct pointer-based dependencies
-- **🔧 Hardware Friendly**: Works on existing GPUs
+The platform serves as both a powerful backend service and a developer-friendly API ecosystem, supporting applications ranging from fleet management and delivery optimization to smart city infrastructure and IoT device coordination.
 
 ## 🧠 Core Innovation
 
-### Four Spatial States (2-bit encoding)
-```
-🏠 Grounded (00): Local, specific relationships (32-128 token window)
-🌍 Escaped  (01): Global, abstract patterns (full sequence access)  
-🔄 Orbiting (10): Contextual connections (128-1024 token window)
-➡️ Goto     (11): Direct pointer jumps to specific positions
+### Geospatial DSL Foundation
+A macro-based syntax that compiles to efficient Tile38 commands, providing an intuitive way for developers to express complex geospatial operations without deep GIS knowledge.
+
+```elixir
+# Find all delivery vehicles within 5km of downtown that haven't moved in 10 minutes
+query = GeoDSL.near("vehicles", downtown_point, 5000)
+  |> GeoDSL.where_not_moved(10, :minutes)
+  |> GeoDSL.execute()
 ```
 
-### The Magic of GOTO Pointers
-Instead of computing attention across all tokens, **GOTO states store direct pointers** to relevant positions:
+### Real-Time Streaming Engine
+Enables real-time geospatial event processing and distribution to thousands of concurrent clients using Phoenix PubSub and GenStage pipelines.
 
-```python
-# Traditional attention: O(n²) operations
-attention_scores = Q @ K.T  # Every token attends to every token
+### Intelligent Geofencing System
+Advanced geofence management with time-based rules, complex triggers, and dynamic zone creation.
 
-# GEO-GOTO: O(k) operations where k ≈ 3 targets per token  
-goto_targets = goto_pointers[token_position]  # Direct lookup
-attention_output = attend_only_to(goto_targets)  # Skip irrelevant tokens
-```
+### Route Optimization Engine
+Smart dispatching and real-time route adaptation for fleet operations.
 
 ---
 
-## ⚡ Performance
+## ⚡ Key Features
 
-### Context Window Scaling
-| Context Length | Traditional 70B | GEO-GOTO 70B | Speedup |
-|----------------|-----------------|---------------|---------|
-| 4K tokens      | 100ms          | 120ms         | 0.8x    |
-| 32K tokens     | 1.6s           | 180ms         | **9x**  |
-| 128K tokens    | 25s            | 450ms         | **56x** |
-| 1M tokens      | >30min         | 2.8s          | **600x+** |
-| 10M tokens     | ❌ Impossible   | 28s           | **∞**   |
+- **🔒 Security First**: Sandboxed DSL execution with strict resource limits
+- **⚡ Real-Time Processing**: Sub-second response times for location queries
+- **📈 Horizontal Scalability**: Architecture designed for millions of concurrent updates
+- **🛠️ Developer Experience**: Intuitive DSL that abstracts complex geospatial operations
+- **🌐 Open Standards**: Built on proven technologies (Tile38, Elixir/Phoenix)
+- **🔧 Multi-Language SDKs**: JavaScript, Python, Go, Java support
+- **📊 Analytics Engine**: Transform raw geospatial data into actionable business intelligence
 
-### Memory Efficiency
+---
+
+## 🏗️ Architecture Overview
+
 ```
-70B Parameter Model Memory Usage:
-
-Traditional Training:  610GB (requires 8+ A100s)
-GEO-GOTO Training:     165GB (fits on 2x A100s)
-Savings:              73% reduction
-
-Traditional Inference: 190GB (requires 3+ A100s)  
-GEO-GOTO Inference:    60GB  (fits on 1x A100)
-Savings:              68% reduction
+┌─────────────────────────────────────────────────────────────────────┐
+│                        OpenSentience Platform                       │
+├─────────────────────────────────────────────────────────────────────┤
+│                           API Gateway                               │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
+│  │ REST APIs   │  │ WebSockets  │  │ GraphQL     │  │ Webhooks    │ │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
+├─────────────────────────────────────────────────────────────────────┤
+│                      Security & Auth Layer                          │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
+│  │Rate Limiting│  │DSL Validator│  │ Permissions │  │ Sandboxing  │ │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
+├─────────────────────────────────────────────────────────────────────┤
+│                       Core Services Layer                           │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
+│  │   Streams   │  │    Zones    │  │   Routes    │  │  Analytics  │ │
+│  │(Real-time)  │  │(Geofencing) │  │(Optimization│  │(Insights)   │ │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
+├─────────────────────────────────────────────────────────────────────┤
+│                       Data Processing Layer                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
+│  │    Tile38   │  │   Phoenix   │  │   Broadway  │  │   GenStage  │ │
+│  │(Geospatial) │  │  (PubSub)   │  │(Processing) │  │(Pipelines)  │ │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
+├─────────────────────────────────────────────────────────────────────┤
+│                        Storage Layer                                │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
+│  │ PostgreSQL  │  │    Redis    │  │ TimescaleDB │  │   MinIO     │ │
+│  │(Metadata)   │  │  (Cache)    │  │(Time Series)│  │(Files/Logs) │ │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
+└─────────────────────────────────────────────────────────────────────┘
 ```
-
-### Real-World Benchmarks
-- **📚 Document Analysis**: Handle 1000+ page documents instantly
-- **💻 Code Generation**: Process entire codebases (10M+ tokens)  
-- **🔬 Research**: Analyze 100+ papers simultaneously
-- **⚖️ Legal**: Complete case file analysis with cross-references
 
 ---
 
 ## 🛠️ Quick Start
 
+### Prerequisites
+- Elixir 1.14+
+- PostgreSQL 13+
+- Redis 6+
+- Tile38 1.30+
+
 ### Installation
+
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/geo-goto-llm.git
-cd geo-goto-llm
+git clone https://github.com/yourusername/opensentience.git
+cd opensentience
 
 # Install dependencies
 mix deps.get
 
-# Compile with optimizations
-mix compile
+# Set up the database
+mix ecto.setup
+
+# Configure Tile38 connection in config/config.exs
+config :opensentience, :tile38,
+  host: "localhost",
+  port: 9851
+
+# Start the Phoenix server
+mix phx.server
 ```
 
 ### Basic Usage
+
 ```elixir
-# Initialize a GEO-GOTO model
-model = GEOGoto.Model.new(
-  vocab_size: 50000,
-  hidden_size: 4096, 
-  num_layers: 32
-)
+# Initialize OpenSentience client
+client = OpenSentience.Client.new(api_key: "your-api-key")
 
-# Create input with automatic spatial state assignment
-input_ids = [1, 5, 23, 45, 67, 89, 123]
-goto_pointers = GEOGoto.create_pointers(input_ids, model.vocab)
+# Create a geofence
+zone = %{
+  name: "downtown_delivery",
+  geometry: %Geo.Polygon{...},
+  properties: %{type: "delivery_zone"}
+}
 
-# Forward pass with spatial-pointer attention
-output = GEOGoto.Model.forward(model, input_ids, goto_pointers)
+{:ok, zone_id} = OpenSentience.Zones.create(client, zone)
 
-# The model automatically:
-# 1. Assigns G/E/O/G states based on semantic content
-# 2. Creates GOTO pointers for long-range dependencies  
-# 3. Uses efficient attention based on spatial states
+# Track a vehicle
+vehicle = %{
+  id: "truck_001",
+  position: %Geo.Point{coordinates: {-122.4194, 37.7749}},
+  properties: %{driver: "john_doe", capacity: 100}
+}
+
+{:ok, vehicle_id} = OpenSentience.Streams.update_location(client, vehicle)
+
+# Query vehicles in zone
+query = GeoDSL.within("vehicles", zone_id)
+results = OpenSentience.Query.execute(client, query)
 ```
 
-### Training Example
-```elixir
-# Training with spatial-pointer loss
-defmodule MyTrainer do
-  def train_step(model, batch) do
-    # Standard language modeling + spatial consistency
-    loss = GEOGoto.Trainer.compute_loss(
-      model, 
-      batch,
-      alpha: 0.1,  # Spatial loss weight
-      beta: 0.05   # GOTO consistency weight
-    )
-    
-    # Efficient gradient computation (no quantum complexity!)
-    gradients = Nx.grad(loss)
-    GEOGoto.Optimizer.update(model, gradients)
-  end
-end
-```
+### JavaScript SDK
 
----
+```javascript
+import { OpenSentience } from '@opensentience/sdk';
 
-## 🏗️ Architecture
+const client = new OpenSentience({
+  apiKey: 'your-api-key',
+  endpoint: 'https://api.opensentience.org'
+});
 
-### Spatial Attention Dispatcher
-```elixir
-def compute_attention(Q, K, V, geo_states, goto_pointers, position) do
-  case geo_states[position] do
-    0 -> local_attention(Q, K, V, position, window: 128)      # Grounded
-    1 -> global_attention(Q, K, V, position)                 # Escaped  
-    2 -> medium_attention(Q, K, V, position, window: 1024)   # Orbiting
-    3 -> goto_attention(Q, K, V, goto_pointers, position)    # Goto
-  end
-end
-```
+// Real-time location tracking
+const subscription = client.streams.subscribe('vehicles', (update) => {
+  console.log('Vehicle moved:', update);
+});
 
-### GOTO Pointer System
-```elixir
-defmodule GEOGoto.Pointers do
-  defstruct [
-    :source_positions,    # [u32] - Which tokens have GOTO pointers
-    :target_positions,    # [u32] - Where they point to
-    :goto_counts,         # [u16] - Number of targets per source  
-    :pointer_offsets      # [u32] - Index into target array
-  ]
-  
-  # Memory usage: ~6 bytes per token with pointers
-  # For 70B model: ~420MB total (vs 50GB+ for quantum approaches)
-end
+// Geofencing
+const zone = await client.zones.create({
+  name: 'warehouse',
+  geometry: {
+    type: 'Polygon',
+    coordinates: [[[...]]]
+  }
+});
 ```
 
 ---
 
-## 📊 Benchmarks
+## 📊 Performance & Scalability
 
-### Long-Context Performance
-| Task | Traditional | GEO-GOTO | Improvement |
-|------|-------------|----------|-------------|
-| Needle in Haystack (1M tokens) | 70% | **95%** | +25% accuracy |
-| Multi-doc QA (500K tokens) | 75% | **90%** | +15% accuracy |
-| Code completion (2M tokens) | ❌ Fails | **85%** | Enables new tasks |
-| Legal analysis (5M tokens) | ❌ Fails | **88%** | Enables new tasks |
+### Real-Time Capabilities
+- **Sub-second response times** for location queries and geofence events
+- **Millions of concurrent location updates** across horizontally scaled nodes
+- **WebSocket connections** supporting thousands of simultaneous clients
 
-### Hardware Compatibility
-| GPU | Traditional 70B | GEO-GOTO 70B | Max Context |
-|-----|-----------------|---------------|-------------|
-| RTX 4090 (24GB) | ❌ | ✅ (with optimization) | 100K tokens |
-| A100 (80GB) | ❌ Training | ✅ Full training | 1M+ tokens |
-| H100 (80GB) | ✅ Inference only | ✅ Full capabilities | 10M+ tokens |
+### Data Throughput
+- Process 1M+ location updates per second
+- Handle complex geospatial queries with sub-50ms response times
+- Support for 100,000+ concurrent connections
 
----
-
-## 🧪 Examples
-
-### Document Analysis
-```elixir
-# Process entire research papers with cross-references
-papers = load_papers(["paper1.pdf", "paper2.pdf", "paper3.pdf"])  # 2M tokens
-analysis = GEOGoto.analyze_documents(papers, query: "What are the main findings?")
-
-# The model automatically:
-# - Uses Escaped states for abstract concepts
-# - Uses Orbiting states for citation relationships  
-# - Uses GOTO pointers for cross-paper references
-# - Uses Grounded states for specific data points
-```
-
-### Code Repository Understanding
-```elixir
-# Analyze entire codebase with function dependencies
-codebase = load_repository("https://github.com/large-project")  # 10M tokens
-explanation = GEOGoto.explain_code(
-  codebase, 
-  query: "How does the authentication system work?"
-)
-
-# GOTO pointers automatically connect:
-# - Function definitions to their calls
-# - Variable declarations to usage
-# - Import statements to implementations
-```
-
-### Conversational AI with Perfect Memory
-```elixir
-# Multi-turn conversation with long-term context
-conversation = GEOGoto.Conversation.new(max_context: 1_000_000)
-
-conversation
-|> add_message("Let's discuss quantum computing...")  # Turn 1
-|> add_message("What about error correction?")        # Turn 100
-|> add_message("How does this relate to our earlier quantum discussion?")  # Turn 500
-
-# GOTO pointers maintain perfect references across hundreds of turns
-```
+### Scalability Features
+- **Stateless services** enabling easy horizontal scaling
+- **Geographic sharding** for global data distribution
+- **Load balancing** with geographic and service-specific algorithms
 
 ---
 
-## 🔬 Research Applications
+## 🔒 Security Architecture
 
-### Supported Use Cases
-- **📖 Literature Review**: Process 100+ academic papers simultaneously
-- **⚖️ Legal Research**: Analyze complete case histories with precedent tracking
-- **🧬 Bioinformatics**: Handle entire genome sequences with structural annotations
-- **📊 Financial Analysis**: Multi-year report analysis with trend identification
-- **🎓 Educational**: Textbook-scale content with concept linking
+### Multi-Layered Security Model
+- **API Security**: JWT-based authentication with role-based access control
+- **DSL Security**: AST validation and function whitelisting
+- **Execution Security**: Process isolation with resource monitoring
+- **Permission System**: Hierarchical permissions with geographic bounds
 
-### Novel Capabilities
-- **Perfect Coreference**: "He" instantly resolves to "John" 500K tokens earlier
-- **Causal Tracking**: "Therefore" jumps directly to "because" statements
-- **Structural Navigation**: Section headers link to relevant content
-- **Temporal Reasoning**: Events connect across long timelines
+### Sandboxed Execution
+All external code execution happens in sandboxed environments with:
+- Strict resource limits (memory, CPU, execution time)
+- Function whitelisting for approved operations
+- Real-time resource monitoring and automatic termination
+
+---
+
+## 📈 Use Cases
+
+### 🚚 Fleet Management
+- Real-time vehicle tracking and geofencing
+- Route optimization and smart dispatching
+- Driver behavior analytics and safety monitoring
+
+### 📦 Delivery & Logistics
+- Dynamic route planning with traffic adaptation
+- Delivery zone optimization
+- Real-time ETA calculations and customer notifications
+
+### 🏙️ Smart Cities
+- Traffic flow monitoring and congestion prediction
+- Public transportation optimization
+- Environmental monitoring and air quality tracking
+
+### 🏥 Healthcare
+- Ambulance routing and hospital resource allocation
+- Medical supply chain tracking
+- Patient location monitoring in large facilities
+
+### 🛡️ Security & Safety
+- Perimeter monitoring and intrusion detection
+- Emergency response coordination
+- Asset tracking and theft prevention
+
+---
+
+## 💰 Pricing Tiers
+
+### Free Tier (Developer)
+- 10,000 API calls per month
+- 2 concurrent DSL executions
+- Basic geofencing (10 zones)
+- Community support
+
+### Professional Tier ($99/month)
+- 1M API calls per month
+- 10 concurrent DSL executions
+- Advanced geofencing (unlimited zones)
+- Email support
+- Private data collections
+- Basic analytics dashboard
+
+### Enterprise Tier (Custom)
+- Unlimited API calls
+- 50 concurrent DSL executions
+- Custom integrations
+- Dedicated support
+- On-premises deployment options
+- Advanced analytics and reporting
+- SLA guarantees
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! GEO-GOTO represents a fundamental shift in how we think about attention and context in language models.
-
-### Areas for Contribution
-- **🔧 GOTO Heuristics**: Better algorithms for creating semantic pointers
-- **⚡ Optimization**: Hardware-specific acceleration (CUDA kernels, TPU support)
-- **📏 Benchmarking**: Long-context evaluation suites and metrics
-- **🎯 Applications**: Domain-specific fine-tuning and use cases
+We welcome contributions! OpenSentience aims to make geospatial intelligence accessible to developers worldwide.
 
 ### Development Setup
 ```bash
-# Development dependencies
+# Fork and clone the repository
+git clone https://github.com/yourusername/opensentience.git
+cd opensentience
+
+# Set up development environment
 mix deps.get
 mix test
+mix ecto.setup
 
-# Run benchmarks
-mix bench.context_scaling
-mix bench.memory_usage
-mix bench.goto_quality
+# Run the development server
+mix phx.server
+```
 
-# Start interactive development
-iex -S mix
+### Areas for Contribution
+- **🔧 DSL Enhancements**: New geospatial operations and optimizations
+- **📊 Analytics Features**: Advanced reporting and visualization
+- **🔌 Integrations**: Third-party service integrations
+- **📱 SDK Development**: Additional client libraries
+- **⚡ Performance**: Query optimization and scalability improvements
+
+### Testing
+```bash
+# Run the full test suite
+mix test
+
+# Run with coverage
+mix test --cover
+
+# Integration tests
+mix test.integration
 ```
 
 ---
 
-## 📝 Research & Citations
+## 📚 Documentation
 
-### Core Papers
-- **Spatial Quantization**: "GEO-GOTO: Spatial-Pointer Architecture for Large Language Models" (2024)
-- **Long Context Efficiency**: "Breaking the O(n²) Barrier: Linear Attention via Direct Pointers" (2024)
-- **Semantic Pointers**: "Learning Meaningful Attention Shortcuts in Transformer Models" (2024)
-
-### Comparison with Related Work
-| Approach | Complexity | Memory | Quality | Implementation |
-|----------|------------|--------|---------|----------------|
-| **Standard Attention** | O(n²) | High | Good | ✅ Mature |
-| **Linear Attention** | O(n) | Medium | Fair | ⚠️ Quality loss |
-| **Sparse Attention** | O(n√n) | Medium | Good | ⚠️ Complex |
-| **RoPE + FlashAttention** | O(n²) | Optimized | Good | ✅ Current SOTA |
-| **GEO-GOTO** | **O(n)** | **Low** | **Excellent** | 🚀 **Novel** |
+- **[API Reference](docs/api/)** - Complete API documentation
+- **[DSL Guide](docs/dsl/)** - Geospatial DSL reference
+- **[SDK Documentation](docs/sdks/)** - Client library guides
+- **[Deployment Guide](docs/deployment/)** - Production deployment instructions
+- **[Architecture](DESIGN-AND-ARCH.md)** - Detailed system architecture
 
 ---
 
-## ⚠️ Current Limitations
+## 🏢 Business Model
 
-### Known Issues
-- **GOTO Quality**: Pointer creation depends on semantic heuristics (improving)
-- **Training Stability**: Multi-objective loss requires careful tuning
-- **Elixir Ecosystem**: Limited large-scale ML tooling (but growing!)
-
-### Roadmap
-- **Q1 2025**: 3B parameter proof-of-concept
-- **Q2 2025**: 30B parameter distributed training  
-- **Q3 2025**: 70B parameter single-GPU implementation
-- **Q4 2025**: Ultra-long context specialization (10M+ tokens)
+OpenSentience operates on a sustainable business model combining:
+- **Tiered subscription pricing** for different user segments
+- **Enterprise solutions** with custom deployments
+- **Professional services** for implementation and consulting
+- **Open-source core** with premium features
 
 ---
 
@@ -311,28 +332,39 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🌟 Star History
+## 🌟 Roadmap
 
-```
-⭐ Star this repo to follow our progress toward making 
-   70B+ models accessible on consumer hardware!
-```
+### Current Focus (2024)
+- Core geospatial DSL implementation
+- Real-time streaming engine
+- Basic geofencing capabilities
+- Multi-language SDK development
 
-## 📞 Contact
-
-- **Research Team**: [research@geo-goto.ai](mailto:research@geo-goto.ai)
-- **Discord**: [GEO-GOTO Community](https://discord.gg/geo-goto)
-- **Twitter**: [@GeoGotoLLM](https://twitter.com/GeoGotoLLM)
+### Upcoming (2025)
+- Advanced analytics and reporting
+- AI-powered route optimization
+- IoT device integration
+- Global deployment expansion
 
 ---
 
-*"Making large language models spatial, efficient, and accessible to everyone."*
+## 📞 Contact & Community
+
+- **Website**: [opensentience.org](https://opensentience.org)
+- **Documentation**: [docs.opensentience.org](https://docs.opensentience.org)
+- **Discord**: [OpenSentience Community](https://discord.gg/opensentience)
+- **Twitter**: [@OpenSentience](https://twitter.com/opensentience)
+- **Email**: [contact@opensentience.org](mailto:contact@opensentience.org)
+
+---
+
+*"Making sophisticated geospatial intelligence accessible to every developer."*
 
 ## 🎯 Quick Links
 
-- [📖 Full Documentation](docs/)
-- [🚀 Getting Started Guide](docs/quickstart.md)
-- [🔬 Research Papers](docs/papers.md)
-- [💻 Examples Repository](examples/)
-- [📊 Benchmarks](benchmarks/)
+- [📖 Documentation](docs/)
+- [🚀 Getting Started Guide](docs/getting-started.md)
+- [🔧 API Reference](docs/api/)
+- [💻 SDKs](docs/sdks/)
+- [📊 Dashboard](https://dashboard.opensentience.org)
 - [🤝 Contributing Guide](CONTRIBUTING.md)

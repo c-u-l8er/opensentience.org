@@ -22,16 +22,16 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenSentience | GEO-GOTO: Revolutionary AI Architecture</title>
-    <meta name="description" content="OpenSentience introduces GEO-GOTO LLM: Spatial-pointer architecture enabling 70B+ models on single GPUs with 1000x speedup for long contexts">
-    
+    <title>OpenSentience | Democratizing Geospatial Intelligence</title>
+    <meta name="description" content="OpenSentience is a comprehensive geospatial intelligence platform that democratizes real-time location awareness for developers and businesses">
+
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: radial-gradient(ellipse at top, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
@@ -39,13 +39,13 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
+
         /* Floating particles background */
         .particles {
             position: fixed;
@@ -56,7 +56,7 @@
             pointer-events: none;
             z-index: 0;
         }
-        
+
         .particle {
             position: absolute;
             width: 2px;
@@ -65,14 +65,14 @@
             opacity: 0.3;
             animation: float 20s infinite linear;
         }
-        
+
         @keyframes float {
             0% { transform: translateY(100vh) translateX(0px); opacity: 0; }
             10% { opacity: 0.3; }
             90% { opacity: 0.3; }
             100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
         }
-        
+
         /* Header */
         header {
             position: relative;
@@ -81,13 +81,13 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
@@ -96,24 +96,24 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .nav-links {
             display: flex;
             list-style: none;
             gap: 30px;
         }
-        
+
         .nav-links a {
             color: white;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
-        
+
         .nav-links a:hover {
             color: #64ffda;
         }
-        
+
         .cta-button {
             background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             padding: 12px 24px;
@@ -125,12 +125,12 @@
             border: none;
             cursor: pointer;
         }
-        
+
         .cta-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
         }
-        
+
         /* Hero Section */
         .hero {
             position: relative;
@@ -138,7 +138,7 @@
             padding: 120px 0;
             text-align: center;
         }
-        
+
         .hero h1 {
             font-size: 4rem;
             font-weight: 900;
@@ -149,14 +149,14 @@
             background-clip: text;
             line-height: 1.2;
         }
-        
+
         .hero h2 {
             font-size: 1.5rem;
             color: #b3b3b3;
             margin-bottom: 30px;
             font-weight: 300;
         }
-        
+
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 40px;
@@ -165,7 +165,7 @@
             margin-right: auto;
             color: #d4d4d8;
         }
-        
+
         .hero-stats {
             display: flex;
             justify-content: center;
@@ -173,25 +173,25 @@
             margin: 60px 0;
             flex-wrap: wrap;
         }
-        
+
         .stat {
             text-align: center;
         }
-        
+
         .stat-number {
             font-size: 3rem;
             font-weight: 900;
             color: #64ffda;
             display: block;
         }
-        
+
         .stat-label {
             color: #b3b3b3;
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         /* Demo Section */
         .demo-section {
             position: relative;
@@ -200,46 +200,46 @@
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
         }
-        
+
         .demo-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
             align-items: center;
         }
-        
+
         .demo-content h3 {
             font-size: 2.5rem;
             margin-bottom: 20px;
             color: #64ffda;
         }
-        
+
         .demo-content p {
             font-size: 1.1rem;
             color: #d4d4d8;
             margin-bottom: 30px;
         }
-        
+
         .feature-list {
             list-style: none;
             margin-bottom: 30px;
         }
-        
+
         .feature-list li {
             padding: 10px 0;
             padding-left: 30px;
             position: relative;
             color: #e4e4e7;
         }
-        
+
         .feature-list li:before {
-            content: "→";
+            content: "📍";
             position: absolute;
             left: 0;
             color: #ff6b6b;
             font-weight: bold;
         }
-        
+
         .demo-visual {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -248,15 +248,15 @@
             text-align: center;
             backdrop-filter: blur(10px);
         }
-        
+
         .architecture-diagram {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin: 20px 0;
         }
-        
-        .state-box {
+
+        .service-box {
             padding: 15px 20px;
             border-radius: 10px;
             font-weight: 600;
@@ -264,30 +264,30 @@
             text-align: center;
             position: relative;
         }
-        
-        .state-grounded { background: linear-gradient(45deg, #ff6b6b, #ff8a80); }
-        .state-escaped { background: linear-gradient(45deg, #4ecdc4, #81e6d9); }
-        .state-orbiting { background: linear-gradient(45deg, #ffd93d, #ffeb3b); color: #333; }
-        .state-goto { background: linear-gradient(45deg, #a8e6cf, #7fcdcd); }
-        
+
+        .service-streams { background: linear-gradient(45deg, #ff6b6b, #ff8a80); }
+        .service-zones { background: linear-gradient(45deg, #4ecdc4, #81e6d9); }
+        .service-routes { background: linear-gradient(45deg, #ffd93d, #ffeb3b); color: #333; }
+        .service-analytics { background: linear-gradient(45deg, #a8e6cf, #7fcdcd); }
+
         .arrow {
             font-size: 2rem;
             color: #64ffda;
             animation: pulse 2s infinite;
         }
-        
+
         @keyframes pulse {
             0%, 100% { opacity: 0.5; }
             50% { opacity: 1; }
         }
-        
+
         /* Performance Section */
         .performance {
             padding: 100px 0;
             position: relative;
             z-index: 10;
         }
-        
+
         .performance h3 {
             text-align: center;
             font-size: 3rem;
@@ -297,13 +297,13 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .perf-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
         }
-        
+
         .perf-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -313,32 +313,32 @@
             backdrop-filter: blur(10px);
             transition: transform 0.3s ease, border-color 0.3s ease;
         }
-        
+
         .perf-card:hover {
             transform: translateY(-10px);
             border-color: #64ffda;
         }
-        
+
         .perf-icon {
             font-size: 3rem;
             margin-bottom: 20px;
             display: block;
         }
-        
+
         .perf-title {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 15px;
             color: #64ffda;
         }
-        
+
         .perf-metric {
             font-size: 2.5rem;
             font-weight: 900;
             color: #ff6b6b;
             margin-bottom: 10px;
         }
-        
+
         /* Use Cases */
         .use-cases {
             padding: 100px 0;
@@ -347,20 +347,20 @@
             position: relative;
             z-index: 10;
         }
-        
+
         .use-cases h3 {
             text-align: center;
             font-size: 3rem;
             margin-bottom: 60px;
             color: #64ffda;
         }
-        
+
         .use-case-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
         }
-        
+
         .use-case {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
@@ -368,29 +368,29 @@
             border-left: 4px solid #ff6b6b;
             transition: all 0.3s ease;
         }
-        
+
         .use-case:hover {
             transform: translateX(10px);
             background: rgba(255, 255, 255, 0.08);
         }
-        
+
         .use-case h4 {
             font-size: 1.3rem;
             margin-bottom: 15px;
             color: #64ffda;
         }
-        
+
         .use-case p {
             color: #d4d4d8;
             margin-bottom: 15px;
         }
-        
+
         .use-case-stat {
             font-size: 0.9rem;
             color: #ff6b6b;
             font-weight: 600;
         }
-        
+
         /* CTA Section */
         .cta-section {
             padding: 100px 0;
@@ -398,7 +398,7 @@
             position: relative;
             z-index: 10;
         }
-        
+
         .cta-section h3 {
             font-size: 3rem;
             margin-bottom: 30px;
@@ -407,7 +407,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .cta-section p {
             font-size: 1.2rem;
             margin-bottom: 40px;
@@ -416,20 +416,20 @@
             margin-left: auto;
             margin-right: auto;
         }
-        
+
         .cta-buttons {
             display: flex;
             gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
         }
-        
+
         .cta-primary {
             background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             padding: 15px 40px;
             font-size: 1.1rem;
         }
-        
+
         .cta-secondary {
             background: transparent;
             border: 2px solid #64ffda;
@@ -440,7 +440,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .cta-secondary:hover {
             background: #64ffda;
             color: #1a1a2e;
@@ -506,7 +506,7 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
         }
-        
+
         /* Footer */
         footer {
             background: rgba(0, 0, 0, 0.5);
@@ -514,20 +514,20 @@
             position: relative;
             z-index: 10;
         }
-        
+
         .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 40px;
             margin-bottom: 40px;
         }
-        
+
         .footer-section h4 {
             color: #64ffda;
             margin-bottom: 20px;
             font-size: 1.2rem;
         }
-        
+
         .footer-section a {
             color: #d4d4d8;
             text-decoration: none;
@@ -535,56 +535,56 @@
             margin-bottom: 10px;
             transition: color 0.3s ease;
         }
-        
+
         .footer-section a:hover {
             color: #64ffda;
         }
-        
+
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 30px;
             text-align: center;
             color: #b3b3b3;
         }
-        
+
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
             }
-            
+
             .hero-stats {
                 gap: 30px;
             }
-            
+
             .stat-number {
                 font-size: 2rem;
             }
-            
+
             .demo-grid {
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
-            
+
             .architecture-diagram {
                 flex-direction: column;
                 gap: 20px;
             }
-            
+
             .arrow {
                 transform: rotate(90deg);
             }
-            
+
             .nav-links {
                 display: none;
             }
-            
+
             .cta-buttons {
                 flex-direction: column;
                 align-items: center;
             }
         }
-        
+
         /* Powered by section */
         .powered-by {
             display: inline-block;
@@ -654,10 +654,10 @@
             <nav>
                 <div class="logo">OpenSentience</div>
                 <ul class="nav-links">
-                    <li><a href="#demo">Technology</a></li>
+                    <li><a href="#features">Features</a></li>
                     <li><a href="#performance">Performance</a></li>
                     <li><a href="#use-cases">Use Cases</a></li>
-                    <li><a href="#research">Research</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
                 </ul>
                 <a href="#get-started" class="cta-button">Get Started</a>
             </nav>
@@ -670,68 +670,69 @@
             <div class="powered-by">
                 Powered by <a href="https://traaviis.com" target="_blank">TRAAVIIS</a>
             </div>
-            <h1>GEO-GOTO</h1>
-            <h2>Revolutionary AI Architecture for the Next Era</h2>
-            <p>The first language model architecture to make 70B+ parameter models run efficiently on single GPUs through spatial reasoning and direct attention jumps. Experience 1000x speedup for long contexts while using 4x less memory.</p>
-            
+            <h1>OpenSentience</h1>
+            <h2>Democratizing Geospatial Intelligence</h2>
+            <p>Comprehensive geospatial intelligence platform that makes sophisticated location-based applications accessible to every developer. Real-time processing, intuitive DSL, and enterprise-grade security.</p>
+
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-number">1000x</span>
-                    <span class="stat-label">Speedup for Long Contexts</span>
+                    <span class="stat-number">1M+</span>
+                    <span class="stat-label">Location Updates/sec</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number">4x</span>
-                    <span class="stat-label">Memory Compression</span>
+                    <span class="stat-number">50ms</span>
+                    <span class="stat-label">Query Response</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number">10M+</span>
-                    <span class="stat-label">Token Context Window</span>
+                    <span class="stat-number">100K+</span>
+                    <span class="stat-label">Concurrent Clients</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number">1</span>
-                    <span class="stat-label">GPU for 70B Model</span>
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">Uptime SLA</span>
                 </div>
             </div>
-            
+
             <div class="cta-buttons">
-                <a href="#demo" class="cta-button cta-primary">See It In Action</a>
+                <a href="#get-started" class="cta-button cta-primary">Start Building</a>
                 <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-secondary">View on GitHub</a>
             </div>
         </div>
     </section>
 
-    <!-- Demo Section -->
-    <section id="demo" class="demo-section fade-in">
+    <!-- Features Section -->
+    <section id="features" class="demo-section fade-in">
         <div class="container">
             <div class="demo-grid">
                 <div class="demo-content">
-                    <h3>Four States, Infinite Possibilities</h3>
-                    <p>GEO-GOTO revolutionizes language models through spatial intelligence. Instead of expensive attention across all tokens, our architecture uses smart spatial states and direct pointer jumps.</p>
-                    
+                    <h3>Geospatial Intelligence Made Simple</h3>
+                    <p>OpenSentience combines advanced geospatial processing with an intuitive Domain Specific Language (DSL) to enable rapid development of location-aware applications without deep GIS knowledge.</p>
+
                     <ul class="feature-list">
-                        <li><strong>Grounded:</strong> Local, specific relationships (32-128 tokens)</li>
-                        <li><strong>Escaped:</strong> Global, abstract patterns (full sequence)</li>
-                        <li><strong>Orbiting:</strong> Contextual connections (128-1024 tokens)</li>
-                        <li><strong>Goto:</strong> Direct jumps to relevant positions</li>
+                        <li><strong>Geospatial DSL:</strong> Macro-based syntax compiling to efficient Tile38 commands</li>
+                        <li><strong>Real-Time Streaming:</strong> Sub-second location updates with Phoenix PubSub</li>
+                        <li><strong>Intelligent Geofencing:</strong> Time-based rules and dynamic zone creation</li>
+                        <li><strong>Route Optimization:</strong> Smart dispatching with real-time adaptation</li>
+                        <li><strong>Analytics Engine:</strong> Transform location data into actionable business intelligence</li>
                     </ul>
-                    
-                    <a href="#performance" class="cta-button">Explore Performance</a>
+
+                    <a href="#performance" class="cta-button">Explore Capabilities</a>
                 </div>
-                
+
                 <div class="demo-visual">
-                    <h4 style="margin-bottom: 30px; color: #64ffda;">Spatial-Pointer Architecture</h4>
+                    <h4 style="margin-bottom: 30px; color: #64ffda;">Core Services Architecture</h4>
                     <div class="architecture-diagram">
-                        <div class="state-box state-grounded">🏠 Grounded</div>
+                        <div class="service-box service-streams">📡 Streams</div>
                         <div class="arrow">→</div>
-                        <div class="state-box state-orbiting">🔄 Orbiting</div>
+                        <div class="service-box service-zones">🎯 Zones</div>
                         <div class="arrow">→</div>
-                        <div class="state-box state-escaped">🌍 Escaped</div>
+                        <div class="service-box service-routes">🚗 Routes</div>
                         <div class="arrow">→</div>
-                        <div class="state-box state-goto">➡️ Goto</div>
+                        <div class="service-box service-analytics">📊 Analytics</div>
                     </div>
                     <p style="margin-top: 20px; font-size: 0.9rem; color: #b3b3b3;">
-                        Traditional: O(n²) attention complexity<br>
-                        GEO-GOTO: O(n) linear complexity with smart shortcuts
+                        Real-time geospatial processing pipeline<br>
+                        Built on Elixir/Phoenix with Tile38 backend
                     </p>
                 </div>
             </div>
@@ -741,35 +742,35 @@
     <!-- Performance Section -->
     <section id="performance" class="performance fade-in">
         <div class="container">
-            <h3>Breakthrough Performance</h3>
-            
+            <h3>Enterprise-Grade Performance</h3>
+
             <div class="perf-grid">
                 <div class="perf-card">
                     <span class="perf-icon">⚡</span>
-                    <div class="perf-title">Context Speed</div>
-                    <div class="perf-metric">600x</div>
-                    <p>Faster processing for 1M+ token contexts compared to traditional transformers</p>
+                    <div class="perf-title">Real-Time Processing</div>
+                    <div class="perf-metric">50ms</div>
+                    <p>Sub-second response times for location queries and geofence events</p>
                 </div>
-                
+
                 <div class="perf-card">
-                    <span class="perf-icon">💾</span>
-                    <div class="perf-title">Memory Usage</div>
-                    <div class="perf-metric">77GB</div>
-                    <p>Total memory for 70B parameter training vs 610GB traditional (88% reduction)</p>
+                    <span class="perf-icon">📈</span>
+                    <div class="perf-title">Scale</div>
+                    <div class="perf-metric">1M+</div>
+                    <p>Location updates per second across horizontally scaled nodes</p>
                 </div>
-                
+
                 <div class="perf-card">
-                    <span class="perf-icon">🎯</span>
-                    <div class="perf-title">Accuracy</div>
-                    <div class="perf-metric">95%</div>
-                    <p>Maintains high accuracy even at extreme context lengths through direct pointers</p>
+                    <span class="perf-icon">🔒</span>
+                    <div class="perf-title">Security</div>
+                    <div class="perf-metric">Sandbox</div>
+                    <p>All DSL execution in sandboxed environments with strict resource limits</p>
                 </div>
-                
+
                 <div class="perf-card">
-                    <span class="perf-icon">🖥️</span>
-                    <div class="perf-title">Hardware</div>
-                    <div class="perf-metric">1 GPU</div>
-                    <p>Single A100 can handle what previously required 8+ GPUs</p>
+                    <span class="perf-icon">🌐</span>
+                    <div class="perf-title">APIs</div>
+                    <div class="perf-metric">REST</div>
+                    <p>REST, WebSockets, GraphQL, and Webhooks for complete integration</p>
                 </div>
             </div>
         </div>
@@ -778,43 +779,73 @@
     <!-- Use Cases Section -->
     <section id="use-cases" class="use-cases fade-in">
         <div class="container">
-            <h3>Revolutionary Applications</h3>
-            
+            <h3>Transforming Industries</h3>
+
             <div class="use-case-grid">
                 <div class="use-case">
-                    <h4>📚 Document Analysis</h4>
-                    <p>Process entire books, research papers, and legal documents with perfect cross-references and citations.</p>
-                    <div class="use-case-stat">→ Handle 1000+ page documents instantly</div>
+                    <h4>🚚 Fleet Management</h4>
+                    <p>Real-time vehicle tracking, route optimization, and driver behavior analytics for logistics companies.</p>
+                    <div class="use-case-stat">→ 40% reduction in operational costs</div>
                 </div>
-                
+
                 <div class="use-case">
-                    <h4>💻 Code Understanding</h4>
-                    <p>Analyze complete codebases with function dependencies, import relationships, and architectural patterns.</p>
-                    <div class="use-case-stat">→ Process 10M+ token repositories</div>
+                    <h4>📦 Delivery & Logistics</h4>
+                    <p>Dynamic route planning, delivery zone optimization, and real-time ETA calculations.</p>
+                    <div class="use-case-stat">→ 25% improvement in on-time delivery</div>
                 </div>
-                
+
                 <div class="use-case">
-                    <h4>🔬 Scientific Research</h4>
-                    <p>Simultaneous analysis of hundreds of research papers with concept linking and knowledge synthesis.</p>
-                    <div class="use-case-stat">→ Compare 100+ papers at once</div>
+                    <h4>🏙️ Smart Cities</h4>
+                    <p>Traffic monitoring, public transportation optimization, and environmental tracking.</p>
+                    <div class="use-case-stat">→ Real-time urban intelligence</div>
                 </div>
-                
+
                 <div class="use-case">
-                    <h4>⚖️ Legal Intelligence</h4>
-                    <p>Complete case file analysis with precedent tracking, cross-references, and temporal reasoning.</p>
-                    <div class="use-case-stat">→ Entire legal libraries accessible</div>
+                    <h4>🏥 Healthcare</h4>
+                    <p>Ambulance routing, medical supply tracking, and facility resource allocation.</p>
+                    <div class="use-case-stat">→ Critical response optimization</div>
                 </div>
-                
+
                 <div class="use-case">
-                    <h4>🏥 Medical Records</h4>
-                    <p>Comprehensive patient history analysis with temporal connections and diagnostic pattern recognition.</p>
-                    <div class="use-case-stat">→ Lifetime medical records in context</div>
+                    <h4>🛡️ Security & Safety</h4>
+                    <p>Perimeter monitoring, emergency response coordination, and asset protection.</p>
+                    <div class="use-case-stat">→ Enhanced situational awareness</div>
                 </div>
-                
+
                 <div class="use-case">
-                    <h4>💼 Business Intelligence</h4>
-                    <p>Multi-year financial analysis, trend identification, and strategic insight generation from vast datasets.</p>
-                    <div class="use-case-stat">→ Years of reports in single analysis</div>
+                    <h4>🏭 IoT & Industrial</h4>
+                    <p>Device tracking, predictive maintenance, and industrial asset monitoring.</p>
+                    <div class="use-case-stat">→ Digital transformation enablement</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="performance fade-in">
+        <div class="container">
+            <h3>Simple, Transparent Pricing</h3>
+
+            <div class="perf-grid">
+                <div class="perf-card">
+                    <span class="perf-icon">🆓</span>
+                    <div class="perf-title">Developer</div>
+                    <div class="perf-metric">Free</div>
+                    <p>10K API calls/month<br>2 concurrent DSL executions<br>Basic geofencing (10 zones)<br>Community support</p>
+                </div>
+
+                <div class="perf-card">
+                    <span class="perf-icon">💼</span>
+                    <div class="perf-title">Professional</div>
+                    <div class="perf-metric">$99</div>
+                    <p>1M API calls/month<br>10 concurrent DSL executions<br>Advanced geofencing<br>Email support<br>Basic analytics</p>
+                </div>
+
+                <div class="perf-card">
+                    <span class="perf-icon">🏢</span>
+                    <div class="perf-title">Enterprise</div>
+                    <div class="perf-metric">Custom</div>
+                    <p>Unlimited API calls<br>50 concurrent DSL executions<br>Custom integrations<br>Dedicated support<br>SLA guarantees</p>
                 </div>
             </div>
         </div>
@@ -823,9 +854,9 @@
     <!-- CTA Section -->
     <section id="get-started" class="cta-section fade-in">
         <div class="container">
-            <h3>Join the Revolution</h3>
-            <p>Be part of the community building the future of efficient, accessible AI. GEO-GOTO makes cutting-edge language models available to everyone, not just tech giants.</p>
-            
+            <h3>Join the Geospatial Revolution</h3>
+            <p>Start building location-aware applications with OpenSentience. From fleet management to smart cities, transform your business with real-time geospatial intelligence.</p>
+
             <div class="contact-form">
                 <form action="https://formspree.io/f/xldwvvde" method="POST">
                     <label>
@@ -834,9 +865,9 @@
                     </label>
                     <label>
                         Your message:
-                        <textarea name="message" placeholder="Tell us about your project or partnership idea..." rows="5" required></textarea>
+                        <textarea name="message" placeholder="Tell us about your project or geospatial use case..." rows="5" required></textarea>
                     </label>
-                    <button type="submit">Send Message</button>
+                    <button type="submit">Get Started</button>
                 </form>
             </div>
         </div>
@@ -847,40 +878,40 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>Technology</h4>
-                    <a href="#demo">Architecture Overview</a>
-                    <a href="#performance">Performance Benchmarks</a>
-                    <a href="https://github.com/opensentience/geo-goto">Open Source Code</a>
-                    <a href="/docs">Technical Documentation</a>
+                    <h4>Platform</h4>
+                    <a href="#features">Features</a>
+                    <a href="#performance">Performance</a>
+                    <a href="DESIGN-AND-ARCH.md">Architecture</a>
+                    <a href="/docs">Documentation</a>
                 </div>
-                
+
                 <div class="footer-section">
-                    <h4>Research</h4>
-                    <a href="/papers">Research Papers</a>
-                    <a href="/benchmarks">Benchmark Results</a>
-                    <a href="/blog">Development Blog</a>
-                    <a href="/collaborate">Academic Collaboration</a>
+                    <h4>Developers</h4>
+                    <a href="/docs/api">API Reference</a>
+                    <a href="/docs/dsl">Geospatial DSL</a>
+                    <a href="/docs/sdks">SDKs</a>
+                    <a href="https://github.com/c-u-l8er/opensentience.org">GitHub</a>
                 </div>
-                
+
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="/about">About</a>
+                    <a href="/blog">Blog</a>
+                    <a href="/careers">Careers</a>
+                    <a href="mailto:contact@opensentience.org">Contact</a>
+                </div>
+
                 <div class="footer-section">
                     <h4>Community</h4>
-                    <a href="https://discord.gg/opensentience">Discord Community</a>
-                    <a href="https://twitter.com/opensentience">Twitter Updates</a>
-                    <a href="/contribute">Contributing Guide</a>
-                    <a href="/events">Events & Workshops</a>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Organization</h4>
-                    <a href="/about">About OpenSentience</a>
-                    <a href="/team">Research Team</a>
-                    <a href="/mission">Our Mission</a>
-                    <a href="mailto:contact@opensentience.org">Contact Us</a>
+                    <a href="https://discord.gg/opensentience">Discord</a>
+                    <a href="https://twitter.com/opensentience">Twitter</a>
+                    <a href="/events">Events</a>
+                    <a href="/newsletter">Newsletter</a>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
-                <p id="copyright">&copy; <span id="current-year">2024</span> OpenSentience.org - Making advanced AI accessible to everyone</p>
+                <p id="copyright">&copy; <span id="current-year">2024</span> OpenSentience.org - Democratizing geospatial intelligence</p>
             </div>
         </div>
     </footer>
@@ -892,16 +923,16 @@
             elements.forEach(element => {
                 const elementTop = element.getBoundingClientRect().top;
                 const windowHeight = window.innerHeight;
-                
+
                 if (elementTop < windowHeight * 0.8) {
                     element.classList.add('visible');
                 }
             });
         }
-        
+
         window.addEventListener('scroll', revealOnScroll);
         revealOnScroll(); // Run on page load
-        
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -915,7 +946,7 @@
                 }
             });
         });
-        
+
         // Dynamic particle generation
         function createParticle() {
             const particle = document.createElement('div');
@@ -923,9 +954,9 @@
             particle.style.left = Math.random() * 100 + '%';
             particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
             particle.style.animationDelay = Math.random() * 5 + 's';
-            
+
             document.querySelector('.particles').appendChild(particle);
-            
+
             // Remove particle after animation
             setTimeout(() => {
                 if (particle.parentNode) {
@@ -933,7 +964,7 @@
                 }
             }, 25000);
         }
-        
+
         // Create particles periodically
         setInterval(createParticle, 3000);
 
