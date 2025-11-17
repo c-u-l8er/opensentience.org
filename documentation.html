@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - OPEN</title>
+    <meta name="description" content="Complete documentation for OPEN - Observability Protocol for Emergent Networks">
+    
+    <!-- Marked.js for markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-elixir.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #64ffda;
+            --primary-dark: #4ecdc4;
+            --accent: #ff6b6b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --dark: #0f0f23;
+            --gray: #b3b3b3;
+            --light: #1a1a2e;
+            --white: #ffffff;
+            --darker: #16213e;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--gray);
+            background: radial-gradient(ellipse at top, var(--darker) 0%, var(--dark) 50%, #0f0f23 100%);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(to right, rgba(100, 255, 218, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(100, 255, 218, 0.08) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            pointer-events: none;
+            animation: grid-fade 20s ease-in-out infinite;
+        }
+
+        @keyframes grid-fade {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* Floating particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #64ffda;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0px); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            background: rgba(15, 15, 35, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--accent), var(--primary));
+            padding: 12px 24px;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .nav-menu .btn-primary {
+            color: white;
+        }
+
+        .nav-menu .btn-primary:hover {
+            color: white;
+        }
+
+        .nav-menu .btn-primary::after {
+            display: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            background: linear-gradient(45deg, var(--primary), var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            border: 2px solid rgba(100, 255, 218, 0.2);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        /* Documentation Grid */
+        .docs-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .doc-list {
+            list-style: none;
+        }
+
+        .doc-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--gray);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .doc-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .doc-link.active {
+            background: rgba(100, 255, 218, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(100, 255, 218, 0.1);
+        }
+
+        /* Content Area */
+        .content {
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .content h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .content h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .content li {
+            margin-bottom: 0.5rem;
+            color: var(--gray);
+        }
+
+        .content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        .content pre {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .content pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .content blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: var(--gray);
+            font-style: italic;
+            background: rgba(100, 255, 218, 0.05);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .content th, .content td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .content th {
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Prism.js syntax highlighting overrides */
+        .content pre[class*="language-"] {
+            background: #2d2d2d;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow: auto;
+        }
+        
+        .content code[class*="language-"] {
+            background: none;
+            color: inherit;
+            padding: 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        /* Better table styling */
+        .content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .content th, .content td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .content th {
+            background: rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .content tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .content tr:hover {
+            background: rgba(100, 255, 218, 0.05);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 60px 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-content h3 {
+            font-size: 1.75rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .footer-content p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .docs-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        /* Loading state */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: var(--gray);
+        }
+
+        /* Error state */
+        .error {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles Background -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 1.5s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 3.5s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div>
+    </div>
+    <div class="bg-grid"></div>
+
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">OS</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="index.html#architecture">Architecture</a></li>
+                <li><a href="index.html#use-cases">Use Cases</a></li>
+                <li><a href="index.html#docs">Getting Started</a></li>
+                <li><a href="documentation.html" class="active">Docs</a></li>
+                <li><a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="btn btn-primary"><span>View on GitHub</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Documentation</h1>
+                <p>Complete guides and references for OPEN - Observability Protocol for Emergent Networks</p>
+                
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search documentation...">
+                    <div class="search-icon">🔍</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Content -->
+    <section class="container">
+        <div class="docs-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h3>Documentation</h3>
+                <ul class="doc-list" id="docList">
+                    <!-- Documents will be loaded here -->
+                </ul>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content" id="contentArea">
+                <div class="loading">Loading documentation...</div>
+            </main>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h3>OPEN</h3>
+                <p>Observability Protocol for Emergent Networks. Type-safe distributed workflow orchestration built on Elixir's BEAM VM.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>© <span id="current-year"></span> OPEN - Observability Protocol for Emergent Networks.</p>
+            </div>
+        </div>
+    </footer>
+    <div style="background: #000; padding: 2em 0 1em;">
+        <div style="margin: 0 auto; width: 728px;">
+            <iframe
+                src="https://ampersandboxdesign.com/advertisements/leaderboard-watermark.html"
+                width="728"
+                height="90"
+                frameborder="0"
+                scrolling="no"
+                style="border:none; overflow:hidden;"
+                title="AmperSandboxDesign Branding Design Agency Advertisement"
+            >
+            </iframe>
+            <div style="text-align: right; color: #ccc; font-size: 0.75em;">
+                ^ADVERTISEMENT
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set dynamic copyright year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // Documentation data - will be populated dynamically
+        let docs = [];
+        
+        let currentDoc = null;
+        let allDocsContent = {};
+        
+        // Initialize documentation
+        async function initDocs() {
+            try {
+                console.log('Initializing documentation...');
+                
+                // Initialize marked.js
+                if (!initializeMarked()) {
+                    console.warn('Marked.js initialization failed, continuing with basic functionality');
+                }
+                
+                // Discover documents dynamically
+                await discoverDocs();
+                await loadAllDocs();
+                console.log('Documents loaded:', Object.keys(allDocsContent));
+                renderDocList();
+                
+                // Load first document by default or check URL hash
+                const hash = window.location.hash.substring(1);
+                if (hash && docs.includes(hash)) {
+                    loadDocument(hash);
+                } else if (docs.length > 0) {
+                    loadDocument(docs[0]);
+                }
+            } catch (error) {
+                console.error('Error initializing documentation:', error);
+                showError(`Failed to initialize documentation: ${error.message}`);
+            }
+        }
+        
+        // Discover markdown files in the docs folder
+        async function discoverDocs() {
+            try {
+                console.log('Discovering documents in docs folder...');
+                
+                // Try to fetch the dynamic index first
+                try {
+                    const response = await fetch('docs/index.json');
+                    if (response.ok) {
+                        const index = await response.json();
+                        docs = index.documents.sort();
+                        console.log('Loaded documents from index.json:', docs);
+                        console.log('Index generated at:', index.generated);
+                        return;
+                    }
+                } catch (indexError) {
+                    console.log('Could not load index.json, falling back to discovery:', indexError.message);
+                }
+                
+                // Fallback: Try to discover documents by testing common patterns
+                console.log('Using fallback discovery method...');
+                const commonPatterns = [
+                    'phase1.md',
+                    'phase2.md',
+                    'phase3.md',
+                    'phase4.md',
+                    'phase5-7.md'
+                ];
+                
+                // Test each document to see if it exists
+                const existingDocs = [];
+                for (const doc of commonPatterns) {
+                    try {
+                        const response = await fetch(`docs/${doc}`, { method: 'HEAD' });
+                        if (response.ok) {
+                            existingDocs.push(doc);
+                            console.log(`Found document: ${doc}`);
+                        }
+                    } catch (error) {
+                        console.log(`Document not found: ${doc}`);
+                    }
+                }
+                
+                // Sort documents alphabetically
+                docs = existingDocs.sort();
+                console.log('Discovered documents via fallback:', docs);
+                
+                if (docs.length === 0) {
+                    throw new Error('No documents found in the docs folder');
+                }
+            } catch (error) {
+                console.error('Error discovering documents:', error);
+                // Final fallback to a basic list if all else fails
+                docs = [
+                    'phase1.md',
+                    'phase2.md',
+                    'phase3.md',
+                    'phase4.md',
+                    'phase5-7.md'
+                ];
+                console.log('Using final fallback document list:', docs);
+            }
+        }
+        
+        // Load all documents
+        async function loadAllDocs() {
+            console.log(`Starting to load ${docs.length} documents...`);
+            let loadedCount = 0;
+            let failedCount = 0;
+            
+            for (const doc of docs) {
+                try {
+                    console.log(`Loading document: ${doc}`);
+                    const response = await fetch(`docs/${doc}`);
+                    if (response.ok) {
+                        const content = await response.text();
+                        allDocsContent[doc] = content;
+                        loadedCount++;
+                        console.log(`Successfully loaded ${doc} (${content.length} characters)`);
+                    } else {
+                        failedCount++;
+                        console.error(`Failed to load ${doc}: ${response.status} ${response.statusText}`);
+                    }
+                } catch (error) {
+                    failedCount++;
+                    console.error(`Error loading ${doc}:`, error);
+                }
+            }
+            
+            console.log(`Document loading complete. Success: ${loadedCount}, Failed: ${failedCount}`);
+            
+            if (loadedCount === 0) {
+                throw new Error('No documents could be loaded');
+            }
+        }
+        
+        // Render document list in sidebar
+        function renderDocList() {
+            const docList = document.getElementById('docList');
+            docList.innerHTML = '';
+            
+            docs.forEach(doc => {
+                const li = document.createElement('li');
+                li.className = 'doc-item';
+                
+                const a = document.createElement('a');
+                a.href = `#${doc}`;
+                a.className = 'doc-link';
+                a.textContent = formatDocTitle(doc);
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadDocument(doc);
+                    window.location.hash = doc;
+                });
+                
+                // Add "NEW" badge for recently discovered documents
+                if (doc === 'phase5-7.md') {
+                    const badge = document.createElement('span');
+                    badge.style.cssText = `
+                        background: #22c55e;
+                        color: white;
+                        font-size: 0.7rem;
+                        padding: 2px 6px;
+                        border-radius: 4px;
+                        margin-left: 8px;
+                        font-weight: 600;
+                    `;
+                    badge.textContent = 'NEW';
+                    a.appendChild(badge);
+                }
+                
+                li.appendChild(a);
+                docList.appendChild(li);
+            });
+        }
+        
+        // Format document title
+        function formatDocTitle(filename) {
+            return filename
+                .replace('.md', '')
+                .replace(/-/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+        }
+        
+        // Load and display document
+        async function loadDocument(docName) {
+            try {
+                console.log(`Loading document: ${docName}`);
+                
+                if (!allDocsContent[docName]) {
+                    showError(`Document ${docName} not found or could not be loaded.`);
+                    return;
+                }
+                
+                currentDoc = docName;
+                
+                // Update active state in sidebar
+                document.querySelectorAll('.doc-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${docName}`) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Check if marked is available
+                if (typeof marked === 'undefined') {
+                    showError('Markdown parser (marked.js) not loaded.');
+                    return;
+                }
+                
+                // Convert markdown to HTML and display
+                const content = markdownToHtml(allDocsContent[docName]);
+                document.getElementById('contentArea').innerHTML = content;
+                
+                // Re-run Prism.js highlighting for the newly added content
+                if (typeof Prism !== 'undefined') {
+                    Prism.highlightAll();
+                } else {
+                    console.warn('Prism.js not loaded, syntax highlighting disabled.');
+                }
+            } catch (error) {
+                console.error(`Error loading document ${docName}:`, error);
+                showError(`Failed to load document: ${error.message}`);
+            }
+        }
+        
+        // Initialize marked.js when available
+        function initializeMarked() {
+            if (typeof marked === 'undefined') {
+                console.error('Marked.js not loaded');
+                return false;
+            }
+            
+            try {
+                // Configure marked options with simpler approach
+                marked.setOptions({
+                    highlight: function(code, lang) {
+                        // Ensure code is a string
+                        const codeStr = typeof code === 'string' ? code : String(code || '');
+                        const language = lang || 'plaintext';
+                        
+                        if (Prism.languages[language]) {
+                            try {
+                                console.log('Highlighting code for language:', language);
+                                console.log('Code type:', typeof codeStr);
+                                console.log('Prism.languages[language] type:', typeof Prism.languages[language]);
+                                
+                                const highlighted = Prism.highlight(codeStr, Prism.languages[language], language);
+                                console.log('Highlighted type:', typeof highlighted);
+                                console.log('Highlighted value:', highlighted);
+                                
+                                // Ensure highlighted is a string
+                                const result = typeof highlighted === 'string' ? highlighted : String(highlighted || codeStr);
+                                console.log('Result type:', typeof result);
+                                return result;
+                            } catch (error) {
+                                console.error('Error highlighting code:', error);
+                                return escapeHtml(codeStr);
+                            }
+                        }
+                        return escapeHtml(codeStr);
+                    },
+                    langPrefix: 'language-',
+                    breaks: true,
+                    gfm: true
+                });
+                
+                console.log('Marked.js initialized successfully');
+                return true;
+            } catch (error) {
+                console.error('Error initializing marked.js:', error);
+                return false;
+            }
+        }
+        
+        // Convert markdown to HTML using Marked.js
+        function markdownToHtml(markdown) {
+            try {
+                if (typeof marked === 'undefined') {
+                    console.error('Marked.js not available, falling back to basic conversion');
+                    return `<pre>${escapeHtml(String(markdown || ''))}</pre>`;
+                }
+                
+                // Ensure markdown is a string
+                const markdownStr = typeof markdown === 'string' ? markdown : String(markdown || '');
+                
+                return marked.parse(markdownStr);
+            } catch (error) {
+                console.error('Error parsing markdown:', error);
+                const markdownStr = typeof markdown === 'string' ? markdown : String(markdown || '');
+                return `<div class="error">Error parsing markdown: ${error.message}</div><pre>${escapeHtml(markdownStr)}</pre>`;
+            }
+        }
+        
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Show error message
+        function showError(message) {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="error">
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (!searchTerm) {
+                renderDocList();
+                return;
+            }
+            
+            const docList = document.getElementById('docList');
+            docList.innerHTML = '';
+            
+            docs.forEach(doc => {
+                const title = formatDocTitle(doc).toLowerCase();
+                const content = allDocsContent[doc] ? allDocsContent[doc].toLowerCase() : '';
+                
+                if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                    const li = document.createElement('li');
+                    li.className = 'doc-item';
+                    
+                    const a = document.createElement('a');
+                    a.href = `#${doc}`;
+                    a.className = 'doc-link';
+                    a.textContent = formatDocTitle(doc);
+                    a.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        loadDocument(doc);
+                        window.location.hash = doc;
+                    });
+                    
+                    li.appendChild(a);
+                    docList.appendChild(li);
+                }
+            });
+            
+            if (docList.innerHTML === '') {
+                docList.innerHTML = '<li class="doc-item"><div class="doc-link">No documents found</div></li>';
+            }
+        });
+        
+        // Handle hash change
+        window.addEventListener('hashchange', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash && docs.includes(hash)) {
+                loadDocument(hash);
+            }
+        });
+        
+        // Handle trial and demo button clicks
+        function handleDevelopmentPrompt(event) {
+            event.preventDefault();
+            const message = "OPEN is still in development! 🚧\n\nTrack our progress on GitHub:\ngithub.com/opensentience/open\n\nWe're working hard to bring you production-ready distributed workflow orchestration!";
+            alert(message);
+            // Optional: Open GitHub in a new tab after user clicks OK
+            window.open('https://github.com/opensentience/open', '_blank');
+        }
+        
+        // Add click handlers to all trial and demo buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            
+            // Check if external libraries are loaded
+            console.log('Marked.js available:', typeof marked !== 'undefined');
+            console.log('Prism.js available:', typeof Prism !== 'undefined');
+            
+            // Navigation "Get Started" button
+            const navGetStarted = document.querySelector('.nav-menu .btn-primary');
+            if (navGetStarted) {
+                navGetStarted.addEventListener('click', handleDevelopmentPrompt);
+            }
+            
+            // Wait a bit for external libraries to load
+            setTimeout(() => {
+                console.log('Initializing documentation after timeout...');
+                console.log('Marked.js available after timeout:', typeof marked !== 'undefined');
+                console.log('Prism.js available after timeout:', typeof Prism !== 'undefined');
+                initDocs();
+            }, 500);
+        });
+        
+        // Also initialize on window load as a fallback
+        window.addEventListener('load', function() {
+            console.log('Window loaded');
+            if (Object.keys(allDocsContent).length === 0) {
+                console.log('Fallback initialization');
+                initDocs();
+            }
+        });
+        
+        // Function to refresh document list (for dynamic updates)
+        async function refreshDocumentList() {
+            console.log('Refreshing document list...');
+            const previousDocs = [...docs];
+            const previousContent = {...allDocsContent};
+            
+            try {
+                // Reset and rediscover documents
+                docs = [];
+                allDocsContent = {};
+                await discoverDocs();
+                await loadAllDocs();
+                renderDocList();
+                
+                console.log('Document list refreshed successfully');
+                console.log('Previous documents:', previousDocs.length);
+                console.log('Current documents:', docs.length);
+                
+                // Show notification if new documents were found
+                const newDocs = docs.filter(doc => !previousDocs.includes(doc));
+                if (newDocs.length > 0) {
+                    console.log('New documents found:', newDocs);
+                    showNotification(`Found ${newDocs.length} new document(s): ${newDocs.map(d => formatDocTitle(d)).join(', ')}`);
+                }
+                
+                // Reload current document if it still exists
+                if (currentDoc && docs.includes(currentDoc)) {
+                    loadDocument(currentDoc);
+                } else if (docs.length > 0) {
+                    loadDocument(docs[0]);
+                }
+            } catch (error) {
+                console.error('Error refreshing document list:', error);
+                // Restore previous state on error
+                docs = previousDocs;
+                allDocsContent = previousContent;
+                showNotification('Failed to refresh document list', 'error');
+            }
+        }
+        
+        // Show notification message
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? 'rgba(220, 38, 38, 0.9)' : 'rgba(34, 197, 94, 0.9)'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+                max-width: 400px;
+                animation: slideIn 0.3s ease-out;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Add keyboard shortcut to refresh documents (Ctrl+R or Cmd+R)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+                e.preventDefault();
+                refreshDocumentList();
+            }
+        });
+        
+        // Periodic check for new documents (every 30 seconds)
+        setInterval(() => {
+            refreshDocumentList();
+        }, 30000);
+    </script>
+</body>
+</html>

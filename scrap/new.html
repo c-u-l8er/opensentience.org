@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OPEN - Observability Protocol for Emergent Networks. A revolutionary distributed workflow orchestration platform built on Elixir's BEAM VM.">
+    <meta name="keywords" content="workflow orchestration, distributed systems, Elixir, BEAM, DAG, observability">
+    <title>OPEN - Observability Protocol for Emergent Networks</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #50E3C2;
+            --dark-bg: #0A0E27;
+            --darker-bg: #060918;
+            --card-bg: #1A1F3A;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B8C5D6;
+            --accent-purple: #9B51E0;
+            --accent-orange: #F2994A;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--darker-bg);
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+        }
+
+        .background-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero .subtitle {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .hero .tagline {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Features Section */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 4rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 40px rgba(74, 144, 226, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(80, 227, 194, 0.1));
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Architecture Section */
+        .architecture {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 12px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            margin: 4rem 0;
+        }
+
+        .architecture h3 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .arch-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .arch-layer {
+            background: rgba(74, 144, 226, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .arch-layer h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .arch-layer p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .use-case {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(80, 227, 194, 0.1));
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .use-case h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker-bg);
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(74, 144, 226, 0.2);
+            text-align: center;
+        }
+
+        footer .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        footer .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        footer .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        footer .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.3rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Scroll Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <nav>
+        <div class="container">
+            <div class="logo">OPEN</div>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#use-cases">Use Cases</a></li>
+                <li><a href="#docs">Docs</a></li>
+                <li><a href="https://github.com/opensentience/open" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>OPEN</h1>
+            <p class="subtitle">Observability Protocol for Emergent Networks</p>
+            <p class="tagline">
+                Type-safe distributed workflow orchestration built on Elixir's BEAM VM.<br>
+                Unmatched fault tolerance. Extreme concurrency. Compile-time safety.<br>
+                <strong>Not another low-code tool—a developer's workflow engine.</strong>
+            </p>
+            <div class="cta-buttons">
+                <a href="#docs" class="btn btn-primary">Get Started</a>
+                <a href="https://github.com/opensentience/open" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>2M+</h3>
+                <p>Concurrent Tasks</p>
+            </div>
+            <div class="stat-item">
+                <h3>&lt;150ms</h3>
+                <p>Fault Recovery</p>
+            </div>
+            <div class="stat-item">
+                <h3>0.05ms</h3>
+                <p>Task Overhead</p>
+            </div>
+            <div class="stat-item">
+                <h3>100%</h3>
+                <p>Type-Safe (with ADTs)</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="section">
+        <h2 class="section-title">Core Capabilities</h2>
+        <p class="section-subtitle">Built for distributed systems that never fail</p>
+
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">⚡</div>
+                <h3>Extreme Performance</h3>
+                <p>Execute 2 million concurrent tasks with sub-millisecond overhead. BEAM's lightweight processes deliver unmatched parallelism.</p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🛡️</div>
+                <h3>Fault Tolerance</h3>
+                <p>OTP supervision trees detect failures in under 150ms and automatically restart. Telecom-grade reliability built-in.</p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🔒</div>
+                <h3>Compile-Time Safety</h3>
+                <p>Macro-based DAG validation catches errors before runtime. The only workflow orchestrator with compile-time guarantees.</p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🌐</div>
+                <h3>Distributed by Design</h3>
+                <p>Built-in Erlang distribution protocol. Coordinate across thousands of nodes with transparent remote execution.</p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">📊</div>
+                <h3>Real-Time Observability</h3>
+                <p>Phoenix LiveView dashboards provide live execution monitoring with WebSocket updates under 100ms latency.</p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🔄</div>
+                <h3>Hybrid Architecture</h3>
+                <p>Elixir orchestrates, native workers compute. Seamlessly integrate with Rust, C++, Python for maximum performance.</p>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🎯</div>
+                <h3>Optional Type Safety</h3>
+                <p>Integrate with Stellarmorphism ADTs for compile-time type checking and exhaustive pattern matching. Pure Elixir or enhanced—your choice.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="section">
+        <h2 class="section-title">Architecture</h2>
+        <p class="section-subtitle">Layered design for maximum flexibility</p>
+
+        <div class="architecture fade-in">
+            <h3>System Design</h3>
+            <div class="arch-diagram">
+                <div class="arch-layer">
+                    <h4>🎨 Ash Framework Layer (Platform)</h4>
+                    <p>DAG storage, user management, GraphQL APIs, authorization, execution history, Phoenix LiveView dashboards</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>🎯 Optional Type Layer (Stellarmorphism ADTs)</h4>
+                    <p>Algebraic data types for type-safe workflows, compile-time validation, exhaustive pattern matching—opt-in enhancement</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>🧠 OPEN Orchestration Layer (Coordination)</h4>
+                    <p>Macro-based DAG definition, topological sorting, dependency resolution, distributed task scheduling, OTP supervision</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>⚙️ Execution Runtime (Performance)</h4>
+                    <p>Pure Elixir hot path (&lt;0.1ms overhead), parallel execution engine, fault detection & recovery, BEAM process pool</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>🔧 Worker Layer (Computation)</h4>
+                    <p>Rust/C++ NIFs for numerical computing, Python via Ports for ML/data science, Julia for scientific computing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="use-cases" class="section">
+        <h2 class="section-title">Use Cases</h2>
+        <p class="section-subtitle">Powering the next generation of distributed systems</p>
+
+        <div class="use-cases fade-in">
+            <div class="use-case">
+                <h4>🔬 Scientific Computing</h4>
+                <p>Coordinate complex computational workflows across HPC clusters with automatic parallelization. Not for simple automation—built for research.</p>
+            </div>
+            <div class="use-case">
+                <h4>📡 IoT & Edge Processing</h4>
+                <p>Process millions of sensor events in real-time with fault-tolerant distributed pipelines. BEAM's concurrency shines here.</p>
+            </div>
+            <div class="use-case">
+                <h4>🤖 ML Pipeline Orchestration</h4>
+                <p>Build and deploy machine learning workflows with parallel feature extraction and training. Code-first, not low-code.</p>
+            </div>
+            <div class="use-case">
+                <h4>💰 Financial Systems</h4>
+                <p>Execute trading algorithms and risk calculations with microsecond precision and zero downtime. Production-grade reliability.</p>
+            </div>
+            <div class="use-case">
+                <h4>🏗️ Data Engineering</h4>
+                <p>Build ETL pipelines that scale to petabytes with automatic failure recovery. Complement Broadway/Flow, don't replace them.</p>
+            </div>
+            <div class="use-case">
+                <h4>🔗 Microservices Orchestration</h4>
+                <p>Coordinate distributed transactions and sagas across service meshes. Works alongside Oban for reliable job execution.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="docs">
+        <h2 class="section-title">Getting Started</h2>
+        <p class="section-subtitle">From zero to production in minutes</p>
+
+        <div class="architecture fade-in">
+            <h3>Quick Start</h3>
+            <div class="arch-diagram">
+                <div class="arch-layer">
+                    <h4>1. Install</h4>
+                    <p><code>mix new my_platform && cd my_platform</code><br>
+                    Add <code>{:open, "~> 0.1.0"}</code> to deps</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>2. Define Your DAG</h4>
+                    <p>Use compile-time macros to define workflows with automatic dependency resolution and type safety</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>3. Execute</h4>
+                    <p>Run with automatic parallelization, fault tolerance, and real-time monitoring out of the box</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>4. Scale</h4>
+                    <p>Deploy across clusters with built-in distribution. No configuration changes needed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="architecture fade-in" style="text-align: center;">
+            <h2 style="margin-bottom: 2rem;">Ready to Build?</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.2rem;">
+                Join the future of distributed workflow orchestration
+            </p>
+            <div class="cta-buttons">
+                <a href="https://github.com/opensentience/open" class="btn btn-primary">View Documentation</a>
+                <a href="https://github.com/opensentience/open" class="btn btn-secondary">Star on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://github.com/opensentience/open" target="_blank" title="GitHub">
+                    <span>⭐</span>
+                </a>
+                <a href="https://twitter.com/opensentience" target="_blank" title="Twitter">
+                    <span>🐦</span>
+                </a>
+                <a href="https://discord.gg/opensentience" target="_blank" title="Discord">
+                    <span>💬</span>
+                </a>
+            </div>
+            <p style="color: var(--text-secondary);">
+                © 2025 OPEN - Observability Protocol for Emergent Networks<br>
+                <a href="https://opensentience.org" style="color: var(--primary-color);">opensentience.org</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Update active nav link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.color = '';
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.style.color = 'var(--primary-color)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

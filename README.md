@@ -1,370 +1,393 @@
-# OpenSentience Platform 🌍📍
+# DAG Computational Model for Supercomputing in Elixir
 
-> **Democratizing Geospatial Intelligence**  
-> Real-time location awareness platform for developers and businesses
+A powerful, macro-based DSL for defining and executing Directed Acyclic Graph (DAG) computations in Elixir. Built for high-performance scientific computing, data processing, and machine learning pipelines with automatic parallelization and optimization.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Elixir](https://img.shields.io/badge/Elixir-1.14+-purple.svg)](https://elixir-lang.org/)
-[![Phoenix](https://img.shields.io/badge/Phoenix-1.7+-red.svg)](https://www.phoenixframework.org/)
-[![Tile38](https://img.shields.io/badge/Tile38-1.30+-blue.svg)](https://tile38.com/)
+## Features
 
----
+- 🚀 **Compile-time DAG Definition** - Define computational graphs using clean, declarative macros
+- ⚡ **Automatic Parallelization** - Independent nodes execute in parallel automatically
+- 🔄 **Dependency Resolution** - Topological sorting ensures correct execution order
+- 🛡️ **Cycle Detection** - Compile-time validation prevents cyclic dependencies
+- 📊 **Multiple Execution Strategies** - Sequential, parallel, and distributed execution
+- 🎯 **Zero-cost Abstractions** - Macro-based implementation with minimal runtime overhead
+- 📈 **Visualization** - Generate GraphViz diagrams of your computation graphs
+- 🧮 **Optimized for Scientific Computing** - Designed for matrix operations, simulations, and data pipelines
 
-## 🚀 What is OpenSentience?
+## Installation
 
-OpenSentience is a comprehensive geospatial intelligence platform that makes sophisticated location-based applications accessible to every developer. Built on a foundation of secure, scalable infrastructure, it combines advanced geospatial processing with an intuitive Domain Specific Language (DSL) to enable rapid development of location-aware applications.
-
-The platform serves as both a powerful backend service and a developer-friendly API ecosystem, supporting applications ranging from fleet management and delivery optimization to smart city infrastructure and IoT device coordination.
-
-## 🧠 Core Innovation
-
-### Geospatial DSL Foundation
-A macro-based syntax that compiles to efficient Tile38 commands, providing an intuitive way for developers to express complex geospatial operations without deep GIS knowledge.
+Add `dag_compute` to your `mix.exs`:
 
 ```elixir
-# Find all delivery vehicles within 5km of downtown that haven't moved in 10 minutes
-query = GeoDSL.near("vehicles", downtown_point, 5000)
-  |> GeoDSL.where_not_moved(10, :minutes)
-  |> GeoDSL.execute()
+def deps do
+  [
+    {:dag_compute, "~> 0.1.0"}
+  ]
+end
 ```
 
-### Real-Time Streaming Engine
-Enables real-time geospatial event processing and distribution to thousands of concurrent clients using Phoenix PubSub and GenStage pipelines.
+## Quick Start
 
-### Intelligent Geofencing System
-Advanced geofence management with time-based rules, complex triggers, and dynamic zone creation.
-
-### Route Optimization Engine
-Smart dispatching and real-time route adaptation for fleet operations.
-
----
-
-## ⚡ Key Features
-
-- **🔒 Security First**: Sandboxed DSL execution with strict resource limits
-- **⚡ Real-Time Processing**: Sub-second response times for location queries
-- **📈 Horizontal Scalability**: Architecture designed for millions of concurrent updates
-- **🛠️ Developer Experience**: Intuitive DSL that abstracts complex geospatial operations
-- **🌐 Open Standards**: Built on proven technologies (Tile38, Elixir/Phoenix)
-- **🔧 Multi-Language SDKs**: JavaScript, Python, Go, Java support
-- **📊 Analytics Engine**: Transform raw geospatial data into actionable business intelligence
-
----
-
-## 🏗️ Architecture Overview
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        OpenSentience Platform                       │
-├─────────────────────────────────────────────────────────────────────┤
-│                           API Gateway                               │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │ REST APIs   │  │ WebSockets  │  │ GraphQL     │  │ Webhooks    │ │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
-├─────────────────────────────────────────────────────────────────────┤
-│                      Security & Auth Layer                          │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │Rate Limiting│  │DSL Validator│  │ Permissions │  │ Sandboxing  │ │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
-├─────────────────────────────────────────────────────────────────────┤
-│                       Core Services Layer                           │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │   Streams   │  │    Zones    │  │   Routes    │  │  Analytics  │ │
-│  │(Real-time)  │  │(Geofencing) │  │(Optimization│  │(Insights)   │ │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
-├─────────────────────────────────────────────────────────────────────┤
-│                       Data Processing Layer                         │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │    Tile38   │  │   Phoenix   │  │   Broadway  │  │   GenStage  │ │
-│  │(Geospatial) │  │  (PubSub)   │  │(Processing) │  │(Pipelines)  │ │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
-├─────────────────────────────────────────────────────────────────────┤
-│                        Storage Layer                                │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │ PostgreSQL  │  │    Redis    │  │ TimescaleDB │  │   MinIO     │ │
-│  │(Metadata)   │  │  (Cache)    │  │(Time Series)│  │(Files/Logs) │ │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🛠️ Quick Start
-
-### Prerequisites
-- Elixir 1.14+
-- PostgreSQL 13+
-- Redis 6+
-- Tile38 1.30+
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/opensentience.git
-cd opensentience
-
-# Install dependencies
-mix deps.get
-
-# Set up the database
-mix ecto.setup
-
-# Configure Tile38 connection in config/config.exs
-config :opensentience, :tile38,
-  host: "localhost",
-  port: 9851
-
-# Start the Phoenix server
-mix phx.server
-```
-
-### Basic Usage
+### Basic Example
 
 ```elixir
-# Initialize OpenSentience client
-client = OpenSentience.Client.new(api_key: "your-api-key")
+defmodule MyPipeline do
+  use DagCompute
+  
+  dag :process_data do
+    node :load, [] do
+      # Load data - no dependencies
+      {:ok, load_dataset()}
+    end
+    
+    node :clean, [:load] do
+      # Clean depends on load
+      data = get(:load)
+      clean_data(data)
+    end
+    
+    node :analyze, [:clean] do
+      # Analyze depends on clean
+      data = get(:clean)
+      run_analysis(data)
+    end
+  end
+end
 
-# Create a geofence
-zone = %{
-  name: "downtown_delivery",
-  geometry: %Geo.Polygon{...},
-  properties: %{type: "delivery_zone"}
-}
-
-{:ok, zone_id} = OpenSentience.Zones.create(client, zone)
-
-# Track a vehicle
-vehicle = %{
-  id: "truck_001",
-  position: %Geo.Point{coordinates: {-122.4194, 37.7749}},
-  properties: %{driver: "john_doe", capacity: 100}
-}
-
-{:ok, vehicle_id} = OpenSentience.Streams.update_location(client, vehicle)
-
-# Query vehicles in zone
-query = GeoDSL.within("vehicles", zone_id)
-results = OpenSentience.Query.execute(client, query)
+# Execute the DAG
+result = MyPipeline.execute_process_data()
 ```
 
-### JavaScript SDK
+### Parallel Execution (Diamond Pattern)
 
-```javascript
-import { OpenSentience } from '@opensentience/sdk';
-
-const client = new OpenSentience({
-  apiKey: 'your-api-key',
-  endpoint: 'https://api.opensentience.org'
-});
-
-// Real-time location tracking
-const subscription = client.streams.subscribe('vehicles', (update) => {
-  console.log('Vehicle moved:', update);
-});
-
-// Geofencing
-const zone = await client.zones.create({
-  name: 'warehouse',
-  geometry: {
-    type: 'Polygon',
-    coordinates: [[[...]]]
-  }
-});
+```elixir
+dag :parallel_features do
+  node :data, [] do
+    load_dataset()
+  end
+  
+  # These two nodes can run in parallel
+  node :feature_a, [:data] do
+    extract_feature_a(get(:data))
+  end
+  
+  node :feature_b, [:data] do
+    extract_feature_b(get(:data))
+  end
+  
+  # Waits for both features
+  node :combine, [:feature_a, :feature_b] do
+    merge(get(:feature_a), get(:feature_b))
+  end
+end
 ```
 
----
+## Core Concepts
 
-## 📊 Performance & Scalability
+### DAG Definition
 
-### Real-Time Capabilities
-- **Sub-second response times** for location queries and geofence events
-- **Millions of concurrent location updates** across horizontally scaled nodes
-- **WebSocket connections** supporting thousands of simultaneous clients
+Use the `dag/2` macro to define a computational graph:
 
-### Data Throughput
-- Process 1M+ location updates per second
-- Handle complex geospatial queries with sub-50ms response times
-- Support for 100,000+ concurrent connections
-
-### Scalability Features
-- **Stateless services** enabling easy horizontal scaling
-- **Geographic sharding** for global data distribution
-- **Load balancing** with geographic and service-specific algorithms
-
----
-
-## 🔒 Security Architecture
-
-### Multi-Layered Security Model
-- **API Security**: JWT-based authentication with role-based access control
-- **DSL Security**: AST validation and function whitelisting
-- **Execution Security**: Process isolation with resource monitoring
-- **Permission System**: Hierarchical permissions with geographic bounds
-
-### Sandboxed Execution
-All external code execution happens in sandboxed environments with:
-- Strict resource limits (memory, CPU, execution time)
-- Function whitelisting for approved operations
-- Real-time resource monitoring and automatic termination
-
----
-
-## 📈 Use Cases
-
-### 🚚 Fleet Management
-- Real-time vehicle tracking and geofencing
-- Route optimization and smart dispatching
-- Driver behavior analytics and safety monitoring
-
-### 📦 Delivery & Logistics
-- Dynamic route planning with traffic adaptation
-- Delivery zone optimization
-- Real-time ETA calculations and customer notifications
-
-### 🏙️ Smart Cities
-- Traffic flow monitoring and congestion prediction
-- Public transportation optimization
-- Environmental monitoring and air quality tracking
-
-### 🏥 Healthcare
-- Ambulance routing and hospital resource allocation
-- Medical supply chain tracking
-- Patient location monitoring in large facilities
-
-### 🛡️ Security & Safety
-- Perimeter monitoring and intrusion detection
-- Emergency response coordination
-- Asset tracking and theft prevention
-
----
-
-## 💰 Pricing Tiers
-
-### Free Tier (Developer)
-- 10,000 API calls per month
-- 2 concurrent DSL executions
-- Basic geofencing (10 zones)
-- Community support
-
-### Professional Tier ($99/month)
-- 1M API calls per month
-- 10 concurrent DSL executions
-- Advanced geofencing (unlimited zones)
-- Email support
-- Private data collections
-- Basic analytics dashboard
-
-### Enterprise Tier (Custom)
-- Unlimited API calls
-- 50 concurrent DSL executions
-- Custom integrations
-- Dedicated support
-- On-premises deployment options
-- Advanced analytics and reporting
-- SLA guarantees
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! OpenSentience aims to make geospatial intelligence accessible to developers worldwide.
-
-### Development Setup
-```bash
-# Fork and clone the repository
-git clone https://github.com/yourusername/opensentience.git
-cd opensentience
-
-# Set up development environment
-mix deps.get
-mix test
-mix ecto.setup
-
-# Run the development server
-mix phx.server
+```elixir
+dag :my_computation do
+  # nodes go here
+end
 ```
 
-### Areas for Contribution
-- **🔧 DSL Enhancements**: New geospatial operations and optimizations
-- **📊 Analytics Features**: Advanced reporting and visualization
-- **🔌 Integrations**: Third-party service integrations
-- **📱 SDK Development**: Additional client libraries
-- **⚡ Performance**: Query optimization and scalability improvements
+### Node Definition
 
-### Testing
-```bash
-# Run the full test suite
-mix test
+Nodes are computation units with explicit dependencies:
 
-# Run with coverage
-mix test --cover
-
-# Integration tests
-mix test.integration
+```elixir
+node :node_name, [:dependency1, :dependency2] do
+  # computation code
+  # use get(:dependency1) to access dependency results
+end
 ```
 
----
+### Accessing Dependencies
 
-## 📚 Documentation
+Use the `get/1` macro within a node to access results from dependencies:
 
-- **[API Reference](docs/api/)** - Complete API documentation
-- **[DSL Guide](docs/dsl/)** - Geospatial DSL reference
-- **[SDK Documentation](docs/sdks/)** - Client library guides
-- **[Deployment Guide](docs/deployment/)** - Production deployment instructions
-- **[Architecture](DESIGN-AND-ARCH.md)** - Detailed system architecture
+```elixir
+node :process, [:fetch] do
+  data = get(:fetch)
+  transform(data)
+end
+```
 
----
+## Execution Strategies
 
-## 🏢 Business Model
+### Sequential Execution
 
-OpenSentience operates on a sustainable business model combining:
-- **Tiered subscription pricing** for different user segments
-- **Enterprise solutions** with custom deployments
-- **Professional services** for implementation and consulting
-- **Open-source core** with premium features
+Executes nodes one at a time in topological order:
 
----
+```elixir
+MyPipeline.execute_process_data(strategy: :sequential)
+```
 
-## 📜 License
+### Parallel Execution (Default)
 
-MIT License - see [LICENSE](LICENSE) for details.
+Automatically parallelizes independent nodes:
 
----
+```elixir
+MyPipeline.execute_process_data(strategy: :parallel)
+MyPipeline.execute_process_data(strategy: :parallel, max_concurrency: 8)
+```
 
-## 🌟 Roadmap
+### Distributed Execution
 
-### Current Focus (2024)
-- Core geospatial DSL implementation
-- Real-time streaming engine
-- Basic geofencing capabilities
-- Multi-language SDK development
+Distribute computation across multiple nodes:
 
-### Upcoming (2025)
-- Advanced analytics and reporting
-- AI-powered route optimization
-- IoT device integration
-- Global deployment expansion
+```elixir
+MyPipeline.execute_process_data(
+  strategy: :distributed,
+  nodes: [node1@host, node2@host],
+  supervisor: MySupervisor
+)
+```
 
----
+## Advanced Features
 
-## 📞 Contact & Community
+### Visualization
 
-- **Website**: [opensentience.org](https://opensentience.org)
-- **Documentation**: [docs.opensentience.org](https://docs.opensentience.org)
-- **Discord**: [OpenSentience Community](https://discord.gg/opensentience)
-- **Twitter**: [@OpenSentience](https://twitter.com/opensentience)
-- **Email**: [contact@opensentience.org](mailto:contact@opensentience.org)
+Generate GraphViz DOT format for your DAGs:
 
----
+```elixir
+dot_output = MyPipeline.visualize_process_data()
+File.write!("pipeline.dot", dot_output)
 
-*"Making sophisticated geospatial intelligence accessible to every developer."*
+# Then render with: dot -Tpng pipeline.dot -o pipeline.png
+```
 
-## 🎯 Quick Links
+### Execution Levels
 
-- [📖 Documentation](docs/)
-- [🚀 Getting Started Guide](docs/getting-started.md)
-- [🔧 API Reference](docs/api/)
-- [💻 SDKs](docs/sdks/)
-- [📊 Dashboard](https://dashboard.opensentience.org)
-- [🤝 Contributing Guide](CONTRIBUTING.md)
+The runtime automatically groups nodes into execution levels based on dependencies:
+
+```
+Level 0: [node_a, node_b]          # No dependencies, run in parallel
+Level 1: [node_c]                  # Depends on node_a
+Level 2: [node_d, node_e]          # Depend on node_c, run in parallel
+Level 3: [node_f]                  # Depends on node_d and node_e
+```
+
+### Cycle Detection
+
+The runtime automatically detects cycles at execution time:
+
+```elixir
+dag :invalid do
+  node :a, [:b] do
+    :value_a
+  end
+  
+  node :b, [:a] do  # Creates a cycle!
+    :value_b
+  end
+end
+
+# Raises: RuntimeError "Cycle detected in DAG: [:a, :b, :a]"
+```
+
+## Real-World Examples
+
+### Scientific Data Pipeline
+
+```elixir
+defmodule SciencePipeline do
+  use DagCompute
+  
+  dag :experiment do
+    node :load_data, [] do
+      read_experimental_data()
+    end
+    
+    node :normalize, [:load_data] do
+      get(:load_data) |> normalize_values()
+    end
+    
+    node :compute_stats, [:normalize] do
+      data = get(:normalize)
+      %{
+        mean: Statistics.mean(data),
+        std: Statistics.std(data)
+      }
+    end
+    
+    node :detect_outliers, [:normalize, :compute_stats] do
+      data = get(:normalize)
+      stats = get(:compute_stats)
+      
+      threshold = stats.mean + 2 * stats.std
+      Enum.filter(data, &(&1 > threshold))
+    end
+    
+    node :generate_report, [:compute_stats, :detect_outliers] do
+      # Generate final report
+      create_report(get(:compute_stats), get(:detect_outliers))
+    end
+  end
+end
+```
+
+### Parallel Monte Carlo Simulation
+
+```elixir
+defmodule MonteCarlo do
+  use DagCompute
+  
+  dag :simulation do
+    # Create 100 independent simulation batches
+    for batch <- 1..100 do
+      node :"batch_#{batch}", [] do
+        run_simulation_batch(batch, iterations: 10_000)
+      end
+    end
+    
+    # Aggregate all results
+    node :aggregate, for(i <- 1..100, do: :"batch_#{i}") do
+      results = for i <- 1..100, do: get(:"batch_#{i}")
+      compute_statistics(results)
+    end
+    
+    node :confidence_interval, [:aggregate] do
+      stats = get(:aggregate)
+      calculate_95_ci(stats)
+    end
+  end
+end
+```
+
+### Machine Learning Pipeline
+
+```elixir
+dag :ml_pipeline do
+  node :load_training_data, [] do
+    load_dataset("training.csv")
+  end
+  
+  # Parallel feature extraction
+  node :text_features, [:load_training_data] do
+    extract_text_features(get(:load_training_data))
+  end
+  
+  node :numerical_features, [:load_training_data] do
+    extract_numerical_features(get(:load_training_data))
+  end
+  
+  node :interaction_features, [:load_training_data] do
+    compute_interactions(get(:load_training_data))
+  end
+  
+  # Merge all features
+  node :merge_features, [:text_features, :numerical_features, :interaction_features] do
+    combine_features(
+      get(:text_features),
+      get(:numerical_features),
+      get(:interaction_features)
+    )
+  end
+  
+  # Parallel model training and validation
+  node :train_model, [:merge_features] do
+    train_gradient_boosting(get(:merge_features))
+  end
+  
+  node :cross_validate, [:merge_features] do
+    k_fold_cv(get(:merge_features), k: 5)
+  end
+  
+  node :evaluate, [:train_model, :cross_validate] do
+    generate_evaluation_report(
+      get(:train_model),
+      get(:cross_validate)
+    )
+  end
+end
+```
+
+## Performance Considerations
+
+### When to Use Parallel Execution
+
+Parallel execution shines when you have:
+- **Independent computations** (diamond patterns)
+- **CPU-intensive operations** that can run concurrently
+- **I/O-bound operations** that benefit from concurrent execution
+- **Multiple data sources** that can be fetched simultaneously
+
+### Optimal Concurrency Levels
+
+```elixir
+# Default: 2x number of schedulers
+execute_my_dag(strategy: :parallel)
+
+# Custom concurrency
+execute_my_dag(strategy: :parallel, max_concurrency: 16)
+
+# For CPU-bound: cores * 1-2
+# For I/O-bound: cores * 2-4
+max_concurrency: System.schedulers_online() * 2
+```
+
+### Benchmarking
+
+```elixir
+# Compare strategies
+{seq_time, seq_result} = :timer.tc(fn ->
+  MyPipeline.execute_process_data(strategy: :sequential)
+end)
+
+{par_time, par_result} = :timer.tc(fn ->
+  MyPipeline.execute_process_data(strategy: :parallel)
+end)
+
+speedup = seq_time / par_time
+IO.puts("Speedup: #{Float.round(speedup, 2)}x")
+```
+
+## Limitations and Future Work
+
+### Current Limitations
+- No automatic memoization/caching between executions
+- No dynamic DAG modification at runtime
+- Limited optimization passes (fusion, etc.)
+
+### Planned Features
+- [ ] Persistent result caching
+- [ ] Cost-based query optimization
+- [ ] GPU computation support
+- [ ] Streaming/incremental execution
+- [ ] Automatic checkpoint/recovery
+- [ ] Performance profiling integration
+- [ ] Resource quota management
+
+## Architecture
+
+### Compile-Time Processing
+1. **Macro Expansion** - `dag` and `node` macros expand to module attributes
+2. **Validation** - Collect all nodes and edges
+3. **Code Generation** - Generate `execute_*` and `visualize_*` functions
+
+### Runtime Execution
+1. **Validation** - Check for cycles using DFS
+2. **Topological Sort** - Order nodes using Kahn's algorithm
+3. **Level Computation** - Group nodes by execution level
+4. **Parallel Execution** - Execute each level's nodes concurrently
+5. **Result Aggregation** - Merge results into context map
+
+## Contributing
+
+Contributions welcome! Areas of interest:
+- Additional optimization passes
+- More execution strategies
+- Enhanced visualization
+- Performance benchmarks
+- Real-world use cases
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Credits
+
+Built with ❤️ using Elixir's powerful macro system for high-performance scientific computing.

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,8 +22,8 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPEN | Observability Protocol for Emergent Networks</title>
-    <meta name="description" content="OPEN - Observability Protocol for Emergent Networks. A revolutionary distributed workflow orchestration platform built on Elixir's BEAM VM.">
+    <title>OpenSentience | Democratizing Geospatial Intelligence</title>
+    <meta name="description" content="OpenSentience is a comprehensive geospatial intelligence platform that democratizes real-time location awareness for developers and businesses">
 
     <style>
         * {
@@ -266,11 +265,10 @@
             position: relative;
         }
 
-        .service-platform { background: linear-gradient(45deg, #ff6b6b, #ff8a80); }
-        .service-types { background: linear-gradient(45deg, #4ecdc4, #81e6d9); }
-        .service-orchestration { background: linear-gradient(45deg, #ffd93d, #ffeb3b); color: #333; }
-        .service-runtime { background: linear-gradient(45deg, #a8e6cf, #7fcdcd); }
-        .service-workers { background: linear-gradient(45deg, #9B51E0, #B197FC); }
+        .service-streams { background: linear-gradient(45deg, #ff6b6b, #ff8a80); }
+        .service-zones { background: linear-gradient(45deg, #4ecdc4, #81e6d9); }
+        .service-routes { background: linear-gradient(45deg, #ffd93d, #ffeb3b); color: #333; }
+        .service-analytics { background: linear-gradient(45deg, #a8e6cf, #7fcdcd); }
 
         .arrow {
             font-size: 2rem;
@@ -448,6 +446,67 @@
             color: #1a1a2e;
         }
 
+        /* Contact Form Styles */
+        .contact-form {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-form label {
+            display: block;
+            margin-bottom: 15px;
+            color: #d4d4d8;
+            font-weight: 500;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #64ffda;
+        }
+
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: #b3b3b3;
+        }
+
+        .contact-form button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .contact-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
         /* Footer */
         footer {
             background: rgba(0, 0, 0, 0.5);
@@ -593,15 +652,14 @@
     <header>
         <div class="container">
             <nav>
-                <div class="logo">OS</div>
+                <div class="logo">OpenSentience</div>
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>
-                    <li><a href="#architecture">Architecture</a></li>
+                    <li><a href="#performance">Performance</a></li>
                     <li><a href="#use-cases">Use Cases</a></li>
-                    <li><a href="#docs">Getting Started</a></li>
-                    <li><a href="documentation.html">Docs</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
                 </ul>
-                <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-button">View on GitHub</a>
+                <a href="#get-started" class="cta-button">Get Started</a>
             </nav>
         </div>
     </header>
@@ -610,33 +668,33 @@
     <section class="hero">
         <div class="container">
             <div class="powered-by">
-                Intelligence by <a href="https://traaviis.com" target="_blank">TRAAVIIS</a>
+                Powered by <a href="https://traaviis.com" target="_blank">TRAAVIIS</a>
             </div>
-            <h1>OPEN Sentience</h1>
-            <h2>Observability Protocol for Emergent Networks</h2>
-            <p>Type-safe distributed workflow orchestration built on Elixir's BEAM VM. Unmatched fault tolerance. Extreme concurrency. Compile-time safety. Not another low-code tool—a developer's workflow engine.</p>
+            <h1>OpenSentience</h1>
+            <h2>Democratizing Geospatial Intelligence</h2>
+            <p>Comprehensive geospatial intelligence platform that makes sophisticated location-based applications accessible to every developer. Real-time processing, intuitive DSL, and enterprise-grade security.</p>
 
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-number">2M+</span>
-                    <span class="stat-label">Concurrent Tasks</span>
+                    <span class="stat-number">1M+</span>
+                    <span class="stat-label">Location Updates/sec</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number"><150ms</span>
-                    <span class="stat-label">Fault Recovery</span>
+                    <span class="stat-number">50ms</span>
+                    <span class="stat-label">Query Response</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number">0.05ms</span>
-                    <span class="stat-label">Task Overhead</span>
+                    <span class="stat-number">100K+</span>
+                    <span class="stat-label">Concurrent Clients</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number">100%</span>
-                    <span class="stat-label">Type-Safe (with ADTs)</span>
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">Uptime SLA</span>
                 </div>
             </div>
 
             <div class="cta-buttons">
-                <a href="#docs" class="cta-button cta-primary">Get Started</a>
+                <a href="#get-started" class="cta-button cta-primary">Start Building</a>
                 <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-secondary">View on GitHub</a>
             </div>
         </div>
@@ -647,36 +705,34 @@
         <div class="container">
             <div class="demo-grid">
                 <div class="demo-content">
-                    <h3>Core Capabilities</h3>
-                    <p>Built for distributed systems that never fail. OPEN combines the power of Elixir's BEAM VM with type-safe workflow orchestration for unprecedented reliability and performance.</p>
+                    <h3>Geospatial Intelligence Made Simple</h3>
+                    <p>OpenSentience combines advanced geospatial processing with an intuitive Domain Specific Language (DSL) to enable rapid development of location-aware applications without deep GIS knowledge.</p>
 
                     <ul class="feature-list">
-                        <li><strong>Extreme Performance:</strong> Execute 2 million concurrent tasks with sub-millisecond overhead</li>
-                        <li><strong>Fault Tolerance:</strong> OTP supervision trees detect failures in under 150ms and auto-restart</li>
-                        <li><strong>Compile-Time Safety:</strong> Macro-based DAG validation catches errors before runtime</li>
-                        <li><strong>Distributed by Design:</strong> Built-in Erlang distribution protocol across thousands of nodes</li>
-                        <li><strong>Real-Time Observability:</strong> Phoenix LiveView dashboards with WebSocket updates under 100ms</li>
+                        <li><strong>Geospatial DSL:</strong> Macro-based syntax compiling to efficient Tile38 commands</li>
+                        <li><strong>Real-Time Streaming:</strong> Sub-second location updates with Phoenix PubSub</li>
+                        <li><strong>Intelligent Geofencing:</strong> Time-based rules and dynamic zone creation</li>
+                        <li><strong>Route Optimization:</strong> Smart dispatching with real-time adaptation</li>
+                        <li><strong>Analytics Engine:</strong> Transform location data into actionable business intelligence</li>
                     </ul>
 
-                    <a href="#architecture" class="cta-button">Explore Architecture</a>
+                    <a href="#performance" class="cta-button">Explore Capabilities</a>
                 </div>
 
                 <div class="demo-visual">
-                    <h4 style="margin-bottom: 30px; color: #64ffda;">System Architecture</h4>
+                    <h4 style="margin-bottom: 30px; color: #64ffda;">Core Services Architecture</h4>
                     <div class="architecture-diagram">
-                        <div class="service-box service-platform">🎨 <br />Platform</div>
+                        <div class="service-box service-streams">📡 Streams</div>
                         <div class="arrow">→</div>
-                        <div class="service-box service-types">🎯 <br />Types</div>
+                        <div class="service-box service-zones">🎯<br /> Zones</div>
                         <div class="arrow">→</div>
-                        <div class="service-box service-orchestration">🧠 <br />OPEN</div>
+                        <div class="service-box service-routes">🚗 Routes</div>
                         <div class="arrow">→</div>
-                        <div class="service-box service-runtime">⚙️ <br />Runtime</div>
-                        <div class="arrow">→</div>
-                        <div class="service-box service-workers">🔧 <br />Workers</div>
+                        <div class="service-box service-analytics">📊 Analytics</div>
                     </div>
                     <p style="margin-top: 20px; font-size: 0.9rem; color: #b3b3b3;">
-                        Layered design for maximum flexibility<br>
-                        Built on Elixir/BEAM with optional type safety
+                        Real-time geospatial processing pipeline<br>
+                        Built on Elixir/Phoenix with Tile38 backend
                     </p>
                 </div>
             </div>
@@ -691,69 +747,30 @@
             <div class="perf-grid">
                 <div class="perf-card">
                     <span class="perf-icon">⚡</span>
-                    <div class="perf-title">Extreme Performance</div>
-                    <div class="perf-metric">2M+</div>
-                    <p>Concurrent tasks with sub-millisecond overhead. BEAM's lightweight processes deliver unmatched parallelism.</p>
+                    <div class="perf-title">Real-Time Processing</div>
+                    <div class="perf-metric">50ms</div>
+                    <p>Sub-second response times for location queries and geofence events</p>
                 </div>
 
                 <div class="perf-card">
-                    <span class="perf-icon">🛡️</span>
-
-                    <div class="perf-title">Fault Tolerance</div>
-                    <div class="perf-metric">&lt;150ms</div>
-                    <p>OTP supervision trees detect failures in under 150ms and automatically restart. Telecom-grade reliability built-in.</p>
+                    <span class="perf-icon">📈</span>
+                    <div class="perf-title">Scale</div>
+                    <div class="perf-metric">1M+</div>
+                    <p>Location updates per second across horizontally scaled nodes</p>
                 </div>
 
                 <div class="perf-card">
                     <span class="perf-icon">🔒</span>
-                    <div class="perf-title">Compile-Time Safety</div>
-                    <div class="perf-metric">100%</div>
-                    <p>Macro-based DAG validation catches errors before runtime. The only workflow orchestrator with compile-time guarantees.</p>
+                    <div class="perf-title">Security</div>
+                    <div class="perf-metric">Sandbox</div>
+                    <p>All DSL execution in sandboxed environments with strict resource limits</p>
                 </div>
 
                 <div class="perf-card">
                     <span class="perf-icon">🌐</span>
-                    <div class="perf-title">Distributed by Design</div>
-                    <div class="perf-metric">1000s</div>
-                    <p>Built-in Erlang distribution protocol. Coordinate across thousands of nodes with transparent remote execution.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Architecture Section -->
-    <section id="architecture" class="demo-section fade-in">
-        <div class="container">
-            <h3 style="text-align: center; font-size: 3rem; margin-bottom: 60px; background: linear-gradient(45deg, #ff6b6b, #64ffda); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Architecture</h3>
-            
-            <div class="demo-visual" style="max-width: 900px; margin: 0 auto;">
-                <h4 style="margin-bottom: 30px; color: #64ffda;">Layered Design for Maximum Flexibility</h4>
-                
-                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ff6b6b;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🎨 Ash Framework Layer (Platform)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">DAG storage, user management, GraphQL APIs, authorization, execution history, Phoenix LiveView dashboards</p>
-                    </div>
-                    
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #4ecdc4;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🎯 Optional Type Layer (Stellarmorphism ADTs)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">Algebraic data types for type-safe workflows, compile-time validation, exhaustive pattern matching—opt-in enhancement</p>
-                    </div>
-                    
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ffd93d;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🧠 OPEN Orchestration Layer (Coordination)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">Macro-based DAG definition, topological sorting, dependency resolution, distributed task scheduling, OTP supervision</p>
-                    </div>
-                    
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #a8e6cf;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">⚙️ Execution Runtime (Performance)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">Pure Elixir hot path (&lt;0.1ms overhead), parallel execution engine, fault detection & recovery, BEAM process pool</p>
-                    </div>
-                    
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #9B51E0;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🔧 Worker Layer (Computation)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">Rust/C++ NIFs for numerical computing, Python via Ports for ML/data science, Julia for scientific computing</p>
-                    </div>
+                    <div class="perf-title">APIs</div>
+                    <div class="perf-metric">REST</div>
+                    <p>REST, WebSockets, GraphQL, and Webhooks for complete integration</p>
                 </div>
             </div>
         </div>
@@ -762,95 +779,96 @@
     <!-- Use Cases Section -->
     <section id="use-cases" class="use-cases fade-in">
         <div class="container">
-            <h3>Powering Next Generation of Distributed Systems</h3>
+            <h3>Transforming Industries</h3>
 
             <div class="use-case-grid">
                 <div class="use-case">
-                    <h4>🔬 Scientific Computing</h4>
-                    <p>Coordinate complex computational workflows across HPC clusters with automatic parallelization. Not for simple automation—built for research.</p>
-                    <div class="use-case-stat">→ HPC cluster coordination</div>
+                    <h4>🚚 Fleet Management</h4>
+                    <p>Real-time vehicle tracking, route optimization, and driver behavior analytics for logistics companies.</p>
+                    <div class="use-case-stat">→ 40% reduction in operational costs</div>
                 </div>
 
                 <div class="use-case">
-                    <h4>📡 IoT & Edge Processing</h4>
-                    <p>Process millions of sensor events in real-time with fault-tolerant distributed pipelines. BEAM's concurrency shines here.</p>
-                    <div class="use-case-stat">→ Real-time sensor processing</div>
+                    <h4>📦 Delivery & Logistics</h4>
+                    <p>Dynamic route planning, delivery zone optimization, and real-time ETA calculations.</p>
+                    <div class="use-case-stat">→ 25% improvement in on-time delivery</div>
                 </div>
 
                 <div class="use-case">
-                    <h4>🤖 ML Pipeline Orchestration</h4>
-                    <p>Build and deploy machine learning workflows with parallel feature extraction and training. Code-first, not low-code.</p>
-                    <div class="use-case-stat">→ Parallel ML workflows</div>
+                    <h4>🏙️ Smart Cities</h4>
+                    <p>Traffic monitoring, public transportation optimization, and environmental tracking.</p>
+                    <div class="use-case-stat">→ Real-time urban intelligence</div>
                 </div>
 
                 <div class="use-case">
-                    <h4>💰 Financial Systems</h4>
-                    <p>Execute trading algorithms and risk calculations with microsecond precision and zero downtime. Production-grade reliability.</p>
-                    <div class="use-case-stat">→ Microsecond precision trading</div>
+                    <h4>🏥 Healthcare</h4>
+                    <p>Ambulance routing, medical supply tracking, and facility resource allocation.</p>
+                    <div class="use-case-stat">→ Critical response optimization</div>
                 </div>
 
                 <div class="use-case">
-                    <h4>🏗️ Data Engineering</h4>
-                    <p>Build ETL pipelines that scale to petabytes with automatic failure recovery. Complement Broadway/Flow, don't replace them.</p>
-                    <div class="use-case-stat">→ Petabyte-scale ETL</div>
+                    <h4>🛡️ Security & Safety</h4>
+                    <p>Perimeter monitoring, emergency response coordination, and asset protection.</p>
+                    <div class="use-case-stat">→ Enhanced situational awareness</div>
                 </div>
 
                 <div class="use-case">
-                    <h4>🔗 Microservices Orchestration</h4>
-                    <p>Coordinate distributed transactions and sagas across service meshes. Works alongside Oban for reliable job execution.</p>
-                    <div class="use-case-stat">→ Service mesh coordination</div>
+                    <h4>🏭 IoT & Industrial</h4>
+                    <p>Device tracking, predictive maintenance, and industrial asset monitoring.</p>
+                    <div class="use-case-stat">→ Digital transformation enablement</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Getting Started Section -->
-    <section id="docs" class="performance fade-in">
+    <!-- Pricing Section -->
+    <section id="pricing" class="performance fade-in">
         <div class="container">
-            <h3>Getting Started</h3>
+            <h3>Simple, Transparent Pricing</h3>
 
             <div class="perf-grid">
                 <div class="perf-card">
-                    <span class="perf-icon">📦</span>
-                    <div class="perf-title">1. Install</div>
-                    <div class="perf-metric">mix</div>
-                    <p><code>mix new my_platform && cd my_platform</code><br>
-                    Add <code>{:open, "~> 0.1.0"}</code> to deps</p>
+                    <span class="perf-icon">🆓</span>
+                    <div class="perf-title">Developer</div>
+                    <div class="perf-metric">Free</div>
+                    <p>10K API calls/month<br>2 concurrent DSL executions<br>Basic geofencing (10 zones)<br>Community support</p>
                 </div>
 
                 <div class="perf-card">
-                    <span class="perf-icon">📝</span>
-                    <div class="perf-title">2. Define Your DAG</div>
-                    <div class="perf-metric">Macros</div>
-                    <p>Use compile-time macros to define workflows with automatic dependency resolution and type safety</p>
+                    <span class="perf-icon">💼</span>
+                    <div class="perf-title">Professional</div>
+                    <div class="perf-metric">$99</div>
+                    <p>1M API calls/month<br>10 concurrent DSL executions<br>Advanced geofencing<br>Email support<br>Basic analytics</p>
                 </div>
 
                 <div class="perf-card">
-                    <span class="perf-icon">🚀</span>
-                    <div class="perf-title">3. Execute</div>
-                    <div class="perf-metric">Run</div>
-                    <p>Run with automatic parallelization, fault tolerance, and real-time monitoring out of the box</p>
-                </div>
-
-                <div class="perf-card">
-                    <span class="perf-icon">📈</span>
-                    <div class="perf-title">4. Scale</div>
-                    <div class="perf-metric">Deploy</div>
-                    <p>Deploy across clusters with built-in distribution. No configuration changes needed.</p>
+                    <span class="perf-icon">🏢</span>
+                    <div class="perf-title">Enterprise</div>
+                    <div class="perf-metric">Custom</div>
+                    <p>Unlimited API calls<br>50 concurrent DSL executions<br>Custom integrations<br>Dedicated support<br>SLA guarantees</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="cta-section fade-in">
+    <section id="get-started" class="cta-section fade-in">
         <div class="container">
-            <h3>Ready to Build?</h3>
-            <p>Join the future of distributed workflow orchestration. From scientific computing to financial systems, transform your infrastructure with OPEN's unmatched reliability and performance.</p>
+            <h3>Join the Geospatial Revolution</h3>
+            <p>Start building location-aware applications with OpenSentience. From fleet management to smart cities, transform your business with real-time geospatial intelligence.</p>
 
-            <div class="cta-buttons">
-                <a href="documentation.html" class="cta-button cta-primary">View Documentation</a>
-                <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-secondary">Star on GitHub</a>
+            <div class="contact-form">
+                <form action="https://formspree.io/f/xldwvvde" method="POST">
+                    <label>
+                        Your email:
+                        <input type="email" name="email" placeholder="your.email@example.com" required>
+                    </label>
+                    <label>
+                        Your message:
+                        <textarea name="message" placeholder="Tell us about your project or geospatial use case..." rows="5" required></textarea>
+                    </label>
+                    <button type="submit">Get Started</button>
+                </form>
             </div>
         </div>
     </section>
@@ -862,24 +880,24 @@
                 <div class="footer-section">
                     <h4>Platform</h4>
                     <a href="#features">Features</a>
-                    <a href="#architecture">Architecture</a>
                     <a href="#performance">Performance</a>
+                    <a href="DESIGN-AND-ARCH.md">Architecture</a>
                     <a href="/docs">Documentation</a>
                 </div>
 
                 <div class="footer-section">
                     <h4>Developers</h4>
                     <a href="/docs/api">API Reference</a>
-                    <a href="/docs/dsl">DSL Guide</a>
+                    <a href="/docs/dsl">Geospatial DSL</a>
                     <a href="/docs/sdks">SDKs</a>
-                    <a href="https://github.com/opensentience/open">GitHub</a>
+                    <a href="https://github.com/c-u-l8er/opensentience.org">GitHub</a>
                 </div>
 
                 <div class="footer-section">
-                    <h4>Resources</h4>
-                    <a href="/tutorials">Tutorials</a>
-                    <a href="/examples">Examples</a>
+                    <h4>Company</h4>
+                    <a href="/about">About</a>
                     <a href="/blog">Blog</a>
+                    <a href="/careers">Careers</a>
                     <a href="mailto:contact@opensentience.org">Contact</a>
                 </div>
 
@@ -893,11 +911,10 @@
             </div>
 
             <div class="footer-bottom">
-                <p id="copyright">&copy; <span id="current-year">2025</span> OPEN - Observability Protocol for Emergent Networks</p>
+                <p id="copyright">&copy; <span id="current-year">2024</span> OpenSentience.org - Democratizing geospatial intelligence</p>
             </div>
         </div>
     </footer>
-
     
     <div style="background: #000; padding: 2em 0 1em;">
         <div style="margin: 0 auto; width: 728px;">
