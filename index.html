@@ -1,976 +1,1677 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <link
-        rel="apple-touch-icon"
-        sizes="180x180"
-        href="/apple-touch-icon.png"
-    />
-    <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href="/favicon-32x32.png"
-    />
-    <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href="/favicon-16x16.png"
-    />
-    <link rel="manifest" href="/site.webmanifest" />
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPEN | Observability Protocol for Emergent Networks</title>
-    <meta name="description" content="OPEN - Observability Protocol for Emergent Networks. A revolutionary distributed workflow orchestration platform built on Elixir's BEAM VM.">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: radial-gradient(ellipse at top, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
-            color: white;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Floating particles background */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: #64ffda;
-            opacity: 0.3;
-            animation: float 20s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) translateX(0px); opacity: 0; }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
-            100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
-        }
-
-        /* Header */
-        header {
-            position: relative;
-            z-index: 100;
-            padding: 20px 0;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #64ffda, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #64ffda;
-        }
-
-        .cta-button {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            padding: 12px 24px;
-            border-radius: 25px;
-            text-decoration: none;
-            color: white;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
-        }
-
-        /* Hero Section */
-        .hero {
-            position: relative;
-            z-index: 10;
-            padding: 120px 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #64ffda, #ff6b6b, #4ecdc4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.2;
-        }
-
-        .hero h2 {
-            font-size: 1.5rem;
-            color: #b3b3b3;
-            margin-bottom: 30px;
-            font-weight: 300;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            color: #d4d4d8;
-        }
-
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            margin: 60px 0;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #64ffda;
-            display: block;
-        }
-
-        .stat-label {
-            color: #b3b3b3;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Demo Section */
-        .demo-section {
-            position: relative;
-            z-index: 10;
-            padding: 100px 0;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .demo-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .demo-content h3 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #64ffda;
-        }
-
-        .demo-content p {
-            font-size: 1.1rem;
-            color: #d4d4d8;
-            margin-bottom: 30px;
-        }
-
-        .feature-list {
-            list-style: none;
-            margin-bottom: 30px;
-        }
-
-        .feature-list li {
-            padding: 10px 0;
-            padding-left: 30px;
-            position: relative;
-            color: #e4e4e7;
-        }
-
-        .feature-list li:before {
-            content: "📍";
-            position: absolute;
-            left: 0;
-            color: #ff6b6b;
-            font-weight: bold;
-        }
-
-        .demo-visual {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .architecture-diagram {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
-        }
-
-        .service-box {
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            min-width: 120px;
-            text-align: center;
-            position: relative;
-        }
-
-        .service-platform { background: linear-gradient(45deg, #ff6b6b, #ff8a80); }
-        .service-types { background: linear-gradient(45deg, #4ecdc4, #81e6d9); }
-        .service-orchestration { background: linear-gradient(45deg, #ffd93d, #ffeb3b); color: #333; }
-        .service-runtime { background: linear-gradient(45deg, #a8e6cf, #7fcdcd); }
-        .service-workers { background: linear-gradient(45deg, #9B51E0, #B197FC); }
-
-        .arrow {
-            font-size: 2rem;
-            color: #64ffda;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        /* Performance Section */
-        .performance {
-            padding: 100px 0;
-            position: relative;
-            z-index: 10;
-        }
-
-        .performance h3 {
-            text-align: center;
-            font-size: 3rem;
-            margin-bottom: 60px;
-            background: linear-gradient(45deg, #ff6b6b, #64ffda);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .perf-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .perf-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .perf-card:hover {
-            transform: translateY(-10px);
-            border-color: #64ffda;
-        }
-
-        .perf-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .perf-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #64ffda;
-        }
-
-        .perf-metric {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #ff6b6b;
-            margin-bottom: 10px;
-        }
-
-        /* Use Cases */
-        .use-cases {
-            padding: 100px 0;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 10;
-        }
-
-        .use-cases h3 {
-            text-align: center;
-            font-size: 3rem;
-            margin-bottom: 60px;
-            color: #64ffda;
-        }
-
-        .use-case-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-        }
-
-        .use-case {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 30px;
-            border-left: 4px solid #ff6b6b;
-            transition: all 0.3s ease;
-        }
-
-        .use-case:hover {
-            transform: translateX(10px);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .use-case h4 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #64ffda;
-        }
-
-        .use-case p {
-            color: #d4d4d8;
-            margin-bottom: 15px;
-        }
-
-        .use-case-stat {
-            font-size: 0.9rem;
-            color: #ff6b6b;
-            font-weight: 600;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 100px 0;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .cta-section h3 {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            background: linear-gradient(45deg, #64ffda, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .cta-section p {
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-            color: #d4d4d8;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .cta-primary {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            padding: 15px 40px;
-            font-size: 1.1rem;
-        }
-
-        .cta-secondary {
-            background: transparent;
-            border: 2px solid #64ffda;
-            color: #64ffda;
-            padding: 15px 40px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .cta-secondary:hover {
-            background: #64ffda;
-            color: #1a1a2e;
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 60px 0 30px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-section h4 {
-            color: #64ffda;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-        }
-
-        .footer-section a {
-            color: #d4d4d8;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            color: #64ffda;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 30px;
-            text-align: center;
-            color: #b3b3b3;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            OpenSentience.org | PXVM-Script — Physics-Aware Programming Language
+        </title>
+        <meta
+            name="description"
+            content="OpenSentience.org presents PXVM-Script: a physics-aware programming language where computation feels forces, conserves energy, and leverages GPU physics acceleration. Build explainable AI, adaptive systems, and physics-grounded software."
+        />
+        <link rel="canonical" href="https://opensentience.org/" />
+        <meta property="og:site_name" content="OpenSentience.org" />
+        <meta
+            property="og:title"
+            content="OpenSentience.org | PXVM-Script — Physics-Aware Programming Language"
+        />
+        <meta
+            property="og:description"
+            content="PXVM-Script is a physics-aware programming language where computation feels forces, conserves energy, and leverages GPU physics acceleration."
+        />
+        <meta property="og:url" content="https://opensentience.org/" />
+        <meta name="twitter:card" content="summary_large_image" />
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
 
-            .hero-stats {
-                gap: 30px;
+            :root {
+                --bg-dark: #0a0e1a;
+                --bg-gradient-start: #0f172a;
+                --bg-gradient-end: #1e1b4b;
+                --accent-primary: #8b5cf6; /* Purple - creativity, innovation */
+                --accent-secondary: #06b6d4; /* Cyan - flow, energy */
+                --accent-tertiary: #f59e0b; /* Amber - warmth, energy */
+                --accent-pink: #ec4899;
+                --accent-green: #10b981;
+                --text-primary: #f8fafc;
+                --text-secondary: #cbd5e1;
+                --text-muted: #64748b;
+                --code-bg: #1e293b;
+                --card-bg: rgba(30, 41, 59, 0.4);
+                --border-color: rgba(148, 163, 184, 0.1);
             }
 
-            .stat-number {
-                font-size: 2rem;
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+                    "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+                background: linear-gradient(
+                    135deg,
+                    var(--bg-gradient-start) 0%,
+                    var(--bg-gradient-end) 100%
+                );
+                color: var(--text-primary);
+                line-height: 1.6;
+                overflow-x: hidden;
             }
 
-            .demo-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
+            /* Animated physics particles background */
+            .physics-bg {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0.08;
             }
 
-            .architecture-diagram {
+            .physics-particle {
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                background: var(--accent-secondary);
+                border-radius: 50%;
+                animation: orbit 20s linear infinite;
+            }
+
+            @keyframes orbit {
+                0% {
+                    transform: rotate(0deg) translateX(100px) rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg) translateX(100px) rotate(-360deg);
+                }
+            }
+
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Navigation */
+            nav {
+                width: 100%;
+                backdrop-filter: blur(10px);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: rgba(10, 14, 26, 0.8);
+                border-bottom: 1px solid var(--border-color);
+                margin-bottom: 2rem;
+            }
+
+            .nav-inner {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 1.5rem 2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .logo-section {
+                display: flex;
                 flex-direction: column;
-                gap: 20px;
+                gap: 0.25rem;
             }
 
-            .arrow {
-                transform: rotate(90deg);
+            .logo {
+                font-size: 1.75rem;
+                font-weight: 900;
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-primary),
+                    var(--accent-secondary)
+                );
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                letter-spacing: -1px;
+            }
+
+            .logo-tagline {
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                font-weight: 600;
             }
 
             .nav-links {
-                display: none;
+                display: flex;
+                gap: 2.5rem;
+                list-style: none;
+                align-items: center;
+            }
+
+            .nav-links a {
+                color: var(--text-secondary);
+                text-decoration: none;
+                transition: color 0.3s;
+                font-size: 0.95rem;
+                font-weight: 500;
+            }
+
+            .nav-links a:hover {
+                color: var(--accent-primary);
+            }
+
+            .nav-cta {
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-primary),
+                    var(--accent-pink)
+                );
+                color: white !important;
+                padding: 0.6rem 1.5rem;
+                border-radius: 0.5rem;
+                font-weight: 600;
+            }
+
+            /* Hero Section */
+            .hero {
+                padding: 5rem 0 4rem;
+                text-align: center;
+            }
+
+            .hero-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: rgba(139, 92, 246, 0.1);
+                border: 1px solid rgba(139, 92, 246, 0.3);
+                color: var(--accent-primary);
+                padding: 0.5rem 1.5rem;
+                border-radius: 2rem;
+                font-size: 0.9rem;
+                font-weight: 600;
+                margin-bottom: 2rem;
+            }
+
+            .hero-badge a {
+                color: #ccc;
+            }
+            .hero-badge a:hover {
+                color: #fff;
+            }
+
+            .hero h1 {
+                font-size: 5rem;
+                font-weight: 900;
+                margin-bottom: 1.5rem;
+                line-height: 1.1;
+                letter-spacing: -2px;
+            }
+
+            .hero h1 .gradient-text {
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-primary),
+                    var(--accent-secondary),
+                    var(--accent-tertiary)
+                );
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                background-size: 200% 200%;
+                animation: gradient-shift 4s ease infinite;
+            }
+
+            @keyframes gradient-shift {
+                0%,
+                100% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+            }
+
+            .hero-subtitle {
+                font-size: 1.5rem;
+                color: var(--text-secondary);
+                margin-bottom: 3rem;
+                max-width: 900px;
+                margin-left: auto;
+                margin-right: auto;
+                font-weight: 400;
+                line-height: 1.6;
             }
 
             .cta-buttons {
-                flex-direction: column;
+                display: flex;
+                gap: 1.5rem;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-bottom: 4rem;
+            }
+
+            .btn {
+                padding: 1rem 2.5rem;
+                border-radius: 0.5rem;
+                font-size: 1.1rem;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.3s;
+                cursor: pointer;
+                border: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .btn-primary {
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-primary),
+                    var(--accent-pink)
+                );
+                color: white;
+                box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 15px 50px rgba(139, 92, 246, 0.4);
+            }
+
+            .btn-secondary {
+                background: var(--card-bg);
+                color: white;
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--border-color);
+            }
+
+            .btn-secondary:hover {
+                background: rgba(139, 92, 246, 0.15);
+                border-color: var(--accent-primary);
+                transform: translateY(-2px);
+            }
+
+            /* Language Features - Hero Code */
+            .hero-code {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+                margin: 6rem 0;
                 align-items: center;
             }
-        }
 
-        /* Powered by section */
-        .powered-by {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out 0.2s forwards;
-        }
+            .code-editor {
+                background: var(--code-bg);
+                border-radius: 1rem;
+                padding: 2rem;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                border: 1px solid rgba(139, 92, 246, 0.2);
+                position: relative;
+            }
 
-        .powered-by a {
-            color: #64ffda;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
+            .code-header {
+                display: flex;
+                gap: 0.5rem;
+                margin-bottom: 1.5rem;
+                align-items: center;
+            }
 
-        .powered-by a:hover {
-            color: #ffffff;
-        }
+            .code-dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+            }
 
-        @keyframes fadeInUp {
-            from {
+            .code-dot.red {
+                background: #ef4444;
+            }
+            .code-dot.yellow {
+                background: #fbbf24;
+            }
+            .code-dot.green {
+                background: #10b981;
+            }
+
+            .code-title {
+                margin-left: 1rem;
+                color: var(--text-muted);
+                font-size: 0.85rem;
+            }
+
+            pre {
+                margin: 0;
+                font-family: "Fira Code", "Courier New", monospace;
+                font-size: 0.95rem;
+                line-height: 1.8;
+                overflow-x: auto;
+            }
+
+            .keyword {
+                color: #c792ea;
+                font-weight: 600;
+            }
+            .function {
+                color: #82aaff;
+            }
+            .string {
+                color: #c3e88d;
+            }
+            .comment {
+                color: #546e7a;
+                font-style: italic;
+            }
+            .operator {
+                color: #89ddff;
+            }
+            .number {
+                color: #f78c6c;
+            }
+            .type {
+                color: #ffcb6b;
+            }
+
+            .features-list {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .feature {
+                display: flex;
+                gap: 1.5rem;
+                align-items: flex-start;
+            }
+
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-primary),
+                    var(--accent-secondary)
+                );
+                border-radius: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.8rem;
+                flex-shrink: 0;
+            }
+
+            .feature h3 {
+                font-size: 1.3rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .feature p {
+                color: var(--text-secondary);
+                font-size: 0.95rem;
+            }
+
+            /* Core Concepts */
+            .core-concepts {
+                margin: 8rem 0;
+            }
+
+            .section-header {
+                text-align: center;
+                margin-bottom: 4rem;
+            }
+
+            .section-header h2 {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+
+            .section-header p {
+                font-size: 1.3rem;
+                color: var(--text-secondary);
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .concepts-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+
+            .concept-card {
+                background: var(--card-bg);
+                border-radius: 1.5rem;
+                padding: 3rem;
+                border: 1px solid var(--border-color);
+                transition: all 0.3s;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .concept-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(
+                    90deg,
+                    var(--accent-primary),
+                    var(--accent-secondary)
+                );
                 opacity: 0;
-                transform: translateY(30px);
+                transition: opacity 0.3s;
             }
-            to {
+
+            .concept-card:hover {
+                transform: translateY(-5px);
+                border-color: var(--accent-primary);
+                box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
+            }
+
+            .concept-card:hover::before {
                 opacity: 1;
-                transform: translateY(0);
             }
-        }
 
-        /* Animation for scroll reveal */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
+            .concept-icon {
+                font-size: 3rem;
+                margin-bottom: 1.5rem;
+            }
 
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
-</head>
-<body>
-    <!-- Floating Particles Background -->
-    <div class="particles">
-        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
-        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
-        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
-        <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
-        <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
-        <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
-        <div class="particle" style="left: 70%; animation-delay: 1.5s;"></div>
-        <div class="particle" style="left: 80%; animation-delay: 3.5s;"></div>
-        <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div>
-    </div>
+            .concept-card h3 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
 
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">OS</div>
+            .concept-card p {
+                color: var(--text-secondary);
+                line-height: 1.7;
+            }
+
+            .concept-code {
+                margin-top: 1.5rem;
+                background: rgba(0, 0, 0, 0.3);
+                padding: 1rem;
+                border-radius: 0.5rem;
+                font-family: "Fira Code", monospace;
+                font-size: 0.85rem;
+            }
+
+            /* Use Cases Section */
+            .use-cases {
+                margin: 8rem 0;
+            }
+
+            .use-cases-tabs {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                margin-bottom: 3rem;
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                padding: 0.75rem 2rem;
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 2rem;
+                color: var(--text-secondary);
+                cursor: pointer;
+                transition: all 0.3s;
+                font-weight: 500;
+            }
+
+            .tab:hover,
+            .tab.active {
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-primary),
+                    var(--accent-pink)
+                );
+                border-color: transparent;
+                color: white;
+            }
+
+            .use-cases-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 2rem;
+            }
+
+            .use-case-card {
+                background: var(--card-bg);
+                border-radius: 1.5rem;
+                padding: 2.5rem;
+                border: 1px solid var(--border-color);
+                transition: all 0.3s;
+            }
+
+            .use-case-card:hover {
+                transform: translateY(-5px);
+                border-color: var(--accent-primary);
+                box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+            }
+
+            .use-case-icon {
+                font-size: 2.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .use-case-card h3 {
+                font-size: 1.4rem;
+                margin-bottom: 1rem;
+            }
+
+            .use-case-card p {
+                color: var(--text-secondary);
+                margin-bottom: 1.5rem;
+                line-height: 1.7;
+            }
+
+            .use-case-tags {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+
+            .tag {
+                display: inline-block;
+                background: rgba(139, 92, 246, 0.15);
+                color: var(--accent-primary);
+                padding: 0.35rem 1rem;
+                border-radius: 1rem;
+                font-size: 0.8rem;
+                font-weight: 600;
+            }
+
+            /* Why PXVM-Script */
+            .why-pxvm {
+                margin: 8rem 0;
+                background: linear-gradient(
+                    135deg,
+                    rgba(139, 92, 246, 0.05),
+                    rgba(6, 182, 212, 0.05)
+                );
+                border-radius: 2rem;
+                padding: 5rem 4rem;
+                border: 1px solid rgba(139, 92, 246, 0.2);
+            }
+
+            .comparison-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+                margin-top: 3rem;
+            }
+
+            .comparison-column h3 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .comparison-item {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                align-items: flex-start;
+            }
+
+            .comparison-icon {
+                font-size: 1.5rem;
+                flex-shrink: 0;
+            }
+
+            .comparison-text strong {
+                display: block;
+                margin-bottom: 0.3rem;
+                font-size: 1.1rem;
+            }
+
+            .comparison-text span {
+                color: var(--text-secondary);
+                font-size: 0.95rem;
+            }
+
+            /* Stats */
+            .stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 2rem;
+                margin: 6rem 0;
+            }
+
+            .stat-card {
+                background: var(--card-bg);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--border-color);
+                border-radius: 1rem;
+                padding: 2.5rem;
+                text-align: center;
+                transition: all 0.3s;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                border-color: var(--accent-primary);
+                box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+            }
+
+            .stat-number {
+                font-size: 3.5rem;
+                font-weight: 900;
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-primary),
+                    var(--accent-secondary)
+                );
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-label {
+                color: var(--text-secondary);
+                font-size: 1rem;
+            }
+
+            /* CTA Section */
+            .cta-section {
+                margin: 8rem 0;
+                text-align: center;
+            }
+
+            .cta-section h2 {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+
+            .cta-section p {
+                font-size: 1.3rem;
+                color: var(--text-secondary);
+                margin-bottom: 3rem;
+                max-width: 700px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            /* Footer */
+            footer {
+                margin-top: 8rem;
+                padding: 4rem 0 2rem;
+                border-top: 1px solid var(--border-color);
+            }
+
+            .footer-content {
+                display: grid;
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+                gap: 4rem;
+                margin-bottom: 3rem;
+            }
+
+            .footer-brand h3 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-primary),
+                    var(--accent-secondary)
+                );
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .footer-brand p {
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+
+            .footer-links h4 {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+                color: var(--text-primary);
+            }
+
+            .footer-links ul {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .footer-links a {
+                color: var(--text-secondary);
+                text-decoration: none;
+                font-size: 0.9rem;
+                transition: color 0.3s;
+            }
+
+            .footer-links a:hover {
+                color: var(--accent-primary);
+            }
+
+            .footer-bottom {
+                padding-top: 2rem;
+                border-top: 1px solid var(--border-color);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: var(--text-muted);
+                font-size: 0.9rem;
+            }
+
+            .footer-social {
+                display: flex;
+                gap: 1.5rem;
+            }
+
+            .footer-social a {
+                color: var(--text-secondary);
+                font-size: 1.2rem;
+                transition: color 0.3s;
+            }
+
+            .footer-social a:hover {
+                color: var(--accent-primary);
+            }
+
+            /* Responsive */
+            @media (max-width: 968px) {
+                .hero h1 {
+                    font-size: 3rem;
+                }
+
+                .hero-code,
+                .comparison-grid,
+                .concepts-grid,
+                .footer-content {
+                    grid-template-columns: 1fr;
+                }
+
+                .nav-links {
+                    display: none;
+                }
+            }
+
+            .cursor {
+                display: inline-block;
+                width: 2px;
+                height: 1em;
+                background: var(--accent-primary);
+                animation: blink 1s infinite;
+                margin-left: 2px;
+            }
+
+            @keyframes blink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Physics particles background -->
+        <div class="physics-bg" id="physics-bg"></div>
+
+        <!-- Navigation -->
+        <nav>
+            <div class="nav-inner">
+                <div class="logo-section">
+                    <div class="logo">OpenSentience.org</div>
+                    <div class="logo-tagline">PXVM-Script</div>
+                </div>
                 <ul class="nav-links">
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#architecture">Architecture</a></li>
+                    <li><a href="#concepts">Concepts</a></li>
                     <li><a href="#use-cases">Use Cases</a></li>
-                    <li><a href="#docs">Getting Started</a></li>
-                    <li><a href="documentation.html">Docs</a></li>
+                    <li>
+                        <a
+                            href="https://github.com/c-u-l8er/brokenrecord.studio"
+                            class="nav-cta"
+                            >GitHub →</a
+                        >
+                    </li>
                 </ul>
-                <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-button">View on GitHub</a>
-            </nav>
-        </div>
-    </header>
+            </div>
+        </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
         <div class="container">
-            <div class="powered-by">
-                Powered by <a href="https://traaviis.com" target="_blank">TRAAVIIS</a>
-            </div>
-            <h1>OPEN Sentience</h1>
-            <h2>Observability Protocol for Emergent Networks</h2>
-            <p>Type-safe distributed workflow orchestration built on Elixir's BEAM VM. Unmatched fault tolerance. Extreme concurrency. Compile-time safety. Not another low-code tool—a developer's workflow engine.</p>
-
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-number">2M+</span>
-                    <span class="stat-label">Concurrent Tasks</span>
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-badge">
+                    <span
+                        >Powered by
+                        <a href="https://traaviis.com" target="_blank"
+                            >TRAAVIIS</a
+                        ></span
+                    >
                 </div>
-                <div class="stat">
-                    <span class="stat-number"><150ms</span>
-                    <span class="stat-label">Fault Recovery</span>
+                <h1>
+                    <span class="gradient-text">Code That Feels Forces</span>
+                </h1>
+                <p class="hero-subtitle">
+                    A physics-aware programming language where functions have
+                    position, velocity, and temperature. Where optimization
+                    happens through force fields. Where constraints are
+                    conservation laws.
+                    <strong>PXVM-Script makes computation physical.</strong>
+                </p>
+                <div class="cta-buttons">
+                    <a href="docs.html" class="btn btn-primary">
+                        <span>Get Started</span>
+                        <span>→</span>
+                    </a>
+                    <a href="#concepts" class="btn btn-secondary"
+                        >Learn the Concepts</a
+                    >
                 </div>
-                <div class="stat">
-                    <span class="stat-number">0.05ms</span>
-                    <span class="stat-label">Task Overhead</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">100%</span>
-                    <span class="stat-label">Type-Safe (with ADTs)</span>
-                </div>
-            </div>
+            </section>
 
-            <div class="cta-buttons">
-                <a href="#docs" class="cta-button cta-primary">Get Started</a>
-                <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-secondary">View on GitHub</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="demo-section fade-in">
-        <div class="container">
-            <div class="demo-grid">
-                <div class="demo-content">
-                    <h3>Core Capabilities</h3>
-                    <p>Built for distributed systems that never fail. OPEN combines the power of Elixir's BEAM VM with type-safe workflow orchestration for unprecedented reliability and performance.</p>
-
-                    <ul class="feature-list">
-                        <li><strong>Extreme Performance:</strong> Execute 2 million concurrent tasks with sub-millisecond overhead</li>
-                        <li><strong>Fault Tolerance:</strong> OTP supervision trees detect failures in under 150ms and auto-restart</li>
-                        <li><strong>Compile-Time Safety:</strong> Macro-based DAG validation catches errors before runtime</li>
-                        <li><strong>Distributed by Design:</strong> Built-in Erlang distribution protocol across thousands of nodes</li>
-                        <li><strong>Real-Time Observability:</strong> Phoenix LiveView dashboards with WebSocket updates under 100ms</li>
-                    </ul>
-
-                    <a href="#architecture" class="cta-button">Explore Architecture</a>
-                </div>
-
-                <div class="demo-visual">
-                    <h4 style="margin-bottom: 30px; color: #64ffda;">System Architecture</h4>
-                    <div class="architecture-diagram">
-                        <div class="service-box service-platform">🎨 <br />Platform</div>
-                        <div class="arrow">→</div>
-                        <div class="service-box service-types">🎯 <br />Types</div>
-                        <div class="arrow">→</div>
-                        <div class="service-box service-orchestration">🧠 <br />OPEN</div>
-                        <div class="arrow">→</div>
-                        <div class="service-box service-runtime">⚙️ <br />Runtime</div>
-                        <div class="arrow">→</div>
-                        <div class="service-box service-workers">🔧 <br />Workers</div>
+            <!-- Hero Code Example -->
+            <section class="hero-code">
+                <div class="code-editor">
+                    <div class="code-header">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                        <div class="code-title">adaptive_learning.pxs</div>
                     </div>
-                    <p style="margin-top: 20px; font-size: 0.9rem; color: #b3b3b3;">
-                        Layered design for maximum flexibility<br>
-                        Built on Elixir/BEAM with optional type safety
+                    <pre><code><span class="keyword">use</span> PXVMScript
+
+<span class="comment"># Functions track position, velocity, temperature</span>
+<span class="keyword">defphysics</span> <span class="function">learn_topic</span>(student, topic) <span class="keyword">do</span>
+  ctx <span class="operator">=</span> physics_context
+
+  <span class="comment"># High temperature = exploration</span>
+  <span class="comment"># Low temperature = consolidation</span>
+  <span class="keyword">if</span> ctx<span class="operator">.</span>temperature <span class="operator">></span> <span class="number">0.7</span> <span class="keyword">do</span>
+    <span class="function">hot_path</span> <span class="keyword">do</span>
+      <span class="comment"># Explore diverse topics</span>
+      <span class="function">in_field</span> <span class="operator">:</span>vortex, <span class="type">axis:</span> <span class="operator">:</span>creativity <span class="keyword">do</span>
+        <span class="function">discover_connections</span>(topic)
+      <span class="keyword">end</span>
+    <span class="keyword">end</span>
+  <span class="keyword">else</span>
+    <span class="function">cold_storage</span> <span class="keyword">do</span>
+      <span class="comment"># Deep focus on mastery</span>
+      <span class="function">attracted_to</span>(student<span class="operator">.</span>weak_areas) <span class="keyword">do</span>
+        <span class="function">practice_until_mastery</span>(topic)
+      <span class="keyword">end</span>
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+
+  <span class="comment"># Conservation guarantees progress</span>
+  <span class="function">conserving</span>([<span class="operator">:</span>knowledge]) <span class="keyword">do</span>
+    update_student_model(student)
+  <span class="keyword">end</span>
+<span class="keyword">end</span><span class="cursor"></span></code></pre>
+                </div>
+
+                <div class="features-list">
+                    <div class="feature">
+                        <div class="feature-icon">🌡️</div>
+                        <div>
+                            <h3>Temperature-Driven</h3>
+                            <p>
+                                Functions have temperature that controls
+                                exploration vs. exploitation. High temp =
+                                creative, low temp = focused.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <div>
+                            <h3>Force Fields</h3>
+                            <p>
+                                Guide computation through attractors, repulsors,
+                                and vortex fields. GPU-accelerated when it
+                                matters.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">🔒</div>
+                        <div>
+                            <h3>Conservation Laws</h3>
+                            <p>
+                                Enforce invariants through physics. Conserved
+                                quantities can't be violated—checked at compile
+                                time.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">📊</div>
+                        <div>
+                            <h3>Spatial Awareness</h3>
+                            <p>
+                                Functions exist in space. Find related concepts
+                                with <code>nearby()</code>. Cluster naturally
+                                through physics.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Core Concepts -->
+            <section class="core-concepts" id="concepts">
+                <div class="section-header">
+                    <h2>Core Concepts</h2>
+                    <p>
+                        Physics isn't just a metaphor—it's the execution model
                     </p>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Performance Section -->
-    <section id="performance" class="performance fade-in">
-        <div class="container">
-            <h3>Enterprise-Grade Performance</h3>
-
-            <div class="perf-grid">
-                <div class="perf-card">
-                    <span class="perf-icon">⚡</span>
-                    <div class="perf-title">Extreme Performance</div>
-                    <div class="perf-metric">2M+</div>
-                    <p>Concurrent tasks with sub-millisecond overhead. BEAM's lightweight processes deliver unmatched parallelism.</p>
-                </div>
-
-                <div class="perf-card">
-                    <span class="perf-icon">🛡️</span>
-
-                    <div class="perf-title">Fault Tolerance</div>
-                    <div class="perf-metric">&lt;150ms</div>
-                    <p>OTP supervision trees detect failures in under 150ms and automatically restart. Telecom-grade reliability built-in.</p>
-                </div>
-
-                <div class="perf-card">
-                    <span class="perf-icon">🔒</span>
-                    <div class="perf-title">Compile-Time Safety</div>
-                    <div class="perf-metric">100%</div>
-                    <p>Macro-based DAG validation catches errors before runtime. The only workflow orchestrator with compile-time guarantees.</p>
-                </div>
-
-                <div class="perf-card">
-                    <span class="perf-icon">🌐</span>
-                    <div class="perf-title">Distributed by Design</div>
-                    <div class="perf-metric">1000s</div>
-                    <p>Built-in Erlang distribution protocol. Coordinate across thousands of nodes with transparent remote execution.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Architecture Section -->
-    <section id="architecture" class="demo-section fade-in">
-        <div class="container">
-            <h3 style="text-align: center; font-size: 3rem; margin-bottom: 60px; background: linear-gradient(45deg, #ff6b6b, #64ffda); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Architecture</h3>
-            
-            <div class="demo-visual" style="max-width: 900px; margin: 0 auto;">
-                <h4 style="margin-bottom: 30px; color: #64ffda;">Layered Design for Maximum Flexibility</h4>
-                
-                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ff6b6b;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🎨 Ash Framework Layer (Platform)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">DAG storage, user management, GraphQL APIs, authorization, execution history, Phoenix LiveView dashboards</p>
+                <div class="concepts-grid">
+                    <div class="concept-card">
+                        <div class="concept-icon">🌡️</div>
+                        <h3>Physics Context</h3>
+                        <p>
+                            Every <code>defphysics</code> function tracks
+                            position, velocity, temperature, mass, and call
+                            frequency. Access through
+                            <code>physics_context</code>.
+                        </p>
+                        <div class="concept-code">
+                            ctx.temperature # exploration level<br />
+                            ctx.velocity # rate of change<br />
+                            ctx.position # location in concept space
+                        </div>
                     </div>
-                    
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #4ecdc4;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🎯 Optional Type Layer (Stellarmorphism ADTs)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">Algebraic data types for type-safe workflows, compile-time validation, exhaustive pattern matching—opt-in enhancement</p>
+
+                    <div class="concept-card">
+                        <div class="concept-icon">⚡</div>
+                        <h3>Force Fields</h3>
+                        <p>
+                            Apply forces to guide computation. Attractors pull
+                            toward goals. Repulsors push away from constraints.
+                            Vortex creates circular patterns.
+                        </p>
+                        <div class="concept-code">
+                            in_field :attractor, center: goal<br />
+                            in_field :repulsor, center: constraint<br />
+                            in_field :vortex, axis: :exploration
+                        </div>
                     </div>
-                    
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ffd93d;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🧠 OPEN Orchestration Layer (Coordination)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">Macro-based DAG definition, topological sorting, dependency resolution, distributed task scheduling, OTP supervision</p>
+
+                    <div class="concept-card">
+                        <div class="concept-icon">🎯</div>
+                        <h3>Relationships</h3>
+                        <p>
+                            Express intent through spatial relationships.
+                            <code>attracted_to</code> pulls toward targets.
+                            <code>repelled_by</code> avoids states.
+                            <code>nearby</code> finds related concepts.
+                        </p>
+                        <div class="concept-code">
+                            attracted_to(best_solution)<br />
+                            repelled_by(invalid_states)<br />
+                            nearby(radius: 10.0)
+                        </div>
                     </div>
-                    
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #a8e6cf;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">⚙️ Execution Runtime (Performance)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">Pure Elixir hot path (&lt;0.1ms overhead), parallel execution engine, fault detection & recovery, BEAM process pool</p>
+
+                    <div class="concept-card">
+                        <div class="concept-icon">🌡️</div>
+                        <h3>Temperature Control</h3>
+                        <p>
+                            <code>hot_path</code> increases temperature for
+                            exploration and creativity.
+                            <code>cold_storage</code> decreases for focused
+                            optimization and refinement.
+                        </p>
+                        <div class="concept-code">
+                            hot_path do # high temp = explore<br />
+                            generate_novel_ideas()<br />
+                            end<br />
+                            cold_storage do # low temp = refine
+                        </div>
                     </div>
-                    
-                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #9B51E0;">
-                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🔧 Worker Layer (Computation)</h4>
-                        <p style="color: #d4d4d8; font-size: 0.95rem;">Rust/C++ NIFs for numerical computing, Python via Ports for ML/data science, Julia for scientific computing</p>
+
+                    <div class="concept-card">
+                        <div class="concept-icon">🔒</div>
+                        <h3>Conservation</h3>
+                        <p>
+                            Enforce invariants through conservation laws. Type
+                            system guarantees constraints aren't violated.
+                            Automatic verification.
+                        </p>
+                        <div class="concept-code">
+                            conserving [:energy, :information] do<br />
+                            # compiler enforces conservation<br />
+                            transform(data)<br />
+                            end
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-icon">📈</div>
+                        <h3>GPU Acceleration</h3>
+                        <p>
+                            Physics primitives map to GPU hardware. Graph
+                            embedding, force fields, and spatial queries
+                            automatically use Vulkan compute when available.
+                        </p>
+                        <div class="concept-code">
+                            # Automatically uses GPU when:<br />
+                            # - Graph has 1000+ nodes<br />
+                            # - backend: :auto is set<br />
+                            GraphPhysics.embed(graph)
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats -->
+            <section class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">⚡</div>
+                    <div class="stat-label">GPU-Accelerated Physics</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">19×</div>
+                    <div class="stat-label">
+                        Faster Graph Embedding (vs CPU)
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Conservation Guaranteed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Ways to Express Intent</div>
+                </div>
+            </section>
+
+            <!-- Use Cases -->
+            <section class="use-cases" id="use-cases">
+                <div class="section-header">
+                    <h2>What You Can Build</h2>
+                    <p>
+                        From explainable AI to adaptive games—physics makes it
+                        natural
+                    </p>
+                </div>
+
+                <div class="use-cases-tabs">
+                    <div class="tab active">All</div>
+                    <div class="tab">AI & ML</div>
+                    <div class="tab">Games & Sim</div>
+                    <div class="tab">Creative</div>
+                    <div class="tab">Systems</div>
+                </div>
+
+                <div class="use-cases-grid">
+                    <!-- AI & ML Use Cases -->
+                    <div class="use-case-card">
+                        <div class="use-case-icon">🤖</div>
+                        <h3>LLM Output Selection</h3>
+                        <p>
+                            Turn multiple LLM responses into physics particles.
+                            Apply forces (accuracy, cost, novelty). Let physics
+                            find the optimal balance. GPU-accelerated,
+                            explainable.
+                        </p>
+                        <div class="concept-code">
+                            # Rank candidates via forces<br />
+                            candidates = LLM.generate(prompt, n: 8)<br />
+                            field = ForceField.new()<br />
+                            field.attract(:accuracy, 0.9)<br />
+                            field.repel(:cost, 0.6)<br />
+                            field.attract(:novelty, 0.3)<br />
+                            best = Physics.select(candidates, field)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">AI</span>
+                            <span class="tag">Explainable</span>
+                            <span class="tag">GPU</span>
+                        </div>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon">📚</div>
+                        <h3>Adaptive Learning Systems</h3>
+                        <p>
+                            Knowledge graphs with physics. Temperature controls
+                            exploration vs. consolidation. Prerequisites as
+                            springs. Student interests as attractors. GPU scales
+                            to 10K+ concepts.
+                        </p>
+                        <div class="concept-code">
+                            # Prereqs as springs + interest as attractor<br />
+                            g = KnowledgeGraph.load("course://math101")<br />
+                            g.springs(:prereq, k: 0.8, damping: 0.2)<br />
+                            g.attractor(student.interests, strength: 0.6)<br />
+                            g.temperature = 0.35<br />
+                            plan = g.relax(steps: 200, backend: :auto)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">EdTech</span>
+                            <span class="tag">Personalization</span>
+                            <span class="tag">Graph Physics</span>
+                        </div>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon">🎯</div>
+                        <h3>Multi-Agent Coordination</h3>
+                        <p>
+                            Agents as particles. Tasks as attractors. Resource
+                            conflicts as repulsion. Physics naturally balances
+                            load and prevents deadlocks. Real-time re-planning.
+                        </p>
+                        <div class="concept-code">
+                            # Tasks pull; contention repels<br />
+                            swarm = Swarm.spawn(agents: 24)<br />
+                            swarm.attract(tasks, strength: 0.7)<br />
+                            swarm.repel(:resource_conflict, strength: 0.9)<br />
+                            swarm.step(dt: 0.016)<br />
+                            assignments = swarm.assignments()<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">Agents</span>
+                            <span class="tag">Coordination</span>
+                            <span class="tag">Real-time</span>
+                        </div>
+                    </div>
+
+                    <!-- Games & Simulation -->
+                    <div class="use-case-card">
+                        <div class="use-case-icon">🎮</div>
+                        <h3>Adaptive Game AI</h3>
+                        <p>
+                            NPCs that feel forces. Curiosity as attractor.
+                            Danger as repulsor. Temperature controls
+                            risk-taking. Personality emerges from force balance.
+                        </p>
+                        <div class="concept-code">
+                            # Behavior is the resultant force vector<br />
+                            npc.attract(:curiosity, strength: 0.6)<br />
+                            npc.repel(:danger, strength: 1.0)<br />
+                            npc.temperature = 0.25 # lower = cautious<br />
+                            npc.integrate(dt: 0.033)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">Games</span>
+                            <span class="tag">AI</span>
+                            <span class="tag">Emergent</span>
+                        </div>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon">🌊</div>
+                        <h3>Physics Simulations</h3>
+                        <p>
+                            N-body problems, molecular dynamics, fluid flow.
+                            Conservation laws enforced by type system. GPU
+                            acceleration through Vulkan compute. Deterministic
+                            or stochastic.
+                        </p>
+                        <div class="concept-code">
+                            # N-body with conservation constraints<br />
+                            sim = NBody.new(bodies, backend: :auto)<br />
+                            sim.conserve(:energy)<br />
+                            sim.conserve(:momentum)<br />
+                            sim.run(steps: 10_000, dt: 0.001)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">Simulation</span>
+                            <span class="tag">Scientific</span>
+                            <span class="tag">GPU</span>
+                        </div>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon">🎲</div>
+                        <h3>Procedural Generation</h3>
+                        <p>
+                            Generate worlds through physics. Biomes as
+                            attractors. Constraints as repulsors. Temperature
+                            controls randomness. Conservation prevents
+                            impossible configurations.
+                        </p>
+                        <div class="concept-code">
+                            # Layout via attractors/repulsors + annealing<br />
+                            world = World.seed(42)<br />
+                            world.attract(:water, strength: 0.7)<br />
+                            world.repel(:overlap, strength: 1.0)<br />
+                            world.temperature = 0.55<br />
+                            world.relax(steps: 800)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">Procedural</span>
+                            <span class="tag">Games</span>
+                            <span class="tag">Creative</span>
+                        </div>
+                    </div>
+
+                    <!-- Creative Applications -->
+                    <div class="use-case-card">
+                        <div class="use-case-icon">📖</div>
+                        <h3>Story Generation</h3>
+                        <p>
+                            Characters as particles with momentum. Plot points
+                            as attractors. Genre as force field. Temperature
+                            controls narrative tension. Physics creates natural
+                            story arcs.
+                        </p>
+                        <div class="concept-code">
+                            # Plot points pull arcs; momentum preserves
+                            intent<br />
+                            cast = Characters.load("ensemble")<br />
+                            plot = Attractors.from(outline.points)<br />
+                            story = Narrative.simulate(cast, plot, genre:
+                            :noir)<br />
+                            story.temperature = 0.4<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">Creative</span>
+                            <span class="tag">AI</span>
+                            <span class="tag">Narrative</span>
+                        </div>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon">🎵</div>
+                        <h3>Generative Music</h3>
+                        <p>
+                            Notes as particles. Harmony as springs (consonance
+                            attracts). Rhythm as uniform field. Tension/release
+                            through temperature cycles. GPU generates in
+                            real-time.
+                        </p>
+                        <div class="concept-code">
+                            # Consonance springs + tempo field<br />
+                            score = Score.new(key: "Am", tempo: 120)<br />
+                            score.springs(:harmony, k: 0.7)<br />
+                            score.field(:rhythm, strength: 0.5)<br />
+                            audio = score.render(seconds: 30, backend: :auto)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">Music</span>
+                            <span class="tag">Generative</span>
+                            <span class="tag">Real-time</span>
+                        </div>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon">💻</div>
+                        <h3>Code Architecture</h3>
+                        <p>
+                            Modules as nodes. Dependencies as springs. Design
+                            patterns as force fields. Complexity limits as
+                            repulsion. Physics enforces SOLID principles
+                            naturally.
+                        </p>
+                        <div class="concept-code">
+                            # Refactor until forces settle<br />
+                            arch = CodeGraph.from_repo("./")<br />
+                            arch.springs(:imports, k: 0.6, damping: 0.3)<br />
+                            arch.repel(:complexity, strength: 0.9)<br />
+                            arch.relax(steps: 400)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">Code Gen</span>
+                            <span class="tag">Architecture</span>
+                            <span class="tag">AI</span>
+                        </div>
+                    </div>
+
+                    <!-- Systems -->
+                    <div class="use-case-card">
+                        <div class="use-case-icon">⚖️</div>
+                        <h3>Load Balancing</h3>
+                        <p>
+                            Servers as nodes with mass (capacity). Requests flow
+                            like water. High-load repels. SLA violations create
+                            strong repulsion. Sub-10ms decisions.
+                        </p>
+                        <div class="concept-code">
+                            # Route by force balance (capacity vs. SLA)<br />
+                            pool = Cluster.observe()<br />
+                            pool.repel(:high_load, strength: 0.8)<br />
+                            pool.repel(:sla_risk, strength: 1.0)<br />
+                            target = pool.select(request)<br />
+                            target.dispatch(request)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">Infrastructure</span>
+                            <span class="tag">Real-time</span>
+                            <span class="tag">Optimization</span>
+                        </div>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon">🔍</div>
+                        <h3>Anomaly Detection</h3>
+                        <p>
+                            Normal behavior as attractor basin. Anomalies escape
+                            basin (high energy). Temperature quantifies
+                            severity. Physics naturally handles drift.
+                        </p>
+                        <div class="concept-code">
+                            # Energy above basin => anomaly<br />
+                            model = AttractorBasin.fit(metrics, window:
+                            "24h")<br />
+                            e = model.energy(point)<br />
+                            alert if e > threshold(temperature: 0.6)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">Security</span>
+                            <span class="tag">Monitoring</span>
+                            <span class="tag">Real-time</span>
+                        </div>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon">📊</div>
+                        <h3>Recommendation Systems</h3>
+                        <p>
+                            Users and items in physics space. Past interactions
+                            as springs. Diversity requirement as repulsion.
+                            Conservation prevents filter bubbles.
+                        </p>
+                        <div class="concept-code">
+                            # Springs remember affinity; repulsion enforces
+                            diversity<br />
+                            space = RecoSpace.embed(users, items, backend:
+                            :auto)<br />
+                            space.springs(:interactions, k: 0.5)<br />
+                            space.repel(:similarity, strength: 0.4)<br />
+                            recs = space.recommend(user, top_k: 20)<br />
+                        </div>
+                        <div class="use-case-tags">
+                            <span class="tag">ML</span>
+                            <span class="tag">Personalization</span>
+                            <span class="tag">Anti-bias</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why PXVM-Script -->
+            <section class="why-pxvm">
+                <div class="section-header">
+                    <h2>Why PXVM-Script?</h2>
+                    <p>Because some problems are naturally physical</p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-column">
+                        <h3>Traditional Approach</h3>
+
+                        <div class="comparison-item">
+                            <div class="comparison-icon">📝</div>
+                            <div class="comparison-text">
+                                <strong>Explicit Everything</strong>
+                                <span
+                                    >Write loops, conditions, heuristics.
+                                    Hand-tune weights. Pray it scales.</span
+                                >
+                            </div>
+                        </div>
+
+                        <div class="comparison-item">
+                            <div class="comparison-icon">🎲</div>
+                            <div class="comparison-text">
+                                <strong>Random or Greedy</strong>
+                                <span
+                                    >Pick first option, random choice, or greedy
+                                    algorithm. Hard to explain "why".</span
+                                >
+                            </div>
+                        </div>
+
+                        <div class="comparison-item">
+                            <div class="comparison-icon">🐌</div>
+                            <div class="comparison-text">
+                                <strong>CPU-Bound</strong>
+                                <span
+                                    >Traditional optimizers take minutes. Can't
+                                    re-optimize as constraints change.</span
+                                >
+                            </div>
+                        </div>
+
+                        <div class="comparison-item">
+                            <div class="comparison-icon">❓</div>
+                            <div class="comparison-text">
+                                <strong>Unexplainable</strong>
+                                <span
+                                    >"The model predicted..." or "The algorithm
+                                    chose..." Black box decisions.</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-column">
+                        <h3>PXVM-Script Approach</h3>
+
+                        <div class="comparison-item">
+                            <div class="comparison-icon">⚡</div>
+                            <div class="comparison-text">
+                                <strong>Declare Intent</strong>
+                                <span
+                                    >Express what you want (forces,
+                                    constraints). Physics figures out how. GPU
+                                    handles scale.</span
+                                >
+                            </div>
+                        </div>
+
+                        <div class="comparison-item">
+                            <div class="comparison-icon">⚖️</div>
+                            <div class="comparison-text">
+                                <strong>Physics Optimization</strong>
+                                <span
+                                    >Forces balance automatically.
+                                    Multi-objective optimization through
+                                    superposition.</span
+                                >
+                            </div>
+                        </div>
+
+                        <div class="comparison-item">
+                            <div class="comparison-icon">🚀</div>
+                            <div class="comparison-text">
+                                <strong>GPU-Accelerated</strong>
+                                <span
+                                    >Graph relaxation in &lt;100ms. Real-time
+                                    re-optimization. Interactive
+                                    exploration.</span
+                                >
+                            </div>
+                        </div>
+
+                        <div class="comparison-item">
+                            <div class="comparison-icon">📊</div>
+                            <div class="comparison-text">
+                                <strong>Force Diagrams</strong>
+                                <span
+                                    >"Forces balanced at 0.87 because accuracy
+                                    (0.9) > cost (-0.3)". Clear and
+                                    auditable.</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta-section">
+                <h2>Start Building with Physics</h2>
+                <p>
+                    PXVM-Script is open source. Documentation is comprehensive.
+                    Community is growing.
+                </p>
+                <!--<div class="cta-buttons">
+                    <a href="docs.html" class="btn btn-primary">
+                        <span>Read the Docs</span>
+                        <span>→</span>
+                    </a>
+                    <a href="examples.html" class="btn btn-secondary"
+                        >Explore Examples</a
+                    >
+                    <a href="playground.html" class="btn btn-secondary"
+                        >Try in Browser</a
+                    >
+                    <a
+                        href="https://github.com/c-u-l8er/brokenrecord.studio"
+                        class="btn btn-secondary"
+                        >View on GitHub</a
+                    >
+                </div>-->
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <h3>PXVM-Script</h3>
+                        <p>
+                            A physics-aware programming language from
+                            OpenSentience.org. Where computation feels forces,
+                            conserves energy, and leverages GPU acceleration.
+                            Make your code physical.
+                        </p>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Learn</h4>
+                        <ul>
+                            <li><a href="docs.html">Documentation</a></li>
+                            <li><a href="tutorial.html">Tutorial</a></li>
+                            <li><a href="examples.html">Examples</a></li>
+                            <li><a href="playground.html">Playground</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Community</h4>
+                        <ul>
+                            <li>
+                                <a
+                                    href="https://github.com/c-u-l8er/brokenrecord.studio"
+                                    >GitHub</a
+                                >
+                            </li>
+                            <li><a href="#">Discord</a></li>
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="showcase.html">Showcase</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>About</h4>
+                        <ul>
+                            <li>
+                                <a href="about.html">About OpenSentience</a>
+                            </li>
+                            <li><a href="research.html">Research</a></li>
+                            <li><a href="press.html">Press Kit</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>
+                        &copy; <span id="current-year"></span> OpenSentience.
+                        PXVM-Script is open source under MIT License.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#">🐦</a>
+                        <a href="#">💬</a>
+                        <a href="#">📺</a>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </footer>
 
-    <!-- Use Cases Section -->
-    <section id="use-cases" class="use-cases fade-in">
-        <div class="container">
-            <h3>Powering Next Generation of Distributed Systems</h3>
-
-            <div class="use-case-grid">
-                <div class="use-case">
-                    <h4>🔬 Scientific Computing</h4>
-                    <p>Coordinate complex computational workflows across HPC clusters with automatic parallelization. Not for simple automation—built for research.</p>
-                    <div class="use-case-stat">→ HPC cluster coordination</div>
-                </div>
-
-                <div class="use-case">
-                    <h4>📡 IoT & Edge Processing</h4>
-                    <p>Process millions of sensor events in real-time with fault-tolerant distributed pipelines. BEAM's concurrency shines here.</p>
-                    <div class="use-case-stat">→ Real-time sensor processing</div>
-                </div>
-
-                <div class="use-case">
-                    <h4>🤖 ML Pipeline Orchestration</h4>
-                    <p>Build and deploy machine learning workflows with parallel feature extraction and training. Code-first, not low-code.</p>
-                    <div class="use-case-stat">→ Parallel ML workflows</div>
-                </div>
-
-                <div class="use-case">
-                    <h4>💰 Financial Systems</h4>
-                    <p>Execute trading algorithms and risk calculations with microsecond precision and zero downtime. Production-grade reliability.</p>
-                    <div class="use-case-stat">→ Microsecond precision trading</div>
-                </div>
-
-                <div class="use-case">
-                    <h4>🏗️ Data Engineering</h4>
-                    <p>Build ETL pipelines that scale to petabytes with automatic failure recovery. Complement Broadway/Flow, don't replace them.</p>
-                    <div class="use-case-stat">→ Petabyte-scale ETL</div>
-                </div>
-
-                <div class="use-case">
-                    <h4>🔗 Microservices Orchestration</h4>
-                    <p>Coordinate distributed transactions and sagas across service meshes. Works alongside Oban for reliable job execution.</p>
-                    <div class="use-case-stat">→ Service mesh coordination</div>
+        <div style="background: #000; padding: 2em 0 1em">
+            <div style="margin: 0 auto; width: 728px">
+                <iframe
+                    src="https://ampersandboxdesign.com/advertisements/leaderboard-watermark.html"
+                    width="728"
+                    height="90"
+                    frameborder="0"
+                    scrolling="no"
+                    style="border: none; overflow: hidden"
+                    title="AmperSandboxDesign Branding Design Agency Advertisement"
+                >
+                </iframe>
+                <div style="text-align: right; color: #ccc; font-size: 0.75em">
+                    ^ADVERTISEMENT
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Getting Started Section -->
-    <section id="docs" class="performance fade-in">
-        <div class="container">
-            <h3>Getting Started</h3>
+        <script>
+            // Generate physics particles
+            const physicsBg = document.getElementById("physics-bg");
+            const particleCount = 20;
 
-            <div class="perf-grid">
-                <div class="perf-card">
-                    <span class="perf-icon">📦</span>
-                    <div class="perf-title">1. Install</div>
-                    <div class="perf-metric">mix</div>
-                    <p><code>mix new my_platform && cd my_platform</code><br>
-                    Add <code>{:open, "~> 0.1.0"}</code> to deps</p>
-                </div>
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement("div");
+                particle.className = "physics-particle";
+                particle.style.left = Math.random() * 100 + "%";
+                particle.style.top = Math.random() * 100 + "%";
+                particle.style.animationDelay = Math.random() * 20 + "s";
+                particle.style.animationDuration =
+                    15 + Math.random() * 10 + "s";
+                physicsBg.appendChild(particle);
+            }
 
-                <div class="perf-card">
-                    <span class="perf-icon">📝</span>
-                    <div class="perf-title">2. Define Your DAG</div>
-                    <div class="perf-metric">Macros</div>
-                    <p>Use compile-time macros to define workflows with automatic dependency resolution and type safety</p>
-                </div>
-
-                <div class="perf-card">
-                    <span class="perf-icon">🚀</span>
-                    <div class="perf-title">3. Execute</div>
-                    <div class="perf-metric">Run</div>
-                    <p>Run with automatic parallelization, fault tolerance, and real-time monitoring out of the box</p>
-                </div>
-
-                <div class="perf-card">
-                    <span class="perf-icon">📈</span>
-                    <div class="perf-title">4. Scale</div>
-                    <div class="perf-metric">Deploy</div>
-                    <p>Deploy across clusters with built-in distribution. No configuration changes needed.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section fade-in">
-        <div class="container">
-            <h3>Ready to Build?</h3>
-            <p>Join the future of distributed workflow orchestration. From scientific computing to financial systems, transform your infrastructure with OPEN's unmatched reliability and performance.</p>
-
-            <div class="cta-buttons">
-                <a href="documentation.html" class="cta-button cta-primary">View Documentation</a>
-                <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-secondary">Star on GitHub</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Platform</h4>
-                    <a href="#features">Features</a>
-                    <a href="#architecture">Architecture</a>
-                    <a href="#performance">Performance</a>
-                    <a href="/docs">Documentation</a>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Developers</h4>
-                    <a href="/docs/api">API Reference</a>
-                    <a href="/docs/dsl">DSL Guide</a>
-                    <a href="/docs/sdks">SDKs</a>
-                    <a href="https://github.com/opensentience/open">GitHub</a>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <a href="/tutorials">Tutorials</a>
-                    <a href="/examples">Examples</a>
-                    <a href="/blog">Blog</a>
-                    <a href="mailto:contact@opensentience.org">Contact</a>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Community</h4>
-                    <a href="https://discord.gg/opensentience">Discord</a>
-                    <a href="https://twitter.com/opensentience">Twitter</a>
-                    <a href="/events">Events</a>
-                    <a href="/newsletter">Newsletter</a>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p id="copyright">&copy; <span id="current-year">2025</span> OPEN - Observability Protocol for Emergent Networks</p>
-            </div>
-        </div>
-    </footer>
-
-    
-    <div style="background: #000; padding: 2em 0 1em;">
-        <div style="margin: 0 auto; width: 728px;">
-            <iframe
-                src="https://ampersandboxdesign.com/advertisements/leaderboard-watermark.html"
-                width="728"
-                height="90"
-                frameborder="0"
-                scrolling="no"
-                style="border:none; overflow:hidden;"
-                title="AmperSandboxDesign Branding Design Agency Advertisement"
-            >
-            </iframe>
-            <div style="text-align: right; color: #ccc; font-size: 0.75em;">
-                ^ADVERTISEMENT
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Scroll reveal animation
-        function revealOnScroll() {
-            const elements = document.querySelectorAll('.fade-in');
-            elements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-
-                if (elementTop < windowHeight * 0.8) {
-                    element.classList.add('visible');
-                }
+            // Smooth scroll
+            document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+                anchor.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(
+                        this.getAttribute("href"),
+                    );
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                        });
+                    }
+                });
             });
-        }
 
-        window.addEventListener('scroll', revealOnScroll);
-        revealOnScroll(); // Run on page load
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+            // Tab functionality
+            const tabs = document.querySelectorAll(".tab");
+            tabs.forEach((tab) => {
+                tab.addEventListener("click", function () {
+                    tabs.forEach((t) => t.classList.remove("active"));
+                    this.classList.add("active");
+                    // Filter use cases logic would go here
+                });
             });
-        });
 
-        // Dynamic particle generation
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-            particle.style.animationDelay = Math.random() * 5 + 's';
-
-            document.querySelector('.particles').appendChild(particle);
-
-            // Remove particle after animation
-            setTimeout(() => {
-                if (particle.parentNode) {
-                    particle.parentNode.removeChild(particle);
-                }
-            }, 25000);
-        }
-
-        // Create particles periodically
-        setInterval(createParticle, 3000);
-
-        // Update copyright year dynamically
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
-</body>
+            // Set dynamic copyright year
+            document.getElementById("current-year").textContent =
+                new Date().getFullYear();
+        </script>
+    </body>
 </html>

@@ -1,0 +1,976 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="/apple-touch-icon.png"
+    />
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="/favicon-32x32.png"
+    />
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPEN | Observability Protocol for Emergent Networks</title>
+    <meta name="description" content="OPEN - Observability Protocol for Emergent Networks. A revolutionary distributed workflow orchestration platform built on Elixir's BEAM VM.">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(ellipse at top, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Floating particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #64ffda;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0px); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 100;
+            padding: 20px 0;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #64ffda, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #64ffda;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 10;
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #64ffda, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            color: #b3b3b3;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #d4d4d8;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 60px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #64ffda;
+            display: block;
+        }
+
+        .stat-label {
+            color: #b3b3b3;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            position: relative;
+            z-index: 10;
+            padding: 100px 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .demo-content h3 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #64ffda;
+        }
+
+        .demo-content p {
+            font-size: 1.1rem;
+            color: #d4d4d8;
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #e4e4e7;
+        }
+
+        .feature-list li:before {
+            content: "📍";
+            position: absolute;
+            left: 0;
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .demo-visual {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .architecture-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .service-box {
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 120px;
+            text-align: center;
+            position: relative;
+        }
+
+        .service-platform { background: linear-gradient(45deg, #ff6b6b, #ff8a80); }
+        .service-types { background: linear-gradient(45deg, #4ecdc4, #81e6d9); }
+        .service-orchestration { background: linear-gradient(45deg, #ffd93d, #ffeb3b); color: #333; }
+        .service-runtime { background: linear-gradient(45deg, #a8e6cf, #7fcdcd); }
+        .service-workers { background: linear-gradient(45deg, #9B51E0, #B197FC); }
+
+        .arrow {
+            font-size: 2rem;
+            color: #64ffda;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Performance Section */
+        .performance {
+            padding: 100px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .performance h3 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #64ffda);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .perf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .perf-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .perf-card:hover {
+            transform: translateY(-10px);
+            border-color: #64ffda;
+        }
+
+        .perf-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .perf-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #64ffda;
+        }
+
+        .perf-metric {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            padding: 100px 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .use-cases h3 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 60px;
+            color: #64ffda;
+        }
+
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .use-case {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 4px solid #ff6b6b;
+            transition: all 0.3s ease;
+        }
+
+        .use-case:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .use-case h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #64ffda;
+        }
+
+        .use-case p {
+            color: #d4d4d8;
+            margin-bottom: 15px;
+        }
+
+        .use-case-stat {
+            font-size: 0.9rem;
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .cta-section h3 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #64ffda, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #d4d4d8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-primary {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            padding: 15px 40px;
+            font-size: 1.1rem;
+        }
+
+        .cta-secondary {
+            background: transparent;
+            border: 2px solid #64ffda;
+            color: #64ffda;
+            padding: 15px 40px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-secondary:hover {
+            background: #64ffda;
+            color: #1a1a2e;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 60px 0 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            color: #64ffda;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .footer-section a {
+            color: #d4d4d8;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #64ffda;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+            color: #b3b3b3;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                gap: 30px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .architecture-diagram {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Powered by section */
+        .powered-by {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.2s forwards;
+        }
+
+        .powered-by a {
+            color: #64ffda;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .powered-by a:hover {
+            color: #ffffff;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animation for scroll reveal */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles Background -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 1.5s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 3.5s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">OS</div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#architecture">Architecture</a></li>
+                    <li><a href="#use-cases">Use Cases</a></li>
+                    <li><a href="#docs">Getting Started</a></li>
+                    <li><a href="documentation.html">Docs</a></li>
+                </ul>
+                <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-button">View on GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="powered-by">
+                Powered by <a href="https://traaviis.com" target="_blank">TRAAVIIS</a>
+            </div>
+            <h1>OPEN Sentience</h1>
+            <h2>Observability Protocol for Emergent Networks</h2>
+            <p>Type-safe distributed workflow orchestration built on Elixir's BEAM VM. Unmatched fault tolerance. Extreme concurrency. Compile-time safety. Not another low-code tool—a developer's workflow engine.</p>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">2M+</span>
+                    <span class="stat-label">Concurrent Tasks</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number"><150ms</span>
+                    <span class="stat-label">Fault Recovery</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">0.05ms</span>
+                    <span class="stat-label">Task Overhead</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Type-Safe (with ADTs)</span>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="#docs" class="cta-button cta-primary">Get Started</a>
+                <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-secondary">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="demo-section fade-in">
+        <div class="container">
+            <div class="demo-grid">
+                <div class="demo-content">
+                    <h3>Core Capabilities</h3>
+                    <p>Built for distributed systems that never fail. OPEN combines the power of Elixir's BEAM VM with type-safe workflow orchestration for unprecedented reliability and performance.</p>
+
+                    <ul class="feature-list">
+                        <li><strong>Extreme Performance:</strong> Execute 2 million concurrent tasks with sub-millisecond overhead</li>
+                        <li><strong>Fault Tolerance:</strong> OTP supervision trees detect failures in under 150ms and auto-restart</li>
+                        <li><strong>Compile-Time Safety:</strong> Macro-based DAG validation catches errors before runtime</li>
+                        <li><strong>Distributed by Design:</strong> Built-in Erlang distribution protocol across thousands of nodes</li>
+                        <li><strong>Real-Time Observability:</strong> Phoenix LiveView dashboards with WebSocket updates under 100ms</li>
+                    </ul>
+
+                    <a href="#architecture" class="cta-button">Explore Architecture</a>
+                </div>
+
+                <div class="demo-visual">
+                    <h4 style="margin-bottom: 30px; color: #64ffda;">System Architecture</h4>
+                    <div class="architecture-diagram">
+                        <div class="service-box service-platform">🎨 <br />Platform</div>
+                        <div class="arrow">→</div>
+                        <div class="service-box service-types">🎯 <br />Types</div>
+                        <div class="arrow">→</div>
+                        <div class="service-box service-orchestration">🧠 <br />OPEN</div>
+                        <div class="arrow">→</div>
+                        <div class="service-box service-runtime">⚙️ <br />Runtime</div>
+                        <div class="arrow">→</div>
+                        <div class="service-box service-workers">🔧 <br />Workers</div>
+                    </div>
+                    <p style="margin-top: 20px; font-size: 0.9rem; color: #b3b3b3;">
+                        Layered design for maximum flexibility<br>
+                        Built on Elixir/BEAM with optional type safety
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section id="performance" class="performance fade-in">
+        <div class="container">
+            <h3>Enterprise-Grade Performance</h3>
+
+            <div class="perf-grid">
+                <div class="perf-card">
+                    <span class="perf-icon">⚡</span>
+                    <div class="perf-title">Extreme Performance</div>
+                    <div class="perf-metric">2M+</div>
+                    <p>Concurrent tasks with sub-millisecond overhead. BEAM's lightweight processes deliver unmatched parallelism.</p>
+                </div>
+
+                <div class="perf-card">
+                    <span class="perf-icon">🛡️</span>
+
+                    <div class="perf-title">Fault Tolerance</div>
+                    <div class="perf-metric">&lt;150ms</div>
+                    <p>OTP supervision trees detect failures in under 150ms and automatically restart. Telecom-grade reliability built-in.</p>
+                </div>
+
+                <div class="perf-card">
+                    <span class="perf-icon">🔒</span>
+                    <div class="perf-title">Compile-Time Safety</div>
+                    <div class="perf-metric">100%</div>
+                    <p>Macro-based DAG validation catches errors before runtime. The only workflow orchestrator with compile-time guarantees.</p>
+                </div>
+
+                <div class="perf-card">
+                    <span class="perf-icon">🌐</span>
+                    <div class="perf-title">Distributed by Design</div>
+                    <div class="perf-metric">1000s</div>
+                    <p>Built-in Erlang distribution protocol. Coordinate across thousands of nodes with transparent remote execution.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="demo-section fade-in">
+        <div class="container">
+            <h3 style="text-align: center; font-size: 3rem; margin-bottom: 60px; background: linear-gradient(45deg, #ff6b6b, #64ffda); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Architecture</h3>
+            
+            <div class="demo-visual" style="max-width: 900px; margin: 0 auto;">
+                <h4 style="margin-bottom: 30px; color: #64ffda;">Layered Design for Maximum Flexibility</h4>
+                
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ff6b6b;">
+                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🎨 Ash Framework Layer (Platform)</h4>
+                        <p style="color: #d4d4d8; font-size: 0.95rem;">DAG storage, user management, GraphQL APIs, authorization, execution history, Phoenix LiveView dashboards</p>
+                    </div>
+                    
+                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #4ecdc4;">
+                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🎯 Optional Type Layer (Stellarmorphism ADTs)</h4>
+                        <p style="color: #d4d4d8; font-size: 0.95rem;">Algebraic data types for type-safe workflows, compile-time validation, exhaustive pattern matching—opt-in enhancement</p>
+                    </div>
+                    
+                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ffd93d;">
+                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🧠 OPEN Orchestration Layer (Coordination)</h4>
+                        <p style="color: #d4d4d8; font-size: 0.95rem;">Macro-based DAG definition, topological sorting, dependency resolution, distributed task scheduling, OTP supervision</p>
+                    </div>
+                    
+                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #a8e6cf;">
+                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">⚙️ Execution Runtime (Performance)</h4>
+                        <p style="color: #d4d4d8; font-size: 0.95rem;">Pure Elixir hot path (&lt;0.1ms overhead), parallel execution engine, fault detection & recovery, BEAM process pool</p>
+                    </div>
+                    
+                    <div class="arch-layer" style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #9B51E0;">
+                        <h4 style="color: #64ffda; margin-bottom: 0.5rem;">🔧 Worker Layer (Computation)</h4>
+                        <p style="color: #d4d4d8; font-size: 0.95rem;">Rust/C++ NIFs for numerical computing, Python via Ports for ML/data science, Julia for scientific computing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section id="use-cases" class="use-cases fade-in">
+        <div class="container">
+            <h3>Powering Next Generation of Distributed Systems</h3>
+
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <h4>🔬 Scientific Computing</h4>
+                    <p>Coordinate complex computational workflows across HPC clusters with automatic parallelization. Not for simple automation—built for research.</p>
+                    <div class="use-case-stat">→ HPC cluster coordination</div>
+                </div>
+
+                <div class="use-case">
+                    <h4>📡 IoT & Edge Processing</h4>
+                    <p>Process millions of sensor events in real-time with fault-tolerant distributed pipelines. BEAM's concurrency shines here.</p>
+                    <div class="use-case-stat">→ Real-time sensor processing</div>
+                </div>
+
+                <div class="use-case">
+                    <h4>🤖 ML Pipeline Orchestration</h4>
+                    <p>Build and deploy machine learning workflows with parallel feature extraction and training. Code-first, not low-code.</p>
+                    <div class="use-case-stat">→ Parallel ML workflows</div>
+                </div>
+
+                <div class="use-case">
+                    <h4>💰 Financial Systems</h4>
+                    <p>Execute trading algorithms and risk calculations with microsecond precision and zero downtime. Production-grade reliability.</p>
+                    <div class="use-case-stat">→ Microsecond precision trading</div>
+                </div>
+
+                <div class="use-case">
+                    <h4>🏗️ Data Engineering</h4>
+                    <p>Build ETL pipelines that scale to petabytes with automatic failure recovery. Complement Broadway/Flow, don't replace them.</p>
+                    <div class="use-case-stat">→ Petabyte-scale ETL</div>
+                </div>
+
+                <div class="use-case">
+                    <h4>🔗 Microservices Orchestration</h4>
+                    <p>Coordinate distributed transactions and sagas across service meshes. Works alongside Oban for reliable job execution.</p>
+                    <div class="use-case-stat">→ Service mesh coordination</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started Section -->
+    <section id="docs" class="performance fade-in">
+        <div class="container">
+            <h3>Getting Started</h3>
+
+            <div class="perf-grid">
+                <div class="perf-card">
+                    <span class="perf-icon">📦</span>
+                    <div class="perf-title">1. Install</div>
+                    <div class="perf-metric">mix</div>
+                    <p><code>mix new my_platform && cd my_platform</code><br>
+                    Add <code>{:open, "~> 0.1.0"}</code> to deps</p>
+                </div>
+
+                <div class="perf-card">
+                    <span class="perf-icon">📝</span>
+                    <div class="perf-title">2. Define Your DAG</div>
+                    <div class="perf-metric">Macros</div>
+                    <p>Use compile-time macros to define workflows with automatic dependency resolution and type safety</p>
+                </div>
+
+                <div class="perf-card">
+                    <span class="perf-icon">🚀</span>
+                    <div class="perf-title">3. Execute</div>
+                    <div class="perf-metric">Run</div>
+                    <p>Run with automatic parallelization, fault tolerance, and real-time monitoring out of the box</p>
+                </div>
+
+                <div class="perf-card">
+                    <span class="perf-icon">📈</span>
+                    <div class="perf-title">4. Scale</div>
+                    <div class="perf-metric">Deploy</div>
+                    <p>Deploy across clusters with built-in distribution. No configuration changes needed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section fade-in">
+        <div class="container">
+            <h3>Ready to Build?</h3>
+            <p>Join the future of distributed workflow orchestration. From scientific computing to financial systems, transform your infrastructure with OPEN's unmatched reliability and performance.</p>
+
+            <div class="cta-buttons">
+                <a href="documentation.html" class="cta-button cta-primary">View Documentation</a>
+                <a href="https://github.com/c-u-l8er/opensentience.org" target="_blank" class="cta-secondary">Star on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Platform</h4>
+                    <a href="#features">Features</a>
+                    <a href="#architecture">Architecture</a>
+                    <a href="#performance">Performance</a>
+                    <a href="/docs">Documentation</a>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Developers</h4>
+                    <a href="/docs/api">API Reference</a>
+                    <a href="/docs/dsl">DSL Guide</a>
+                    <a href="/docs/sdks">SDKs</a>
+                    <a href="https://github.com/opensentience/open">GitHub</a>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <a href="/tutorials">Tutorials</a>
+                    <a href="/examples">Examples</a>
+                    <a href="/blog">Blog</a>
+                    <a href="mailto:contact@opensentience.org">Contact</a>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <a href="https://discord.gg/opensentience">Discord</a>
+                    <a href="https://twitter.com/opensentience">Twitter</a>
+                    <a href="/events">Events</a>
+                    <a href="/newsletter">Newsletter</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p id="copyright">&copy; <span id="current-year">2025</span> OPEN - Observability Protocol for Emergent Networks</p>
+            </div>
+        </div>
+    </footer>
+
+    
+    <div style="background: #000; padding: 2em 0 1em;">
+        <div style="margin: 0 auto; width: 728px;">
+            <iframe
+                src="https://ampersandboxdesign.com/advertisements/leaderboard-watermark.html"
+                width="728"
+                height="90"
+                frameborder="0"
+                scrolling="no"
+                style="border:none; overflow:hidden;"
+                title="AmperSandboxDesign Branding Design Agency Advertisement"
+            >
+            </iframe>
+            <div style="text-align: right; color: #ccc; font-size: 0.75em;">
+                ^ADVERTISEMENT
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Scroll reveal animation
+        function revealOnScroll() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (elementTop < windowHeight * 0.8) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Run on page load
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Dynamic particle generation
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+
+            document.querySelector('.particles').appendChild(particle);
+
+            // Remove particle after animation
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 25000);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 3000);
+
+        // Update copyright year dynamically
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
