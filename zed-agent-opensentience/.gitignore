@@ -1,0 +1,36 @@
+# Elixir / Mix
+/_build/
+/deps/
+/doc/
+/cover/
+/tmp/
+
+# Erlang / OTP
+*.beam
+*.plt
+*.plt.hash
+.erlang.cookie
+
+# Elixir language server (ElixirLS)
+/.elixir_ls/
+
+# Dialyzer
+/dialyzer
+/dialyzer.plt
+/dialyzer.plt.hash
+
+# Logs & crash dumps
+*.log
+erl_crash.dump
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Release artifacts (common)
+/rel/
+/_build/prod/rel/
