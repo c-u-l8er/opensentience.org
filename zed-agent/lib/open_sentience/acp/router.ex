@@ -160,6 +160,10 @@ defmodule OpenSentience.ACP.Router do
       %{"jsonrpc" => "2.0", "id" => id, "method" => method}
       |> maybe_put("params", params)
 
+    Logger.debug(
+      "ACP -> client request id=#{inspect(id)} method=#{inspect(method)} timeout_ms=#{inspect(timeout_ms)}"
+    )
+
     case safe_send(state.send_message_fun, msg) do
       :ok ->
         new_state = %__MODULE__{
@@ -168,10 +172,16 @@ defmodule OpenSentience.ACP.Router do
             pending: Map.put(state.pending, id, {from, timer_ref})
         }
 
+        Logger.debug("ACP pending request id=#{inspect(id)} method=#{inspect(method)}")
         {:noreply, new_state}
 
       {:error, reason} ->
         _ = Process.cancel_timer(timer_ref)
+
+        Logger.debug(
+          "ACP -> client send failed id=#{inspect(id)} method=#{inspect(method)} reason=#{inspect(reason)}"
+        )
+
         {:reply, {:error, {:send_failed, reason}}, %__MODULE__{state | next_id: id + 1}}
     end
   end
@@ -198,9 +208,14 @@ defmodule OpenSentience.ACP.Router do
   def handle_info({:request_timeout, id}, %__MODULE__{} = state) do
     case Map.pop(state.pending, id) do
       {nil, _pending} ->
+        Logger.debug(
+          "ACP request timeout fired for unknown id=#{inspect(id)} (already resolved?)"
+        )
+
         {:noreply, state}
 
       {{from, _timer_ref}, pending} ->
+        Logger.debug("ACP <- client timeout id=#{inspect(id)}")
         GenServer.reply(from, {:error, {:timeout, id}})
         {:noreply, %__MODULE__{state | pending: pending}}
     end
@@ -231,14 +246,27 @@ defmodule OpenSentience.ACP.Router do
     case Map.pop(state.pending, id) do
       {nil, _pending} ->
         # Response for an unknown id. Ignore (could be for some other layer).
+        Logger.debug(
+          "ACP <- client response for unknown id=#{inspect(id)} reply_kind=#{inspect(reply_kind(reply))}"
+        )
+
         state
 
       {{from, timer_ref}, pending} ->
         _ = Process.cancel_timer(timer_ref)
+
+        Logger.debug(
+          "ACP <- client response id=#{inspect(id)} reply_kind=#{inspect(reply_kind(reply))}"
+        )
+
         GenServer.reply(from, reply)
         %__MODULE__{state | pending: pending}
     end
   end
+
+  defp reply_kind({:ok, _}), do: :ok
+  defp reply_kind({:error, _}), do: :error
+  defp reply_kind(_), do: :unknown
 
   defp is_response_result?(%{"id" => id, "result" => _} = msg) do
     has_no_method = not Map.has_key?(msg, "method")

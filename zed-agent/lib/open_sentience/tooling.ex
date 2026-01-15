@@ -258,7 +258,14 @@ defmodule OpenSentience.Tooling do
                   "type" => "content",
                   "content" => %{
                     "type" => "text",
-                    "text" => "Error: " <> stringify_tool_output(error)
+                    "text" =>
+                      case {error, raw_output} do
+                        {{:timeout, id}, %{"method" => method}} when is_binary(method) ->
+                          "Timeout calling #{method} (id=#{id})"
+
+                        _ ->
+                          "Error: " <> stringify_tool_output(error)
+                      end
                   }
                 }
               ]
@@ -617,86 +624,106 @@ defmodule OpenSentience.Tooling do
     env = Map.get(args, "env") || []
     output_limit = Keyword.get(opts, :terminal_output_byte_limit, @default_terminal_output_limit)
 
-    with :ok <- ensure_terminal_supported(client_capabilities),
-         true <- is_binary(cmd) do
-      create_params =
-        %{
-          "sessionId" => session_id,
-          "command" => cmd,
-          "args" => normalize_string_list(argv),
-          "env" => normalize_env(env),
-          "outputByteLimit" => output_limit
-        }
-        |> maybe_put("cwd", cwd)
+    mode = run_command_mode()
 
-      case OpenSentience.ACP.Router.request(router, "terminal/create", create_params, timeout_ms) do
-        {:ok, %{"terminalId" => terminal_id}} when is_binary(terminal_id) ->
-          # Embed terminal into the tool call so Zed can show live output.
-          send_update(notify, session_id, %{
-            "sessionUpdate" => "tool_call_update",
-            "toolCallId" => tool_call_id,
-            "content" => [
-              %{"type" => "terminal", "terminalId" => terminal_id}
-            ]
-          })
-
-          # Wait for exit (bounded by timeout_ms, but add slack on the router side)
-          _ =
-            OpenSentience.ACP.Router.request(
-              router,
-              "terminal/wait_for_exit",
-              %{"sessionId" => session_id, "terminalId" => terminal_id},
-              timeout_ms
-            )
-
-          # Fetch final output
-          output =
-            case OpenSentience.ACP.Router.request(
-                   router,
-                   "terminal/output",
-                   %{"sessionId" => session_id, "terminalId" => terminal_id},
-                   timeout_ms
-                 ) do
-              {:ok, %{"output" => out} = resp} ->
-                {out, resp}
-
-              {:ok, other} ->
-                {"", other}
-
-              {:error, reason} ->
-                {"", %{"error" => inspect(reason)}}
-            end
-
-          # Release terminal (best-effort)
-          _ =
-            OpenSentience.ACP.Router.request(
-              router,
-              "terminal/release",
-              %{"sessionId" => session_id, "terminalId" => terminal_id},
-              timeout_ms
-            )
-
-          {out_text, raw_output} = output
-
-          summary = %{
-            "terminalId" => terminal_id,
-            "output" => out_text
-          }
-
-          {:ok, summary, Map.put(raw_output, "terminalId", terminal_id)}
-
-        {:ok, other} ->
-          {:error, {:unexpected_terminal_create_response, other}, other}
-
-        {:error, reason} ->
-          {:error, reason, %{"method" => "terminal/create"}}
-      end
-    else
-      false ->
+    cond do
+      not is_binary(cmd) ->
         {:error, {:invalid_params, "command must be a string"}, %{"command" => cmd}}
 
-      {:error, reason} ->
-        {:error, reason, %{"method" => "terminal/create", "command" => cmd}}
+      mode == :local ->
+        run_local_command(cmd, argv, cwd, env, timeout_ms, output_limit)
+
+      true ->
+        case ensure_terminal_supported(client_capabilities) do
+          :ok ->
+            create_params =
+              %{
+                "sessionId" => session_id,
+                "command" => cmd,
+                "args" => normalize_string_list(argv),
+                "env" => normalize_env(env),
+                "outputByteLimit" => output_limit
+              }
+              |> maybe_put("cwd", cwd)
+
+            case OpenSentience.ACP.Router.request(
+                   router,
+                   "terminal/create",
+                   create_params,
+                   timeout_ms
+                 ) do
+              {:ok, %{"terminalId" => terminal_id}} when is_binary(terminal_id) ->
+                # Embed terminal into the tool call so Zed can show live output.
+                send_update(notify, session_id, %{
+                  "sessionUpdate" => "tool_call_update",
+                  "toolCallId" => tool_call_id,
+                  "content" => [
+                    %{"type" => "terminal", "terminalId" => terminal_id}
+                  ]
+                })
+
+                # Wait for exit (bounded by timeout_ms, but add slack on the router side)
+                _ =
+                  OpenSentience.ACP.Router.request(
+                    router,
+                    "terminal/wait_for_exit",
+                    %{"sessionId" => session_id, "terminalId" => terminal_id},
+                    timeout_ms
+                  )
+
+                # Fetch final output
+                output =
+                  case OpenSentience.ACP.Router.request(
+                         router,
+                         "terminal/output",
+                         %{"sessionId" => session_id, "terminalId" => terminal_id},
+                         timeout_ms
+                       ) do
+                    {:ok, %{"output" => out} = resp} ->
+                      {out, resp}
+
+                    {:ok, other} ->
+                      {"", other}
+
+                    {:error, reason} ->
+                      {"", %{"error" => inspect(reason)}}
+                  end
+
+                # Release terminal (best-effort)
+                _ =
+                  OpenSentience.ACP.Router.request(
+                    router,
+                    "terminal/release",
+                    %{"sessionId" => session_id, "terminalId" => terminal_id},
+                    timeout_ms
+                  )
+
+                {out_text, raw_output} = output
+
+                summary = %{
+                  "terminalId" => terminal_id,
+                  "output" => out_text
+                }
+
+                {:ok, summary, Map.put(raw_output, "terminalId", terminal_id)}
+
+              {:ok, other} ->
+                {:error, {:unexpected_terminal_create_response, other}, other}
+
+              {:error, reason} ->
+                # If the client terminal path is broken (e.g. Zed doesn't respond to terminal/create),
+                # fall back to local execution in :auto mode.
+                if mode == :auto do
+                  run_local_command(cmd, argv, cwd, env, timeout_ms, output_limit)
+                else
+                  {:error, reason, %{"method" => "terminal/create"}}
+                end
+            end
+
+          {:error, _unsupported} ->
+            # Client terminal not supported; local fallback
+            run_local_command(cmd, argv, cwd, env, timeout_ms, output_limit)
+        end
     end
   end
 
@@ -898,6 +925,150 @@ defmodule OpenSentience.Tooling do
   end
 
   defp normalize_env(_), do: []
+
+  # ----------------------------------------------------------------------------
+  # Local command execution (host-side fallback)
+  # ----------------------------------------------------------------------------
+  #
+  # This is useful when the ACP client either:
+  # - does not implement `terminal/*`, or
+  # - advertises it but fails to respond (e.g. terminal/create timeouts).
+  #
+  # Configure via:
+  # - OPENSENTIENCE_RUN_COMMAND_MODE=local  -> always run locally
+  # - OPENSENTIENCE_RUN_COMMAND_MODE=client -> always use client terminal (default)
+  # - OPENSENTIENCE_RUN_COMMAND_MODE=auto   -> try client terminal, fallback to local on failure
+  defp run_command_mode do
+    case System.get_env("OPENSENTIENCE_RUN_COMMAND_MODE") do
+      nil ->
+        :client
+
+      v when is_binary(v) ->
+        v = v |> String.trim() |> String.downcase()
+
+        cond do
+          v in ["local", "host", "native"] -> :local
+          v in ["client", "terminal"] -> :client
+          v in ["auto"] -> :auto
+          true -> :client
+        end
+    end
+  end
+
+  defp run_local_command(cmd, argv, cwd, env, timeout_ms, output_limit)
+       when is_binary(cmd) and is_list(argv) and is_integer(timeout_ms) and timeout_ms > 0 and
+              is_integer(output_limit) and output_limit > 0 do
+    exe = System.find_executable(cmd)
+    args = normalize_string_list(argv)
+
+    if not is_binary(exe) do
+      {:error, {:local_command_not_found, cmd},
+       %{"method" => "local/run_command", "command" => cmd}}
+    else
+      port_opts =
+        [
+          :binary,
+          :exit_status,
+          :stderr_to_stdout,
+          args: Enum.map(args, &to_charlist/1),
+          env: port_env(env)
+        ]
+        |> maybe_add_cd(cwd)
+
+      port = Port.open({:spawn_executable, exe}, port_opts)
+
+      case collect_port_output(port, timeout_ms, output_limit, "", false) do
+        {:ok, out, exit_status, truncated?} ->
+          {:ok,
+           %{
+             "output" => out,
+             "exitCode" => exit_status,
+             "outputTruncated" => truncated?
+           },
+           %{
+             "method" => "local/run_command",
+             "command" => cmd,
+             "exitCode" => exit_status,
+             "outputBytes" => byte_size(out),
+             "outputTruncated" => truncated?
+           }}
+
+        {:error, reason, partial, truncated?} ->
+          {:error, reason,
+           %{
+             "method" => "local/run_command",
+             "command" => cmd,
+             "partialOutput" => partial,
+             "outputBytes" => byte_size(partial),
+             "outputTruncated" => truncated?
+           }}
+      end
+    end
+  end
+
+  defp run_local_command(cmd, argv, cwd, env, timeout_ms, output_limit) do
+    {:error, {:invalid_params, "invalid local command arguments"},
+     %{
+       "method" => "local/run_command",
+       "command" => cmd,
+       "args" => argv,
+       "cwd" => cwd,
+       "env" => env,
+       "timeout_ms" => timeout_ms,
+       "output_limit" => output_limit
+     }}
+  end
+
+  defp port_env(env) when is_list(env) do
+    normalize_env(env)
+    |> Enum.map(fn %{"name" => n, "value" => v} ->
+      {to_charlist(n), to_charlist(v)}
+    end)
+  end
+
+  defp port_env(_), do: []
+
+  defp maybe_add_cd(opts, cwd) when is_list(opts) do
+    if is_binary(cwd) and String.trim(cwd) != "" do
+      opts ++ [cd: to_charlist(cwd)]
+    else
+      opts
+    end
+  end
+
+  defp collect_port_output(port, timeout_ms, output_limit, acc, truncated?)
+       when is_port(port) and is_integer(timeout_ms) and timeout_ms > 0 and
+              is_integer(output_limit) and output_limit > 0 and is_binary(acc) and
+              is_boolean(truncated?) do
+    receive do
+      {^port, {:data, chunk}} when is_binary(chunk) ->
+        {acc2, truncated2} = append_limited(acc, chunk, output_limit, truncated?)
+        collect_port_output(port, timeout_ms, output_limit, acc2, truncated2)
+
+      {^port, {:exit_status, status}} when is_integer(status) ->
+        _ = Port.close(port)
+        {:ok, acc, status, truncated?}
+    after
+      timeout_ms ->
+        _ = Port.close(port)
+        {:error, {:timeout, :local_run_command}, acc, truncated?}
+    end
+  end
+
+  defp append_limited(acc, chunk, limit, truncated?) do
+    remaining = limit - byte_size(acc)
+
+    cond do
+      remaining <= 0 ->
+        {acc, true}
+
+      byte_size(chunk) <= remaining ->
+        {acc <> chunk, truncated?}
+
+      true ->
+        {acc <> binary_part(chunk, 0, remaining), true}
+    end
+  end
 
   defp stringify_tool_output(nil), do: "null"
 

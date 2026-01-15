@@ -804,6 +804,23 @@ defmodule OpenSentience.Agent do
             if not is_pid(router) do
               {:error, :acp_router_unavailable}
             else
+              # Allow disabling permission prompts (useful if the client doesn't implement
+              # `session/request_permission` and tool calls would otherwise time out).
+              #
+              # Set OPENSENTIENCE_REQUEST_PERMISSION=false (or 0/no/off) to disable.
+              request_permission? =
+                case System.get_env("OPENSENTIENCE_REQUEST_PERMISSION") do
+                  nil ->
+                    true
+
+                  "" ->
+                    true
+
+                  v when is_binary(v) ->
+                    v = v |> String.trim() |> String.downcase()
+                    v not in ["0", "false", "no", "off"]
+                end
+
               {:ok, results} =
                 Tooling.execute_tool_calls(
                   session_id,
@@ -812,7 +829,7 @@ defmodule OpenSentience.Agent do
                   notify,
                   client_capabilities,
                   timeout_ms: 30_000,
-                  request_permission: true
+                  request_permission: request_permission?
                 )
 
               tool_messages = Tooling.to_model_tool_results(results, :openai_chat)
