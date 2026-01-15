@@ -26,7 +26,6 @@ defmodule OpenSentience.MixProject do
 
   def application do
     [
-      mod: {OpenSentience.Application, []},
       extra_applications: [:logger]
     ]
   end

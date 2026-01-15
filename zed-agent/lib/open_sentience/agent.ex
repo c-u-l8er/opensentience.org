@@ -14,6 +14,8 @@ defmodule OpenSentience.Agent do
     responding to `session/prompt` with a stop reason.
   """
 
+  alias OpenSentience.{LLM, Tooling, Prompt}
+
   @supported_protocol_versions MapSet.new([1])
 
   @agent_info %{
@@ -289,7 +291,8 @@ defmodule OpenSentience.Agent do
     with {:ok, session} <- fetch_session(state, session_id),
          {:ok, prompt_blocks} <- validate_prompt(prompt) do
       # Record the user prompt in session history (simple, in-memory)
-      user_text = render_prompt_blocks(prompt_blocks)
+      user_text = Prompt.render_prompt(prompt_blocks)
+      prior_history = session.history
 
       session =
         Map.update!(session, :history, fn hist ->
@@ -304,45 +307,100 @@ defmodule OpenSentience.Agent do
         "entries" => [
           %{"content" => "Understand the request", "priority" => "high", "status" => "completed"},
           %{
-            "content" => "Respond with guidance or next actions",
+            "content" => "Call LLM (if configured)",
+            "priority" => "high",
+            "status" => "completed"
+          },
+          %{
+            "content" => "Execute requested tools (if any) and respond",
             "priority" => "high",
             "status" => "completed"
           }
         ]
       })
 
-      # Stream the agent's response as chunks.
-      response_text =
-        [
-          "I received your prompt via ACP.",
-          "",
-          "What I can do right now:",
-          "- Accept sessions and prompts correctly over JSON-RPC 2.0 (stdio).",
-          "- Stream updates back to Zed via `session/update`.",
-          "",
-          "What I *don't* do yet:",
-          "- Call an LLM provider (no model backend configured).",
-          "- Execute tools (fs/terminal) or apply edits.",
-          "",
-          "Your prompt (rendered):",
-          user_text
-        ]
-        |> Enum.join("\n")
+      llm_cfg = LLM.from_env()
 
-      # Chunking is optional; but Zed handles streaming nicely.
-      response_text
-      |> chunk_text(600)
-      |> Enum.each(fn chunk ->
-        send_update(notify, session_id, %{
-          "sessionUpdate" => "agent_message_chunk",
-          "content" => %{"type" => "text", "text" => chunk}
-        })
-      end)
+      final_text =
+        if LLM.configured?(llm_cfg) do
+          base_messages =
+            [
+              %{"role" => "system", "content" => llm_system_prompt(session)}
+            ] ++
+              history_to_llm_messages(prior_history) ++
+              [%{"role" => "user", "content" => user_text}]
+
+          case run_llm_with_tools(
+                 llm_cfg,
+                 base_messages,
+                 session_id,
+                 notify,
+                 state.client_capabilities
+               ) do
+            {:ok, text} ->
+              text
+
+            {:error, reason} ->
+              fallback_text =
+                [
+                  "LLM backend is configured but failed at runtime (#{inspect(reason)}).",
+                  "",
+                  "Falling back to stub response.",
+                  "",
+                  "Your prompt (rendered):",
+                  user_text
+                ]
+                |> Enum.join("\n")
+
+              fallback_text
+              |> chunk_text(600)
+              |> Enum.each(fn chunk ->
+                send_update(notify, session_id, %{
+                  "sessionUpdate" => "agent_message_chunk",
+                  "content" => %{"type" => "text", "text" => chunk}
+                })
+              end)
+
+              fallback_text
+          end
+        else
+          response_text =
+            [
+              "I received your prompt via ACP.",
+              "",
+              "What I can do right now:",
+              "- Accept sessions and prompts correctly over JSON-RPC 2.0 (stdio).",
+              "- Stream updates back to Zed via `session/update`.",
+              "",
+              "What I *don't* do yet:",
+              "- Call an LLM provider (no model backend configured).",
+              "- Execute tools (fs/terminal) or apply edits.",
+              "",
+              "To enable the LLM backend (OpenRouter), set:",
+              "- OPENSENTIENCE_OPENROUTER_API_KEY (or OPENROUTER_API_KEY)",
+              "- OPENSENTIENCE_OPENROUTER_MODEL (optional)",
+              "",
+              "Your prompt (rendered):",
+              user_text
+            ]
+            |> Enum.join("\n")
+
+          response_text
+          |> chunk_text(600)
+          |> Enum.each(fn chunk ->
+            send_update(notify, session_id, %{
+              "sessionUpdate" => "agent_message_chunk",
+              "content" => %{"type" => "text", "text" => chunk}
+            })
+          end)
+
+          response_text
+        end
 
       # Record agent response in history
       session =
         Map.update!(session, :history, fn hist ->
-          hist ++ [%{role: :agent, content: [%{"type" => "text", "text" => response_text}]}]
+          hist ++ [%{role: :agent, content: [%{"type" => "text", "text" => final_text}]}]
         end)
 
       state = put_in(state.sessions[session_id], session)
@@ -523,5 +581,288 @@ defmodule OpenSentience.Agent do
       end
 
     do_chunk_text(rest, max, [chunk | acc])
+  end
+
+  defp llm_system_prompt(session) do
+    cwd =
+      case Map.get(session, :cwd) do
+        p when is_binary(p) -> p
+        _ -> ""
+      end
+
+    mode =
+      case Map.get(session, :mode) do
+        m when is_binary(m) -> m
+        _ -> "default"
+      end
+
+    [
+      "You are OpenSentience, an external coding agent running inside Zed via ACP.",
+      "Follow the user's instructions and be concise and precise.",
+      "If you need to read or write files or run commands, use the available tools.",
+      "All file paths MUST be absolute when using file tools.",
+      "Session working directory: #{cwd}",
+      "Session mode: #{mode}"
+    ]
+    |> Enum.join("\n")
+  end
+
+  defp history_to_llm_messages(history) when is_list(history) do
+    history
+    |> Enum.flat_map(fn
+      %{role: :user, content: blocks} when is_list(blocks) ->
+        text = Prompt.render_prompt(blocks)
+        if String.trim(text) == "", do: [], else: [%{"role" => "user", "content" => text}]
+
+      %{role: :agent, content: blocks} when is_list(blocks) ->
+        text = Prompt.render_prompt(blocks)
+        if String.trim(text) == "", do: [], else: [%{"role" => "assistant", "content" => text}]
+
+      _ ->
+        []
+    end)
+  end
+
+  defp llm_tools do
+    [
+      %{
+        "type" => "function",
+        "function" => %{
+          "name" => "read_file",
+          "description" =>
+            "Read a text file from disk via the client. Path must be an absolute path (or a file:// URI with an absolute path).",
+          "parameters" => %{
+            "type" => "object",
+            "properties" => %{
+              "path" => %{
+                "type" => "string",
+                "description" => "Absolute file path (or file:// URI)."
+              },
+              "line" => %{"type" => "integer", "description" => "1-based start line (optional)."},
+              "limit" => %{"type" => "integer", "description" => "Max lines to read (optional)."}
+            },
+            "required" => ["path"]
+          }
+        }
+      },
+      %{
+        "type" => "function",
+        "function" => %{
+          "name" => "write_file",
+          "description" =>
+            "Write a text file via the client. Path must be an absolute path (or a file:// URI with an absolute path).",
+          "parameters" => %{
+            "type" => "object",
+            "properties" => %{
+              "path" => %{
+                "type" => "string",
+                "description" => "Absolute file path (or file:// URI)."
+              },
+              "content" => %{"type" => "string", "description" => "Full new file contents."}
+            },
+            "required" => ["path", "content"]
+          }
+        }
+      },
+      %{
+        "type" => "function",
+        "function" => %{
+          "name" => "run_command",
+          "description" =>
+            "Run a shell command in the user's environment via the client terminal. Use absolute cwd when provided.",
+          "parameters" => %{
+            "type" => "object",
+            "properties" => %{
+              "command" => %{
+                "type" => "string",
+                "description" => "Executable name, e.g. 'mix' or 'npm'."
+              },
+              "args" => %{
+                "type" => "array",
+                "items" => %{"type" => "string"},
+                "description" => "Command arguments."
+              },
+              "cwd" => %{
+                "type" => "string",
+                "description" => "Absolute working directory (optional)."
+              },
+              "env" => %{
+                "type" => "array",
+                "items" => %{
+                  "type" => "object",
+                  "properties" => %{
+                    "name" => %{"type" => "string"},
+                    "value" => %{"type" => "string"}
+                  },
+                  "required" => ["name", "value"]
+                },
+                "description" => "Environment variables (optional)."
+              }
+            },
+            "required" => ["command"]
+          }
+        }
+      }
+    ]
+  end
+
+  defp llm_tools_for_client(client_capabilities) when is_map(client_capabilities) do
+    llm_tools()
+    |> Enum.filter(fn
+      %{"type" => "function", "function" => %{"name" => "read_file"}} ->
+        client_supports_fs_read?(client_capabilities)
+
+      %{"type" => "function", "function" => %{"name" => "write_file"}} ->
+        client_supports_fs_write?(client_capabilities)
+
+      %{"type" => "function", "function" => %{"name" => "run_command"}} ->
+        client_supports_terminal?(client_capabilities)
+
+      _ ->
+        true
+    end)
+  end
+
+  defp llm_tools_for_client(_), do: llm_tools()
+
+  defp client_supports_fs_read?(caps) when is_map(caps) do
+    fs = Map.get(caps, "fs") || Map.get(caps, :fs) || %{}
+    Map.get(fs, "readTextFile") == true or Map.get(fs, :readTextFile) == true
+  end
+
+  defp client_supports_fs_read?(_), do: false
+
+  defp client_supports_fs_write?(caps) when is_map(caps) do
+    fs = Map.get(caps, "fs") || Map.get(caps, :fs) || %{}
+    Map.get(fs, "writeTextFile") == true or Map.get(fs, :writeTextFile) == true
+  end
+
+  defp client_supports_fs_write?(_), do: false
+
+  defp client_supports_terminal?(caps) when is_map(caps) do
+    Map.get(caps, "terminal") == true or Map.get(caps, :terminal) == true
+  end
+
+  defp client_supports_terminal?(_), do: false
+
+  defp run_llm_with_tools(llm_cfg, messages, session_id, notify, client_capabilities) do
+    run_llm_with_tools(llm_cfg, messages, session_id, notify, client_capabilities, 1, 3, "")
+  end
+
+  defp run_llm_with_tools(
+         llm_cfg,
+         messages,
+         session_id,
+         notify,
+         client_capabilities,
+         turn,
+         max_turns,
+         acc_text
+       ) do
+    router_pid = Process.get(:acp_router)
+
+    # Only advertise tools to the model when we can actually execute them.
+    tools =
+      if is_pid(router_pid) do
+        llm_tools_for_client(client_capabilities)
+      else
+        []
+      end
+
+    llm_opts =
+      if tools == [] do
+        []
+      else
+        [tools: tools, tool_choice: "auto"]
+      end
+
+    case LLM.chat(llm_cfg, messages, llm_opts) do
+      {:ok, %{text: text, tool_calls: tool_calls}} when is_list(tool_calls) ->
+        if is_binary(text) and String.trim(text) != "" do
+          text
+          |> chunk_text(600)
+          |> Enum.each(fn chunk ->
+            send_update(notify, session_id, %{
+              "sessionUpdate" => "agent_message_chunk",
+              "content" => %{"type" => "text", "text" => chunk}
+            })
+          end)
+        end
+
+        acc_text = acc_text <> (text || "")
+
+        cond do
+          tool_calls == [] ->
+            {:ok, acc_text}
+
+          turn >= max_turns ->
+            {:ok, acc_text}
+
+          true ->
+            router = router_pid
+
+            if not is_pid(router) do
+              {:error, :acp_router_unavailable}
+            else
+              {:ok, results} =
+                Tooling.execute_tool_calls(
+                  session_id,
+                  tool_calls,
+                  router,
+                  notify,
+                  client_capabilities,
+                  timeout_ms: 30_000,
+                  request_permission: true
+                )
+
+              tool_messages = Tooling.to_model_tool_results(results, :openai_chat)
+
+              assistant_content =
+                if is_binary(text) and String.trim(text) != "" do
+                  text
+                else
+                  nil
+                end
+
+              messages2 =
+                messages ++
+                  [
+                    %{
+                      "role" => "assistant",
+                      "content" => assistant_content,
+                      "tool_calls" => tool_calls
+                    }
+                  ] ++ tool_messages
+
+              run_llm_with_tools(
+                llm_cfg,
+                messages2,
+                session_id,
+                notify,
+                client_capabilities,
+                turn + 1,
+                max_turns,
+                acc_text
+              )
+            end
+        end
+
+      {:ok, %{text: text}} ->
+        if is_binary(text) and String.trim(text) != "" do
+          text
+          |> chunk_text(600)
+          |> Enum.each(fn chunk ->
+            send_update(notify, session_id, %{
+              "sessionUpdate" => "agent_message_chunk",
+              "content" => %{"type" => "text", "text" => chunk}
+            })
+          end)
+        end
+
+        {:ok, acc_text <> (text || "")}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 end

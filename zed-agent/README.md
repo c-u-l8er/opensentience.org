@@ -58,7 +58,15 @@ Example configuration (adjust command/args to match your agent):
       "type": "custom",
       "command": "/absolute/path/to/opensentience",
       "args": ["--acp"],
-      "env": {}
+      "env": {
+        "OPENSENTIENCE_LLM_PROVIDER": "openrouter",
+        "OPENSENTIENCE_OPENROUTER_API_KEY": "YOUR_OPENROUTER_API_KEY",
+        "OPENSENTIENCE_OPENROUTER_MODEL": "openai/gpt-4o-mini",
+        "OPENSENTIENCE_OPENROUTER_BASE_URL": "https://openrouter.ai/api/v1",
+        "OPENSENTIENCE_OPENROUTER_APP_URL": "https://opensentience.org",
+        "OPENSENTIENCE_OPENROUTER_APP_NAME": "OpenSentience",
+        "OPENSENTIENCE_LLM_TIMEOUT_MS": "60000"
+      }
     }
   }
 }
@@ -68,9 +76,19 @@ Example configuration (adjust command/args to match your agent):
 
 - `command` should be **absolute** when possible (more reliable than relying on PATH).
 - `args` must include whatever flag/subcommand makes your program speak ACP over stdio.
-- `env` is optional, but useful for:
-  - LLM provider API keys (do **not** commit keys to git)
-  - feature flags / logging toggles
+- `env` is optional, but useful for enabling the LLM backend and tuning behavior.
+  - LLM provider selection:
+    - `OPENSENTIENCE_LLM_PROVIDER=openrouter` (default)
+  - OpenRouter auth + model:
+    - `OPENSENTIENCE_OPENROUTER_API_KEY` (preferred) or `OPENROUTER_API_KEY`
+    - `OPENSENTIENCE_OPENROUTER_MODEL` (optional; default: `openai/gpt-4o-mini`)
+    - `OPENSENTIENCE_OPENROUTER_BASE_URL` (optional; default: `https://openrouter.ai/api/v1`)
+    - `OPENSENTIENCE_OPENROUTER_APP_URL` (optional; sent as `HTTP-Referer`)
+    - `OPENSENTIENCE_OPENROUTER_APP_NAME` (optional; sent as `X-Title`)
+  - Timeout:
+    - `OPENSENTIENCE_LLM_TIMEOUT_MS` (optional; default: `60000`)
+  - General:
+    - Do **not** commit API keys to git; set them in Zed settings or your shell environment.
 
 ---
 
