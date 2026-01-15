@@ -25,15 +25,14 @@ defmodule OpenSentience.JSONRPC do
   @type id :: integer() | binary() | nil
   @type method :: binary()
 
-  @type message ::
-          %{
-            required("jsonrpc") => binary(),
-            optional("id") => id(),
-            optional("method") => method(),
-            optional("params") => map(),
-            optional("result") => any(),
-            optional("error") => map()
-          }
+  @typedoc """
+  JSON-RPC 2.0 message map (string-keyed).
+
+  We keep this typespec intentionally permissive for broad compiler compatibility,
+  since detailed map types with literal string keys can be fragile across Elixir
+  versions and tooling.
+  """
+  @type message :: %{optional(String.t()) => any()}
 
   @doc """
   Build a JSON-RPC request.

@@ -16,11 +16,12 @@ defmodule OpenSentience.MixProject do
       ],
       description: "OpenSentience ACP agent CLI for Zed (stdio JSON-RPC).",
       source_url: "https://opensentience.org",
-      homepage_url: "https://opensentience.org",
-      preferred_cli_env: [
-        test: :test
-      ]
+      homepage_url: "https://opensentience.org"
     ]
+  end
+
+  def cli do
+    [preferred_envs: [test: :test]]
   end
 
   def application do

@@ -459,7 +459,7 @@ defmodule OpenSentience.Agent do
     }
   end
 
-  defp error_response(id, code, message, data \\ %{}) do
+  defp error_response(id, code, message, data) do
     base = %{
       "jsonrpc" => "2.0",
       "id" => id,
