@@ -108,11 +108,11 @@ defmodule OpenSentience.Catalog do
             |> Repo.insert()
 
           %Agent{} = existing ->
-            # Preserve first discovery time; still update last_seen and other fields.
+            # Preserve first discovery time; other defaulting (status/last_seen) is handled
+            # by Agent.upsert_changeset/2 to avoid mixed-key issues and unintended overrides.
             preserved =
               attrs
-              |> Map.put(:discovered_at, existing.discovered_at)
-              |> Map.put_new(:last_seen_at, DateTime.utc_now())
+              |> Map.put("discovered_at", existing.discovered_at)
 
             existing
             |> Agent.upsert_changeset(preserved)

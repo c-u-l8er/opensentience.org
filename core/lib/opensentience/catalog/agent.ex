@@ -99,6 +99,8 @@ defmodule OpenSentience.Catalog.Agent do
   """
   @spec changeset(t(), map()) :: Ecto.Changeset.t()
   def changeset(%__MODULE__{} = agent, attrs) when is_map(attrs) do
+    attrs = normalize_params(attrs)
+
     agent
     |> cast(attrs, [
       :agent_id,
@@ -162,12 +164,10 @@ defmodule OpenSentience.Catalog.Agent do
 
     attrs =
       attrs
+      |> normalize_params()
       |> Map.put_new("last_seen_at", now)
-      |> Map.put_new(:last_seen_at, now)
       |> Map.put_new("discovered_at", now)
-      |> Map.put_new(:discovered_at, now)
       |> Map.put_new("status", "local_uninstalled")
-      |> Map.put_new(:status, "local_uninstalled")
 
     changeset(agent, attrs)
   end
@@ -206,6 +206,22 @@ defmodule OpenSentience.Catalog.Agent do
   # ----------------------------------------------------------------------------
   # Internal helpers
   # ----------------------------------------------------------------------------
+
+  # Ecto requires params maps to have *either* atom keys *or* string keys.
+  # Discovery/upsert callers may provide mixed maps (e.g. after Map.put/3), so we
+  # normalize to string keys (preferring existing string keys on conflict).
+  defp normalize_params(attrs) when is_map(attrs) do
+    Enum.reduce(attrs, %{}, fn
+      {k, v}, acc when is_binary(k) ->
+        Map.put(acc, k, v)
+
+      {k, v}, acc when is_atom(k) ->
+        Map.put_new(acc, Atom.to_string(k), v)
+
+      {k, v}, acc ->
+        Map.put_new(acc, to_string(k), v)
+    end)
+  end
 
   defp normalize_enum_value(nil), do: nil
   defp normalize_enum_value(value) when is_atom(value), do: Atom.to_string(value)

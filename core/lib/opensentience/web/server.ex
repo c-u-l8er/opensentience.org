@@ -48,11 +48,20 @@ defmodule OpenSentience.Web.Server do
     # Phase 1: ensure admin token exists (do NOT log token value).
     ensure_admin_token_exists(cfg)
 
-    # Start the HTML router under Cowboy.
+    # Cookie sessions require conn.secret_key_base. Ensure we have a persistent one.
+    secret_key_base =
+      case ensure_web_secret_key_base() do
+        {:ok, value} -> value
+        {:error, reason} ->
+          Logger.error("Failed to ensure web secret_key_base (falling back to ephemeral): #{inspect(reason)}")
+          generate_secret_key_base()
+      end
+
+    # Start the HTML router under Cowboy (wrapped to set secret_key_base).
     children = [
       Plug.Cowboy.child_spec(
         scheme: :http,
-        plug: OpenSentience.Web.Router,
+        plug: {OpenSentience.Web.EndpointPlug, secret_key_base: secret_key_base},
         options: cowboy_opts(cfg)
       )
     ]
@@ -233,5 +242,108 @@ defmodule OpenSentience.Web.Server do
 
       Path.join([Path.expand(home), "state", "admin.token"])
     end
+  end
+
+  # ----------------------------------------------------------------------------
+  # Session secret_key_base (cookie sessions)
+  # ----------------------------------------------------------------------------
+
+  defp ensure_web_secret_key_base do
+    case System.get_env("OPENSENTIENCE_SECRET_KEY_BASE") |> normalize_optional() do
+      secret when is_binary(secret) ->
+        {:ok, secret}
+
+      _ ->
+        path = web_secret_key_base_path()
+        _ = File.mkdir_p(Path.dirname(path))
+
+        case File.read(path) do
+          {:ok, contents} ->
+            case normalize_optional(contents) do
+              nil ->
+                secret = generate_secret_key_base()
+
+                case File.write(path, secret <> "\n", [:write]) do
+                  :ok ->
+                    _ = File.chmod(path, 0o600)
+                    {:ok, secret}
+
+                  {:error, reason} ->
+                    {:error, reason}
+                end
+
+              secret ->
+                {:ok, secret}
+            end
+
+          {:error, :enoent} ->
+            secret = generate_secret_key_base()
+
+            case File.write(path, secret <> "\n", [:write]) do
+              :ok ->
+                _ = File.chmod(path, 0o600)
+                {:ok, secret}
+
+              {:error, reason} ->
+                {:error, reason}
+            end
+
+          {:error, reason} ->
+            {:error, reason}
+        end
+    end
+  end
+
+  defp web_secret_key_base_path do
+    from_cfg =
+      case Application.get_env(:opensentience_core, :paths) do
+        cfg when is_list(cfg) -> Keyword.get(cfg, :web_secret_key_base_path) || Keyword.get(cfg, :secret_key_base_path)
+        cfg when is_map(cfg) -> Map.get(cfg, :web_secret_key_base_path) || Map.get(cfg, :secret_key_base_path)
+        _ -> nil
+      end ||
+        get_in(Application.get_env(:opensentience_core, :web, []), [:secret_key_base_path])
+
+    from_cfg ||
+      if Code.ensure_loaded?(OpenSentience.Paths) and function_exported?(OpenSentience.Paths, :state_dir, 0) do
+        Path.join(OpenSentience.Paths.state_dir(), "web.secret_key_base")
+      else
+        home =
+          System.get_env("OPENSENTIENCE_HOME") ||
+            Path.join(System.user_home!(), ".opensentience")
+
+        Path.join([Path.expand(home), "state", "web.secret_key_base"])
+      end
+  end
+
+  defp generate_secret_key_base do
+    64
+    |> :crypto.strong_rand_bytes()
+    |> Base.url_encode64(padding: false)
+  end
+
+  defp normalize_optional(nil), do: nil
+
+  defp normalize_optional(v) when is_binary(v) do
+    v = String.trim(v)
+    if v == "", do: nil, else: v
+  end
+
+  defp normalize_optional(v), do: v |> to_string() |> normalize_optional()
+end
+
+defmodule OpenSentience.Web.EndpointPlug do
+  @moduledoc false
+
+  @behaviour Plug
+
+  def init(opts) do
+    secret_key_base = Keyword.fetch!(opts, :secret_key_base)
+    router_opts = OpenSentience.Web.Router.init([])
+    %{secret_key_base: secret_key_base, router_opts: router_opts}
+  end
+
+  def call(conn, %{secret_key_base: secret_key_base, router_opts: router_opts}) do
+    conn = %{conn | secret_key_base: secret_key_base}
+    OpenSentience.Web.Router.call(conn, router_opts)
   end
 end

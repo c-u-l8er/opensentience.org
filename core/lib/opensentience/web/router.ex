@@ -24,6 +24,10 @@ defmodule OpenSentience.Web.Router do
 
   @read_only_methods ~w(GET HEAD OPTIONS)
 
+  # In a plain Plug router (no Phoenix endpoint), cookie sessions require
+  # `conn.secret_key_base` to be set. We set it via a plug below.
+  @secret_key_base_key {__MODULE__, :secret_key_base}
+
   # ---------------------------------------------------------------------------
   # Plugs
   # ---------------------------------------------------------------------------
@@ -33,6 +37,9 @@ defmodule OpenSentience.Web.Router do
 
   plug(:put_security_headers)
 
+  # Required for cookie sessions (and therefore CSRF).
+  plug(:put_secret_key_base)
+
   # Cookie session is required for CSRF protection.
   # This is local-only admin UI, but we still keep CSRF on by default.
   plug(Plug.Session,
@@ -41,6 +48,9 @@ defmodule OpenSentience.Web.Router do
     signing_salt: "opensentience_core_signing_salt",
     same_site: "Lax"
   )
+
+  # Required by Plug.CSRFProtection (it reads from the session).
+  plug(:fetch_session)
 
   # Parse request bodies for future state-changing operations (Phase 1+).
   plug(Plug.Parsers,
@@ -304,6 +314,44 @@ defmodule OpenSentience.Web.Router do
       "content-security-policy",
       "default-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
     )
+  end
+
+  defp put_secret_key_base(%{secret_key_base: secret} = conn, _opts)
+       when is_binary(secret) and secret != "" do
+    conn
+  end
+
+  defp put_secret_key_base(conn, _opts) do
+    configured =
+      System.get_env("OPENSENTIENCE_SECRET_KEY_BASE") ||
+        case Application.get_env(:opensentience_core, :web, []) do
+          cfg when is_list(cfg) -> Keyword.get(cfg, :secret_key_base)
+          cfg when is_map(cfg) -> Map.get(cfg, :secret_key_base)
+          _ -> nil
+        end
+
+    secret =
+      cond do
+        is_binary(configured) and String.trim(configured) != "" ->
+          String.trim(configured)
+
+        true ->
+          case :persistent_term.get(@secret_key_base_key, nil) do
+            nil ->
+              generated =
+                64
+                |> :crypto.strong_rand_bytes()
+                |> Base.url_encode64(padding: false)
+
+              :persistent_term.put(@secret_key_base_key, generated)
+              generated
+
+            existing ->
+              existing
+          end
+      end
+
+    %{conn | secret_key_base: secret}
   end
 
   defp require_admin_token_for_state_changes(conn, _opts) do
