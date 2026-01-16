@@ -3,7 +3,7 @@
 
 **Version:** 1.0  
 **Date:** January 16, 2026  
-**Status:** Design Complete / Ready for Implementation
+**Status:** Architecture complete; implementation decisions pending (see Section 10: Open Questions)
 
 ---
 
@@ -31,9 +31,9 @@
 └─────────────────────────────────────────────────────────────┘
 
 Local Resources Convention:
-~/.opensentience/     # Core runtime
-~/.fleetprompt/       # Skills/workflows/configs per project
-~/Projects/*/         # Agent source projects
+~/.opensentience/     # Core runtime (state, installs, audit log, derived indexes/caches)
+~/Projects/*/         # Working projects + agent source repos (may contain `.fleetprompt/`)
+.fleetprompt/         # Repo-first per-project resources (source of truth; safe to index without code execution)
 ```
 
 ---
@@ -52,9 +52,9 @@ Local Resources Convention:
 | **Delegatic** | Company Agent | Multi-agent orchestration groups |
 | **A2A Traffic** | Event Agent | Inter-agent message routing |
 
-### 1.2 Local Resource Convention: `~/.fleetprompt/`
+### 1.2 Local Resource Convention: repo-first `.fleetprompt/` (source of truth)
 
-**Every project can declare FleetPrompt resources:**
+**Every project can declare FleetPrompt resources in-repo (`.fleetprompt/`):**
 
 ```bash
 # Project structure
@@ -89,7 +89,9 @@ Local Resources Convention:
 
 ### 2.1 FleetPrompt as OS Agent
 
-**FleetPrompt runs as an OpenSentience agent** that provides:
+**FleetPrompt runs as an OpenSentience agent**.
+
+**Tool naming (canonical):** tools are addressed globally as `<agent_id>/<tool_name>` (namespaced). For example, Core would route `com.fleetprompt.core/fp_run_skill` (display UIs may show a short name like `fp_run_skill`).
 
 ```json
 {
@@ -98,8 +100,7 @@ Local Resources Convention:
   "version": "1.0.0",
   "capabilities": ["skills", "workflows", "marketplace"],
   "permissions": [
-    "filesystem:read:~/.fleetprompt/**",
-    "tool:invoke:*/skill_*"
+    "filesystem:read:~/Projects/**/.fleetprompt/**"
   ]
 }
 ```
@@ -150,6 +151,8 @@ company_id = "eng-team-alpha"
 role = "worker"
 
 [a2a]
+# NOTE: event permissions are bus-agnostic and use the `event:*` namespace.
+# A2A Traffic is the default in-portfolio event bus implementation.
 subscribe = ["deploy.*.success", "test.*.failed"]
 publish = ["build.*.complete"]
 ```
@@ -160,7 +163,9 @@ publish = ["build.*.complete"]
 
 ### 3.1 Graphonomous as Knowledge Layer
 
-**Graphonomous provides graph-native RAG for all agents** using Arcana:
+**Graphonomous provides graph-native RAG for all agents** using Arcana.
+
+Tool naming note: the agent may internally implement `graph_search`, but the canonical routed tool identifier is namespaced (e.g. `com.graphonomous.core/graph_search`).
 
 ```elixir
 # Graphonomous agent = thin wrapper around Arcana
@@ -256,7 +261,7 @@ end
 | `Arcana.ingest/2` | `graph_ingest` tool | `graph:write:collection` |
 | `Arcana.search/2` | `graph_search` tool | `graph:read:collection` |
 | `Arcana.Entity` | `graph_entities` tool | `graph:read:entities` |
-| `Arcana.Agent` | Native LLM pipeline | `network:http:llm_api` |
+| `Arcana.Agent` | Native LLM pipeline | `network:egress:llm_api` |
 
 **Multi-tenancy via Ecto repos:**
 ```elixir
@@ -293,7 +298,7 @@ Arcana.search(query, repo: tenant_repo, collections: ["shared", "company-abc"])
     {
       "agent_id": "com.opensentience.scheduler",
       "role": "campaign_scheduler",
-      "permissions_override": ["network:http:write:social_apis"]
+      "permissions_override": ["network:egress:social_apis"]
     }
   ],
   "shared_resources": {
@@ -338,7 +343,7 @@ agent_requested = ["graph:read:customer", "filesystem:write:/campaigns/draft/**"
 # ✅ Allowed (subset)
 Delegatic.authorize(company, agent, agent_requested)
 
-agent_requested = ["network:http:write:external_api"]
+agent_requested = ["network:egress:external_api"]
 # ❌ Denied (not in company permissions)
 ```
 
@@ -451,8 +456,7 @@ A2ATraffic.publish(event,
     "filesystem:execute:/path/to/binary",
     
     // Network
-    "network:http:read",
-    "network:http:write",
+    "network:egress:<host-or-tag>",
     "network:tcp:connect:host:port",
     "network:dns:resolve",
     
@@ -568,13 +572,13 @@ A2ATraffic.publish(event,
    - Filesystem: /companies/marketing-automation-co/
    
 3. Graphonomous ingests customer data:
-   Tool: graph_ingest
+   Tool: com.graphonomous.core/graph_ingest
    Collection: customer_insights
    Permission: graph:write:customer_insights (approved)
    
 4. Copywriter agent generates ad copy:
    Tool: generate_copy
-   Reads: graph_search(customer_insights)
+   Reads: com.graphonomous.core/graph_search(customer_insights)
    Writes: /companies/.../campaigns/ad-001.md
    Permission: filesystem:write:/companies/marketing-automation-co/**
    
@@ -596,7 +600,7 @@ A2ATraffic.publish(event,
    Pattern match: campaign.analysis.complete
    Action: Schedule campaign if score > threshold
    Tool: schedule_post
-   Permission: network:http:write:social_apis
+   Permission: network:egress:social_apis
    
 9. Audit log records full chain:
    - Company provisioned
@@ -644,7 +648,7 @@ opensentience.org/
 
 1. **Arcana version compatibility:** Target v0.1.x or wait for v1.0?
 2. **Multi-tenancy strategy:** Schema-per-tenant or database-per-tenant for Delegatic companies?
-3. **Event persistence:** Should A2A store events for replay/audit?
+3. **Event persistence:** A2A logs events durably for audit; should A2A also retain them for replay, and what retention/compaction policy should apply?
 4. **GraphQL API:** Should admin UI use REST or GraphQL for real-time updates?
 5. **Authentication:** How do external tools auth with OS? API keys? OAuth?
 

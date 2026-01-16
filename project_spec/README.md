@@ -8,6 +8,7 @@ OpenSentience is the **always-running core** of the portfolio.
   - OpenSentience Core architecture
   - Marketplace (discover/sync/install/enable/run)
   - Local Admin UI + Chat on `127.0.0.1:6767`
+  - Runtime protocol (Core ↔ Agent), including the message envelope (see Section 8)
   - Safe-by-default workflow
 
 - `portfolio-integration.md`

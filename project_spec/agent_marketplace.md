@@ -234,14 +234,15 @@ The protocol must support:
 - structured errors
 - versioning/compat negotiation
 
+Concrete v1 message envelope + framing is specified in `opensentience.org/project_spec/RUNTIME_PROTOCOL.md` and is treated as the MVP baseline.
+
 ### 8.2 Transport
 
-MVP transport options (choose one during implementation):
-1. **Local TCP** with JSON messages (simpler to debug)
-2. **Unix domain socket** (better local security)
-3. **Distributed Erlang** (fast but higher operational/security complexity)
+**MVP standard (baseline):** Unix domain socket (UDS) using **length-prefixed JSON frames** as defined in `opensentience.org/project_spec/RUNTIME_PROTOCOL.md`:
+- each message is a single JSON object (UTF-8)
+- framed with a 4-byte unsigned big-endian length prefix
 
-This spec recommends **Unix domain socket** for local-first + security, with JSON framing.
+Alternative transports may be used for development (e.g., local TCP on `127.0.0.1`), but they MUST preserve the exact same framing and message envelope.
 
 ### 8.3 Security
 
