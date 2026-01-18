@@ -9,53 +9,29 @@ This will let Zed run the agent as a subprocess and interact with it in the Agen
 ---
 
 ## Current status (what exists right now)
-The repo you have open (`opensentience.org`) is primarily a static site, so I added a new subproject under:
+The repo you have open (`opensentience.org`) contains multiple parts (site + Elixir projects). The **ACP external agent implementation for Zed** lives under:
 
-- `opensentience.org/zed-agent-opensentience/`
+- `opensentience.org/zed-agent/`
 
-This subproject is a **Mix + escript** scaffold for an ACP agent.
+This subproject is a **Mix + escript** ACP agent (JSON-RPC 2.0 over stdio). It already contains typical Mix build output (`_build/`, `deps/`, `test/`) and an `opensentience` escript artifact in the project root (rebuildable via `mix escript.build`).
 
-### Key files added
-- `opensentience.org/zed-agent-opensentience/mix.exs`
-  - Defines the Mix project `:opensentience_acp`
-  - Adds `{:jason, "~> 1.4"}` for JSON encode/decode
-  - Configures `escript` output named `opensentience`
-  - Sets `mod: {OpenSentience.Application, []}`
-
-- `opensentience.org/zed-agent-opensentience/config/config.exs`
-  - Logger configured (intended to write to `stderr`, not `stdout`)
-  - Basic agent identity and defaults
-
-- `opensentience.org/zed-agent-opensentience/lib/open_sentience/cli.ex`
-  - CLI entrypoint (`OpenSentience.CLI`) used by escript
-  - Starts ACP stdio loop when run with `--acp` (or no args)
-  - Routes incoming JSON-RPC messages to the core agent implementation
-  - Sends responses/notifications back via the stdio transport
-
-- `opensentience.org/zed-agent-opensentience/lib/open_sentience/transport/stdio.ex`
-  - Implements newline-delimited JSON-RPC stdio transport rules:
-    - reads one JSON object per line
-    - writes one JSON object per line
-    - never prints non-ACP content to `stdout`
-    - logs go to `stderr` via Logger
-
-- `opensentience.org/zed-agent-opensentience/lib/open_sentience/agent.ex`
-  - A transport-agnostic ACP “brain”:
-    - handles `initialize`, `session/new`, `session/prompt`, `session/set_mode`
-    - handles `session/cancel` notifications
-    - emits `session/update` notifications during prompts
-  - Currently behaves as a **stub agent**: it does not call an LLM, it just acknowledges prompts and streams a basic response.
-
-- `opensentience.org/zed-agent-opensentience/lib/open_sentience/json_rpc.ex`
-  - JSON-RPC helper builders/validators (currently not wired into the CLI/transport; available for future cleanup/refactor)
-
-- `opensentience.org/zed-agent-opensentience/lib/open_sentience/prompt.ex`
-  - A simple “render ACP prompt blocks into text” helper (currently not used by `OpenSentience.Agent`)
-
-- `opensentience.org/zed-agent-opensentience/README.md`
-  - How to configure Zed to run this as a custom external agent.
-
-- `opensentience.org/zed-agent-opensentience/.gitignore`
+### Key files (current `opensentience.org/zed-agent/` implementation)
+- `opensentience.org/zed-agent/mix.exs`
+  - Mix + escript project for the ACP agent
+- `opensentience.org/zed-agent/README.md`
+  - How to configure Zed to run the agent as a custom external agent
+- `opensentience.org/zed-agent/lib/open_sentience/agent.ex`
+  - ACP “brain” that handles `initialize`, `session/new`, `session/prompt`, and `session/cancel`
+  - Streams progress via `session/update` during prompt turns
+  - Contains an LLM-backed path (see LLM modules) in addition to baseline protocol handling
+- `opensentience.org/zed-agent/lib/open_sentience/acp/router.ex`
+  - ACP router that supports **agent-initiated client requests** (JSON-RPC 2.0) with response correlation (used for calling client methods like `fs/*`, `terminal/*`, and `session/request_permission` when wired in)
+- `opensentience.org/zed-agent/lib/open_sentience/llm.ex`
+  - LLM provider selection (supports at least `openrouter` + `mock`)
+- `opensentience.org/zed-agent/lib/open_sentience/llm/open_router.ex`
+  - OpenRouter client (OpenAI-compatible `/chat/completions`)
+- `opensentience.org/zed-agent/opensentience`
+  - Built escript artifact (can be regenerated with `mix escript.build`)
 
 ---
 
@@ -91,16 +67,17 @@ The core ACP flow is covered at a basic level:
 ## What is NOT implemented yet (important gaps)
 This is currently an ACP “protocol skeleton”, not a full coding agent.
 
-### No LLM backend
-- There is **no** OpenAI/Anthropic/local-model integration.
-- The agent does not generate code changes or tool calls based on model output.
+### LLM backend exists (but the “coding agent” workflow is still incomplete)
+- An LLM integration exists (OpenRouter + a deterministic `mock` mode).
+- The agent has code paths intended to run an LLM-driven turn and (where wired) incorporate tool results.
 
-### No client tool usage (fs/terminal)
+### Agent-initiated client tool usage is scaffolded (partial)
 ACP supports an agent calling client methods like:
 - `fs/read_text_file`, `fs/write_text_file`
-- `terminal/create`, `terminal/output`, etc.
+- `terminal/create`, `terminal/output`
+- `session/request_permission`
 
-This agent does **not** call any of those yet, and it does not request permissions via `session/request_permission`.
+This repo includes an ACP routing layer to support those client calls with response correlation. However, the full “edit files / run commands / apply diffs” workflow is not yet complete end-to-end (tool call reporting, robust permission request UX, and reliable editing/patch application still need finishing work).
 
 ### No “real” Zed editing workflow
 - Tool call reporting (`tool_call` / `tool_call_update`) is not used.
@@ -112,10 +89,14 @@ This agent does **not** call any of those yet, and it does not request permissio
 
 ---
 
-## Known technical constraints in this environment
-I **did not compile** the Elixir project here, because the tooling interface I have only allows running shell commands with `cd` set to a project root directory (`opensentience.org`), and it disallows `cd` inside the command. Since this Mix project lives under a subdirectory, I can’t run `mix deps.get` / `mix compile` via the available terminal tool.
+## Build / run status (what’s true right now)
+- The ACP agent lives at `opensentience.org/zed-agent/`.
+- A built escript artifact is present at `opensentience.org/zed-agent/opensentience`.
+- You can (and should) rebuild locally from `opensentience.org/zed-agent/` with:
+  - `mix deps.get`
+  - `mix escript.build`
 
-So: the scaffold is written, but you should run a local build to confirm compilation.
+If Zed is configured to run the `opensentience` executable with `--acp`, the agent should be able to participate in ACP `initialize` + session flows.
 
 ---
 
@@ -166,14 +147,20 @@ The included `opensentience.org/zed-agent-opensentience/README.md` already docum
 
 ---
 
-## Open questions (I need your preference)
-To continue “coding the agent” beyond protocol scaffolding, I need one decision:
+## Open questions (what’s still needed to finish the “real” Zed coding agent)
+The agent already has an LLM provider story (OpenRouter by default, plus `mock` for tests). The remaining decisions are about *scope and safety*:
 
-1. **Which model/provider should OpenSentience use?**
-   - OpenAI? Anthropic? Google? Ollama (local)?
-2. Should it be **bring-your-own-key** via environment variables (recommended), or do you want a different auth mechanism?
-3. Do you want OpenSentience to:
-   - only chat, or
-   - also **edit files / run commands** autonomously through ACP tools?
+1. Do you want to keep **OpenRouter as the default provider**, or add first-class support for another provider (Anthropic/OpenAI/local)?
+2. Should the agent be allowed to use ACP client tools by default:
+   - `fs/*` reads only,
+   - reads + writes,
+   - and/or `terminal/*`?
+3. What permission posture do you want in Zed:
+   - request permission per operation (`session/request_permission`) every time,
+   - or allow a “trusted mode” toggle (still audited, but fewer prompts)?
+4. What is the expected editing format:
+   - direct file writes,
+   - diff/patch application,
+   - or both?
 
-If you answer those, I can continue from the current scaffold and implement the actual agent behavior (model calls + tool loop) in a way that matches ACP and Zed’s external agent expectations.
+Once those are decided, the implementation work is to make prompt turns consistently drive: (a) tool calls via the ACP router, (b) structured progress updates, and (c) robust final responses that reflect actual edits/commands performed.

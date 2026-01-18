@@ -11,9 +11,25 @@ OpenSentience is the **always-running core** of the portfolio.
   - Runtime protocol (Core ↔ Agent), including the message envelope (see Section 8)
   - Safe-by-default workflow
 
+- `RUNTIME_PROTOCOL.md`
+  - Concrete Core ↔ Agent protocol (v1): transport, framing, envelope, tool calls, streaming, cancellation, heartbeats
+
 - `portfolio-integration.md`
   - How FleetPrompt, Graphonomous, Delegatic, and A2A fit together
   - Local resource conventions (`~/.opensentience`, `.fleetprompt/`)
+
+## Additional specs (recommended next)
+
+These documents complement the canonical specs above:
+
+- `TRUST_AND_REGISTRY.md`
+  - Registry metadata, provenance, verification levels, and drift/approval posture (MVP-aligned)
+
+- `OBSERVABILITY_AND_METRICS.md`
+  - Correlation-driven observability: audit/logs/metrics/traces posture, retention, and export guidance
+
+- `AGENT_TESTING.md`
+  - Protocol contract tests + agent-owned test suites (determinism, safety, CI expectations)
 
 ## Cross-portfolio standards (adopted)
 

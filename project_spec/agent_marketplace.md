@@ -129,6 +129,7 @@ Each agent project must contain a manifest at a well-known path:
 
 Example:
 
+Required (v1):
 - `id`: reverse-DNS style string (stable)
 - `name`: display name
 - `version`: semver
@@ -138,11 +139,24 @@ Example:
 - `permissions`: list of requested permissions
 - `capabilities`: `["tools", "streaming", "cancellation"]` etc.
 
+Recommended optional fields (for discovery/search UX; safe to index without executing code):
+- `keywords`: array of strings (tags for basic search)
+- `tool_summary`: display-only list of tools (authoritative tool list comes from runtime registration)
+- `integration_points`: array of strings (e.g. `["github", "gitlab"]`) for filtering
+- `docs_url`: link to human docs (not fetched during discovery)
+
+Recommended optional fields (for production hardening; not required for MVP):
+- `resources`: declared “needs” for operator visibility only (Core may enforce later), e.g. cpu/memory hints
+- `execution_limits`: declared timeouts/concurrency/rate hints (Core may enforce later)
+- `publisher`: display metadata (name, url); registry may attach verification later
+- `verification`: display metadata (e.g. `unverified|verified|audited`) — registry-derived, not trusted if self-declared
+- `trust_score`: registry-derived numeric (if present); Core treats as informational only unless a verification system is implemented
+
 ---
 
 ## 6) Discovery
 
-### 6.1 Local Discovery
+### 6.1 Local Discovery (MVP: file-based, no code execution)
 
 The core supports configured scan roots, e.g.:
 
@@ -166,11 +180,48 @@ The core can:
 - read registry entries (pure data)
 - present them as “available to install”
 
-Registry entry should include:
+Registry entry should include (minimum):
 - `id`
 - `git_url`
 - `default_ref` (tag/branch/commit)
 - `manifest_path` (default `opensentience.agent.json`)
+
+Registry entry may include (trust + UX metadata; informational unless verified by Core):
+- `publisher` (object): display identity (name/url/contact)
+- `verification` (object): e.g. `{ "level": "unverified|verified|audited|certified", "issuer": "...", "issued_at": "...", "evidence_url": "..." }`
+- `trust_score` (number): registry-computed score used for sorting/filtering
+- `deprecated` (boolean) and `replacement_id` (string)
+- `keywords`, `integration_points` (arrays) for filtering
+
+Important: Core MUST continue to treat remote registry metadata as untrusted input. The only trust boundary in MVP is: explicit install/build/enable by the user, plus Core-side permission enforcement.
+
+### 6.3 Catalog Search (MVP: metadata + filtering)
+
+Core should support searching the local + remote catalogs using only manifest/registry metadata (no code execution), for example:
+
+- free-text across: `id`, `name`, `description`, `keywords`
+- filters across:
+  - `capabilities`
+  - `integration_points`
+  - `status` (installed/enabled/running)
+  - `verification.level` (if present)
+  - `trust_score >= threshold` (if present)
+
+This is intentionally “semantic-light” for MVP: it must be fast, deterministic, and safe.
+
+### 6.4 Semantic Discovery (MVP+; keep file scanning as the source of truth)
+
+If/when we add semantic search, it should be implemented as a derived index over already-discovered safe fields:
+
+- Inputs to semantic index:
+  - `name`, `description`, `keywords`, `tool_summary` (if present), and (optionally) registry-provided tags
+- Ranking should combine:
+  - relevance (semantic)
+  - operator-selected trust thresholds (verification/trust_score)
+  - observed reliability metrics (see Section 11.3)
+
+Non-negotiable invariant:
+- Semantic discovery must never execute agent code and must never fetch arbitrary URLs during discovery/indexing.
 
 ---
 
@@ -292,6 +343,21 @@ Core responsibilities:
   - periodic heartbeat
 - Core marks agent unhealthy and stops routing if heartbeat fails.
 
+### 10.3 Resource Limits & Abuse Resistance (MVP+ guidance; do not weaken MVP invariants)
+
+MVP requirement remains: permission gating + process isolation. In addition, Core should be designed to add resource controls without refactors:
+
+Recommended operator controls (even if enforcement is “best-effort” at first):
+- Per-tool call timeouts (`timeout_ms` propagated; Core may enforce stricter limits)
+- Max concurrent tool calls per agent
+- Rate limits (calls/minute) per agent and/or per caller
+- Bounded logs and bounded message sizes (protocol already specifies `max_frame_bytes`)
+- Kill-switch: disable an enabled agent quickly (stop process + stop routing)
+
+Optional enforcement mechanisms (later phases):
+- OS-level CPU/memory limits (e.g. cgroups on Linux)
+- Network egress controls aligned with `network:egress:<host-or-tag>`
+
 ---
 
 ## 11) Observability & Auditing
@@ -313,6 +379,39 @@ Record:
 - permission grants/revocations
 - run commands + timestamps
 - tool invocations (tool name, agent id, caller, outcome)
+
+Audit requirements (keep consistent with `RUNTIME_PROTOCOL.md`):
+- Prefer correlation fields (`request_id`, `correlation_id`, `causation_id`) so UI can show a unified timeline.
+- Persist only secret-free metadata; apply redaction best-effort to tool I/O and logs.
+
+### 11.3 Metrics & Tracing (MVP+; design now, implement incrementally)
+
+Production operators need “is it healthy and fast?” in addition to logs:
+
+Recommended metrics (per agent and per tool_id):
+- invocation counts
+- success/failure/canceled counts
+- latency (p50/p95/p99)
+- crash/restart counts and uptime
+- permission denials (by permission type/category)
+
+Recommended tracing model:
+- represent a tool call as a root “span” with child spans for permission checks, routing, and agent execution
+- tie traces to audit events via `correlation_id` / `request_id`
+
+Non-negotiable invariant:
+- traces and metrics must remain secret-free in durable storage.
+
+### 11.4 Testing & Evaluation (MVP+; required for higher trust levels)
+
+This spec does not require a full eval framework for MVP, but it should establish the expectation:
+
+- Agents SHOULD ship repeatable tests (unit/integration) for their tool surfaces.
+- Core SHOULD eventually provide a way to run agent test suites in isolation and record results as auditable events.
+- Registry verification levels (if implemented) SHOULD require passing a standard test suite and basic security checks for “audited/certified” tiers.
+
+Keep the trust boundary clear:
+- Running tests is code execution and must be treated similarly to build/run (explicit operator intent + audit).
 
 ---
 

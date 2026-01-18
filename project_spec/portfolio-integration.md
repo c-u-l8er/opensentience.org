@@ -3,7 +3,7 @@
 
 **Version:** 1.0  
 **Date:** January 16, 2026  
-**Status:** Architecture complete; implementation decisions pending (see Section 10: Open Questions)
+**Status:** Architecture complete; implementation decisions pending (see Section 10: Open Questions). See also: `TRUST_AND_REGISTRY.md` and `OBSERVABILITY_AND_METRICS.md`.
 
 ---
 
@@ -34,6 +34,10 @@ Local Resources Convention:
 ~/.opensentience/     # Core runtime (state, installs, audit log, derived indexes/caches)
 ~/Projects/*/         # Working projects + agent source repos (may contain `.fleetprompt/`)
 .fleetprompt/         # Repo-first per-project resources (source of truth; safe to index without code execution)
+
+Related specs:
+- Trust/registry metadata and provenance: `TRUST_AND_REGISTRY.md`
+- Correlation-driven observability (audit/logs/metrics/traces posture): `OBSERVABILITY_AND_METRICS.md`
 ```
 
 ---
@@ -51,6 +55,12 @@ Local Resources Convention:
 | **Graphonomous** | Knowledge Agent | RAG + Graph reasoning (Arcana) |
 | **Delegatic** | Company Agent | Multi-agent orchestration groups |
 | **A2A Traffic** | Event Agent | Inter-agent message routing |
+
+**Workflow and orchestration ownership (clarification):**
+- **OpenSentience Core** governs agent lifecycle (discover/install/build/enable/run), permission enforcement at routing boundaries, and the unified audit timeline. Core is not the “workflow engine” for the portfolio.
+- **FleetPrompt** owns repo-first workflow definitions and execution (`.fleetprompt/workflows/`) and exposes them as tools.
+- **Delegatic** owns multi-agent “company/mission” orchestration (coordination + policy gating), typically by invoking FleetPrompt workflows and other agent tools via Core routing.
+- **A2A Traffic** owns inter-agent pub/sub event routing (`event:*` permissions), used to trigger or coordinate work across agents.
 
 ### 1.2 Local Resource Convention: repo-first `.fleetprompt/` (source of truth)
 
