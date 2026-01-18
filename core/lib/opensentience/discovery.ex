@@ -25,6 +25,8 @@ defmodule OpenSentience.Discovery do
 
   alias OpenSentience.Catalog
   alias OpenSentience.Catalog.Agent
+  alias OpenSentience.Discovery.GitInfo
+  alias OpenSentience.Paths
 
   @manifest_filename "opensentience.agent.json"
 
@@ -447,19 +449,88 @@ defmodule OpenSentience.Discovery do
 
     existing = Catalog.get_agent(agent_id)
 
-    attrs = %{
-      agent_id: agent_id,
-      name: maybe_string(manifest["name"]),
-      version: maybe_string(manifest["version"]),
-      description: maybe_string(manifest["description"]),
-      manifest_path: normalize_path(manifest_path),
-      manifest_hash: manifest_hash
-    }
+    manifest_path_abs = normalize_path(manifest_path)
+    repo_root = if is_binary(manifest_path_abs), do: Path.dirname(manifest_path_abs), else: nil
+
+    agents_dir = Paths.agents_dir() |> Path.expand()
+    agents_dir_prefix = Path.join(agents_dir, "")
+    repo_root_prefix = if is_binary(repo_root), do: Path.join(Path.expand(repo_root), ""), else: nil
+
+    in_agents_dir? =
+      is_binary(repo_root_prefix) and String.starts_with?(repo_root_prefix, agents_dir_prefix)
+
+    git_info =
+      if is_binary(repo_root) do
+        case GitInfo.read(repo_root) do
+          {:ok, info} -> info
+          {:error, _} -> %{}
+        end
+      else
+        %{}
+      end
+
+    inferred_status = if in_agents_dir?, do: "installed", else: "local_dev"
+
+    # Discovery should not stomp operational state (enabled/running/error/etc).
+    status =
+      cond do
+        is_nil(existing) ->
+          inferred_status
+
+        existing.status in [nil, "", "local_dev", "local_uninstalled", "installed"] ->
+          inferred_status
+
+        true ->
+          existing.status
+      end
+
+    # Fill missing build_status on rescan without requiring a manifest change.
+    # This improves UI clarity for older rows created before we defaulted it.
+    build_status_fill =
+      cond do
+        is_nil(existing) ->
+          nil
+
+        is_nil(existing.build_status) ->
+          "not_built"
+
+        is_binary(existing.build_status) and String.trim(existing.build_status) == "" ->
+          "not_built"
+
+        true ->
+          nil
+      end
+
+    attrs =
+      %{
+        agent_id: agent_id,
+        name: maybe_string(manifest["name"]),
+        version: maybe_string(manifest["version"]),
+        description: maybe_string(manifest["description"]),
+        manifest_path: manifest_path_abs,
+        manifest_hash: manifest_hash,
+        status: status
+      }
+      |> maybe_put(:build_status, build_status_fill)
+      |> maybe_put(:source_git_url, Map.get(git_info, :source_git_url))
+      |> maybe_put(:source_ref, Map.get(git_info, :source_ref))
+
+    attrs =
+      if in_agents_dir? and is_binary(repo_root) and
+           (is_nil(existing) or is_nil(existing.install_path) or existing.install_path == "") do
+        Map.put(attrs, :install_path, repo_root)
+      else
+        attrs
+      end
 
     action =
       cond do
         is_nil(existing) ->
           :discovered
+
+        match?(%Agent{}, existing) and existing.manifest_hash == manifest_hash and
+            enrichment_needed?(existing, attrs) ->
+          :updated
 
         match?(%Agent{}, existing) and existing.manifest_hash == manifest_hash ->
           :unchanged
@@ -700,6 +771,71 @@ defmodule OpenSentience.Discovery do
   end
 
   defp maybe_string(_), do: nil
+
+  defp maybe_put(map, _key, nil) when is_map(map), do: map
+
+  defp maybe_put(map, key, value) when is_map(map) and is_atom(key) and is_binary(value) do
+    v = String.trim(value)
+    if v == "", do: map, else: Map.put(map, key, v)
+  end
+
+  defp maybe_put(map, key, value) when is_map(map) and is_atom(key) do
+    Map.put(map, key, value)
+  end
+
+  defp enrichment_needed?(%Agent{} = existing, attrs) when is_map(attrs) do
+    # If the manifest hash didn't change, we still want to opportunistically enrich
+    # lifecycle fields when we can do so safely without executing code.
+    #
+    # "Enrichment" includes:
+    # - filling blanks (git URL/ref, install path)
+    # - adjusting inferred status for local/installed classification
+    # - ensuring build_status has a safe default ("not_built") rather than nil/blank
+    candidates = [
+      {:source_git_url, existing.source_git_url, Map.get(attrs, :source_git_url)},
+      {:source_ref, existing.source_ref, Map.get(attrs, :source_ref)},
+      {:install_path, existing.install_path, Map.get(attrs, :install_path)}
+    ]
+
+    filled_blanks? =
+      Enum.any?(candidates, fn {_key, old, new} ->
+        blank?(old) and present?(new)
+      end)
+
+    status_changed? =
+      present?(Map.get(attrs, :status)) and present?(existing.status) and
+        normalize_status(existing.status) != normalize_status(Map.get(attrs, :status))
+
+    status_was_blank? = blank?(existing.status) and present?(Map.get(attrs, :status))
+
+    build_status_missing? = blank?(existing.build_status)
+
+    filled_blanks? or status_was_blank? or status_changed? or build_status_missing?
+  end
+
+  defp enrichment_needed?(_existing, _attrs), do: false
+
+  defp blank?(nil), do: true
+  defp blank?(v) when is_binary(v), do: String.trim(v) == ""
+  defp blank?(v) when is_atom(v), do: v |> Atom.to_string() |> blank?()
+  defp blank?(v), do: v |> to_string() |> blank?()
+
+  defp present?(v), do: not blank?(v)
+
+  defp normalize_status(nil), do: nil
+  defp normalize_status(v) when is_atom(v), do: v |> Atom.to_string() |> normalize_status()
+
+  defp normalize_status(v) when is_binary(v) do
+    v
+    |> String.trim()
+    |> String.downcase()
+    |> case do
+      "" -> nil
+      s -> s
+    end
+  end
+
+  defp normalize_status(v), do: v |> to_string() |> normalize_status()
 
   defp sha256_hex(bin) when is_binary(bin) do
     :crypto.hash(:sha256, bin)

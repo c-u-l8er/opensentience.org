@@ -73,7 +73,13 @@ mix opensentience.agents.scan
 mix opensentience.agents.list
 ```
 
-5) Tail audit log:
+5) Install an agent (explicit trust boundary; executes `git`):
+
+```/dev/null#L1-2
+mix opensentience.agents.install com.example.side_effects --git-url https://github.com/org/repo.git --ref main
+```
+
+6) Tail audit log:
 
 ```/dev/null#L1-2
 mix opensentience.audit.tail --limit 50
@@ -139,6 +145,9 @@ Implemented Mix tasks (Phase 1 scaffold):
   - supports `--no-upsert` and `--format json`
 - `mix opensentience.agents.list`
   - list catalog agents, supports filters and `--json`
+- `mix opensentience.agents.install`
+  - install an agent into `~/.opensentience/agents/<agent_id>/src` (git clone/fetch; explicit trust boundary)
+  - supports `--git-url`, `--ref`, and `--no-audit`
 - `mix opensentience.audit.tail`
   - tail audit events (supports `--follow`)
 

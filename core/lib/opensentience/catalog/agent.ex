@@ -168,6 +168,7 @@ defmodule OpenSentience.Catalog.Agent do
       |> Map.put_new("last_seen_at", now)
       |> Map.put_new("discovered_at", now)
       |> Map.put_new("status", "local_uninstalled")
+      |> Map.put_new("build_status", "not_built")
 
     changeset(agent, attrs)
   end
