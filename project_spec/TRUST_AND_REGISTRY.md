@@ -217,7 +217,159 @@ These levels are designed to be implementable incrementally and map cleanly to U
 
 ---
 
-## 7) Optional cryptographic hooks (designed for later, harmless now)
+## 7) Commercial entitlements for source-available agents (paid updates via Stripe Connect)
+
+This section defines a **paid-updates entitlement model** that is compatible with:
+- **source-available** agents (code can be inspected),
+- a **commercial marketplace** (FleetPrompt) with publisher payouts via **Stripe Connect**,
+- the existing OpenSentience trust posture:
+  - discovery is non-executing,
+  - install/build is a trust boundary,
+  - enablement is permission-gated,
+  - runtime is isolated,
+  - auditability is first-class.
+
+### 7.1 What is “paid” in this model?
+
+The paid product is an **entitlement** that grants access to one or more of:
+- an **update channel** (new versions in the registry / release feed),
+- **signed release bundles** (recommended distribution artifact),
+- **support / SLA** (optional),
+- optional **verification/audit program** outcomes (separate from payment).
+
+Important:
+- Being paid does **not** grant extra runtime permissions.
+- Being paid does **not** bypass “Enable” approvals.
+- Core remains the policy enforcement point.
+
+### 7.2 Stripe Connect responsibilities (marketplace layer)
+
+FleetPrompt Marketplace uses **Stripe Connect** to:
+- onboard publishers (initially individuals) to receive payouts,
+- charge customers in a single marketplace checkout experience,
+- route publisher payouts and platform fees automatically.
+
+Stripe Connect is strictly the **payments and payout rail**. It does not replace:
+- OpenSentience install/build/enable/run controls,
+- provenance, drift detection, or audit timeline.
+
+### 7.3 Entitlement object (conceptual)
+
+FleetPrompt Marketplace issues an entitlement after a successful payment event.
+
+A minimal entitlement record should include:
+
+- `entitlement_id` (string, UUID)
+- `agent_id` (string; must match `opensentience.agent.json` `id`)
+- `purchaser_user_id` (string; FleetPrompt account id / email-linked account)
+- `publisher_id` (string; marketplace publisher account)
+- `status` (`active | past_due | canceled | revoked`)
+- `kind` (`one_time | subscription`)
+- `policy` (object):
+  - `updates`:
+    - `allowed`: boolean
+    - `updates_until` (RFC3339 or null for indefinite)
+    - `major_range` (e.g., `"1.x"` or `"any"`)
+  - `artifacts`:
+    - `signed_bundles_allowed`: boolean
+- `issued_at` (RFC3339)
+- `revoked_at` (RFC3339, optional)
+- `source` (object, optional):
+  - `stripe_account_id` (connected account id; optional)
+  - `stripe_customer_id` (optional)
+  - `stripe_subscription_id` (optional)
+  - `stripe_payment_intent_id` (optional)
+  - `stripe_charge_id` (optional)
+
+Security requirements:
+- Entitlements are **secrets** if represented as tokens. Tokens must not be stored in SQLite.
+- Entitlement records stored server-side must not contain secrets beyond Stripe identifiers.
+- Any durable audit trail must remain secret-free.
+
+### 7.4 Entitlement token format (Core consumption)
+
+OpenSentience Core needs a way to authenticate update/download requests without becoming a payment system.
+
+Two acceptable approaches:
+
+1) **Opaque token** (recommended)
+- Core stores an opaque token in a file-backed secret store under `~/.opensentience/`.
+- Core presents the token to FleetPrompt Marketplace when requesting:
+  - the paid registry feed,
+  - signed release bundle download URLs,
+  - update eligibility checks.
+
+2) **Signed token** (JWT-like)
+- FleetPrompt Marketplace issues a signed token with:
+  - `entitlement_id`, `agent_id`, `exp`, and minimal policy flags.
+- Core stores it file-backed and refreshes as needed.
+- Signed tokens must be short-lived or revocable via server checks.
+
+In both cases:
+- Core must treat the token as a secret (no logs, no audit persistence).
+- Core must remain functional without any entitlements (open agents still work).
+
+### 7.5 Source-available + paid updates: how distribution works
+
+This portfolio supports “source-available but paid updates” by separating:
+- **source visibility** (public repo), from
+- **convenient/official update channel** (entitlement-gated).
+
+Recommended stance:
+- The agent’s `source.git_url` may be public and inspectable.
+- FleetPrompt Marketplace provides an entitlement-gated **release feed** and/or **signed bundles** for versions covered by the entitlement.
+
+Practical consequences:
+- A user may always choose to self-build from source (still a trust boundary).
+- Without an active entitlement, Core should:
+  - stop offering updates from the paid channel,
+  - continue running already-installed versions (subject to enablement/permissions),
+  - optionally show “updates available (requires entitlement)” messaging.
+
+### 7.6 Registry entries for paid agents (metadata only)
+
+Registry entries may include additional fields to describe paid distribution:
+
+- `commercial` (object, optional):
+  - `requires_entitlement` (boolean)
+  - `entitlement_provider` (e.g., `"fleetprompt_marketplace"`)
+  - `product_sku` / `plan_id` (string; marketplace identifier, not Stripe secret)
+  - `update_policy_summary` (string; human-readable)
+  - `source_available` (boolean)
+  - `docs_url` (optional)
+
+Core must treat all of this as **informational** and untrusted until backed by a valid entitlement at install/update time.
+
+### 7.7 Webhook-driven lifecycle (marketplace layer)
+
+FleetPrompt Marketplace should maintain entitlement state based on payment events.
+
+Minimum event handling (names depend on Stripe integration details):
+- successful initial purchase → create entitlement (`active`)
+- subscription renewal paid → keep entitlement `active`
+- payment failure / past due → mark entitlement `past_due` (optionally grace period)
+- cancellation at period end → mark entitlement `canceled` at end of term
+- refund / dispute / fraud → mark entitlement `revoked`
+
+Core behavior when entitlement changes:
+- `active` → allow updates/downloads per policy
+- `past_due` → optionally allow a short grace period; otherwise block updates
+- `canceled` → block future updates/downloads; do not uninstall
+- `revoked` → block updates/downloads immediately; warn in UI
+
+### 7.8 Compatibility with OpenSentience trust boundaries
+
+This entitlement model intentionally does not change the security posture:
+
+- Discovery remains pure and offline-capable.
+- Install/build/enable remain explicit, auditable actions.
+- Entitlement checks gate **distribution/update access**, not runtime permissions.
+- Permission approvals remain deny-by-default and subset-based.
+- Runtime remains process-isolated with protocol-level authentication.
+
+---
+
+## 8) Optional cryptographic hooks (designed for later, harmless now)
 
 This section defines shapes that can exist in registry entries without requiring Core to implement verification immediately.
 

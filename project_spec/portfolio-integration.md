@@ -3,7 +3,7 @@
 
 **Version:** 1.0  
 **Date:** January 16, 2026  
-**Status:** Architecture complete; implementation decisions pending (see Section 10: Open Questions). See also: `TRUST_AND_REGISTRY.md` and `OBSERVABILITY_AND_METRICS.md`.
+**Status:** Architecture complete; implementation decisions pending (see Section 10: Open Questions). See also: `TRUST_AND_REGISTRY.md`, `OBSERVABILITY_AND_METRICS.md`, and FleetPrompt specs (`fleetprompt.com/project_spec/*`) for commercial marketplace/entitlements decisions.
 
 ---
 
@@ -38,6 +38,7 @@ Local Resources Convention:
 Related specs:
 - Trust/registry metadata and provenance: `TRUST_AND_REGISTRY.md`
 - Correlation-driven observability (audit/logs/metrics/traces posture): `OBSERVABILITY_AND_METRICS.md`
+- FleetPrompt (engine + commercial marketplace direction): `fleetprompt.com/project_spec/README.md` (and related docs in `fleetprompt.com/project_spec/*`)
 ```
 
 ---
@@ -58,9 +59,17 @@ Related specs:
 
 **Workflow and orchestration ownership (clarification):**
 - **OpenSentience Core** governs agent lifecycle (discover/install/build/enable/run), permission enforcement at routing boundaries, and the unified audit timeline. Core is not the “workflow engine” for the portfolio.
-- **FleetPrompt** owns repo-first workflow definitions and execution (`.fleetprompt/workflows/`) and exposes them as tools.
+- **FleetPrompt (engine)** owns repo-first workflow definitions and execution (`.fleetprompt/workflows/`) and exposes them as tools.
 - **Delegatic** owns multi-agent “company/mission” orchestration (coordination + policy gating), typically by invoking FleetPrompt workflows and other agent tools via Core routing.
 - **A2A Traffic** owns inter-agent pub/sub event routing (`event:*` permissions), used to trigger or coordinate work across agents.
+- **FleetPrompt Marketplace (commercial)** is a separate web product/service (not the local FleetPrompt engine agent) responsible for:
+  - commercial discovery/browsing,
+  - publisher onboarding,
+  - paid update entitlements (e.g., subscription state),
+  - and (optionally) a curated remote registry index for Core “remote discovery”.
+  Core integration principles:
+  - Marketplace entitlements must never bypass Core’s local permission approval (“Enable”) and ToolRouter enforcement.
+  - Core should treat marketplace/registry data as untrusted inputs and preserve the existing trust boundaries: install/build/enable/run + audit.
 
 ### 1.2 Local Resource Convention: repo-first `.fleetprompt/` (source of truth)
 
@@ -99,7 +108,7 @@ Related specs:
 
 ### 2.1 FleetPrompt as OS Agent
 
-**FleetPrompt runs as an OpenSentience agent**.
+**FleetPrompt (engine) runs as an OpenSentience agent**. The **FleetPrompt Marketplace** is a separate commercial web product/service (see `fleetprompt.com/project_spec/*`) that may provide a remote registry index and paid-update entitlements; it does not change Core’s local trust boundaries or permission model.
 
 **Tool naming (canonical):** tools are addressed globally as `<agent_id>/<tool_name>` (namespaced). For example, Core would route `com.fleetprompt.core/fp_run_skill` (display UIs may show a short name like `fp_run_skill`).
 

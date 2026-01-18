@@ -22,6 +22,18 @@ OpenSentience is the **always-running core** of the portfolio.
 
 These documents complement the canonical specs above:
 
+- `SEMANTIC_DISCOVERY.md`
+  - Semantic agent search: MVP-safe metadata search, with optional semantic indexing via Graphonomous or a pluggable backend later
+
+- `WORKFLOW_ORCHESTRATION.md`
+  - Workflow orchestration proposal and execution model (note: portfolio ownership is FleetPrompt + Delegatic; Core routes + audits)
+
+- `RESOURCE_LIMITS.md`
+  - Resource limits and sandboxing roadmap (timeouts, rate limits, OS-level controls)
+
+- `fleetprompt.com/project_spec/MARKETPLACE_COMMERCIAL.md`
+  - FleetPrompt Marketplace (commercial): accounts, Stripe Connect payouts, listings, entitlements, artifacts/download delivery, and the Ash+Phoenix+Inertia+Svelte stack
+
 - `TRUST_AND_REGISTRY.md`
   - Registry metadata, provenance, verification levels, and drift/approval posture (MVP-aligned)
 
