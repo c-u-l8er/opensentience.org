@@ -1,0 +1,24 @@
+services:
+  opensentience-core:
+    image: archlinux:base
+    command: >
+      sh -lc "
+        pacman -Syu --noconfirm --needed elixir erlang git ca-certificates &&
+        mix deps.get &&
+        mix run --no-halt
+      "
+    working_dir: /home/travis/ProjectAmp/opensentience.org/core
+    environment:
+      OPENSENTIENCE_WEB_IP: "0.0.0.0"
+      OPENSENTIENCE_WEB_PORT: "6767"
+    ports:
+      - "6767:6767"
+    volumes:
+      # Core source (must match your real path)
+      - /home/travis/ProjectAmp/opensentience.org/core:/home/travis/ProjectAmp/opensentience.org/core
+
+      # Persist Core state/catalog/build sandboxes
+      - /home/travis/.opensentience:/home/travis/.opensentience
+
+      # Required because agent source URLs are file:///home/travis/Projects/...
+      - /home/travis/Projects:/home/travis/Projects

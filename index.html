@@ -1,0 +1,1270 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>OpenSentience — The Open Agent Runtime</title>
+        <meta
+            name="description"
+            content="Open-source, local-first agent runtime. Govern, execute, and observe AI agents on your hardware."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=Instrument+Serif:ital@0;1&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg: #07090c;
+                --s1: #0d1117;
+                --s2: #131920;
+                --s3: #1a222c;
+                --b1: rgba(255, 255, 255, 0.04);
+                --b2: rgba(255, 255, 255, 0.08);
+                --b3: rgba(255, 255, 255, 0.14);
+                --t1: #c9d1d9;
+                --t2: #8b949e;
+                --t3: #484f58;
+                --t4: #2d333b;
+                --g: #39d353;
+                --gd: rgba(57, 211, 83, 0.12);
+                --gg: rgba(57, 211, 83, 0.04);
+                --bl: #58a6ff;
+                --bld: rgba(88, 166, 255, 0.1);
+                --am: #d29922;
+                --rd: #f85149;
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                font-family: "DM Mono", monospace;
+                background: var(--bg);
+                color: var(--t1);
+                -webkit-font-smoothing: antialiased;
+                font-size: 13px;
+                line-height: 1.7;
+            }
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            /* Scanline overlay */
+            body::after {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 9999;
+                background: repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.03) 2px,
+                    rgba(0, 0, 0, 0.03) 4px
+                );
+                opacity: 0.5;
+            }
+
+            /* Grid background */
+            .grid-bg {
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 0;
+                background-image:
+                    linear-gradient(var(--b1) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--b1) 1px, transparent 1px);
+                background-size: 60px 60px;
+                opacity: 0.6;
+            }
+
+            /* Glow */
+            .glow {
+                position: fixed;
+                width: 400px;
+                height: 400px;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 0;
+                background: radial-gradient(circle, var(--gg), transparent 70%);
+                top: -5%;
+                right: 10%;
+                animation: pulse 6s ease-in-out infinite;
+            }
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 0.5;
+                    transform: scale(1);
+                }
+                50% {
+                    opacity: 0.8;
+                    transform: scale(1.05);
+                }
+            }
+
+            .page {
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Nav */
+            nav {
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background: rgba(7, 9, 12, 0.88);
+                backdrop-filter: blur(12px);
+                border-bottom: 1px solid var(--b1);
+            }
+            .nav-w {
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 0 1.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 48px;
+            }
+            .nav-l {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 500;
+                font-size: 12px;
+            }
+            .nav-l .led {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--g);
+                box-shadow: 0 0 6px var(--g);
+            }
+            .nav-r {
+                display: flex;
+                gap: 1.25rem;
+                font-size: 11px;
+                color: var(--t2);
+                letter-spacing: 0.03em;
+            }
+            .nav-r a:hover {
+                color: var(--g);
+            }
+            .nav-r .gh {
+                color: var(--g);
+                border: 1px solid rgba(57, 211, 83, 0.3);
+                padding: 3px 10px;
+                border-radius: 3px;
+                font-weight: 500;
+            }
+            .nav-r .gh:hover {
+                background: rgba(57, 211, 83, 0.08);
+            }
+
+            .wrap {
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 0 1.5rem;
+            }
+
+            /* Hero */
+            .hero {
+                padding: 7rem 0 4rem;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+                align-items: start;
+            }
+            .hero-txt h1 {
+                font-family: "Instrument Serif", serif;
+                font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+                font-weight: 400;
+                line-height: 1.06;
+                letter-spacing: -0.03em;
+                margin-bottom: 1rem;
+            }
+            .hero-txt h1 i {
+                font-style: italic;
+                color: var(--g);
+            }
+            .hero-txt .sub {
+                font-size: 13px;
+                color: var(--t2);
+                max-width: 420px;
+                font-weight: 300;
+                margin-bottom: 1.5rem;
+            }
+            .hero-txt .sub strong {
+                color: var(--t1);
+                font-weight: 500;
+            }
+            .hero-acts {
+                display: flex;
+                gap: 0.5rem;
+                margin-bottom: 2rem;
+            }
+            .btn {
+                font-family: "DM Mono", monospace;
+                font-size: 11px;
+                padding: 8px 16px;
+                border-radius: 4px;
+                font-weight: 500;
+                transition: all 0.2s;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .btn-g {
+                background: var(--g);
+                color: var(--bg);
+                border: none;
+            }
+            .btn-g:hover {
+                box-shadow: 0 0 20px rgba(57, 211, 83, 0.25);
+                transform: translateY(-1px);
+            }
+            .btn-o {
+                border: 1px solid var(--b2);
+                color: var(--t2);
+                background: transparent;
+            }
+            .btn-o:hover {
+                border-color: var(--g);
+                color: var(--g);
+            }
+            .tags {
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+            .tag {
+                font-size: 10px;
+                padding: 2px 8px;
+                border: 1px solid var(--b2);
+                border-radius: 3px;
+                color: var(--t3);
+                letter-spacing: 0.04em;
+            }
+            .tag.hl {
+                border-color: rgba(57, 211, 83, 0.25);
+                color: var(--g);
+            }
+
+            /* Process table (hero right) */
+            .proc {
+                background: var(--s1);
+                border: 1px solid var(--b2);
+                border-radius: 6px;
+                overflow: hidden;
+                font-size: 11px;
+            }
+            .proc-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 12px;
+                background: var(--s2);
+                border-bottom: 1px solid var(--b1);
+            }
+            .proc-bar span {
+                font-size: 10px;
+                color: var(--t3);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                font-weight: 500;
+            }
+            .proc-bar .live {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                color: var(--g);
+                font-size: 10px;
+            }
+            .proc-bar .live::before {
+                content: "";
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: var(--g);
+                animation: blink 1.5s ease-in-out infinite;
+            }
+            @keyframes blink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.2;
+                }
+            }
+            .proc table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .proc th {
+                text-align: left;
+                padding: 6px 12px;
+                font-size: 9px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--t3);
+                font-weight: 500;
+                background: var(--s1);
+                border-bottom: 1px solid var(--b1);
+            }
+            .proc td {
+                padding: 6px 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+                color: var(--t2);
+                font-size: 11px;
+            }
+            .proc tr:hover td {
+                background: rgba(57, 211, 83, 0.02);
+                color: var(--t1);
+            }
+            .proc .status {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .proc .status::before {
+                content: "";
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+            }
+            .proc .status.run::before {
+                background: var(--g);
+            }
+            .proc .status.idle::before {
+                background: var(--am);
+            }
+            .proc .status.stop::before {
+                background: var(--t4);
+            }
+            .proc .perm {
+                font-size: 10px;
+                color: var(--t3);
+            }
+            .proc .perm .y {
+                color: var(--g);
+            }
+            .proc .perm .n {
+                color: var(--t4);
+            }
+            .proc .cpu {
+                color: var(--bl);
+                font-size: 10px;
+            }
+            .proc-foot {
+                padding: 6px 12px;
+                background: var(--s2);
+                border-top: 1px solid var(--b1);
+                font-size: 10px;
+                color: var(--t3);
+                display: flex;
+                justify-content: space-between;
+            }
+
+            /* Section */
+            section {
+                padding: 4rem 0;
+                border-top: 1px solid var(--b1);
+            }
+            .sec-h {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 1.5rem;
+            }
+            .sec-n {
+                font-size: 10px;
+                color: var(--g);
+                background: var(--gd);
+                padding: 2px 6px;
+                border-radius: 3px;
+                font-weight: 500;
+                letter-spacing: 0.1em;
+            }
+            section h2 {
+                font-family: "Instrument Serif", serif;
+                font-size: clamp(1.5rem, 3vw, 2.2rem);
+                font-weight: 400;
+                letter-spacing: -0.02em;
+            }
+            .col-2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+                margin-top: 1.5rem;
+            }
+            .col-3 {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1px;
+                background: var(--b1);
+                border: 1px solid var(--b1);
+                border-radius: 6px;
+                overflow: hidden;
+                margin-top: 1.5rem;
+            }
+            .card {
+                background: var(--bg);
+                padding: 1.75rem;
+            }
+            .card h4 {
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--g);
+                margin-bottom: 0.4rem;
+                font-weight: 500;
+            }
+            .card p {
+                font-size: 12px;
+                color: var(--t2);
+                font-weight: 300;
+                line-height: 1.8;
+            }
+            .prose {
+                font-size: 12.5px;
+                color: var(--t2);
+                font-weight: 300;
+                max-width: 560px;
+                line-height: 1.85;
+            }
+            .prose strong {
+                color: var(--t1);
+                font-weight: 500;
+            }
+
+            /* Stack */
+            .arch {
+                margin-top: 1.5rem;
+                border: 1px solid var(--b1);
+                border-radius: 6px;
+                overflow: hidden;
+            }
+            .arch-row {
+                display: grid;
+                grid-template-columns: 130px 1fr;
+                border-bottom: 1px solid var(--b1);
+            }
+            .arch-row:last-child {
+                border-bottom: none;
+            }
+            .arch-label {
+                padding: 14px 16px;
+                background: var(--s1);
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                color: var(--t3);
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                border-right: 1px solid var(--b1);
+            }
+            .arch-val {
+                padding: 14px 16px;
+                font-size: 12px;
+                color: var(--t2);
+                font-weight: 300;
+                line-height: 1.8;
+            }
+            .arch-val strong {
+                color: var(--t1);
+                font-weight: 500;
+            }
+            .chip {
+                display: inline-block;
+                font-size: 9px;
+                padding: 1px 6px;
+                border: 1px solid var(--b2);
+                border-radius: 3px;
+                color: var(--t3);
+                margin: 1px 2px;
+            }
+            .chip.cg {
+                border-color: rgba(57, 211, 83, 0.25);
+                color: var(--g);
+            }
+            .chip.cb {
+                border-color: rgba(88, 166, 255, 0.25);
+                color: var(--bl);
+            }
+
+            /* Comparison */
+            .tbl {
+                margin-top: 1.5rem;
+                overflow-x: auto;
+                border: 1px solid var(--b1);
+                border-radius: 6px;
+            }
+            .tbl table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 11px;
+            }
+            .tbl thead th {
+                text-align: left;
+                padding: 8px 14px;
+                font-size: 9px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--t3);
+                font-weight: 500;
+                background: var(--s1);
+                border-bottom: 1px solid var(--b1);
+            }
+            .tbl tbody td {
+                padding: 8px 14px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+                color: var(--t2);
+                font-weight: 300;
+            }
+            .tbl tbody tr:hover td {
+                background: rgba(57, 211, 83, 0.02);
+                color: var(--t1);
+            }
+            .y {
+                color: var(--g);
+                font-weight: 500;
+            }
+            .n {
+                color: var(--t4);
+            }
+
+            /* Callout */
+            .cta-box {
+                margin-top: 1.5rem;
+                border: 1px solid var(--b2);
+                border-left: 3px solid var(--g);
+                border-radius: 0 6px 6px 0;
+                padding: 1.25rem 1.5rem;
+                background: var(--s1);
+            }
+            .cta-box h3 {
+                font-size: 13px;
+                font-weight: 500;
+                margin-bottom: 0.25rem;
+            }
+            .cta-box p {
+                font-size: 12px;
+                color: var(--t2);
+                font-weight: 300;
+                line-height: 1.8;
+            }
+
+            /* Terminal */
+            .term {
+                background: var(--s1);
+                border: 1px solid var(--b1);
+                border-radius: 6px;
+                overflow: hidden;
+                margin-top: 1.5rem;
+            }
+            .term-bar {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                padding: 8px 12px;
+                background: var(--s2);
+                border-bottom: 1px solid var(--b1);
+            }
+            .term-bar .d {
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+            }
+            .d.r {
+                background: var(--rd);
+            }
+            .d.a {
+                background: var(--am);
+            }
+            .d.g {
+                background: var(--g);
+            }
+            .term-bar .tt {
+                flex: 1;
+                text-align: center;
+                font-size: 10px;
+                color: var(--t4);
+                letter-spacing: 0.05em;
+            }
+            .term-body {
+                padding: 16px;
+                font-size: 11.5px;
+                line-height: 2;
+                white-space: pre;
+                overflow-x: auto;
+                color: var(--t2);
+            }
+            .term-body .p {
+                color: var(--g);
+            }
+            .term-body .c {
+                color: var(--t1);
+            }
+            .term-body .cm {
+                color: var(--t4);
+                font-style: italic;
+            }
+            .term-body .h {
+                color: var(--bl);
+            }
+            .term-body .w {
+                color: var(--am);
+            }
+            .term-body .o {
+                color: var(--t2);
+            }
+
+            /* Ecosystem */
+            .eco {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1px;
+                background: var(--b1);
+                border: 1px solid var(--b1);
+                border-radius: 6px;
+                overflow: hidden;
+                margin-top: 1.5rem;
+            }
+            .eco-card {
+                background: var(--bg);
+                padding: 1.5rem;
+                transition: background 0.2s;
+            }
+            .eco-card:hover {
+                background: var(--s1);
+            }
+            .eco-card h4 {
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--g);
+                margin-bottom: 0.35rem;
+                font-weight: 500;
+            }
+            .eco-card .lbl {
+                font-family: "Instrument Serif", serif;
+                font-size: 15px;
+                font-weight: 400;
+                margin-bottom: 0.35rem;
+                letter-spacing: -0.01em;
+            }
+            .eco-card p {
+                font-size: 11px;
+                color: var(--t3);
+                font-weight: 300;
+                line-height: 1.7;
+            }
+
+            /* Footer */
+            footer {
+                padding: 2.5rem 0;
+                border-top: 1px solid var(--b1);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            footer p {
+                font-size: 10px;
+                color: var(--t4);
+            }
+            footer a {
+                color: var(--g);
+            }
+
+            @media (max-width: 900px) {
+                .hero {
+                    grid-template-columns: 1fr;
+                    padding: 5rem 0 3rem;
+                }
+                .proc {
+                    max-width: 100%;
+                    overflow-x: auto;
+                }
+                .col-2,
+                .col-3,
+                .eco {
+                    grid-template-columns: 1fr;
+                }
+                .arch-row {
+                    grid-template-columns: 1fr;
+                }
+                .arch-label {
+                    border-right: none;
+                    border-bottom: 1px solid var(--b1);
+                }
+                .nav-r .hide-m {
+                    display: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="grid-bg"></div>
+        <div class="glow"></div>
+        <div class="page">
+            <nav>
+                <div class="nav-w">
+                    <div class="nav-l">
+                        <span class="led"></span> opensentience
+                    </div>
+                    <div class="nav-r">
+                        <a href="#why" class="hide-m">Why</a>
+                        <a href="#arch" class="hide-m">Architecture</a>
+                        <a href="#feat" class="hide-m">Features</a>
+                        <a href="#cmp" class="hide-m">Compare</a>
+                        <a
+                            href="https://github.com/c-u-l8er/opensentience.org"
+                            class="gh"
+                            >★ GitHub</a
+                        >
+                    </div>
+                </div>
+            </nav>
+
+            <div class="wrap">
+                <!-- HERO -->
+                <div class="hero">
+                    <div class="hero-txt">
+                        <h1>The agent runtime<br /><i>you control.</i></h1>
+                        <p class="sub">
+                            An open-source daemon that <strong>governs</strong>,
+                            <strong>executes</strong>, and
+                            <strong>observes</strong> AI agents on your
+                            hardware. Explicit permissions. Process isolation.
+                            Full audit trail. No cloud.
+                        </p>
+                        <div class="hero-acts">
+                            <a
+                                href="https://github.com/c-u-l8er/opensentience.org"
+                                class="btn btn-g"
+                                >View on GitHub →</a
+                            >
+                            <a href="#arch" class="btn btn-o">Read the Spec</a>
+                        </div>
+                        <div class="tags">
+                            <span class="tag hl">Elixir / OTP 27</span>
+                            <span class="tag hl">MCP Native</span>
+                            <span class="tag">MIT Licensed</span>
+                            <span class="tag">Local-first</span>
+                            <span class="tag">SQLite</span>
+                            <span class="tag">Phoenix LiveView</span>
+                        </div>
+                    </div>
+                    <div class="proc">
+                        <div class="proc-bar">
+                            <span>Agent Monitor</span
+                            ><span class="live">live</span>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Agent</th>
+                                    <th>Status</th>
+                                    <th>Permissions</th>
+                                    <th>CPU</th>
+                                    <th>Mem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>code-reviewer</td>
+                                    <td>
+                                        <span class="status run">running</span>
+                                    </td>
+                                    <td class="perm">
+                                        <span class="y">fs:r</span>
+                                        <span class="y">mcp:git</span>
+                                        <span class="n">net</span>
+                                    </td>
+                                    <td class="cpu">2.1%</td>
+                                    <td>48 MB</td>
+                                </tr>
+                                <tr>
+                                    <td>doc-writer</td>
+                                    <td>
+                                        <span class="status run">running</span>
+                                    </td>
+                                    <td class="perm">
+                                        <span class="y">fs:rw</span>
+                                        <span class="y">mcp:md</span>
+                                        <span class="n">shell</span>
+                                    </td>
+                                    <td class="cpu">1.4%</td>
+                                    <td>32 MB</td>
+                                </tr>
+                                <tr>
+                                    <td>data-analyst</td>
+                                    <td>
+                                        <span class="status idle">idle</span>
+                                    </td>
+                                    <td class="perm">
+                                        <span class="y">fs:r</span>
+                                        <span class="y">net:api</span>
+                                        <span class="y">mcp:sql</span>
+                                    </td>
+                                    <td class="cpu">0.0%</td>
+                                    <td>24 MB</td>
+                                </tr>
+                                <tr>
+                                    <td>security-scan</td>
+                                    <td>
+                                        <span class="status run">running</span>
+                                    </td>
+                                    <td class="perm">
+                                        <span class="y">fs:r</span>
+                                        <span class="y">net:local</span>
+                                        <span class="n">shell</span>
+                                    </td>
+                                    <td class="cpu">3.8%</td>
+                                    <td>64 MB</td>
+                                </tr>
+                                <tr>
+                                    <td>dep-updater</td>
+                                    <td>
+                                        <span class="status stop">stopped</span>
+                                    </td>
+                                    <td class="perm">
+                                        <span class="y">fs:rw</span>
+                                        <span class="y">shell</span>
+                                        <span class="y">net</span>
+                                    </td>
+                                    <td class="cpu">—</td>
+                                    <td>—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="proc-foot">
+                            <span
+                                >5 agents · 3 running · 1 idle · 1 stopped</span
+                            ><span>↑ 168 MB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TERMINAL -->
+                <div class="term">
+                    <div class="term-bar">
+                        <span class="d r"></span><span class="d a"></span
+                        ><span class="d g"></span
+                        ><span class="tt">~/.opensentience</span>
+                    </div>
+                    <div class="term-body">
+                        <span class="cm"># Install and start</span>
+                        <span class="p">$</span>
+                        <span class="c"
+                            >mix escript.install hex opensentience</span
+                        >
+                        <span class="p">$</span>
+                        <span class="c">opensentience start</span>
+                        <span class="o"
+                            >● OpenSentience v0.1.0 (PID 48291)</span
+                        >
+                        <span class="o">
+                            Admin →
+                            <span class="h">http://localhost:4200</span></span
+                        >
+                        <span class="o">
+                            MCP → stdio |
+                            ~/.opensentience/sockets/daemon.sock</span
+                        >
+
+                        <span class="cm"
+                            ># Install an agent — permissions reviewed
+                            first</span
+                        >
+                        <span class="p">$</span>
+                        <span class="c"
+                            >opensentience agent install
+                            fleetprompt/code-reviewer</span
+                        >
+                        <span class="o">
+                            Requesting:
+                            <span class="w">filesystem:read</span>
+                            ~/projects/**</span
+                        >
+                        <span class="o">
+                            <span class="w">mcp_tool</span> git:status,
+                            git:diff</span
+                        >
+                        <span class="o">
+                            Accept? <span class="h">[y/n]</span>
+                            <span class="c">y</span></span
+                        >
+                        <span class="o">
+                            ✓ Installed. Agent
+                            <span class="h">code-reviewer</span> is
+                            running.</span
+                        >
+                    </div>
+                </div>
+
+                <!-- WHY -->
+                <section id="why">
+                    <div class="sec-h">
+                        <span class="sec-n">01</span>
+                        <h2>Why this exists</h2>
+                    </div>
+                    <div class="col-2">
+                        <div>
+                            <p class="prose">
+                                OpenAI launched <strong>Frontier</strong> on Feb
+                                5, 2026 — an enterprise platform managing AI
+                                agents as "AI coworkers." 57% of organizations
+                                now have agents in production (LangChain State
+                                of AI Agents, 2026). Every major vendor wants to
+                                be your agent runtime.
+                            </p>
+                            <p class="prose" style="margin-top: 0.75rem">
+                                They share one assumption:
+                                <strong>your agents run on their cloud</strong>.
+                                Your data flows through their systems. Their
+                                policies govern your agents. OpenSentience
+                                inverts this — a supervised, local-first daemon
+                                where <em>you</em> define the rules.
+                            </p>
+                        </div>
+                        <div>
+                            <div class="cta-box">
+                                <h3>Runtime governance is now table stakes</h3>
+                                <p>
+                                    Palo Alto Networks, Token Security, and
+                                    AccuKnox all confirm: agents need runtime
+                                    identity, least privilege, and egress
+                                    controls. "Governance has to operate at the
+                                    same speed as the agents themselves."
+                                    OpenSentience enforces at runtime.
+                                </p>
+                            </div>
+                            <div
+                                class="cta-box"
+                                style="
+                                    margin-top: 0.75rem;
+                                    border-left-color: var(--bl);
+                                "
+                            >
+                                <h3>The Sentient Foundation (Feb 19, 2026)</h3>
+                                <p>
+                                    Launched to ensure AGI remains open-source
+                                    and decentralized. OpenSentience embodies
+                                    this at the infrastructure layer.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ARCHITECTURE -->
+                <section id="arch">
+                    <div class="sec-h">
+                        <span class="sec-n">02</span>
+                        <h2>Architecture</h2>
+                    </div>
+                    <p class="prose">
+                        An OTP supervision tree that manages agent lifecycles,
+                        permissions, and inter-agent communication. Every agent
+                        is a supervised BEAM process.
+                    </p>
+                    <div class="arch">
+                        <div class="arch-row">
+                            <div class="arch-label">Admin UI</div>
+                            <div class="arch-val">
+                                <strong>Phoenix LiveView</strong> —
+                                localhost-only dashboard. Real-time monitoring
+                                of every tool call, permission request, and
+                                resource access.
+                                <span class="chip cg">localhost:4200</span>
+                                <span class="chip">websocket</span>
+                            </div>
+                        </div>
+                        <div class="arch-row">
+                            <div class="arch-label">Agents</div>
+                            <div class="arch-val">
+                                <strong>Supervised GenServer processes</strong>
+                                — memory-isolated, fault-tolerant, individually
+                                restartable.
+                                <span class="chip cg">permissions</span>
+                                <span class="chip cg">resource limits</span>
+                                <span class="chip cb">audit log</span>
+                                <span class="chip cb">MCP tools</span>
+                            </div>
+                        </div>
+                        <div class="arch-row">
+                            <div class="arch-label">Protocol</div>
+                            <div class="arch-val">
+                                <strong>MCP via Hermes</strong> — STDIO for
+                                local, Streamable HTTP for remote, Unix sockets
+                                for inter-agent.
+                                <span class="chip cg">hermes_mcp 0.8+</span>
+                                <span class="chip">JSON-RPC 2.0</span>
+                                <span class="chip cb">OAuth 2.1</span>
+                            </div>
+                        </div>
+                        <div class="arch-row">
+                            <div class="arch-label">Daemon</div>
+                            <div class="arch-val">
+                                <strong>OTP Application</strong> —
+                                fault-tolerant supervision with
+                                <code
+                                    style="
+                                        font-size: 11px;
+                                        background: var(--s2);
+                                        padding: 1px 5px;
+                                        border-radius: 2px;
+                                    "
+                                    >:rest_for_one</code
+                                >
+                                strategy. One agent crash doesn't bring down the
+                                system.
+                                <span class="chip cb">Elixir 1.17+</span>
+                                <span class="chip cb">OTP 27</span>
+                            </div>
+                        </div>
+                        <div class="arch-row">
+                            <div class="arch-label">Storage</div>
+                            <div class="arch-val">
+                                <strong>SQLite</strong> (state, audit,
+                                permissions) · <strong>ETS</strong> (hot cache).
+                                All data in
+                                <code
+                                    style="
+                                        font-size: 11px;
+                                        background: var(--s2);
+                                        padding: 1px 5px;
+                                        border-radius: 2px;
+                                    "
+                                    >~/.opensentience/</code
+                                >
+                                — portable, inspectable, yours.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FEATURES -->
+                <section id="feat">
+                    <div class="sec-h">
+                        <span class="sec-n">03</span>
+                        <h2>Core capabilities</h2>
+                    </div>
+                    <div class="col-3">
+                        <div class="card">
+                            <h4>Permission Engine</h4>
+                            <p>
+                                Fine-grained, per-agent capabilities.
+                                Filesystem, network, shell, MCP tools — nothing
+                                auto-granted. Users approve before activation.
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h4>Process Isolation</h4>
+                            <p>
+                                Every agent runs as a supervised BEAM process.
+                                Memory-isolated, fault-tolerant. One rogue agent
+                                can't crash others or read their state.
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h4>Audit Trail</h4>
+                            <p>
+                                Every tool call, file access, and network
+                                request logged. Full traceability, queryable via
+                                MCP or admin UI.
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h4>MCP Native</h4>
+                            <p>
+                                Agents expose and consume MCP tools. Connect to
+                                Claude Desktop, Cursor, VS Code. The protocol IS
+                                the API.
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h4>FleetPrompt Marketplace</h4>
+                            <p>
+                                Install agents with one command. Permission
+                                review before activation. Community trust scores
+                                and audit history.
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h4>Graphonomous Memory</h4>
+                            <p>
+                                Agents connect to Graphonomous for continual
+                                learning. Each agent gets its own knowledge
+                                graph that grows with use.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COMPARISON -->
+                <section id="cmp">
+                    <div class="sec-h">
+                        <span class="sec-n">04</span>
+                        <h2>Comparison</h2>
+                    </div>
+                    <p class="prose">
+                        The landscape is full of agent runtimes. None combine
+                        local-first execution, explicit permissions, and
+                        MCP-native governance.
+                    </p>
+                    <div class="tbl">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>OpenSentience</th>
+                                    <th>OpenAI Frontier</th>
+                                    <th>Salesforce AgentForce</th>
+                                    <th>Goose (Block)</th>
+                                    <th>CrewAI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Runtime</td>
+                                    <td class="y">Local-first</td>
+                                    <td class="n">OpenAI cloud</td>
+                                    <td class="n">Salesforce cloud</td>
+                                    <td class="y">Local</td>
+                                    <td>Cloud / local</td>
+                                </tr>
+                                <tr>
+                                    <td>Permissions</td>
+                                    <td class="y">Explicit, fine-grained</td>
+                                    <td>IAM-based</td>
+                                    <td class="n">Role-based</td>
+                                    <td class="n">None</td>
+                                    <td class="n">None</td>
+                                </tr>
+                                <tr>
+                                    <td>Process isolation</td>
+                                    <td class="y">BEAM VM</td>
+                                    <td>Sandbox</td>
+                                    <td class="n">Shared</td>
+                                    <td class="n">Single process</td>
+                                    <td class="n">Python threads</td>
+                                </tr>
+                                <tr>
+                                    <td>Protocol</td>
+                                    <td class="y">MCP native</td>
+                                    <td>OpenAI API</td>
+                                    <td class="n">Proprietary</td>
+                                    <td class="y">MCP</td>
+                                    <td class="n">Custom</td>
+                                </tr>
+                                <tr>
+                                    <td>Audit</td>
+                                    <td class="y">Built-in, queryable</td>
+                                    <td>Logs</td>
+                                    <td>Salesforce audit</td>
+                                    <td class="n">None</td>
+                                    <td class="n">None</td>
+                                </tr>
+                                <tr>
+                                    <td>Lock-in</td>
+                                    <td class="y">None (MIT)</td>
+                                    <td class="n">OpenAI</td>
+                                    <td class="n">Salesforce</td>
+                                    <td class="y">MIT</td>
+                                    <td>Minimal</td>
+                                </tr>
+                                <tr>
+                                    <td>Continual learning</td>
+                                    <td class="y">Graphonomous</td>
+                                    <td>Feedback loops</td>
+                                    <td class="n">None</td>
+                                    <td class="n">None</td>
+                                    <td class="n">None</td>
+                                </tr>
+                                <tr>
+                                    <td>Price</td>
+                                    <td class="y">Free</td>
+                                    <td class="n">Enterprise $$</td>
+                                    <td class="n">Enterprise $$</td>
+                                    <td class="y">Free</td>
+                                    <td>Free / Paid</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ECOSYSTEM -->
+                <section>
+                    <div class="sec-h">
+                        <span class="sec-n">05</span>
+                        <h2>The [&] stack</h2>
+                    </div>
+                    <p class="prose">
+                        OpenSentience is the runtime layer of the
+                        <a
+                            href="https://ampersandboxdesign.com"
+                            style="color: var(--g)"
+                            >[&] Ampersand Box</a
+                        >
+                        portfolio.
+                    </p>
+                    <div class="eco">
+                        <div class="eco-card">
+                            <h4>FleetPrompt</h4>
+                            <div class="lbl">Marketplace</div>
+                            <p>Discover, install, and distribute agents.</p>
+                        </div>
+                        <div class="eco-card">
+                            <h4>Graphonomous</h4>
+                            <div class="lbl">Memory</div>
+                            <p>Self-evolving knowledge graphs for agents.</p>
+                        </div>
+                        <div class="eco-card">
+                            <h4>SpecPrompt</h4>
+                            <div class="lbl">Standards</div>
+                            <p>Spec-driven development. SPEC.md files.</p>
+                        </div>
+                        <div class="eco-card">
+                            <h4>Agentelic</h4>
+                            <div class="lbl">Engineering</div>
+                            <p>Enterprise builder. Test → Deploy → Govern.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="wrap">
+                <footer>
+                    <p>
+                        &copy; 2026
+                        <a href="https://ampersandboxdesign.com"
+                            >[&] Ampersand Box Design</a
+                        >
+                    </p>
+                    <p>
+                        <a href="https://github.com/c-u-l8er/opensentience.org"
+                            >GitHub</a
+                        >
+                        · opensentience.org
+                    </p>
+                </footer>
+            </div>
+        </div>
+    </body>
+</html>
