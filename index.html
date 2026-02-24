@@ -867,36 +867,35 @@
                         ><span class="tt">~/.opensentience</span>
                     </div>
                     <div class="term-body">
-                        <span class="cm"># Install and start</span>
-                        <span class="p">$</span>
-                        <span class="c"
+                        <span class="cm"># Install + start daemon</span>
+                        <span class="p">$</span
+                        ><span class="c"
                             >mix escript.install hex opensentience</span
                         >
-                        <span class="p">$</span>
-                        <span class="c">opensentience start</span>
+                        <span class="p">$</span
+                        ><span class="c">opensentience start</span>
                         <span class="o"
                             >● OpenSentience v0.1.0 (PID 48291)</span
                         >
-                        <span class="o">
-                            Admin →
+                        <span class="o"
+                            >Admin UI →
                             <span class="h">http://localhost:4200</span></span
                         >
-                        <span class="o">
-                            MCP → stdio |
+                        <span class="o"
+                            >MCP (stdio) →
                             ~/.opensentience/sockets/daemon.sock</span
                         >
 
                         <span class="cm"
-                            ># Install an agent — permissions reviewed
-                            first</span
+                            ># Install an agent (permissions preview)</span
                         >
-                        <span class="p">$</span>
-                        <span class="c"
+                        <span class="p">$</span
+                        ><span class="c"
                             >opensentience agent install
                             fleetprompt/code-reviewer</span
                         >
+                        <span class="o">Requested permissions:</span>
                         <span class="o">
-                            Requesting:
                             <span class="w">filesystem:read</span>
                             ~/projects/**</span
                         >
@@ -904,14 +903,14 @@
                             <span class="w">mcp_tool</span> git:status,
                             git:diff</span
                         >
-                        <span class="o">
-                            Accept? <span class="h">[y/n]</span>
+                        <span class="o"
+                            >Approve? <span class="h">[y/N]</span>
                             <span class="c">y</span></span
                         >
-                        <span class="o">
-                            ✓ Installed. Agent
-                            <span class="h">code-reviewer</span> is
-                            running.</span
+                        <span class="o"
+                            >✓ Installed:
+                            <span class="h">code-reviewer</span>
+                            (running)</span
                         >
                     </div>
                 </div>
@@ -1266,5 +1265,26 @@
                 </footer>
             </div>
         </div>
+        <script>
+            // Format terminal code content on page load
+            document.addEventListener("DOMContentLoaded", function () {
+                const termBody = document.querySelector(".term-body");
+                if (termBody) {
+                    // Get the text content and normalize whitespace
+                    let content = termBody.innerHTML;
+
+                    // Remove leading/trailing whitespace from each line
+                    content = content.replace(/^\s+/gm, "");
+
+                    // Remove extra blank lines
+                    content = content.replace(/\n\s*\n/g, "\n");
+
+                    // Trim the entire content
+                    content = content.trim();
+
+                    termBody.innerHTML = content;
+                }
+            });
+        </script>
     </body>
 </html>
