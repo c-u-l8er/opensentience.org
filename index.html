@@ -807,11 +807,11 @@
             }
             .proof-table td {
                 padding: 0.5rem 0.8rem;
-                border-bottom: 1px solid rgba(255,255,255,0.03);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.03);
                 color: var(--text-secondary);
             }
             .proof-table tr:hover td {
-                background: rgba(255,255,255,0.02);
+                background: rgba(255, 255, 255, 0.02);
             }
             .proof-table .pass {
                 color: var(--cyan);
@@ -870,9 +870,16 @@
             .proof-log.active {
                 display: block;
             }
-            .proof-log .log-pass { color: var(--cyan); }
-            .proof-log .log-info { color: var(--text-dim); }
-            .proof-log .log-phase { color: var(--accent); font-weight: 600; }
+            .proof-log .log-pass {
+                color: var(--cyan);
+            }
+            .proof-log .log-info {
+                color: var(--text-dim);
+            }
+            .proof-log .log-phase {
+                color: var(--accent);
+                font-weight: 600;
+            }
 
             /* ─── ANIMATIONS ─── */
             .reveal {
@@ -1010,7 +1017,7 @@
                     </p>
                     <div class="paper-tags">
                         <span class="paper-tag status-published"
-                            >v0.1.9 · shipped</span
+                            >v0.1.12 · shipped</span
                         >
                         <span class="paper-tag">&memory.graph</span>
                         <span class="paper-tag">SQLite + embeddings</span>
@@ -1229,24 +1236,37 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
             <h2>Verify the proof <em>yourself</em></h2>
 
             <p class="lead">
-                The claim that κ > 0 ⟺ cyclic structure is not a marketing assertion — it is a proved invariant,
-                verified exhaustively across 1,926,351 finite systems. The proof code runs right here
+                The claim that κ > 0 ⟺ cyclic structure is not a marketing
+                assertion — it is a proved invariant, verified exhaustively
+                across 1,926,351 finite systems. The proof code runs right here
                 in your browser. No server, no trust required.
             </p>
 
-            <p class="reveal" style="color: var(--text-secondary); margin-bottom: 1rem;">
-                <strong>Part 1 — Directed Graphs (n=2..5):</strong> For every possible directed graph
-                on 2, 3, 4, and 5 nodes (1,052,740 graphs total), verify that
-                κ(G) > 0 ⟺ β₁(G) > 0 ⟺ G has a nontrivial strongly connected component.
+            <p
+                class="reveal"
+                style="color: var(--text-secondary); margin-bottom: 1rem"
+            >
+                <strong>Part 1 — Directed Graphs (n=2..5):</strong> For every
+                possible directed graph on 2, 3, 4, and 5 nodes (1,052,740
+                graphs total), verify that κ(G) > 0 ⟺ β₁(G) > 0 ⟺ G has a
+                nontrivial strongly connected component.
             </p>
-            <p class="reveal" style="color: var(--text-secondary); margin-bottom: 2rem;">
-                <strong>Part 2 — Finite Dynamical Systems (n=2..7):</strong> For every function
-                f: [n] → [n] (873,611 maps total), verify that
-                κ(TransitionGraph(f)) > 0 ⟺ f has a periodic orbit of period > 1.
+            <p
+                class="reveal"
+                style="color: var(--text-secondary); margin-bottom: 2rem"
+            >
+                <strong>Part 2 — Finite Dynamical Systems (n=2..7):</strong> For
+                every function f: [n] → [n] (873,611 maps total), verify that
+                κ(TransitionGraph(f)) > 0 ⟺ f has a periodic orbit of period >
+                1.
             </p>
 
             <div class="proof-controls reveal">
-                <button id="proof-run-btn" class="btn-run" onclick="startProof()">
+                <button
+                    id="proof-run-btn"
+                    class="btn-run"
+                    onclick="startProof()"
+                >
                     Run Exhaustive Proof
                 </button>
                 <span id="proof-status" class="proof-status"></span>
@@ -1259,7 +1279,14 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
             <div id="proof-log" class="proof-log"></div>
 
             <div id="proof-results" class="proof-results">
-                <h4 style="font-family: var(--sans); font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0.75rem;">
+                <h4
+                    style="
+                        font-family: var(--sans);
+                        font-size: 0.9rem;
+                        color: var(--text-dim);
+                        margin-bottom: 0.75rem;
+                    "
+                >
                     Part 1: Directed Graphs
                 </h4>
                 <table class="proof-table">
@@ -1277,7 +1304,15 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
                     <tbody id="graph-results-body"></tbody>
                 </table>
 
-                <h4 style="font-family: var(--sans); font-size: 0.9rem; color: var(--text-dim); margin-top: 2rem; margin-bottom: 0.75rem;">
+                <h4
+                    style="
+                        font-family: var(--sans);
+                        font-size: 0.9rem;
+                        color: var(--text-dim);
+                        margin-top: 2rem;
+                        margin-bottom: 0.75rem;
+                    "
+                >
                     Part 2: Finite Dynamical Systems
                 </h4>
                 <table class="proof-table">
@@ -1296,6 +1331,160 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
             </div>
 
             <div id="proof-verdict" class="proof-verdict"></div>
+        </section>
+
+        <!-- ═══════════════════ LIVE VALIDATION ═══════════════════ -->
+        <section id="live-validation" class="container">
+            <div class="section-label">OS-002 &middot; Product Validation</div>
+            <h2>From theorem to <em>shipping product</em></h2>
+
+            <p class="lead">
+                The exhaustive proof above verifies the invariant across
+                1,926,351 mathematical objects. Below is what happens when
+                &kappa; meets a real knowledge graph on a live MCP server.
+            </p>
+
+            <div class="kappa-visual reveal">
+                <div class="paper-card" data-primitive="reason">
+                    <div class="paper-number">Step 1</div>
+                    <h3>Store a Business Cycle</h3>
+                    <pre
+                        style="
+                            margin-top: 1rem;
+                            background: var(--bg-elevated);
+                            border: 1px solid var(--border);
+                            border-radius: 8px;
+                            padding: 1.25rem;
+                            font-family: var(--mono);
+                            font-size: 0.8rem;
+                            line-height: 1.7;
+                            color: var(--text-secondary);
+                        "
+                    >
+4 nodes stored:
+  Market Share &rarr; Revenue &rarr; R&amp;D &rarr; Product Quality &rarr; Market Share
+
+All edges: causal type
+MCP tools used: store_node &times; 4, then edge creation</pre
+                    >
+                </div>
+                <div class="paper-card" data-primitive="reason">
+                    <div class="paper-number">Step 2</div>
+                    <h3>Analyze Topology</h3>
+                    <pre
+                        style="
+                            margin-top: 1rem;
+                            background: var(--bg-elevated);
+                            border: 1px solid var(--border);
+                            border-radius: 8px;
+                            padding: 1.25rem;
+                            font-family: var(--mono);
+                            font-size: 0.8rem;
+                            line-height: 1.7;
+                            color: var(--text-secondary);
+                        "
+                    ><span style="color: var(--text-dim);">routing:</span>        <span style="color: var(--blue);">deliberate</span>
+<span style="color: var(--text-dim);">max_kappa:</span>      <span style="color: var(--blue);">1</span>
+<span style="color: var(--text-dim);">scc_count:</span>      <span style="color: var(--blue);">1</span>
+<span style="color: var(--text-dim);">fault_line:</span>     <span style="color: var(--rose);">Product Quality &rarr; Market Share</span>
+<span style="color: var(--text-dim);">deliberation:</span>   <span style="color: var(--blue);">max_iterations: 2, agents: 1, confidence: 0.75</span></pre>
+                </div>
+            </div>
+
+            <div
+                class="thesis-block reveal"
+                style="border-left-color: var(--blue)"
+            >
+                The system correctly identified one strongly connected component
+                containing all four business nodes, computed
+                &kappa;&nbsp;=&nbsp;1, and identified Product Quality &rarr;
+                Market Share as the fault-line edge &mdash; the single edge
+                whose removal would break the feedback loop. This is the first
+                agent memory system to route inference depth based on proved
+                graph topology.
+                <span class="attribution"
+                    >&mdash; Phase 0 validation, March 22, 2026</span
+                >
+            </div>
+
+            <div class="reveal" style="margin-top: 3rem">
+                <h4
+                    style="
+                        font-family: var(--sans);
+                        font-size: 0.9rem;
+                        color: var(--text-dim);
+                        margin-bottom: 0.75rem;
+                    "
+                >
+                    Integration Test Results
+                </h4>
+                <table class="proof-table">
+                    <thead>
+                        <tr>
+                            <th>Check</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Server connection</td>
+                            <td class="pass">PASS</td>
+                        </tr>
+                        <tr>
+                            <td>Store 4 business nodes</td>
+                            <td class="pass">PASS</td>
+                        </tr>
+                        <tr>
+                            <td>Create causal edges (cycle)</td>
+                            <td class="pass">PASS</td>
+                        </tr>
+                        <tr>
+                            <td>analyze_topology: routing</td>
+                            <td class="pass">"deliberate" &#10003;</td>
+                        </tr>
+                        <tr>
+                            <td>analyze_topology: max_kappa</td>
+                            <td class="pass">1 &#10003;</td>
+                        </tr>
+                        <tr>
+                            <td>analyze_topology: fault_line</td>
+                            <td class="pass">
+                                Product Quality &rarr; Market Share &#10003;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>analyze_topology: scc_count</td>
+                            <td class="pass">1 &#10003;</td>
+                        </tr>
+                        <tr>
+                            <td>analyze_topology: approximate</td>
+                            <td class="pass">
+                                false (exact computation) &#10003;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Deliberation budget computed</td>
+                            <td class="pass">
+                                max_iter=2, agents=1, conf=0.75 &#10003;
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p
+                class="reveal"
+                style="
+                    color: var(--text-secondary);
+                    margin-top: 2rem;
+                    font-size: 0.95rem;
+                "
+            >
+                Full MCP integration test:
+                <strong style="color: var(--cyan)">13 checks passed</strong>
+                across store, retrieve, query, learn, goals, health,
+                consolidation, and topology. Zero failures.
+            </p>
         </section>
 
         <!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
@@ -1881,8 +2070,8 @@ autonomy: {
             let proofRunning = false;
 
             function log(html) {
-                const el = document.getElementById('proof-log');
-                el.innerHTML += html + '<br>';
+                const el = document.getElementById("proof-log");
+                el.innerHTML += html + "<br>";
                 el.scrollTop = el.scrollHeight;
             }
 
@@ -1894,61 +2083,82 @@ autonomy: {
                 if (proofRunning) return;
                 proofRunning = true;
 
-                const btn = document.getElementById('proof-run-btn');
-                const status = document.getElementById('proof-status');
-                const progress = document.getElementById('proof-progress');
-                const progressBar = document.getElementById('proof-progress-bar');
-                const logEl = document.getElementById('proof-log');
-                const results = document.getElementById('proof-results');
-                const graphBody = document.getElementById('graph-results-body');
-                const dynBody = document.getElementById('dyn-results-body');
-                const verdict = document.getElementById('proof-verdict');
+                const btn = document.getElementById("proof-run-btn");
+                const status = document.getElementById("proof-status");
+                const progress = document.getElementById("proof-progress");
+                const progressBar =
+                    document.getElementById("proof-progress-bar");
+                const logEl = document.getElementById("proof-log");
+                const results = document.getElementById("proof-results");
+                const graphBody = document.getElementById("graph-results-body");
+                const dynBody = document.getElementById("dyn-results-body");
+                const verdict = document.getElementById("proof-verdict");
 
                 btn.disabled = true;
-                btn.classList.add('running');
-                btn.textContent = 'Running...';
-                progress.classList.add('active');
-                logEl.classList.add('active');
-                logEl.innerHTML = '';
-                graphBody.innerHTML = '';
-                dynBody.innerHTML = '';
-                results.classList.add('visible');
-                verdict.classList.remove('visible');
+                btn.classList.add("running");
+                btn.textContent = "Running...";
+                progress.classList.add("active");
+                logEl.classList.add("active");
+                logEl.innerHTML = "";
+                graphBody.innerHTML = "";
+                dynBody.innerHTML = "";
+                results.classList.add("visible");
+                verdict.classList.remove("visible");
 
                 // Total objects for progress: graphs(n=2..5) + dynamics(n=2..7)
                 const graphTotals = [0, 0, 4, 64, 4096, 1048576]; // 2^(n*(n-1))
                 const dynTotals = [0, 0, 4, 27, 256, 3125, 46656, 823543];
-                const totalGraphs = graphTotals.slice(2, 6).reduce((a, b) => a + b, 0);
-                const totalDyn = dynTotals.slice(2, 8).reduce((a, b) => a + b, 0);
+                const totalGraphs = graphTotals
+                    .slice(2, 6)
+                    .reduce((a, b) => a + b, 0);
+                const totalDyn = dynTotals
+                    .slice(2, 8)
+                    .reduce((a, b) => a + b, 0);
                 const grandTotal = totalGraphs + totalDyn;
                 let globalChecked = 0;
 
-                log('<span class="log-phase">PART 1: DIRECTED GRAPHS (n=2..5)</span>');
-                log('<span class="log-info">Verifying: κ(G) > 0 ⟺ β₁(G) > 0 ⟺ has nontrivial SCC</span>');
+                log(
+                    '<span class="log-phase">PART 1: DIRECTED GRAPHS (n=2..5)</span>',
+                );
+                log(
+                    '<span class="log-info">Verifying: κ(G) > 0 ⟺ β₁(G) > 0 ⟺ has nontrivial SCC</span>',
+                );
 
                 const result = await runFullProof((update) => {
-                    if (update.step === 'start') {
-                        if (update.phase === 'graphs') {
+                    if (update.step === "start") {
+                        if (update.phase === "graphs") {
                             status.textContent = `Graphs n=${update.n}...`;
                         } else {
                             status.textContent = `Dynamical systems n=${update.n}...`;
                         }
-                    } else if (update.step === 'progress') {
-                        const phaseOffset = update.phase === 'dynamics' ? totalGraphs : 0;
-                        const prevN = update.phase === 'graphs'
-                            ? graphTotals.slice(2, update.n).reduce((a, b) => a + b, 0)
-                            : dynTotals.slice(2, update.n).reduce((a, b) => a + b, 0);
+                    } else if (update.step === "progress") {
+                        const phaseOffset =
+                            update.phase === "dynamics" ? totalGraphs : 0;
+                        const prevN =
+                            update.phase === "graphs"
+                                ? graphTotals
+                                      .slice(2, update.n)
+                                      .reduce((a, b) => a + b, 0)
+                                : dynTotals
+                                      .slice(2, update.n)
+                                      .reduce((a, b) => a + b, 0);
                         globalChecked = phaseOffset + prevN + update.checked;
-                        const pct = (globalChecked / grandTotal * 100).toFixed(1);
-                        progressBar.style.width = pct + '%';
-                        status.textContent = `${update.phase === 'graphs' ? 'Graphs' : 'Dynamics'} n=${update.n}: ${formatNum(update.checked)}/${formatNum(update.total)}`;
-                    } else if (update.step === 'done') {
+                        const pct = (
+                            (globalChecked / grandTotal) *
+                            100
+                        ).toFixed(1);
+                        progressBar.style.width = pct + "%";
+                        status.textContent = `${update.phase === "graphs" ? "Graphs" : "Dynamics"} n=${update.n}: ${formatNum(update.checked)}/${formatNum(update.total)}`;
+                    } else if (update.step === "done") {
                         const r = update.result;
-                        const statusClass = r.failures === 0 ? 'pass' : 'fail';
-                        const statusText = r.failures === 0 ? 'PASS' : 'FAIL';
+                        const statusClass = r.failures === 0 ? "pass" : "fail";
+                        const statusText = r.failures === 0 ? "PASS" : "FAIL";
 
-                        if (update.phase === 'graphs') {
-                            const pearson = r.pearsonR !== null ? r.pearsonR.toFixed(4) : 'N/A';
+                        if (update.phase === "graphs") {
+                            const pearson =
+                                r.pearsonR !== null
+                                    ? r.pearsonR.toFixed(4)
+                                    : "N/A";
                             graphBody.innerHTML += `<tr>
                                 <td>${r.n}</td>
                                 <td class="num">${formatNum(r.numGraphs)}</td>
@@ -1958,12 +2168,18 @@ autonomy: {
                                 <td class="num">${formatNum(r.elapsed)}ms</td>
                                 <td class="${statusClass}">${statusText}</td>
                             </tr>`;
-                            log(`<span class="log-pass">  n=${r.n}: ${formatNum(r.numGraphs)} graphs, ${formatNum(r.scGraphs)} SC, fails=${r.failures}, r(κ,β₁)=${pearson}, ${formatNum(r.elapsed)}ms [${statusText}]</span>`);
+                            log(
+                                `<span class="log-pass">  n=${r.n}: ${formatNum(r.numGraphs)} graphs, ${formatNum(r.scGraphs)} SC, fails=${r.failures}, r(κ,β₁)=${pearson}, ${formatNum(r.elapsed)}ms [${statusText}]</span>`,
+                            );
 
                             if (r.n === 5) {
-                                log('');
-                                log('<span class="log-phase">PART 2: FINITE DYNAMICAL SYSTEMS (n=2..7)</span>');
-                                log('<span class="log-info">Verifying: κ(f) > 0 ⟺ has periodic orbit (period > 1)</span>');
+                                log("");
+                                log(
+                                    '<span class="log-phase">PART 2: FINITE DYNAMICAL SYSTEMS (n=2..7)</span>',
+                                );
+                                log(
+                                    '<span class="log-info">Verifying: κ(f) > 0 ⟺ has periodic orbit (period > 1)</span>',
+                                );
                             }
                         } else {
                             dynBody.innerHTML += `<tr>
@@ -1974,33 +2190,37 @@ autonomy: {
                                 <td class="num">${formatNum(r.elapsed)}ms</td>
                                 <td class="${statusClass}">${statusText}</td>
                             </tr>`;
-                            log(`<span class="log-pass">  n=${r.n}: ${formatNum(r.numMaps)} maps, ${formatNum(r.periodicMaps)} periodic, fails=${r.failures}, ${formatNum(r.elapsed)}ms [${statusText}]</span>`);
+                            log(
+                                `<span class="log-pass">  n=${r.n}: ${formatNum(r.numMaps)} maps, ${formatNum(r.periodicMaps)} periodic, fails=${r.failures}, ${formatNum(r.elapsed)}ms [${statusText}]</span>`,
+                            );
                         }
                     }
                 });
 
                 // Show verdict
-                progressBar.style.width = '100%';
-                verdict.classList.add('visible');
+                progressBar.style.width = "100%";
+                verdict.classList.add("visible");
 
                 if (result.totalFailures === 0) {
-                    verdict.className = 'proof-verdict visible verified';
+                    verdict.className = "proof-verdict visible verified";
                     verdict.innerHTML = `<div class="verdict-title">VERIFIED</div>
                         ${formatNum(result.totalObjects)} objects tested, 0 counterexamples. ${formatNum(result.elapsed)}ms total.
                         <br>κ(G) > 0 ⟺ β₁(G) > 0 ⟺ has nontrivial SCC (all directed graphs n≤5).
                         <br>κ(f) > 0 ⟺ has periodic orbit of period > 1 (all f:[n]→[n], n≤7).`;
-                    log('');
-                    log(`<span class="log-pass">VERIFIED: ${formatNum(result.totalObjects)} objects, 0 counterexamples, ${formatNum(result.elapsed)}ms.</span>`);
+                    log("");
+                    log(
+                        `<span class="log-pass">VERIFIED: ${formatNum(result.totalObjects)} objects, 0 counterexamples, ${formatNum(result.elapsed)}ms.</span>`,
+                    );
                 } else {
-                    verdict.className = 'proof-verdict visible failed';
+                    verdict.className = "proof-verdict visible failed";
                     verdict.innerHTML = `<div class="verdict-title">FAILED</div>
                         ${result.totalFailures} counterexamples found in ${formatNum(result.totalObjects)} objects.`;
                 }
 
                 btn.disabled = false;
-                btn.classList.remove('running');
-                btn.textContent = 'Run Again';
-                status.textContent = 'Complete.';
+                btn.classList.remove("running");
+                btn.textContent = "Run Again";
+                status.textContent = "Complete.";
                 proofRunning = false;
             }
 
