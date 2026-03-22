@@ -719,6 +719,161 @@
                 color: var(--accent);
             }
 
+            /* ─── PROOF VERIFIER ─── */
+            .proof-controls {
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                flex-wrap: wrap;
+                margin: 2rem 0;
+            }
+            .btn-run {
+                font-family: var(--mono);
+                font-size: 0.85rem;
+                font-weight: 600;
+                padding: 0.9rem 2.2rem;
+                border-radius: 8px;
+                border: 1px solid var(--cyan);
+                background: rgba(45, 212, 191, 0.1);
+                color: var(--cyan);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 10px rgba(45, 212, 191, 0.15);
+            }
+            .btn-run:hover:not(:disabled) {
+                background: rgba(45, 212, 191, 0.2);
+                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.25);
+                transform: translateY(-1px);
+            }
+            .btn-run:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            .btn-run.running {
+                border-color: var(--amber);
+                color: var(--amber);
+                background: rgba(251, 191, 36, 0.1);
+                box-shadow: 0 2px 10px rgba(251, 191, 36, 0.15);
+            }
+            .proof-status {
+                font-family: var(--mono);
+                font-size: 0.8rem;
+                color: var(--text-dim);
+            }
+
+            .proof-progress {
+                width: 100%;
+                height: 6px;
+                background: var(--bg-elevated);
+                border-radius: 3px;
+                overflow: hidden;
+                margin: 1rem 0;
+                display: none;
+            }
+            .proof-progress.active {
+                display: block;
+            }
+            .proof-progress-bar {
+                height: 100%;
+                width: 0%;
+                background: linear-gradient(90deg, var(--cyan), var(--blue));
+                border-radius: 3px;
+                transition: width 0.15s ease;
+            }
+
+            .proof-results {
+                margin-top: 2rem;
+                display: none;
+            }
+            .proof-results.visible {
+                display: block;
+            }
+            .proof-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-family: var(--mono);
+                font-size: 0.75rem;
+                margin: 1rem 0;
+            }
+            .proof-table th {
+                text-align: left;
+                padding: 0.6rem 0.8rem;
+                border-bottom: 1px solid var(--border);
+                color: var(--text-dim);
+                font-weight: 500;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                font-size: 0.65rem;
+            }
+            .proof-table td {
+                padding: 0.5rem 0.8rem;
+                border-bottom: 1px solid rgba(255,255,255,0.03);
+                color: var(--text-secondary);
+            }
+            .proof-table tr:hover td {
+                background: rgba(255,255,255,0.02);
+            }
+            .proof-table .pass {
+                color: var(--cyan);
+                font-weight: 600;
+            }
+            .proof-table .fail {
+                color: var(--rose);
+                font-weight: 600;
+            }
+            .proof-table .num {
+                text-align: right;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .proof-verdict {
+                margin-top: 1.5rem;
+                padding: 1.5rem 2rem;
+                border-radius: 8px;
+                font-family: var(--mono);
+                font-size: 0.85rem;
+                display: none;
+            }
+            .proof-verdict.visible {
+                display: block;
+            }
+            .proof-verdict.verified {
+                background: rgba(45, 212, 191, 0.08);
+                border: 1px solid rgba(45, 212, 191, 0.2);
+                color: var(--cyan);
+            }
+            .proof-verdict.failed {
+                background: rgba(251, 113, 133, 0.08);
+                border: 1px solid rgba(251, 113, 133, 0.2);
+                color: var(--rose);
+            }
+            .proof-verdict .verdict-title {
+                font-size: 1rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+
+            .proof-log {
+                font-family: var(--mono);
+                font-size: 0.72rem;
+                color: var(--text-dim);
+                margin-top: 1rem;
+                max-height: 200px;
+                overflow-y: auto;
+                line-height: 1.6;
+                padding: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                display: none;
+            }
+            .proof-log.active {
+                display: block;
+            }
+            .proof-log .log-pass { color: var(--cyan); }
+            .proof-log .log-info { color: var(--text-dim); }
+            .proof-log .log-phase { color: var(--accent); font-weight: 600; }
+
             /* ─── ANIMATIONS ─── */
             .reveal {
                 opacity: 0;
@@ -744,6 +899,7 @@
                     <li><a href="#thesis">Thesis</a></li>
                     <li><a href="#protocols">Protocols</a></li>
                     <li><a href="#kappa">κ Theory</a></li>
+                    <li><a href="#verify">Proof</a></li>
                     <li><a href="#architecture">Architecture</a></li>
                     <li><a href="#governance">Governance</a></li>
                     <li><a href="#references">References</a></li>
@@ -1065,6 +1221,81 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
                 the graph learns from its own reasoning. Over time, κ decreases
                 as uncertainty crystallizes into settled knowledge.
             </p>
+        </section>
+
+        <!-- ═══════════════════ PROOF VERIFIER ═══════════════════ -->
+        <section id="verify" class="container">
+            <div class="section-label">OS-002 · Runnable Proof</div>
+            <h2>Verify the proof <em>yourself</em></h2>
+
+            <p class="lead">
+                The claim that κ > 0 ⟺ cyclic structure is not a marketing assertion — it is a proved invariant,
+                verified exhaustively across 1,926,351 finite systems. The proof code runs right here
+                in your browser. No server, no trust required.
+            </p>
+
+            <p class="reveal" style="color: var(--text-secondary); margin-bottom: 1rem;">
+                <strong>Part 1 — Directed Graphs (n=2..5):</strong> For every possible directed graph
+                on 2, 3, 4, and 5 nodes (1,052,740 graphs total), verify that
+                κ(G) > 0 ⟺ β₁(G) > 0 ⟺ G has a nontrivial strongly connected component.
+            </p>
+            <p class="reveal" style="color: var(--text-secondary); margin-bottom: 2rem;">
+                <strong>Part 2 — Finite Dynamical Systems (n=2..7):</strong> For every function
+                f: [n] → [n] (873,611 maps total), verify that
+                κ(TransitionGraph(f)) > 0 ⟺ f has a periodic orbit of period > 1.
+            </p>
+
+            <div class="proof-controls reveal">
+                <button id="proof-run-btn" class="btn-run" onclick="startProof()">
+                    Run Exhaustive Proof
+                </button>
+                <span id="proof-status" class="proof-status"></span>
+            </div>
+
+            <div id="proof-progress" class="proof-progress">
+                <div id="proof-progress-bar" class="proof-progress-bar"></div>
+            </div>
+
+            <div id="proof-log" class="proof-log"></div>
+
+            <div id="proof-results" class="proof-results">
+                <h4 style="font-family: var(--sans); font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0.75rem;">
+                    Part 1: Directed Graphs
+                </h4>
+                <table class="proof-table">
+                    <thead>
+                        <tr>
+                            <th>n</th>
+                            <th class="num">Graphs</th>
+                            <th class="num">With SCCs</th>
+                            <th class="num">Failures</th>
+                            <th class="num">r(κ, β₁)</th>
+                            <th class="num">Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="graph-results-body"></tbody>
+                </table>
+
+                <h4 style="font-family: var(--sans); font-size: 0.9rem; color: var(--text-dim); margin-top: 2rem; margin-bottom: 0.75rem;">
+                    Part 2: Finite Dynamical Systems
+                </h4>
+                <table class="proof-table">
+                    <thead>
+                        <tr>
+                            <th>n</th>
+                            <th class="num">Maps</th>
+                            <th class="num">Periodic</th>
+                            <th class="num">Failures</th>
+                            <th class="num">Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dyn-results-body"></tbody>
+                </table>
+            </div>
+
+            <div id="proof-verdict" class="proof-verdict"></div>
         </section>
 
         <!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
@@ -1644,7 +1875,135 @@ autonomy: {
             </p>
         </footer>
 
+        <script src="kappa_proof.js"></script>
         <script>
+            // ─── Proof Verifier UI ───
+            let proofRunning = false;
+
+            function log(html) {
+                const el = document.getElementById('proof-log');
+                el.innerHTML += html + '<br>';
+                el.scrollTop = el.scrollHeight;
+            }
+
+            function formatNum(n) {
+                return n.toLocaleString();
+            }
+
+            async function startProof() {
+                if (proofRunning) return;
+                proofRunning = true;
+
+                const btn = document.getElementById('proof-run-btn');
+                const status = document.getElementById('proof-status');
+                const progress = document.getElementById('proof-progress');
+                const progressBar = document.getElementById('proof-progress-bar');
+                const logEl = document.getElementById('proof-log');
+                const results = document.getElementById('proof-results');
+                const graphBody = document.getElementById('graph-results-body');
+                const dynBody = document.getElementById('dyn-results-body');
+                const verdict = document.getElementById('proof-verdict');
+
+                btn.disabled = true;
+                btn.classList.add('running');
+                btn.textContent = 'Running...';
+                progress.classList.add('active');
+                logEl.classList.add('active');
+                logEl.innerHTML = '';
+                graphBody.innerHTML = '';
+                dynBody.innerHTML = '';
+                results.classList.add('visible');
+                verdict.classList.remove('visible');
+
+                // Total objects for progress: graphs(n=2..5) + dynamics(n=2..7)
+                const graphTotals = [0, 0, 4, 64, 4096, 1048576]; // 2^(n*(n-1))
+                const dynTotals = [0, 0, 4, 27, 256, 3125, 46656, 823543];
+                const totalGraphs = graphTotals.slice(2, 6).reduce((a, b) => a + b, 0);
+                const totalDyn = dynTotals.slice(2, 8).reduce((a, b) => a + b, 0);
+                const grandTotal = totalGraphs + totalDyn;
+                let globalChecked = 0;
+
+                log('<span class="log-phase">PART 1: DIRECTED GRAPHS (n=2..5)</span>');
+                log('<span class="log-info">Verifying: κ(G) > 0 ⟺ β₁(G) > 0 ⟺ has nontrivial SCC</span>');
+
+                const result = await runFullProof((update) => {
+                    if (update.step === 'start') {
+                        if (update.phase === 'graphs') {
+                            status.textContent = `Graphs n=${update.n}...`;
+                        } else {
+                            status.textContent = `Dynamical systems n=${update.n}...`;
+                        }
+                    } else if (update.step === 'progress') {
+                        const phaseOffset = update.phase === 'dynamics' ? totalGraphs : 0;
+                        const prevN = update.phase === 'graphs'
+                            ? graphTotals.slice(2, update.n).reduce((a, b) => a + b, 0)
+                            : dynTotals.slice(2, update.n).reduce((a, b) => a + b, 0);
+                        globalChecked = phaseOffset + prevN + update.checked;
+                        const pct = (globalChecked / grandTotal * 100).toFixed(1);
+                        progressBar.style.width = pct + '%';
+                        status.textContent = `${update.phase === 'graphs' ? 'Graphs' : 'Dynamics'} n=${update.n}: ${formatNum(update.checked)}/${formatNum(update.total)}`;
+                    } else if (update.step === 'done') {
+                        const r = update.result;
+                        const statusClass = r.failures === 0 ? 'pass' : 'fail';
+                        const statusText = r.failures === 0 ? 'PASS' : 'FAIL';
+
+                        if (update.phase === 'graphs') {
+                            const pearson = r.pearsonR !== null ? r.pearsonR.toFixed(4) : 'N/A';
+                            graphBody.innerHTML += `<tr>
+                                <td>${r.n}</td>
+                                <td class="num">${formatNum(r.numGraphs)}</td>
+                                <td class="num">${formatNum(r.scGraphs)}</td>
+                                <td class="num">${r.failures}</td>
+                                <td class="num">${pearson}</td>
+                                <td class="num">${formatNum(r.elapsed)}ms</td>
+                                <td class="${statusClass}">${statusText}</td>
+                            </tr>`;
+                            log(`<span class="log-pass">  n=${r.n}: ${formatNum(r.numGraphs)} graphs, ${formatNum(r.scGraphs)} SC, fails=${r.failures}, r(κ,β₁)=${pearson}, ${formatNum(r.elapsed)}ms [${statusText}]</span>`);
+
+                            if (r.n === 5) {
+                                log('');
+                                log('<span class="log-phase">PART 2: FINITE DYNAMICAL SYSTEMS (n=2..7)</span>');
+                                log('<span class="log-info">Verifying: κ(f) > 0 ⟺ has periodic orbit (period > 1)</span>');
+                            }
+                        } else {
+                            dynBody.innerHTML += `<tr>
+                                <td>${r.n}</td>
+                                <td class="num">${formatNum(r.numMaps)}</td>
+                                <td class="num">${formatNum(r.periodicMaps)}</td>
+                                <td class="num">${r.failures}</td>
+                                <td class="num">${formatNum(r.elapsed)}ms</td>
+                                <td class="${statusClass}">${statusText}</td>
+                            </tr>`;
+                            log(`<span class="log-pass">  n=${r.n}: ${formatNum(r.numMaps)} maps, ${formatNum(r.periodicMaps)} periodic, fails=${r.failures}, ${formatNum(r.elapsed)}ms [${statusText}]</span>`);
+                        }
+                    }
+                });
+
+                // Show verdict
+                progressBar.style.width = '100%';
+                verdict.classList.add('visible');
+
+                if (result.totalFailures === 0) {
+                    verdict.className = 'proof-verdict visible verified';
+                    verdict.innerHTML = `<div class="verdict-title">VERIFIED</div>
+                        ${formatNum(result.totalObjects)} objects tested, 0 counterexamples. ${formatNum(result.elapsed)}ms total.
+                        <br>κ(G) > 0 ⟺ β₁(G) > 0 ⟺ has nontrivial SCC (all directed graphs n≤5).
+                        <br>κ(f) > 0 ⟺ has periodic orbit of period > 1 (all f:[n]→[n], n≤7).`;
+                    log('');
+                    log(`<span class="log-pass">VERIFIED: ${formatNum(result.totalObjects)} objects, 0 counterexamples, ${formatNum(result.elapsed)}ms.</span>`);
+                } else {
+                    verdict.className = 'proof-verdict visible failed';
+                    verdict.innerHTML = `<div class="verdict-title">FAILED</div>
+                        ${result.totalFailures} counterexamples found in ${formatNum(result.totalObjects)} objects.`;
+                }
+
+                btn.disabled = false;
+                btn.classList.remove('running');
+                btn.textContent = 'Run Again';
+                status.textContent = 'Complete.';
+                proofRunning = false;
+            }
+
             // Scroll reveal
             const observer = new IntersectionObserver(
                 (entries) => {
