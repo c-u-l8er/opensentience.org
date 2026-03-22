@@ -3,1292 +3,1590 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>OpenSentience — The Open Agent Runtime</title>
+        <title>OpenSentience — Open Research into Machine Cognition</title>
         <meta
             name="description"
-            content="Open-source, local-first agent runtime. Govern, execute, and observe AI agents on your hardware."
+            content="Open research protocols for machine cognition, structured memory, deliberation topology, and agent governance. Published by Ampersand Box Design."
+        />
+        <meta
+            name="keywords"
+            content="machine cognition, agent memory, knowledge graph topology, κ-routing, deliberation protocol, cognitive architecture, AI agent governance, continual learning, structured memory"
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=Instrument+Serif:ital@0;1&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
         <style>
             :root {
-                --bg: #07090c;
-                --s1: #0d1117;
-                --s2: #131920;
-                --s3: #1a222c;
-                --b1: rgba(255, 255, 255, 0.04);
-                --b2: rgba(255, 255, 255, 0.08);
-                --b3: rgba(255, 255, 255, 0.14);
-                --t1: #c9d1d9;
-                --t2: #8b949e;
-                --t3: #484f58;
-                --t4: #2d333b;
-                --g: #39d353;
-                --gd: rgba(57, 211, 83, 0.12);
-                --gg: rgba(57, 211, 83, 0.04);
-                --bl: #58a6ff;
-                --bld: rgba(88, 166, 255, 0.1);
-                --am: #d29922;
-                --rd: #f85149;
-            }
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            html {
-                scroll-behavior: smooth;
-            }
-            body {
-                font-family: "DM Mono", monospace;
-                background: var(--bg);
-                color: var(--t1);
-                -webkit-font-smoothing: antialiased;
-                font-size: 13px;
-                line-height: 1.7;
-            }
-            a {
-                color: inherit;
-                text-decoration: none;
+                --bg: #0a0a0c;
+                --bg-elevated: #111114;
+                --bg-card: #16161a;
+                --bg-card-hover: #1c1c22;
+                --text: #e8e6e3;
+                --text-secondary: #9b9a97;
+                --text-dim: #65646a;
+                --accent: #c4a7ff;
+                --accent-dim: #8b6bbf;
+                --accent-glow: rgba(196, 167, 255, 0.08);
+                --cyan: #4af5c6;
+                --blue: #7b8cff;
+                --rose: #ff6b8a;
+                --amber: #ffc46b;
+                --border: #2a2a30;
+                --border-accent: #3a3050;
+                --serif: "Crimson Pro", Georgia, serif;
+                --sans: "DM Sans", system-ui, sans-serif;
+                --mono: "JetBrains Mono", monospace;
+                --max-w: 1100px;
+                --gutter: clamp(1.5rem, 4vw, 3rem);
             }
 
-            /* Scanline overlay */
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html {
+                scroll-behavior: smooth;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--serif);
+                font-size: 18px;
+                line-height: 1.7;
+                overflow-x: hidden;
+            }
+
+            /* Grain overlay */
             body::after {
                 content: "";
                 position: fixed;
                 inset: 0;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
                 pointer-events: none;
                 z-index: 9999;
-                background: repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0, 0, 0, 0.03) 2px,
-                    rgba(0, 0, 0, 0.03) 4px
-                );
-                opacity: 0.5;
             }
 
-            /* Grid background */
-            .grid-bg {
-                position: fixed;
-                inset: 0;
-                pointer-events: none;
-                z-index: 0;
-                background-image:
-                    linear-gradient(var(--b1) 1px, transparent 1px),
-                    linear-gradient(90deg, var(--b1) 1px, transparent 1px);
-                background-size: 60px 60px;
-                opacity: 0.6;
+            ::selection {
+                background: var(--accent);
+                color: var(--bg);
             }
 
-            /* Glow */
-            .glow {
-                position: fixed;
-                width: 400px;
-                height: 400px;
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 0;
-                background: radial-gradient(circle, var(--gg), transparent 70%);
-                top: -5%;
-                right: 10%;
-                animation: pulse 6s ease-in-out infinite;
+            a {
+                color: var(--accent);
+                text-decoration: none;
+                transition: color 0.2s;
             }
-            @keyframes pulse {
-                0%,
-                100% {
-                    opacity: 0.5;
-                    transform: scale(1);
-                }
-                50% {
-                    opacity: 0.8;
-                    transform: scale(1.05);
-                }
+            a:hover {
+                color: var(--text);
             }
 
-            .page {
-                position: relative;
-                z-index: 1;
-            }
-
-            /* Nav */
-            nav {
-                position: sticky;
-                top: 0;
-                z-index: 50;
-                background: rgba(7, 9, 12, 0.88);
-                backdrop-filter: blur(12px);
-                border-bottom: 1px solid var(--b1);
-            }
-            .nav-w {
-                max-width: 1100px;
+            .container {
+                max-width: var(--max-w);
                 margin: 0 auto;
-                padding: 0 1.5rem;
+                padding: 0 var(--gutter);
+            }
+
+            /* ─── NAV ─── */
+            nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                background: rgba(10, 10, 12, 0.85);
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--border);
+                padding: 0 var(--gutter);
+            }
+            nav .nav-inner {
+                max-width: var(--max-w);
+                margin: 0 auto;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                height: 48px;
+                height: 60px;
             }
-            .nav-l {
+            nav .logo {
+                font-family: var(--sans);
+                font-weight: 700;
+                font-size: 0.95rem;
+                letter-spacing: 0.02em;
+                color: var(--text);
                 display: flex;
                 align-items: center;
-                gap: 8px;
-                font-weight: 500;
-                font-size: 12px;
-            }
-            .nav-l .led {
-                width: 7px;
-                height: 7px;
-                border-radius: 50%;
-                background: var(--g);
-                box-shadow: 0 0 6px var(--g);
-            }
-            .nav-r {
-                display: flex;
-                gap: 1.25rem;
-                font-size: 11px;
-                color: var(--t2);
-                letter-spacing: 0.03em;
-            }
-
-            .nav-r .link {
-                line-height: 2.5em;
-            }
-            .nav-r a:hover {
-                color: var(--g);
-            }
-            .nav-r .gh {
-                color: var(--g);
-                border: 1px solid rgba(57, 211, 83, 0.3);
-                padding: 3px 10px;
-                border-radius: 3px;
-                font-weight: 500;
-            }
-            .nav-r .gh:hover {
-                background: rgba(57, 211, 83, 0.08);
-            }
-
-            .wrap {
-                max-width: 1100px;
-                margin: 0 auto;
-                padding: 0 1.5rem;
-            }
-
-            /* Hero */
-            .hero {
-                padding: 7rem 0 4rem;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 3rem;
-                align-items: start;
-            }
-            .hero-txt h1 {
-                font-family: "Instrument Serif", serif;
-                font-size: clamp(2.6rem, 5.5vw, 4.2rem);
-                font-weight: 400;
-                line-height: 1.06;
-                letter-spacing: -0.03em;
-                margin-bottom: 1rem;
-            }
-            .hero-txt h1 i {
-                font-style: italic;
-                color: var(--g);
-            }
-            .hero-txt .sub {
-                font-size: 13px;
-                color: var(--t2);
-                max-width: 420px;
-                font-weight: 300;
-                margin-bottom: 1.5rem;
-            }
-            .hero-txt .sub strong {
-                color: var(--t1);
-                font-weight: 500;
-            }
-            .hero-acts {
-                display: flex;
                 gap: 0.5rem;
-                margin-bottom: 2rem;
             }
-            .btn {
-                font-family: "DM Mono", monospace;
-                font-size: 11px;
-                padding: 8px 16px;
-                border-radius: 4px;
-                font-weight: 500;
-                transition: all 0.2s;
-                cursor: pointer;
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-            }
-            .btn-g {
-                background: var(--g);
-                color: var(--bg);
-                border: none;
-            }
-            .btn-g:hover {
-                box-shadow: 0 0 20px rgba(57, 211, 83, 0.25);
-                transform: translateY(-1px);
-            }
-            .btn-o {
-                border: 1px solid var(--b2);
-                color: var(--t2);
-                background: transparent;
-            }
-            .btn-o:hover {
-                border-color: var(--g);
-                color: var(--g);
-            }
-            .tags {
+            nav .logo .mark {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                border: 2px solid var(--accent);
                 display: flex;
-                gap: 6px;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.7rem;
+                color: var(--accent);
+            }
+            nav .nav-links {
+                display: flex;
+                gap: 1.8rem;
+                list-style: none;
+            }
+            nav .nav-links a {
+                font-family: var(--sans);
+                font-size: 0.8rem;
+                font-weight: 500;
+                color: var(--text-secondary);
+                letter-spacing: 0.03em;
+                text-transform: uppercase;
+            }
+            nav .nav-links a:hover {
+                color: var(--accent);
+            }
+
+            @media (max-width: 700px) {
+                nav .nav-links {
+                    display: none;
+                }
+            }
+
+            /* ─── HERO ─── */
+            .hero {
+                padding: 10rem 0 6rem;
+                text-align: center;
+                position: relative;
+            }
+            .hero::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 600px;
+                height: 600px;
+                background: radial-gradient(
+                    ellipse,
+                    rgba(196, 167, 255, 0.06) 0%,
+                    transparent 70%
+                );
+                pointer-events: none;
+            }
+            .hero-badge {
+                display: inline-block;
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--accent);
+                border: 1px solid var(--border-accent);
+                padding: 0.4rem 1rem;
+                border-radius: 100px;
+                margin-bottom: 2rem;
+                background: var(--accent-glow);
+            }
+            .hero h1 {
+                font-family: var(--serif);
+                font-weight: 300;
+                font-size: clamp(2.4rem, 5.5vw, 4rem);
+                line-height: 1.15;
+                letter-spacing: -0.02em;
+                max-width: 800px;
+                margin: 0 auto 1.5rem;
+            }
+            .hero h1 em {
+                font-style: italic;
+                color: var(--accent);
+            }
+            .hero .subtitle {
+                font-family: var(--sans);
+                font-size: 1.05rem;
+                color: var(--text-secondary);
+                max-width: 600px;
+                margin: 0 auto 2.5rem;
+                line-height: 1.6;
+            }
+            .hero .cta-row {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
                 flex-wrap: wrap;
             }
-            .tag {
-                font-size: 10px;
-                padding: 2px 8px;
-                border: 1px solid var(--b2);
-                border-radius: 3px;
-                color: var(--t3);
-                letter-spacing: 0.04em;
-            }
-            .tag.hl {
-                border-color: rgba(57, 211, 83, 0.25);
-                color: var(--g);
-            }
-
-            /* Process table (hero right) */
-            .proc {
-                background: var(--s1);
-                border: 1px solid var(--b2);
+            .btn {
+                font-family: var(--sans);
+                font-size: 0.85rem;
+                font-weight: 600;
+                padding: 0.75rem 1.8rem;
                 border-radius: 6px;
-                overflow: hidden;
-                font-size: 11px;
+                border: 1px solid var(--border);
+                background: var(--bg-card);
+                color: var(--text);
+                cursor: pointer;
+                transition: all 0.2s;
+                text-decoration: none;
+                display: inline-block;
             }
-            .proc-bar {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 8px 12px;
-                background: var(--s2);
-                border-bottom: 1px solid var(--b1);
+            .btn:hover {
+                background: var(--bg-card-hover);
+                border-color: var(--accent-dim);
+                color: var(--text);
             }
-            .proc-bar span {
-                font-size: 10px;
-                color: var(--t3);
-                letter-spacing: 0.06em;
-                text-transform: uppercase;
-                font-weight: 500;
+            .btn-primary {
+                background: var(--accent);
+                color: var(--bg);
+                border-color: var(--accent);
             }
-            .proc-bar .live {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                color: var(--g);
-                font-size: 10px;
-            }
-            .proc-bar .live::before {
-                content: "";
-                width: 5px;
-                height: 5px;
-                border-radius: 50%;
-                background: var(--g);
-                animation: blink 1.5s ease-in-out infinite;
-            }
-            @keyframes blink {
-                0%,
-                100% {
-                    opacity: 1;
-                }
-                50% {
-                    opacity: 0.2;
-                }
-            }
-            .proc table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            .proc th {
-                text-align: left;
-                padding: 6px 12px;
-                font-size: 9px;
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                color: var(--t3);
-                font-weight: 500;
-                background: var(--s1);
-                border-bottom: 1px solid var(--b1);
-            }
-            .proc td {
-                padding: 6px 12px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-                color: var(--t2);
-                font-size: 11px;
-            }
-            .proc tr:hover td {
-                background: rgba(57, 211, 83, 0.02);
-                color: var(--t1);
-            }
-            .proc .status {
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-            }
-            .proc .status::before {
-                content: "";
-                width: 5px;
-                height: 5px;
-                border-radius: 50%;
-            }
-            .proc .status.run::before {
-                background: var(--g);
-            }
-            .proc .status.idle::before {
-                background: var(--am);
-            }
-            .proc .status.stop::before {
-                background: var(--t4);
-            }
-            .proc .perm {
-                font-size: 10px;
-                color: var(--t3);
-            }
-            .proc .perm .y {
-                color: var(--g);
-            }
-            .proc .perm .n {
-                color: var(--t4);
-            }
-            .proc .cpu {
-                color: var(--bl);
-                font-size: 10px;
-            }
-            .proc-foot {
-                padding: 6px 12px;
-                background: var(--s2);
-                border-top: 1px solid var(--b1);
-                font-size: 10px;
-                color: var(--t3);
-                display: flex;
-                justify-content: space-between;
+            .btn-primary:hover {
+                background: #d4bbff;
+                color: var(--bg);
             }
 
-            /* Section */
+            /* ─── SECTIONS ─── */
             section {
-                padding: 4rem 0;
-                border-top: 1px solid var(--b1);
+                padding: 6rem 0;
+                border-top: 1px solid var(--border);
             }
-            .sec-h {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-bottom: 1.5rem;
-            }
-            .sec-n {
-                font-size: 10px;
-                color: var(--g);
-                background: var(--gd);
-                padding: 2px 6px;
-                border-radius: 3px;
-                font-weight: 500;
-                letter-spacing: 0.1em;
+            .section-label {
+                font-family: var(--mono);
+                font-size: 0.65rem;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                color: var(--accent-dim);
+                margin-bottom: 1rem;
             }
             section h2 {
-                font-family: "Instrument Serif", serif;
-                font-size: clamp(1.5rem, 3vw, 2.2rem);
-                font-weight: 400;
-                letter-spacing: -0.02em;
+                font-family: var(--serif);
+                font-weight: 300;
+                font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+                line-height: 1.2;
+                margin-bottom: 1.5rem;
+                letter-spacing: -0.01em;
             }
-            .col-2 {
+            section h2 em {
+                font-style: italic;
+                color: var(--accent);
+            }
+
+            .lead {
+                font-size: 1.1rem;
+                color: var(--text-secondary);
+                max-width: 700px;
+                margin-bottom: 3rem;
+            }
+
+            /* ─── THESIS ─── */
+            .thesis-block {
+                border-left: 3px solid var(--accent-dim);
+                padding: 2rem 2.5rem;
+                background: var(--accent-glow);
+                border-radius: 0 8px 8px 0;
+                margin: 3rem 0;
+                font-size: 1.15rem;
+                font-style: italic;
+                color: var(--text);
+                line-height: 1.7;
+            }
+            .thesis-block .attribution {
+                display: block;
+                margin-top: 1rem;
+                font-style: normal;
+                font-family: var(--sans);
+                font-size: 0.8rem;
+                color: var(--text-dim);
+            }
+
+            /* ─── PAPERS GRID ─── */
+            .papers-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin-top: 2rem;
+            }
+            .paper-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 2rem 2.5rem;
+                transition: all 0.3s;
+                position: relative;
+                overflow: hidden;
+            }
+            .paper-card:hover {
+                border-color: var(--border-accent);
+                background: var(--bg-card-hover);
+                transform: translateY(-2px);
+            }
+            .paper-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+            }
+            .paper-card[data-primitive="memory"]::before {
+                background: var(--cyan);
+            }
+            .paper-card[data-primitive="reason"]::before {
+                background: var(--blue);
+            }
+            .paper-card[data-primitive="time"]::before {
+                background: var(--rose);
+            }
+            .paper-card[data-primitive="space"]::before {
+                background: var(--amber);
+            }
+            .paper-card[data-primitive="governance"]::before {
+                background: var(--accent);
+            }
+            .paper-card[data-primitive="system"]::before {
+                background: linear-gradient(
+                    90deg,
+                    var(--cyan),
+                    var(--blue),
+                    var(--rose),
+                    var(--amber)
+                );
+            }
+
+            .paper-number {
+                font-family: var(--mono);
+                font-size: 0.65rem;
+                color: var(--text-dim);
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                margin-bottom: 0.75rem;
+            }
+            .paper-card h3 {
+                font-family: var(--serif);
+                font-weight: 600;
+                font-size: 1.3rem;
+                margin-bottom: 0.75rem;
+                line-height: 1.3;
+            }
+            .paper-card .paper-desc {
+                font-size: 0.95rem;
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-bottom: 1.25rem;
+            }
+            .paper-tags {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+            .paper-tag {
+                font-family: var(--mono);
+                font-size: 0.65rem;
+                padding: 0.25rem 0.6rem;
+                border-radius: 4px;
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--text-dim);
+                border: 1px solid var(--border);
+            }
+            .paper-tag.status-published {
+                color: var(--cyan);
+                border-color: rgba(74, 245, 198, 0.2);
+            }
+            .paper-tag.status-draft {
+                color: var(--amber);
+                border-color: rgba(255, 196, 107, 0.2);
+            }
+            .paper-tag.status-spec {
+                color: var(--blue);
+                border-color: rgba(123, 140, 255, 0.2);
+            }
+
+            /* ─── ARCHITECTURE DIAGRAM ─── */
+            .arch-stack {
+                margin: 3rem 0;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+            .arch-layer {
+                display: grid;
+                grid-template-columns: 180px 1fr;
+                gap: 0;
+                min-height: 60px;
+                align-items: stretch;
+            }
+            .arch-layer-label {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                padding: 1rem 1.2rem;
+                display: flex;
+                align-items: center;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                border-right: none;
+                border-radius: 6px 0 0 6px;
+                color: var(--text-dim);
+            }
+            .arch-layer-content {
+                padding: 1rem 1.5rem;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 0 6px 6px 0;
+                font-family: var(--sans);
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+                color: var(--text-secondary);
+            }
+            .arch-chip {
+                font-family: var(--mono);
+                font-size: 0.72rem;
+                padding: 0.3rem 0.7rem;
+                border-radius: 4px;
+                border: 1px solid var(--border);
+                white-space: nowrap;
+            }
+            .arch-chip.memory {
+                color: var(--cyan);
+                border-color: rgba(74, 245, 198, 0.25);
+            }
+            .arch-chip.reason {
+                color: var(--blue);
+                border-color: rgba(123, 140, 255, 0.25);
+            }
+            .arch-chip.time {
+                color: var(--rose);
+                border-color: rgba(255, 107, 138, 0.25);
+            }
+            .arch-chip.space {
+                color: var(--amber);
+                border-color: rgba(255, 196, 107, 0.25);
+            }
+            .arch-chip.governance {
+                color: var(--accent);
+                border-color: var(--border-accent);
+            }
+
+            @media (max-width: 700px) {
+                .arch-layer {
+                    grid-template-columns: 1fr;
+                }
+                .arch-layer-label {
+                    border-radius: 6px 6px 0 0;
+                    border-right: 1px solid var(--border);
+                    border-bottom: none;
+                }
+                .arch-layer-content {
+                    border-radius: 0 0 6px 6px;
+                }
+            }
+
+            /* ─── KAPPA EXPLAINER ─── */
+            .kappa-visual {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 2rem;
-                margin-top: 1.5rem;
+                margin: 3rem 0;
             }
-            .col-3 {
+            @media (max-width: 700px) {
+                .kappa-visual {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .kappa-box {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 2rem;
+            }
+            .kappa-box h4 {
+                font-family: var(--mono);
+                font-size: 0.8rem;
+                letter-spacing: 0.05em;
+                margin-bottom: 1rem;
+            }
+            .kappa-box .kappa-val {
+                font-family: var(--mono);
+                font-size: 2.5rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+            .kappa-box .kappa-label {
+                font-family: var(--sans);
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+            }
+            .kappa-box.dag .kappa-val {
+                color: var(--cyan);
+            }
+            .kappa-box.scc .kappa-val {
+                color: var(--rose);
+            }
+
+            pre {
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 1.5rem;
+                overflow-x: auto;
+                font-family: var(--mono);
+                font-size: 0.8rem;
+                line-height: 1.6;
+                color: var(--text-secondary);
+                margin: 2rem 0;
+            }
+            code {
+                font-family: var(--mono);
+                font-size: 0.85em;
+                color: var(--accent);
+            }
+
+            /* ─── GOVERNANCE ─── */
+            .governance-grid {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
-                gap: 1px;
-                background: var(--b1);
-                border: 1px solid var(--b1);
-                border-radius: 6px;
-                overflow: hidden;
-                margin-top: 1.5rem;
+                gap: 1.5rem;
+                margin: 2rem 0;
             }
-            .card {
-                background: var(--bg);
-                padding: 1.75rem;
-            }
-            .card h4 {
-                font-size: 10px;
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                color: var(--g);
-                margin-bottom: 0.4rem;
-                font-weight: 500;
-            }
-            .card p {
-                font-size: 12px;
-                color: var(--t2);
-                font-weight: 300;
-                line-height: 1.8;
-            }
-            .prose {
-                font-size: 12.5px;
-                color: var(--t2);
-                font-weight: 300;
-                max-width: 560px;
-                line-height: 1.85;
-            }
-            .prose strong {
-                color: var(--t1);
-                font-weight: 500;
+            @media (max-width: 800px) {
+                .governance-grid {
+                    grid-template-columns: 1fr;
+                }
             }
 
-            /* Stack */
-            .arch {
-                margin-top: 1.5rem;
-                border: 1px solid var(--b1);
-                border-radius: 6px;
-                overflow: hidden;
-            }
-            .arch-row {
-                display: grid;
-                grid-template-columns: 130px 1fr;
-                border-bottom: 1px solid var(--b1);
-            }
-            .arch-row:last-child {
-                border-bottom: none;
-            }
-            .arch-label {
-                padding: 14px 16px;
-                background: var(--s1);
-                font-size: 10px;
-                text-transform: uppercase;
-                letter-spacing: 0.12em;
-                color: var(--t3);
-                font-weight: 500;
-                display: flex;
-                align-items: center;
-                border-right: 1px solid var(--b1);
-            }
-            .arch-val {
-                padding: 14px 16px;
-                font-size: 12px;
-                color: var(--t2);
-                font-weight: 300;
-                line-height: 1.8;
-            }
-            .arch-val strong {
-                color: var(--t1);
-                font-weight: 500;
-            }
-            .chip {
-                display: inline-block;
-                font-size: 9px;
-                padding: 1px 6px;
-                border: 1px solid var(--b2);
-                border-radius: 3px;
-                color: var(--t3);
-                margin: 1px 2px;
-            }
-            .chip.cg {
-                border-color: rgba(57, 211, 83, 0.25);
-                color: var(--g);
-            }
-            .chip.cb {
-                border-color: rgba(88, 166, 255, 0.25);
-                color: var(--bl);
-            }
-
-            /* Comparison */
-            .tbl {
-                margin-top: 1.5rem;
-                overflow-x: auto;
-                border: 1px solid var(--b1);
-                border-radius: 6px;
-            }
-            .tbl table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 11px;
-            }
-            .tbl thead th {
-                text-align: left;
-                padding: 8px 14px;
-                font-size: 9px;
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                color: var(--t3);
-                font-weight: 500;
-                background: var(--s1);
-                border-bottom: 1px solid var(--b1);
-            }
-            .tbl tbody td {
-                padding: 8px 14px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-                color: var(--t2);
-                font-weight: 300;
-            }
-            .tbl tbody tr:hover td {
-                background: rgba(57, 211, 83, 0.02);
-                color: var(--t1);
-            }
-            .y {
-                color: var(--g);
-                font-weight: 500;
-            }
-            .n {
-                color: var(--t4);
-            }
-
-            /* Callout */
-            .cta-box {
-                margin-top: 1.5rem;
-                border: 1px solid var(--b2);
-                border-left: 3px solid var(--g);
-                border-radius: 0 6px 6px 0;
-                padding: 1.25rem 1.5rem;
-                background: var(--s1);
-            }
-            .cta-box h3 {
-                font-size: 13px;
-                font-weight: 500;
-                margin-bottom: 0.25rem;
-            }
-            .cta-box p {
-                font-size: 12px;
-                color: var(--t2);
-                font-weight: 300;
-                line-height: 1.8;
-            }
-
-            /* Terminal */
-            .term {
-                background: var(--s1);
-                border: 1px solid var(--b1);
-                border-radius: 6px;
-                overflow: hidden;
-                margin-top: 1.5rem;
-            }
-            .term-bar {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                padding: 8px 12px;
-                background: var(--s2);
-                border-bottom: 1px solid var(--b1);
-            }
-            .term-bar .d {
-                width: 9px;
-                height: 9px;
-                border-radius: 50%;
-            }
-            .d.r {
-                background: var(--rd);
-            }
-            .d.a {
-                background: var(--am);
-            }
-            .d.g {
-                background: var(--g);
-            }
-            .term-bar .tt {
-                flex: 1;
+            .gov-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 2rem;
                 text-align: center;
-                font-size: 10px;
-                color: var(--t4);
-                letter-spacing: 0.05em;
             }
-            .term-body {
-                padding: 16px;
-                font-size: 11.5px;
-                line-height: 2;
-                white-space: pre;
-                overflow-x: auto;
-                color: var(--t2);
+            .gov-card .gov-icon {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+                opacity: 0.6;
             }
-            .term-body .p {
-                color: var(--g);
+            .gov-card h4 {
+                font-family: var(--sans);
+                font-weight: 600;
+                font-size: 0.95rem;
+                margin-bottom: 0.5rem;
             }
-            .term-body .c {
-                color: var(--t1);
+            .gov-card p {
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                line-height: 1.5;
             }
-            .term-body .cm {
-                color: var(--t4);
-                font-style: italic;
-            }
-            .term-body .h {
-                color: var(--bl);
-            }
-            .term-body .w {
-                color: var(--am);
-            }
-            .term-body .o {
-                color: var(--t2);
+            .gov-card .gov-mono {
+                font-family: var(--mono);
+                font-size: 0.75rem;
+                color: var(--accent-dim);
+                margin-top: 0.75rem;
             }
 
-            /* Ecosystem */
-            .eco {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 1px;
-                background: var(--b1);
-                border: 1px solid var(--b1);
-                border-radius: 6px;
-                overflow: hidden;
-                margin-top: 1.5rem;
+            /* ─── REFERENCES ─── */
+            .ref-list {
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                line-height: 1.8;
             }
-            .eco-card {
-                background: var(--bg);
-                padding: 1.5rem;
-                transition: background 0.2s;
+            .ref-list li {
+                margin-bottom: 0.5rem;
+                list-style: none;
+                padding-left: 2.5rem;
+                text-indent: -2.5rem;
             }
-            .eco-card:hover {
-                background: var(--s1);
-            }
-            .eco-card h4 {
-                font-size: 10px;
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                color: var(--g);
-                margin-bottom: 0.35rem;
-                font-weight: 500;
-            }
-            .eco-card .lbl {
-                font-family: "Instrument Serif", serif;
-                font-size: 15px;
-                font-weight: 400;
-                margin-bottom: 0.35rem;
-                letter-spacing: -0.01em;
-            }
-            .eco-card p {
-                font-size: 11px;
-                color: var(--t3);
-                font-weight: 300;
-                line-height: 1.7;
+            .ref-list .ref-id {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                color: var(--text-dim);
             }
 
-            /* Footer */
+            /* ─── FOOTER ─── */
             footer {
-                padding: 2.5rem 0;
-                border-top: 1px solid var(--b1);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 1rem;
+                padding: 4rem 0;
+                border-top: 1px solid var(--border);
+                text-align: center;
+            }
+            footer .footer-mark {
+                font-family: var(--sans);
+                font-weight: 700;
+                font-size: 0.85rem;
+                color: var(--text-dim);
+                margin-bottom: 1rem;
             }
             footer p {
-                font-size: 10px;
-                color: var(--t4);
+                font-family: var(--sans);
+                font-size: 0.8rem;
+                color: var(--text-dim);
+                line-height: 1.6;
             }
-            footer a {
-                color: var(--g);
+            footer .footer-links {
+                margin-top: 1.5rem;
+                display: flex;
+                gap: 2rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            footer .footer-links a {
+                font-family: var(--sans);
+                font-size: 0.8rem;
+                color: var(--text-dim);
+            }
+            footer .footer-links a:hover {
+                color: var(--accent);
             }
 
-            @media (max-width: 900px) {
-                .hero {
-                    grid-template-columns: 1fr;
-                    padding: 5rem 0 3rem;
-                }
-                .proc {
-                    max-width: 100%;
-                    overflow-x: auto;
-                }
-                .col-2,
-                .col-3,
-                .eco {
-                    grid-template-columns: 1fr;
-                }
-                .arch-row {
-                    grid-template-columns: 1fr;
-                }
-                .arch-label {
-                    border-right: none;
-                    border-bottom: 1px solid var(--b1);
-                }
-                .nav-r .hide-m {
-                    display: none;
-                }
+            /* ─── ANIMATIONS ─── */
+            .reveal {
+                opacity: 0;
+                transform: translateY(24px);
+                transition:
+                    opacity 0.6s ease,
+                    transform 0.6s ease;
+            }
+            .reveal.visible {
+                opacity: 1;
+                transform: translateY(0);
             }
         </style>
     </head>
     <body>
-        <div class="grid-bg"></div>
-        <div class="glow"></div>
-        <div class="page">
-            <nav>
-                <div class="nav-w">
-                    <div class="nav-l">
-                        <span class="led"></span> opensentience
+        <nav>
+            <div class="nav-inner">
+                <a href="/" class="logo">
+                    <span class="mark">OS</span>
+                    OpenSentience
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#thesis">Thesis</a></li>
+                    <li><a href="#protocols">Protocols</a></li>
+                    <li><a href="#kappa">κ Theory</a></li>
+                    <li><a href="#architecture">Architecture</a></li>
+                    <li><a href="#governance">Governance</a></li>
+                    <li><a href="#references">References</a></li>
+                    <li><a href="https://ampersandboxdesign.com">← [&]</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <header class="hero container">
+            <span class="hero-badge">Open Research Initiative</span>
+            <h1>Open research into <em>machine cognition</em></h1>
+            <p class="subtitle">
+                Published protocols for structured memory, topological
+                deliberation, autonomous attention, and agent governance.
+                Because the questions about machine understanding matter as much
+                as the products.
+            </p>
+            <div class="cta-row">
+                <a href="#protocols" class="btn btn-primary"
+                    >Read the Protocols</a
+                >
+                <a
+                    href="https://github.com/c-u-l8er/AmpersandBoxDesign"
+                    class="btn"
+                    >GitHub</a
+                >
+                <a
+                    href="https://ampersandboxdesign.com/protocol.html"
+                    class="btn"
+                    >[&] Protocol Spec</a
+                >
+            </div>
+        </header>
+
+        <!-- ═══════════════════ THESIS ═══════════════════ -->
+        <section id="thesis" class="container">
+            <div class="section-label">Founding Thesis</div>
+            <h2>
+                Intelligence is not generation. It is
+                <em>structured accumulation.</em>
+            </h2>
+
+            <div class="thesis-block reveal">
+                Models generate answers. Systems accumulate intelligence.
+                Durable intelligence requires memory, evidence, time, and
+                interaction with the world. The ampersand represents
+                composition:
+                <code>agent & memory & reasoning & time & space</code>.
+                Intelligence does not come from a model. It emerges from the
+                system those components create.
+                <span class="attribution">— The [&] thesis</span>
+            </div>
+
+            <p
+                class="reveal"
+                style="color: var(--text-secondary); margin-top: 2rem"
+            >
+                OpenSentience is the research arm of
+                <a href="https://ampersandboxdesign.com">Ampersand Box Design</a
+                >. While the [&] portfolio builds production infrastructure for
+                agent cognition, OpenSentience publishes the theoretical
+                foundations, empirical protocols, and open questions that guide
+                that work. Every protocol below is grounded in implemented or
+                in-progress code, not speculation.
+            </p>
+
+            <p
+                class="reveal"
+                style="color: var(--text-secondary); margin-top: 1rem"
+            >
+                Our position: the limiting factor in AI agent capability is
+                <em>not</em> raw model intelligence. It is memory architecture,
+                deliberation structure, temporal grounding, and governance.
+                These are infrastructure problems, not model problems. They
+                require engineering protocols, not larger parameters.
+            </p>
+        </section>
+
+        <!-- ═══════════════════ PROTOCOLS ═══════════════════ -->
+        <section id="protocols" class="container">
+            <div class="section-label">Published Protocols</div>
+            <h2>Six protocols. One <em>cognitive loop.</em></h2>
+            <p class="lead">
+                Each protocol addresses a specific gap in the agent cognition
+                stack. Together they form a complete autonomous loop: an agent
+                that knows what it knows, knows what it doesn't know, and
+                decides what to do about it — without being asked.
+            </p>
+
+            <div class="papers-grid">
+                <div class="paper-card reveal" data-primitive="memory">
+                    <div class="paper-number">
+                        OS-001 · Continual Learning Protocol
                     </div>
-                    <div class="nav-r">
-                        <a href="#why" class="link hide-m">Why</a>
-                        <a href="#arch" class="link hide-m">Architecture</a>
-                        <a href="#feat" class="link hide-m">Features</a>
-                        <a href="#cmp" class="link hide-m">Compare</a>
-                        <a
-                            href="https://github.com/c-u-l8er/opensentience.org"
-                            class="gh"
-                            >★ GitHub</a
+                    <h3>
+                        Graphonomous: Knowledge Graphs for Continual Agent
+                        Learning
+                    </h3>
+                    <p class="paper-desc">
+                        A graph-backed memory engine where agents store
+                        episodic, semantic, and procedural knowledge as typed
+                        nodes with confidence scores and provenance chains.
+                        Multi-timescale consolidation inspired by hippocampal
+                        replay — fast memory promotes to slow memory, weak
+                        connections decay, strong patterns crystallize.
+                        Outcome-driven learning updates confidence across causal
+                        chains, not just individual nodes.
+                    </p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-published"
+                            >v0.1.9 · shipped</span
+                        >
+                        <span class="paper-tag">&memory.graph</span>
+                        <span class="paper-tag">SQLite + embeddings</span>
+                        <span class="paper-tag">MCP server</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="reason">
+                    <div class="paper-number">
+                        OS-002 · Topological Routing Protocol
+                    </div>
+                    <h3>κ-Routing: When to Retrieve, When to Deliberate</h3>
+                    <p class="paper-desc">
+                        The cyclicity invariant κ (kappa) detects irreducible
+                        feedback loops in a knowledge graph. When κ = 0, the
+                        subgraph is a DAG — retrieve context in one pass. When κ
+                        > 0, circular dependencies exist — iterate and
+                        deliberate before answering. κ determines not just
+                        <em>whether</em> to think harder, but
+                        <em>how entangled</em> the reasoning is. Proved on
+                        1,926,351 finite systems with zero counterexamples.
+                        Fault-line edges (minimum cuts within SCCs) become the
+                        mechanical decomposition boundaries for deliberation.
+                    </p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">spec complete</span>
+                        <span class="paper-tag">&reason.deliberate</span>
+                        <span class="paper-tag">Tarjan SCC</span>
+                        <span class="paper-tag">bipartition enumeration</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="reason">
+                    <div class="paper-number">
+                        OS-003 · Deliberation Orchestrator Protocol
+                    </div>
+                    <h3>
+                        Topology-Driven Deliberation: Fault Lines as Prompt
+                        Boundaries
+                    </h3>
+                    <p class="paper-desc">
+                        When κ > 0, fault-line edges become prompt boundaries.
+                        The Deliberator decomposes circular knowledge along
+                        those boundaries, runs focused reasoning passes on each
+                        partition, reconciles them, and writes conclusions back
+                        into the graph — reducing κ over time as uncertainty
+                        crystallizes into settled knowledge. Single-agent fast
+                        path; escalates to multi-agent formal argumentation
+                        (Deliberatic) only when convergence fails.
+                    </p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">spec complete</span>
+                        <span class="paper-tag">&reason.deliberate</span>
+                        <span class="paper-tag">graph crystallization</span>
+                        <span class="paper-tag">escalation path</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="system">
+                    <div class="paper-number">
+                        OS-004 · Attention Engine Protocol
+                    </div>
+                    <h3>
+                        Proactive Attention: Self-Directed Cognition Without
+                        Queries
+                    </h3>
+                    <p class="paper-desc">
+                        The missing ignition in a reactive system. The Attention
+                        Engine is a periodic loop that examines the knowledge
+                        graph's topology, coverage gaps, and active goals to
+                        decide what the system should reason about, learn about,
+                        or act on next — without waiting for a query. Three
+                        modes: Explore (what don't I know?), Plan (what should I
+                        do?), and Focus (where should I spend compute?). Not a
+                        5th cognitive primitive — attention is meta-reasoning
+                        over the existing four.
+                    </p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">spec complete</span>
+                        <span class="paper-tag"
+                            >survey → triage → dispatch</span
+                        >
+                        <span class="paper-tag"
+                            >heartbeat + event triggers</span
+                        >
+                        <span class="paper-tag"
+                            >autonomous goal generation</span
                         >
                     </div>
                 </div>
-            </nav>
 
-            <div class="wrap">
-                <!-- HERO -->
-                <div class="hero">
-                    <div class="hero-txt">
-                        <h1>The agent runtime<br /><i>you control.</i></h1>
-                        <p class="sub">
-                            An open-source daemon that <strong>governs</strong>,
-                            <strong>executes</strong>, and
-                            <strong>observes</strong> AI agents on your
-                            hardware. Explicit permissions. Process isolation.
-                            Full audit trail. No cloud.
+                <div class="paper-card reveal" data-primitive="system">
+                    <div class="paper-number">
+                        OS-005 · Model Tier Adaptation Protocol
+                    </div>
+                    <h3>
+                        Hardware-Adaptive Cognition: Same Topology, Different
+                        Depth
+                    </h3>
+                    <p class="paper-desc">
+                        κ routing becomes <em>more</em> valuable on constrained
+                        hardware — it tells the system when to skip expensive
+                        inference entirely. Three tiers (local 8B, local 70B+,
+                        cloud frontier) with qualitatively different strategies:
+                        single-pass enrichment vs. multi-pass deliberation,
+                        demand-triggered vs. heartbeat attention, aggressive
+                        crystallization vs. fresh inference. The κ paradox: ROI
+                        of topological routing is highest when inference is most
+                        expensive.
+                    </p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">spec complete</span>
+                        <span class="paper-tag"
+                            >local_small · local_large · cloud_frontier</span
+                        >
+                        <span class="paper-tag">cost tracking</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="governance">
+                    <div class="paper-number">
+                        OS-006 · Agent Governance Shim Protocol
+                    </div>
+                    <h3>
+                        Thin Governance: Permissions, Audit, and Lifecycle for
+                        Any Runtime
+                    </h3>
+                    <p class="paper-desc">
+                        A lightweight governance layer — not a full runtime —
+                        that wraps around any OTP-based agent system (Jido,
+                        Alloy, or raw GenServer). Provides the permission
+                        taxonomy (filesystem, network, tool invocation, graph
+                        access), audit trail, agent lifecycle states (installed
+                        → enabled → running), and three autonomy levels
+                        (observe, advise, act). Designed as a hex package
+                        dependency, not a daemon.
+                    </p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-draft"
+                            >in development</span
+                        >
+                        <span class="paper-tag">permissions model</span>
+                        <span class="paper-tag">audit trail</span>
+                        <span class="paper-tag">autonomy levels</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════ KAPPA THEORY ═══════════════════ -->
+        <section id="kappa" class="container">
+            <div class="section-label">OS-002 · Deep Dive</div>
+            <h2>The κ invariant: <em>topology as cognition signal</em></h2>
+
+            <p class="lead">
+                A simple graph-theoretic insight with far-reaching consequences
+                for agent reasoning. The strongly connected component structure
+                of a knowledge graph mechanically determines when retrieval is
+                sufficient and when deliberation is required.
+            </p>
+
+            <div class="kappa-visual reveal">
+                <div class="kappa-box dag">
+                    <h4>DAG Region</h4>
+                    <div class="kappa-val">κ = 0</div>
+                    <div class="kappa-label">
+                        No circular dependencies. Context retrieval is a
+                        single-pass traversal. Route: <strong>fast</strong>. No
+                        LLM deliberation needed.
+                    </div>
+                </div>
+                <div class="kappa-box scc">
+                    <h4>SCC Region</h4>
+                    <div class="kappa-val">κ > 0</div>
+                    <div class="kappa-label">
+                        Irreducible feedback loops present. κ measures
+                        entanglement depth. Route: <strong>deliberate</strong>.
+                        Fault lines become prompt decomposition boundaries.
+                    </div>
+                </div>
+            </div>
+
+            <pre
+                class="reveal"
+            ><span style="color:var(--text-dim)">// The routing decision is trivial once κ is computed:</span>
+function route(topology_result):
+    if topology_result.max_kappa == 0:
+        return "fast"        <span style="color:var(--cyan)">// retrieve in one pass</span>
+    else:
+        return "deliberate"  <span style="color:var(--rose)">// decompose along fault lines</span>
+
+<span style="color:var(--text-dim)">// Deliberation budget scales with κ:</span>
+budget.max_iterations  = min(κ + 1, 4)
+budget.agent_count     = min(κ, 3)
+budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
+
+            <p class="reveal" style="color: var(--text-secondary)">
+                The key insight:
+                <strong
+                    >the graph's structure mechanically determines the prompt
+                    structure.</strong
+                >
+                No human prompt engineering. The topology <em>is</em> the
+                reasoning template. For κ = 1, one fault line generates two
+                conditional assumption passes plus reconciliation. For κ = 2,
+                two independent fault lines generate a 2×2 assumption matrix.
+                The Deliberator writes conclusions back as new semantic nodes —
+                the graph learns from its own reasoning. Over time, κ decreases
+                as uncertainty crystallizes into settled knowledge.
+            </p>
+        </section>
+
+        <!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
+        <section id="architecture" class="container">
+            <div class="section-label">The Cognitive Loop</div>
+            <h2>How the protocols <em>compose</em></h2>
+
+            <p class="lead">
+                Each protocol occupies a layer. Together they form the
+                autonomous cognition loop described in the Attention Engine:
+                sense → understand → think → act → learn → govern → decide what
+                to do next.
+            </p>
+
+            <div class="arch-stack reveal">
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Attention</div>
+                    <div class="arch-layer-content">
+                        <span class="arch-chip governance"
+                            >Attention Engine</span
+                        >
+                        <span style="color: var(--text-dim); font-size: 0.8rem"
+                            >Survey → Triage → Dispatch. Proactive. Decides what
+                            to reason about next.</span
+                        >
+                    </div>
+                </div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Governance</div>
+                    <div class="arch-layer-content">
+                        <span class="arch-chip governance"
+                            >Governance Shim</span
+                        >
+                        <span class="arch-chip governance">Delegatic</span>
+                        <span style="color: var(--text-dim); font-size: 0.8rem"
+                            >Permissions, autonomy levels, audit trail. Policy
+                            boundaries.</span
+                        >
+                    </div>
+                </div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Deliberation</div>
+                    <div class="arch-layer-content">
+                        <span class="arch-chip reason">κ-Router</span>
+                        <span class="arch-chip reason">Deliberator</span>
+                        <span class="arch-chip reason"
+                            >Deliberatic (escalation)</span
+                        >
+                        <span style="color: var(--text-dim); font-size: 0.8rem"
+                            >Topology → routing → focused passes →
+                            crystallization.</span
+                        >
+                    </div>
+                </div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Memory</div>
+                    <div class="arch-layer-content">
+                        <span class="arch-chip memory">Graphonomous</span>
+                        <span class="arch-chip memory">Retriever</span>
+                        <span class="arch-chip memory">Consolidator</span>
+                        <span class="arch-chip memory">Learner</span>
+                        <span style="color: var(--text-dim); font-size: 0.8rem"
+                            >Knowledge graph, embeddings, outcome learning,
+                            consolidation.</span
+                        >
+                    </div>
+                </div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Intelligence</div>
+                    <div class="arch-layer-content">
+                        <span class="arch-chip time">TickTickClock</span>
+                        <span class="arch-chip space">GeoFleetic</span>
+                        <span style="color: var(--text-dim); font-size: 0.8rem"
+                            >Temporal patterns + spatial awareness. The when and
+                            where axes.</span
+                        >
+                    </div>
+                </div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Adaptation</div>
+                    <div class="arch-layer-content">
+                        <span class="arch-chip governance">Model Tier</span>
+                        <span class="arch-chip governance">Cost Tracker</span>
+                        <span style="color: var(--text-dim); font-size: 0.8rem"
+                            >Hardware-adaptive budgets. Same topology, different
+                            depth.</span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="thesis-block reveal"
+                style="border-left-color: var(--blue); margin-top: 3rem"
+            >
+                The four cognitive primitives map to the fundamental axes of
+                cognition:
+                <strong>&memory</strong> → What. <strong>&reason</strong> → How
+                (including meta-reasoning / attention). <strong>&time</strong> →
+                When. <strong>&space</strong> → Where. There is no "why"
+                primitive because "why" is answered by the composition of memory
+                (what happened), reasoning (how it connects), and time (when it
+                happened). Similarly, "what next" is answered by reasoning over
+                memory and time — which is exactly what the Attention Engine
+                does.
+                <span class="attribution"
+                    >— OS-004 §9, Architectural Notes</span
+                >
+            </div>
+        </section>
+
+        <!-- ═══════════════════ GOVERNANCE ═══════════════════ -->
+        <section id="governance" class="container">
+            <div class="section-label">OS-006 · Governance Shim</div>
+            <h2>Three autonomy levels, <em>not a ladder</em></h2>
+
+            <p class="lead">
+                The governance shim is not a runtime. It's a thin permission and
+                audit layer that wraps around any OTP-based agent system. The
+                autonomy level is a governance decision, not a maturity metric.
+                Some agents should stay at :observe forever.
+            </p>
+
+            <div class="governance-grid reveal">
+                <div class="gov-card">
+                    <div class="gov-icon">◉</div>
+                    <h4>:observe</h4>
+                    <p>
+                        Show me what you'd do, but don't do it. Safe default.
+                        New deployments, debugging, audit mode.
+                    </p>
+                    <div class="gov-mono">
+                        read-only · no mutations · no dispatches
+                    </div>
+                </div>
+                <div class="gov-card">
+                    <div class="gov-icon">◎</div>
+                    <h4>:advise</h4>
+                    <p>
+                        Propose actions, I'll approve. Typical production mode.
+                        Human-in-the-loop.
+                    </p>
+                    <div class="gov-mono">
+                        proposals · approval gate · audit logged
+                    </div>
+                </div>
+                <div class="gov-card">
+                    <div class="gov-icon">●</div>
+                    <h4>:act</h4>
+                    <p>
+                        Do it, but stay within limits. High-trust, strict
+                        budget. Fully autonomous within governance bounds.
+                    </p>
+                    <div class="gov-mono">
+                        budget-capped · time-bounded · policy-enforced
+                    </div>
+                </div>
+            </div>
+
+            <pre
+                class="reveal"
+            ><span style="color:var(--text-dim)">// Permission taxonomy (thin governance, not full runtime)</span>
+permissions: [
+  "filesystem:read:/data/knowledge",
+  "tool:invoke:graphonomous/*",
+  "tool:invoke:ticktickclock/detect",
+  "graph:read:*",
+  "graph:write:agent-owned",
+  "event:subscribe:outcome.*",
+  "event:publish:attention.proposal"
+]
+
+<span style="color:var(--text-dim)">// Autonomy budget (from ampersand.json governance block)</span>
+autonomy: {
+  level: "advise",
+  model_tier: "local_small",
+  budget: { max_actions_per_hour: 5, require_approval_for: ["act", "propose"] }
+}</pre>
+        </section>
+
+        <!-- ═══════════════════ COGNITIVE SCIENCE ═══════════════════ -->
+        <section id="science" class="container">
+            <div class="section-label">Theoretical Foundations</div>
+            <h2>Grounded in cognitive science, <em>not analogy</em></h2>
+
+            <p class="lead">
+                The four primitives are not arbitrary marketing categories. They
+                map directly to established cognitive architecture models and
+                neuroanatomical systems.
+            </p>
+
+            <div class="papers-grid reveal">
+                <div
+                    class="paper-card"
+                    data-primitive="memory"
+                    style="
+                        display: grid;
+                        grid-template-columns: auto 1fr;
+                        gap: 1.5rem;
+                        align-items: start;
+                    "
+                >
+                    <div
+                        style="
+                            font-family: var(--mono);
+                            font-size: 2rem;
+                            color: var(--cyan);
+                            padding-top: 0.3rem;
+                        "
+                    >
+                        &
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem">
+                            memory → Hippocampus + Neocortex + Basal Ganglia
+                        </h3>
+                        <p class="paper-desc" style="margin-bottom: 0">
+                            Tulving's episodic/semantic distinction (1972).
+                            Atkinson-Shiffrin multi-store model. SOAR's semantic
+                            + episodic memory systems. ACT-R's declarative
+                            memory. Graphonomous implements multi-timescale
+                            consolidation inspired by hippocampal-neocortical
+                            replay.
                         </p>
-                        <div class="hero-acts">
-                            <a
-                                href="https://github.com/c-u-l8er/opensentience.org"
-                                class="btn btn-g"
-                                >View on GitHub →</a
-                            >
-                            <a href="#arch" class="btn btn-o">Read the Spec</a>
-                        </div>
-                        <div class="tags">
-                            <span class="tag hl">Elixir / OTP 27</span>
-                            <span class="tag hl">MCP Native</span>
-                            <span class="tag">MIT Licensed</span>
-                            <span class="tag">Local-first</span>
-                            <span class="tag">SQLite</span>
-                            <span class="tag">Phoenix LiveView</span>
-                        </div>
-                    </div>
-                    <div class="proc">
-                        <div class="proc-bar">
-                            <span>Agent Monitor</span
-                            ><span class="live">live</span>
-                        </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Agent</th>
-                                    <th>Status</th>
-                                    <th>Permissions</th>
-                                    <th>CPU</th>
-                                    <th>Mem</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>code-reviewer</td>
-                                    <td>
-                                        <span class="status run">running</span>
-                                    </td>
-                                    <td class="perm">
-                                        <span class="y">fs:r</span>
-                                        <span class="y">mcp:git</span>
-                                        <span class="n">net</span>
-                                    </td>
-                                    <td class="cpu">2.1%</td>
-                                    <td>48 MB</td>
-                                </tr>
-                                <tr>
-                                    <td>doc-writer</td>
-                                    <td>
-                                        <span class="status run">running</span>
-                                    </td>
-                                    <td class="perm">
-                                        <span class="y">fs:rw</span>
-                                        <span class="y">mcp:md</span>
-                                        <span class="n">shell</span>
-                                    </td>
-                                    <td class="cpu">1.4%</td>
-                                    <td>32 MB</td>
-                                </tr>
-                                <tr>
-                                    <td>data-analyst</td>
-                                    <td>
-                                        <span class="status idle">idle</span>
-                                    </td>
-                                    <td class="perm">
-                                        <span class="y">fs:r</span>
-                                        <span class="y">net:api</span>
-                                        <span class="y">mcp:sql</span>
-                                    </td>
-                                    <td class="cpu">0.0%</td>
-                                    <td>24 MB</td>
-                                </tr>
-                                <tr>
-                                    <td>security-scan</td>
-                                    <td>
-                                        <span class="status run">running</span>
-                                    </td>
-                                    <td class="perm">
-                                        <span class="y">fs:r</span>
-                                        <span class="y">net:local</span>
-                                        <span class="n">shell</span>
-                                    </td>
-                                    <td class="cpu">3.8%</td>
-                                    <td>64 MB</td>
-                                </tr>
-                                <tr>
-                                    <td>dep-updater</td>
-                                    <td>
-                                        <span class="status stop">stopped</span>
-                                    </td>
-                                    <td class="perm">
-                                        <span class="y">fs:rw</span>
-                                        <span class="y">shell</span>
-                                        <span class="y">net</span>
-                                    </td>
-                                    <td class="cpu">—</td>
-                                    <td>—</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="proc-foot">
-                            <span
-                                >5 agents · 3 running · 1 idle · 1 stopped</span
-                            ><span>↑ 168 MB</span>
-                        </div>
                     </div>
                 </div>
-
-                <!-- TERMINAL -->
-                <div class="term">
-                    <div class="term-bar">
-                        <span class="d r"></span><span class="d a"></span
-                        ><span class="d g"></span
-                        ><span class="tt">~/.opensentience</span>
+                <div
+                    class="paper-card"
+                    data-primitive="reason"
+                    style="
+                        display: grid;
+                        grid-template-columns: auto 1fr;
+                        gap: 1.5rem;
+                        align-items: start;
+                    "
+                >
+                    <div
+                        style="
+                            font-family: var(--mono);
+                            font-size: 2rem;
+                            color: var(--blue);
+                            padding-top: 0.3rem;
+                        "
+                    >
+                        &
                     </div>
-                    <div class="term-body">
-                        <span class="cm"># Install + start daemon</span>
-                        <span class="p">$</span
-                        ><span class="c"
-                            >mix escript.install hex opensentience</span
-                        >
-                        <span class="p">$</span
-                        ><span class="c">opensentience start</span>
-                        <span class="o"
-                            >● OpenSentience v0.1.0 (PID 48291)</span
-                        >
-                        <span class="o"
-                            >Admin UI →
-                            <span class="h">http://localhost:4200</span></span
-                        >
-                        <span class="o"
-                            >MCP (stdio) →
-                            ~/.opensentience/sockets/daemon.sock</span
-                        >
-
-                        <span class="cm"
-                            ># Install an agent (permissions preview)</span
-                        >
-                        <span class="p">$</span
-                        ><span class="c"
-                            >opensentience agent install
-                            fleetprompt/code-reviewer</span
-                        >
-                        <span class="o">Requested permissions:</span>
-                        <span class="o">
-                            <span class="w">filesystem:read</span>
-                            ~/projects/**</span
-                        >
-                        <span class="o">
-                            <span class="w">mcp_tool</span> git:status,
-                            git:diff</span
-                        >
-                        <span class="o"
-                            >Approve? <span class="h">[y/N]</span>
-                            <span class="c">y</span></span
-                        >
-                        <span class="o"
-                            >✓ Installed:
-                            <span class="h">code-reviewer</span>
-                            (running)</span
-                        >
+                    <div>
+                        <h3 style="font-size: 1.1rem">
+                            reason → Prefrontal Cortex + Anterior Cingulate
+                        </h3>
+                        <p class="paper-desc" style="margin-bottom: 0">
+                            BDI (Belief-Desire-Intention) model. SOAR's impasse
+                            resolution mechanism. ACT-R's production system.
+                            Kahneman's dual-process theory (fast/slow thinking).
+                            κ-routing implements the fast/slow distinction
+                            mechanically via graph topology.
+                        </p>
                     </div>
                 </div>
-
-                <!-- WHY -->
-                <section id="why">
-                    <div class="sec-h">
-                        <span class="sec-n">01</span>
-                        <h2>Why this exists</h2>
+                <div
+                    class="paper-card"
+                    data-primitive="time"
+                    style="
+                        display: grid;
+                        grid-template-columns: auto 1fr;
+                        gap: 1.5rem;
+                        align-items: start;
+                    "
+                >
+                    <div
+                        style="
+                            font-family: var(--mono);
+                            font-size: 2rem;
+                            color: var(--rose);
+                            padding-top: 0.3rem;
+                        "
+                    >
+                        &
                     </div>
-                    <div class="col-2">
-                        <div>
-                            <p class="prose">
-                                OpenAI launched <strong>Frontier</strong> on Feb
-                                5, 2026 — an enterprise platform managing AI
-                                agents as "AI coworkers." 57% of organizations
-                                now have agents in production (LangChain State
-                                of AI Agents, 2026). Every major vendor wants to
-                                be your agent runtime.
-                            </p>
-                            <p class="prose" style="margin-top: 0.75rem">
-                                They share one assumption:
-                                <strong>your agents run on their cloud</strong>.
-                                Your data flows through their systems. Their
-                                policies govern your agents. OpenSentience
-                                inverts this — a supervised, local-first daemon
-                                where <em>you</em> define the rules.
-                            </p>
-                        </div>
-                        <div>
-                            <div class="cta-box">
-                                <h3>Runtime governance is now table stakes</h3>
-                                <p>
-                                    Palo Alto Networks, Token Security, and
-                                    AccuKnox all confirm: agents need runtime
-                                    identity, least privilege, and egress
-                                    controls. "Governance has to operate at the
-                                    same speed as the agents themselves."
-                                    OpenSentience enforces at runtime.
-                                </p>
-                            </div>
-                            <div
-                                class="cta-box"
-                                style="
-                                    margin-top: 0.75rem;
-                                    border-left-color: var(--bl);
-                                "
-                            >
-                                <h3>The Sentient Foundation (Feb 19, 2026)</h3>
-                                <p>
-                                    Launched to ensure AGI remains open-source
-                                    and decentralized. OpenSentience embodies
-                                    this at the infrastructure layer.
-                                </p>
-                            </div>
-                        </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem">
+                            time → Cerebellum + Hippocampus + Basal Ganglia
+                        </h3>
+                        <p class="paper-desc" style="margin-bottom: 0">
+                            Temporal difference learning. ACT-R's temporal
+                            constraints on memory retrieval. Baddeley's
+                            phonological loop for temporal sequencing.
+                            TickTickClock implements temporal anomaly detection
+                            via Mamba SSM.
+                        </p>
                     </div>
-                </section>
-
-                <!-- ARCHITECTURE -->
-                <section id="arch">
-                    <div class="sec-h">
-                        <span class="sec-n">02</span>
-                        <h2>Architecture</h2>
+                </div>
+                <div
+                    class="paper-card"
+                    data-primitive="space"
+                    style="
+                        display: grid;
+                        grid-template-columns: auto 1fr;
+                        gap: 1.5rem;
+                        align-items: start;
+                    "
+                >
+                    <div
+                        style="
+                            font-family: var(--mono);
+                            font-size: 2rem;
+                            color: var(--amber);
+                            padding-top: 0.3rem;
+                        "
+                    >
+                        &
                     </div>
-                    <p class="prose">
-                        An OTP supervision tree that manages agent lifecycles,
-                        permissions, and inter-agent communication. Every agent
-                        is a supervised BEAM process.
-                    </p>
-                    <div class="arch">
-                        <div class="arch-row">
-                            <div class="arch-label">Admin UI</div>
-                            <div class="arch-val">
-                                <strong>Phoenix LiveView</strong> —
-                                localhost-only dashboard. Real-time monitoring
-                                of every tool call, permission request, and
-                                resource access.
-                                <span class="chip cg">localhost:4200</span>
-                                <span class="chip">websocket</span>
-                            </div>
-                        </div>
-                        <div class="arch-row">
-                            <div class="arch-label">Agents</div>
-                            <div class="arch-val">
-                                <strong>Supervised GenServer processes</strong>
-                                — memory-isolated, fault-tolerant, individually
-                                restartable.
-                                <span class="chip cg">permissions</span>
-                                <span class="chip cg">resource limits</span>
-                                <span class="chip cb">audit log</span>
-                                <span class="chip cb">MCP tools</span>
-                            </div>
-                        </div>
-                        <div class="arch-row">
-                            <div class="arch-label">Protocol</div>
-                            <div class="arch-val">
-                                <strong>MCP via Anubis (Hermes fork)</strong> —
-                                STDIO for local, Streamable HTTP for remote,
-                                Unix sockets for inter-agent.
-                                <span class="chip cg">anubis_mcp 0.17+</span>
-                                <span class="chip">JSON-RPC 2.0</span>
-                                <span class="chip cb">OAuth 2.1</span>
-                            </div>
-                        </div>
-                        <div class="arch-row">
-                            <div class="arch-label">Daemon</div>
-                            <div class="arch-val">
-                                <strong>OTP Application</strong> —
-                                fault-tolerant supervision with
-                                <code
-                                    style="
-                                        font-size: 11px;
-                                        background: var(--s2);
-                                        padding: 1px 5px;
-                                        border-radius: 2px;
-                                    "
-                                    >:rest_for_one</code
-                                >
-                                strategy. One agent crash doesn't bring down the
-                                system.
-                                <span class="chip cb">Elixir 1.17+</span>
-                                <span class="chip cb">OTP 27</span>
-                            </div>
-                        </div>
-                        <div class="arch-row">
-                            <div class="arch-label">Storage</div>
-                            <div class="arch-val">
-                                <strong>SQLite</strong> (state, audit,
-                                permissions) · <strong>ETS</strong> (hot cache).
-                                All data in
-                                <code
-                                    style="
-                                        font-size: 11px;
-                                        background: var(--s2);
-                                        padding: 1px 5px;
-                                        border-radius: 2px;
-                                    "
-                                    >~/.opensentience/</code
-                                >
-                                — portable, inspectable, yours.
-                            </div>
-                        </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem">
+                            space → Hippocampus + Parietal Cortex + Entorhinal
+                            Grid Cells
+                        </h3>
+                        <p class="paper-desc" style="margin-bottom: 0">
+                            O'Keefe & Nadel's Cognitive Map Theory (1978). Place
+                            cells (O'Keefe, Nobel 2014) and grid cells (Moser &
+                            Moser). SOAR's Spatial Visual System. GeoFleetic
+                            implements spatial awareness via delta-CRDTs for
+                            distributed state sync.
+                        </p>
                     </div>
-                </section>
-
-                <!-- FEATURES -->
-                <section id="feat">
-                    <div class="sec-h">
-                        <span class="sec-n">03</span>
-                        <h2>Core capabilities</h2>
-                    </div>
-                    <div class="col-3">
-                        <div class="card">
-                            <h4>Permission Engine</h4>
-                            <p>
-                                Fine-grained, per-agent capabilities.
-                                Filesystem, network, shell, MCP tools — nothing
-                                auto-granted. Users approve before activation.
-                            </p>
-                        </div>
-                        <div class="card">
-                            <h4>Process Isolation</h4>
-                            <p>
-                                Every agent runs as a supervised BEAM process.
-                                Memory-isolated, fault-tolerant. One rogue agent
-                                can't crash others or read their state.
-                            </p>
-                        </div>
-                        <div class="card">
-                            <h4>Audit Trail</h4>
-                            <p>
-                                Every tool call, file access, and network
-                                request logged. Full traceability, queryable via
-                                MCP or admin UI.
-                            </p>
-                        </div>
-                        <div class="card">
-                            <h4>MCP Native</h4>
-                            <p>
-                                Agents expose and consume MCP tools. Connect to
-                                Claude Desktop, Cursor, VS Code. The protocol IS
-                                the API.
-                            </p>
-                        </div>
-                        <div class="card">
-                            <h4>FleetPrompt Marketplace</h4>
-                            <p>
-                                Install agents with one command. Permission
-                                review before activation. Community trust scores
-                                and audit history.
-                            </p>
-                        </div>
-                        <div class="card">
-                            <h4>Graphonomous Memory</h4>
-                            <p>
-                                Agents connect to Graphonomous for continual
-                                learning. Each agent gets its own knowledge
-                                graph that grows with use.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- COMPARISON -->
-                <section id="cmp">
-                    <div class="sec-h">
-                        <span class="sec-n">04</span>
-                        <h2>Comparison</h2>
-                    </div>
-                    <p class="prose">
-                        The landscape is full of agent runtimes. None combine
-                        local-first execution, explicit permissions, and
-                        MCP-native governance.
-                    </p>
-                    <div class="tbl">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>OpenSentience</th>
-                                    <th>OpenAI Frontier</th>
-                                    <th>Salesforce AgentForce</th>
-                                    <th>Goose (Block)</th>
-                                    <th>CrewAI</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Runtime</td>
-                                    <td class="y">Local-first</td>
-                                    <td class="n">OpenAI cloud</td>
-                                    <td class="n">Salesforce cloud</td>
-                                    <td class="y">Local</td>
-                                    <td>Cloud / local</td>
-                                </tr>
-                                <tr>
-                                    <td>Permissions</td>
-                                    <td class="y">Explicit, fine-grained</td>
-                                    <td>IAM-based</td>
-                                    <td class="n">Role-based</td>
-                                    <td class="n">None</td>
-                                    <td class="n">None</td>
-                                </tr>
-                                <tr>
-                                    <td>Process isolation</td>
-                                    <td class="y">BEAM VM</td>
-                                    <td>Sandbox</td>
-                                    <td class="n">Shared</td>
-                                    <td class="n">Single process</td>
-                                    <td class="n">Python threads</td>
-                                </tr>
-                                <tr>
-                                    <td>Protocol</td>
-                                    <td class="y">MCP native</td>
-                                    <td>OpenAI API</td>
-                                    <td class="n">Proprietary</td>
-                                    <td class="y">MCP</td>
-                                    <td class="n">Custom</td>
-                                </tr>
-                                <tr>
-                                    <td>Audit</td>
-                                    <td class="y">Built-in, queryable</td>
-                                    <td>Logs</td>
-                                    <td>Salesforce audit</td>
-                                    <td class="n">None</td>
-                                    <td class="n">None</td>
-                                </tr>
-                                <tr>
-                                    <td>Lock-in</td>
-                                    <td class="y">None (MIT)</td>
-                                    <td class="n">OpenAI</td>
-                                    <td class="n">Salesforce</td>
-                                    <td class="y">MIT</td>
-                                    <td>Minimal</td>
-                                </tr>
-                                <tr>
-                                    <td>Continual learning</td>
-                                    <td class="y">Graphonomous</td>
-                                    <td>Feedback loops</td>
-                                    <td class="n">None</td>
-                                    <td class="n">None</td>
-                                    <td class="n">None</td>
-                                </tr>
-                                <tr>
-                                    <td>Price</td>
-                                    <td class="y">Free</td>
-                                    <td class="n">Enterprise $$</td>
-                                    <td class="n">Enterprise $$</td>
-                                    <td class="y">Free</td>
-                                    <td>Free / Paid</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- ECOSYSTEM -->
-                <section>
-                    <div class="sec-h">
-                        <span class="sec-n">05</span>
-                        <h2>The [&] stack</h2>
-                    </div>
-                    <p class="prose">
-                        OpenSentience is the runtime layer of the
-                        <a
-                            href="https://ampersandboxdesign.com"
-                            style="color: var(--g)"
-                            >[&] Ampersand Box</a
-                        >
-                        portfolio.
-                    </p>
-                    <div class="eco">
-                        <div class="eco-card">
-                            <h4>FleetPrompt</h4>
-                            <div class="lbl">Marketplace</div>
-                            <p>Discover, install, and distribute agents.</p>
-                        </div>
-                        <div class="eco-card">
-                            <h4>Graphonomous</h4>
-                            <div class="lbl">Memory</div>
-                            <p>Self-evolving knowledge graphs for agents.</p>
-                        </div>
-                        <div class="eco-card">
-                            <h4>SpecPrompt</h4>
-                            <div class="lbl">Standards</div>
-                            <p>Spec-driven development. SPEC.md files.</p>
-                        </div>
-                        <div class="eco-card">
-                            <h4>Agentelic</h4>
-                            <div class="lbl">Engineering</div>
-                            <p>Enterprise builder. Test → Deploy → Govern.</p>
-                        </div>
-                    </div>
-                </section>
+                </div>
             </div>
+        </section>
 
-            <div class="wrap">
-                <footer>
-                    <p>
-                        &copy; 2026
-                        <a href="https://ampersandboxdesign.com"
-                            >[&] Ampersand Box Design</a
-                        >
-                    </p>
-                    <p>
-                        <a href="https://github.com/c-u-l8er/opensentience.org"
-                            >GitHub</a
-                        >
-                        · opensentience.org
-                    </p>
-                </footer>
+        <!-- ═══════════════════ REFERENCES ═══════════════════ -->
+        <section id="references" class="container">
+            <div class="section-label">References & Further Reading</div>
+            <h2>Standing on the work of <em>others</em></h2>
+
+            <h4
+                style="
+                    font-family: var(--sans);
+                    font-size: 0.85rem;
+                    margin-top: 2rem;
+                    margin-bottom: 1rem;
+                    color: var(--text-dim);
+                "
+            >
+                Cognitive Architectures
+            </h4>
+            <ul class="ref-list reveal">
+                <li>
+                    <span class="ref-id">[1]</span> Newell, A. (1990).
+                    <em>Unified Theories of Cognition</em>. Harvard University
+                    Press.
+                </li>
+                <li>
+                    <span class="ref-id">[2]</span> Laird, J.E. (2012).
+                    <em>The Soar Cognitive Architecture</em>. MIT Press.
+                </li>
+                <li>
+                    <span class="ref-id">[3]</span> Anderson, J.R. (2007).
+                    <em
+                        >How Can the Human Mind Occur in the Physical
+                        Universe?</em
+                    >
+                    Oxford University Press. (ACT-R)
+                </li>
+                <li>
+                    <span class="ref-id">[4]</span> Sumers et al. (2023).
+                    "Cognitive Architectures for Language Agents (CoALA)."
+                    arXiv:2309.02427.
+                </li>
+            </ul>
+
+            <h4
+                style="
+                    font-family: var(--sans);
+                    font-size: 0.85rem;
+                    margin-top: 2rem;
+                    margin-bottom: 1rem;
+                    color: var(--text-dim);
+                "
+            >
+                Memory & Neuroscience
+            </h4>
+            <ul class="ref-list reveal">
+                <li>
+                    <span class="ref-id">[5]</span> Tulving, E. (1972, 1983).
+                    Distinction between episodic and semantic memory.
+                </li>
+                <li>
+                    <span class="ref-id">[6]</span> Baddeley, A. & Hitch, G.
+                    (1974). Working memory model.
+                </li>
+                <li>
+                    <span class="ref-id">[7]</span> O'Keefe, J. & Nadel, L.
+                    (1978). <em>The Hippocampus as a Cognitive Map</em>.
+                </li>
+                <li>
+                    <span class="ref-id">[8]</span> Burgess et al. (2002).
+                    Hippocampal function including temporal and
+                    spatial-associative retrievals.
+                </li>
+                <li>
+                    <span class="ref-id">[9]</span> Behrouz & Mirrokni (Google
+                    Research, NeurIPS 2025). "Nested Learning" — HOPE
+                    architecture for multi-timescale memory.
+                </li>
+                <li>
+                    <span class="ref-id">[10]</span> Zheng et al. (2025).
+                    "Machine Memory Intelligence: Inspired by Human Memory
+                    Mechanisms." <em>Engineering</em>, 55(12): 24-35.
+                </li>
+                <li>
+                    <span class="ref-id">[11]</span> Liu et al. (2025). "Memory
+                    in the Age of AI Agents: A Survey." arXiv.
+                </li>
+            </ul>
+
+            <h4
+                style="
+                    font-family: var(--sans);
+                    font-size: 0.85rem;
+                    margin-top: 2rem;
+                    margin-bottom: 1rem;
+                    color: var(--text-dim);
+                "
+            >
+                Agent Protocols & Deliberation
+            </h4>
+            <ul class="ref-list reveal">
+                <li>
+                    <span class="ref-id">[12]</span> Anthropic (2024-2025).
+                    Model Context Protocol (MCP). modelcontextprotocol.io.
+                </li>
+                <li>
+                    <span class="ref-id">[13]</span> Google (2025).
+                    Agent-to-Agent Protocol (A2A). github.com/google/A2A.
+                </li>
+                <li>
+                    <span class="ref-id">[14]</span> Kaesberg et al. (ACL 2025).
+                    Multi-agent deliberation protocols outperforming voting
+                    approaches.
+                </li>
+                <li>
+                    <span class="ref-id">[15]</span> Rodriguez-Sanchez et al.
+                    (Jan 2026). "DALIA: Declarative Agentic Layer for
+                    Intelligent Agents." arXiv:2601.17435.
+                </li>
+                <li>
+                    <span class="ref-id">[16]</span> IBM / Linux Foundation
+                    (2025). Agent Communication Protocol (ACP).
+                </li>
+            </ul>
+
+            <h4
+                style="
+                    font-family: var(--sans);
+                    font-size: 0.85rem;
+                    margin-top: 2rem;
+                    margin-bottom: 1rem;
+                    color: var(--text-dim);
+                "
+            >
+                Industry & Surveys
+            </h4>
+            <ul class="ref-list reveal">
+                <li>
+                    <span class="ref-id">[17]</span> Gartner (2025). 40% of
+                    enterprise apps will embed AI agents by end of 2026.
+                </li>
+                <li>
+                    <span class="ref-id">[18]</span> ICLR 2026 Workshop.
+                    "MemAgents: Memory for LLM-Based Agentic Systems."
+                </li>
+                <li>
+                    <span class="ref-id">[19]</span> VentureBeat (Jan 2026).
+                    "Continual learning shifts rigor toward memory provenance
+                    and retention."
+                </li>
+                <li>
+                    <span class="ref-id">[20]</span> Chen et al. (2025). "AI
+                    Meets Brain: A Unified Survey on Memory Systems."
+                    arXiv:2512.23343.
+                </li>
+            </ul>
+        </section>
+
+        <!-- ═══════════════════ OPEN QUESTIONS ═══════════════════ -->
+        <section class="container">
+            <div class="section-label">Open Questions</div>
+            <h2>What we don't know <em>yet</em></h2>
+
+            <div
+                class="thesis-block reveal"
+                style="
+                    border-left-color: var(--rose);
+                    font-style: normal;
+                    font-size: 1rem;
+                "
+            >
+                <p style="margin-bottom: 1rem">
+                    These are genuine open research questions driving our work:
+                </p>
+                <p style="margin-bottom: 0.75rem">
+                    <strong
+                        >1. Does κ-driven deliberation actually improve answer
+                        quality?</strong
+                    >
+                    — The routing is proved; the product effect is not. We need
+                    controlled evaluations comparing raw retrieval, enriched
+                    retrieval, and deliberated retrieval across circular vs.
+                    acyclic knowledge regions.
+                </p>
+                <p style="margin-bottom: 0.75rem">
+                    <strong
+                        >2. What is the minimum model tier for effective
+                        single-pass deliberation?</strong
+                    >
+                    — Our hypothesis is that 8B models can benefit from
+                    topology-enriched context even without multi-pass reasoning.
+                    This needs empirical validation.
+                </p>
+                <p style="margin-bottom: 0.75rem">
+                    <strong
+                        >3. How should confidence decay interact with
+                        crystallized conclusions?</strong
+                    >
+                    — If a deliberated conclusion decays to low confidence,
+                    should it be re-deliberated automatically? What triggers
+                    re-examination?
+                </p>
+                <p style="margin-bottom: 0.75rem">
+                    <strong
+                        >4. Can attention-driven goal generation be safe on
+                        small models?</strong
+                    >
+                    — Autonomous PROPOSE mode risks hallucinated goals on weaker
+                    models. What guardrails prevent goal drift without
+                    eliminating autonomy?
+                </p>
+                <p>
+                    <strong
+                        >5. What does "understanding" mean for a graph-based
+                        system?</strong
+                    >
+                    — If an agent's knowledge graph contains all the right
+                    relationships with high confidence, and it can navigate them
+                    to answer questions, does it "understand" the domain? This
+                    is the question OpenSentience exists to explore.
+                </p>
             </div>
-        </div>
+        </section>
+
+        <!-- ═══════════════════ FOOTER ═══════════════════ -->
+        <footer class="container">
+            <div class="footer-mark">OpenSentience</div>
+            <p>
+                An open research initiative by
+                <a href="https://ampersandboxdesign.com">Ampersand Box Design</a
+                >.<br />
+                Published protocols. Open questions. No hype.
+            </p>
+            <div class="footer-links">
+                <a href="https://ampersandboxdesign.com"
+                    >ampersandboxdesign.com</a
+                >
+                <a href="https://graphonomous.com">graphonomous.com</a>
+                <a href="https://deliberatic.com">deliberatic.com</a>
+                <a href="https://github.com/c-u-l8er/AmpersandBoxDesign"
+                    >GitHub</a
+                >
+                <a href="https://ampersandboxdesign.com/protocol.html"
+                    >[&] Protocol</a
+                >
+                <a href="https://traaviis.com">traaviis.com</a>
+            </div>
+            <p style="margin-top: 2rem; font-size: 0.7rem">
+                © 2026 Ampersand Box Design. Research published under Apache 2.0
+                where possible.
+            </p>
+        </footer>
+
         <script>
-            // Format terminal code content on page load
-            document.addEventListener("DOMContentLoaded", function () {
-                const termBody = document.querySelector(".term-body");
-                if (termBody) {
-                    // Get the text content and normalize whitespace
-                    let content = termBody.innerHTML;
+            // Scroll reveal
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("visible");
+                        }
+                    });
+                },
+                { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
+            );
 
-                    // Remove leading/trailing whitespace from each line
-                    content = content.replace(/^\s+/gm, "");
-
-                    // Remove extra blank lines
-                    content = content.replace(/\n\s*\n/g, "\n");
-
-                    // Trim the entire content
-                    content = content.trim();
-
-                    termBody.innerHTML = content;
-                }
-            });
+            document
+                .querySelectorAll(".reveal")
+                .forEach((el) => observer.observe(el));
         </script>
     </body>
 </html>
