@@ -17,5 +17,5 @@ OpenSentience does not expose MCP tools directly. Agents interact with OpenSenti
 
 ## Spec location
 
-- `project_spec/README.md` — full protocol specifications
+- `docs/spec/README.md` — full protocol specifications
 - Parent protocol: https://ampersandboxdesign.com

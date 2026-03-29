@@ -4,7 +4,7 @@ Research arm of [&] Ampersand Box Design. Publishes theoretical foundations, emp
 
 ## Source-of-truth spec
 
-- `project_spec/README.md` — OpenSentience research protocols specification
+- `docs/spec/README.md` — OpenSentience research protocols specification
 
 ## Published protocols
 

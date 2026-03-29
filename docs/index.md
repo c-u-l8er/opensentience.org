@@ -49,6 +49,15 @@ can adopt any subset.
 Graphonomous <https://graphonomous.com>
 BendScript <https://bendscript.com>
 WebHost.Systems <https://webhost.systems>
+Agentelic <https://agentelic.com>
+AgenTroMatic <https://agentromatic.com>
+Delegatic <https://delegatic.com>
+Deliberatic <https://deliberatic.com>
+FleetPrompt <https://fleetprompt.com>
+GeoFleetic <https://geofleetic.com>
+OpenSentience <https://opensentience.org>
+SpecPrompt <https://specprompt.com>
+TickTickClock <https://ticktickclock.com>
 ```
 
 ```{toctree}
@@ -59,6 +68,15 @@ WebHost.Systems <https://webhost.systems>
 Graphonomous Docs <https://docs.graphonomous.com>
 BendScript Docs <https://docs.bendscript.com>
 WebHost.Systems Docs <https://docs.webhost.systems>
+Agentelic Docs <https://docs.agentelic.com>
+AgenTroMatic Docs <https://docs.agentromatic.com>
+Delegatic Docs <https://docs.delegatic.com>
+Deliberatic Docs <https://docs.deliberatic.com>
+FleetPrompt Docs <https://docs.fleetprompt.com>
+GeoFleetic Docs <https://docs.geofleetic.com>
+OpenSentience Docs <https://docs.opensentience.org>
+SpecPrompt Docs <https://docs.specprompt.com>
+TickTickClock Docs <https://docs.ticktickclock.com>
 ```
 
 ```{toctree}
@@ -68,6 +86,7 @@ WebHost.Systems Docs <https://docs.webhost.systems>
 architecture
 quickstart
 faq
+spec/README
 ```
 
 ```{toctree}
