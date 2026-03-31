@@ -1,6 +1,6 @@
 # Skill 07 — Cognitive Science Foundations
 
-> Research grounding for each of the six protocols: the theories, the papers,
+> Research grounding for each of the eight protocols: the theories, the papers,
 > the design constraints, and the open questions.
 
 ---

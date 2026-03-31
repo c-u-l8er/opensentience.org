@@ -1,13 +1,13 @@
-# Skill 01 — The Six Cognitive Protocols
+# Skill 01 — The Eight Cognitive Protocols
 
-> OS-001 through OS-006: what each protocol specifies, which product
+> OS-001 through OS-008: what each protocol specifies, which product
 > implements it, and the cognitive science behind it.
 
 ---
 
 ## Overview
 
-OpenSentience publishes six numbered protocols. Each formalizes a cognitive
+OpenSentience publishes eight numbered protocols. Each formalizes a cognitive
 capability required for governed, self-improving AI agents. The protocols
 are independent specifications — they can be adopted individually or
 composed together.

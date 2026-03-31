@@ -10,7 +10,7 @@
 ## Quick Orientation
 
 OpenSentience is the **governance layer** for the [&] Protocol ecosystem.
-It publishes six cognitive protocols (OS-001 through OS-006) and ships one
+It publishes eight cognitive protocols (OS-001 through OS-008) and ships one
 runtime artifact — the `open_sentience` hex package implementing OS-006.
 
 The shim wraps OTP-supervised agents with:
@@ -37,7 +37,7 @@ Every governed agent follows this rhythm:
 
 | File | What It Teaches |
 |------|----------------|
-| [01_PROTOCOLS_OVERVIEW.md](01_PROTOCOLS_OVERVIEW.md) | The six cognitive protocols and their cognitive science grounding |
+| [01_PROTOCOLS_OVERVIEW.md](01_PROTOCOLS_OVERVIEW.md) | The eight cognitive protocols and their cognitive science grounding |
 | [02_AGENT_LIFECYCLE.md](02_AGENT_LIFECYCLE.md) | State machine: installed through removed |
 | [03_PERMISSIONS.md](03_PERMISSIONS.md) | Permission taxonomy, evaluation order, glob patterns |
 | [04_AUTONOMY_LEVELS.md](04_AUTONOMY_LEVELS.md) | Graduated autonomy: observe, advise, act |

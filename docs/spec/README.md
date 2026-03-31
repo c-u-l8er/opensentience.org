@@ -14,9 +14,9 @@
 OpenSentience is the **research arm and runtime governance layer** of the [&] Protocol ecosystem. It publishes theoretical foundations, empirical protocols, and open questions about machine cognition — then ships a thin governance shim (OS-006) that wraps any OTP-based agent system with permissions, audit trails, lifecycle management, and autonomy levels.
 
 OpenSentience is **not a product**. It is a research organization that produces:
-1. **Six numbered protocols** (OS-001 through OS-006) — each defining a cognitive primitive
+1. **Eight numbered protocols** (OS-001 through OS-008) — each defining a cognitive primitive
 2. **One runtime artifact** — the governance shim hex package (`open_sentience`) implementing OS-006
-3. **Published research** — cognitive science grounding, empirical benchmarks, open questions
+3. **Published research** — cognitive science grounding for all eight protocols, empirical benchmarks, open questions
 
 The other [&] products implement the protocols. OpenSentience defines them, grounds them in theory, and provides the thin enforcement layer that ties them together at runtime.
 
@@ -50,7 +50,7 @@ The industry builds agents like scripts — deploy and pray. OpenSentience provi
 
 Models generate answers. Systems accumulate intelligence. Durable intelligence requires memory, evidence, time, and interaction with the world. A language model that cannot remember yesterday, weigh evidence across sessions, or learn from deployment context is a generator — not an intelligent system.
 
-OpenSentience's six protocols define the primitives required to bridge that gap: continual memory (OS-001), topological routing (OS-002), structured deliberation (OS-003), attentional triage (OS-004), adaptive model selection (OS-005), and governed execution (OS-006).
+OpenSentience's eight protocols define the primitives required to bridge that gap: continual memory (OS-001), topological routing (OS-002), structured deliberation (OS-003), attentional triage (OS-004), adaptive model selection (OS-005), governed execution (OS-006), adversarial defense (OS-007), and orchestration harness (OS-008).
 
 ### 1.4 Why Elixir
 
@@ -64,7 +64,7 @@ The governance shim is fundamentally a **supervision wrapper with policy enforce
 
 ### 1.5 One-Liner
 
-> "The research foundation and governance shim for machine cognition — six protocols, one thin runtime."
+> "The research foundation and governance shim for machine cognition — eight protocols, one thin runtime."
 
 ---
 
@@ -175,9 +175,9 @@ Each `OpenSentience.AgentLifecycle` GenStateMachine:
 
 ---
 
-## 4. The Six Protocols
+## 4. The Eight Protocols
 
-OpenSentience publishes six numbered protocols. Each defines a cognitive primitive, grounds it in theory, and specifies the interface contract that implementations must satisfy.
+OpenSentience publishes eight numbered protocols. Each defines a cognitive primitive, grounds it in theory, and specifies the interface contract that implementations must satisfy.
 
 ### 4.1 OS-001: Continual Learning Protocol
 

@@ -16,21 +16,24 @@ OpenSentience is **not a product**. It is two things:
 2. **A thin governance shim** (`open_sentience` hex package) that enforces
    permission, lifecycle, and autonomy policies on OTP-supervised agents.
 
-The research output is the six numbered protocols (OS-001 through OS-006).
-The runtime output is the Elixir package implementing OS-006.
+The research output is eight numbered protocols (OS-001 through OS-008).
+The runtime output is the Elixir package implementing OS-006 (governance shim)
+and OS-008 (agent harness).
 
 ---
 
-## The Six Cognitive Protocols
+## The Eight Cognitive Protocols
 
 | Protocol | Name | Cognitive Basis | Implemented By |
 |----------|------|-----------------|----------------|
 | OS-001 | Continual Learning | Hippocampal consolidation | Graphonomous |
-| OS-002 | Topological Routing (kappa) | Prefrontal gating | Graphonomous routing layer |
+| OS-002 | Topological Routing (κ) | Prefrontal gating | Graphonomous routing layer |
 | OS-003 | Deliberation Orchestrator | Dual-process theory | AgenTroMatic |
 | OS-004 | Attention Engine | Endogenous attention | Graphonomous attention module |
 | OS-005 | Model Tier Adaptation | Resource rationality | Graphonomous / Agentelic |
 | OS-006 | Agent Governance Shim | Executive function | `open_sentience` hex package |
+| OS-007 | Adversarial Robustness | Immune system | OpenSentience security module |
+| OS-008 | Agent Harness | Supervisory attentional system | OpenSentience harness module |
 
 Each protocol maps a well-established cognitive science finding to a concrete
 software architecture. The protocols are independent but composable — an agent
@@ -85,8 +88,16 @@ TickTickClock Docs <https://docs.ticktickclock.com>
 
 architecture
 quickstart
+positioning
+ecosystem-overview
+competitive-landscape
+harness-engineering
+runtime-walkthrough
+comparison-table
+research
 faq
 spec/README
+spec/OS-008-HARNESS
 ```
 
 ```{toctree}
@@ -111,16 +122,41 @@ skills/08_ANTI_PATTERNS
 If you are new to OpenSentience, follow this path:
 
 1. **This page** — understand scope and structure
-2. **skills/01_PROTOCOLS_OVERVIEW** — the six protocols and their cognitive grounding
-3. **architecture** — how the governance shim is built
+2. **positioning** — where OpenSentience fits in the agent governance landscape
+3. **architecture** — how the governance shim is built (OTP internals)
 4. **quickstart** — install the hex package and run your first governed agent
-5. **skills/02_AGENT_LIFECYCLE** — understand the state machine
-6. **skills/03_PERMISSIONS** — learn the permission model
-7. **skills/04_AUTONOMY_LEVELS** — graduated autonomy
-8. **skills/05_AUDIT_TRAILS** — compliance and forensics
-9. **skills/06_INTEGRATION** — connecting to the [&] ecosystem
-10. **skills/07_COGNITIVE_SCIENCE** — research foundations
+5. **ecosystem-overview** — how all eight protocols connect across the [&] ecosystem
+6. **harness-engineering** — the emerging discipline of harness design and OS-008's position
+7. **runtime-walkthrough** — follow a concrete agent through governance + harness orchestration
+8. **competitive-landscape** — how OpenSentience compares to alternative approaches
+9. **comparison-table** — quick-reference feature comparison
+10. **research** — cognitive science grounding for each protocol
 11. **faq** — fill in remaining questions
+12. **skills/** — hands-on implementation skills for the governance shim
+
+For deep protocol specifics:
+- **spec/README** — the full technical specification (OS-001 through OS-007)
+- **spec/OS-008-HARNESS** — the Agent Harness Protocol specification
+
+---
+
+## The Three Enforcement Layers
+
+OpenSentience provides three layers of runtime enforcement:
+
+```
+OS-008 Harness:   "Has this agent followed the correct process?"
+                   Pipeline ordering, quality gates, sprint contracts
+
+OS-006 Shim:      "Is this agent allowed to do this?"
+                   Permissions, lifecycle, autonomy levels
+
+OS-007 Security:  "Is this agent under attack?"
+                   Threat detection, identity verification, circuit breakers
+```
+
+All three log to the same append-only audit trail, creating a unified
+compliance record from protocol to permission to pipeline.
 
 ---
 
@@ -130,27 +166,29 @@ OpenSentience occupies the **governance and research layer** of the [&] stack:
 
 ```
   [&] Protocol        — capability composition (what an agent CAN do)
-  OpenSentience       — governance (what an agent MAY do, and how we know)
+  OpenSentience       — governance + harness (what an agent MAY do, and how)
   Graphonomous        — memory + learning (OS-001, OS-002, OS-004, OS-005)
   AgenTroMatic        — deliberation (OS-003)
   Delegatic           — policy authoring (feeds into OS-006 enforcement)
   Agentelic           — agent manifests (consumed by OS-006 install)
   FleetPrompt         — marketplace (agents enter governance on install)
+  SpecPrompt          — acceptance criteria (consumed by OS-008 quality gates)
 ```
 
 The governance shim wraps any OTP `child_spec`. It does not replace the
 supervised process — it interposes permission checks, lifecycle management,
-autonomy control, and audit logging around it.
+autonomy control, pipeline enforcement, and audit logging around it.
 
 ---
 
 ## Founding Thesis
 
 OpenSentience exists because intelligence without governance is generation
-without accumulation. The six protocols formalize what structured accumulation
+without accumulation. The eight protocols formalize what structured accumulation
 requires: memory that consolidates, routing that detects cycles, deliberation
-that resolves conflict, attention that prioritizes, resources that adapt, and
-governance that enforces boundaries.
+that resolves conflict, attention that prioritizes, resources that adapt,
+governance that enforces boundaries, security that detects threats, and a
+harness that orchestrates the entire pipeline.
 
 The shim is deliberately thin. Governance should cost less than 1% of the
 system it governs.

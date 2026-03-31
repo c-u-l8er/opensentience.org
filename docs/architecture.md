@@ -1,7 +1,7 @@
 # Architecture
 
-> OTP supervision tree, GenServers, ETS caches, and MCP server layout for
-> the `open_sentience` governance shim.
+> OTP supervision tree, GenServers, ETS caches, MCP server layout, and
+> harness components for the `open_sentience` governance shim and agent harness.
 
 ---
 
@@ -40,11 +40,22 @@ OpenSentience.Application
         |           +-- <wrapped agent process> (the actual child_spec)
         |
         +-- OpenSentience.MCP.Server           (Hermes MCP server)
+        |
+        +-- OpenSentience.Harness.Supervisor  (DynamicSupervisor)
+              |
+              +-- OpenSentience.Harness.Session  (per task, supervised)
+                    |
+                    +-- Harness.PipelineEnforcer   (GenServer)
+                    +-- Harness.QualityGate        (GenServer)
+                    +-- Harness.ContractValidator   (GenServer + ETS)
+                    +-- Harness.SprintController    (GenStateMachine)
+                    +-- Harness.ContextManager      (GenServer)
 ```
 
 Each component has a single responsibility. The supervision strategy is
 `one_for_one` — a crash in the AuditWriter does not take down the
-PermissionEngine, and vice versa.
+PermissionEngine, and vice versa. Harness sessions are supervised independently
+under a DynamicSupervisor — each task gets its own isolated session.
 
 ---
 
@@ -187,6 +198,91 @@ autonomy.
 
 ---
 
+## Harness Components (OS-008)
+
+The harness layer sits above the governance shim components. It orchestrates
+agent pipelines, enforces prerequisite ordering, and manages quality gates.
+
+### PipelineEnforcer (GenServer)
+
+Ensures pipeline stages execute in order. Blocks tool calls that violate
+prerequisites.
+
+- **Prerequisite model:** each tool call has a set of required prior stages
+- **Key rule:** `retrieve_context` MUST complete before any write-class tool call
+- **Stage tracking:** MapSet of completed `{stage, status}` tuples per session
+- **Integration:** wraps above OS-006 permission checks — both must pass
+- **Violations:** logged to audit trail with session_id and missing prerequisites
+
+### QualityGate (GenServer)
+
+Evaluator orchestrator. Spawns evaluator agents in isolated contexts to grade
+generator output against acceptance criteria.
+
+- **Separate context:** evaluator never sees generator reasoning (enforced)
+- **Adversarial tuning:** system prompt emphasizes finding failures
+- **Evidence required:** pass judgments must cite specific evidence
+- **Iteration loop:** fail → feedback → generator iterates (up to max_iterations)
+- **Escalation:** max iterations reached → escalate to human
+
+### ContractValidator (GenServer + ETS)
+
+Validates [&] Protocol governance blocks at runtime.
+
+- **Hard constraints:** inviolable — action blocked if violated
+- **Soft constraints:** logged as warnings if overridden
+- **Escalation rules:** `escalate_when.confidence_below`, `escalate_when.cost_exceeds_usd`
+- **Confidence gating:** coverage assessment must exceed threshold before dispatch
+
+### SprintController (GenStateMachine)
+
+Manages the planner → generator → evaluator loop as a state machine.
+
+- **States:** `planned`, `generating`, `evaluating`, `passed`, `feedback`,
+  `committed`, `escalated`, `completed`
+- **Sprint contracts:** explicit agreements between roles with acceptance criteria,
+  iteration limits, budget constraints, and provenance links
+- **Tier adaptation:** local_small skips planner (single sprint), cloud_frontier
+  gets full adversarial evaluation
+
+### ContextManager (GenServer)
+
+Monitors context window utilization and prevents quality degradation.
+
+- **Compaction threshold:** 55% (triggers before 60% degradation point)
+- **Overflow threshold:** tool results > 20K tokens offloaded to filesystem
+- **Compaction strategy:** offload large results, summarize history, inject fresh
+  Graphonomous retrieval
+- **Subagent delegation:** tasks exceeding context limits spawn subagents via OS-006,
+  sharing knowledge through Graphonomous (not parent context)
+
+---
+
+## The Dual Enforcement Stack
+
+OS-006 and OS-008 operate as a layered enforcement stack:
+
+```
+Agent requests tool call
+  │
+  ▼
+OS-008 PipelineEnforcer: Are prerequisites met?
+  │ NO → Block with reason + audit log
+  │ YES ↓
+  ▼
+OS-006 PermissionEngine: Does the agent have permission?
+  │ NO → Block with audit log
+  │ YES ↓
+  ▼
+Tool executes
+  │
+  ▼
+OS-008 PipelineEnforcer: Update stage state
+OS-006 AuditWriter: Log execution
+```
+
+---
+
 ## Performance Targets
 
 | Metric | Target | Mechanism |
@@ -196,3 +292,5 @@ autonomy.
 | Memory overhead | < 5 MB RSS | ETS tables, no large state |
 | Audit write latency | < 1 ms (batched) | GenServer batching at 100ms intervals |
 | Agent install latency | < 10 ms | Single ETS write + DynamicSupervisor start |
+| Pipeline prerequisite check | < 5 microseconds | MapSet membership check |
+| Context utilization tracking | < 1 ms per tool result | Token counting + threshold check |
