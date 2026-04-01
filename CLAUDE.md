@@ -22,6 +22,7 @@ Research arm of [&] Ampersand Box Design. Publishes theoretical foundations, emp
 ## Separate spec documents
 
 - `docs/spec/OS-008-HARNESS.md` — Agent Harness Protocol (pipeline enforcement, quality gates, sprint contracts, context management)
+- `docs/spec/OS-E001-EMPIRICAL-EVALUATION.md` — Empirical Evaluation of Topology-Aware Continual Learning (Graphonomous benchmark on [&] portfolio)
 
 ## Relationship to other projects
 
