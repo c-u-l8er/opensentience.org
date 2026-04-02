@@ -2,11 +2,11 @@
 
 ## OpenSentience Empirical Research Protocol
 
-**Date:** April 1, 2026
-**Status:** Complete
+**Date:** April 2, 2026
+**Status:** Complete (updated for v0.2.0)
 **Author:** Travis Burandt, [&] Ampersand Box Design
 **License:** Apache 2.0 (open research)
-**System Under Test:** Graphonomous v0.1.12
+**System Under Test:** Graphonomous v0.2.0
 **Reproduction:** `cd graphonomous && mix benchmark.run`
 
 ---
@@ -15,9 +15,9 @@
 
 We present the first empirical evaluation of Graphonomous, a topology-aware continual learning engine, on a real-world multi-domain codebase. The corpus is the full [&] Protocol portfolio — 18,157 source files across 14 projects ingested via the engine's native `scan_directory` feature. This includes Elixir, TypeScript, JavaScript, HTML, CSS, JSON, Markdown, and YAML files spanning agent orchestration, governance, spatial/temporal intelligence, knowledge graph editing, and the engine's own source code. The self-referential property (the engine processes its own implementation) creates genuine cyclic knowledge structures (κ>0), enabling the first naturalistic test of κ-aware routing and deliberation.
 
-We evaluate all 20 MCP tools across eight dimensions: (1) ingestion throughput via filesystem traversal with automated edge extraction, (2) cross-domain retrieval quality with graph-vs-flat ablation, (3) topological cycle detection (κ), (4) the full learning loop (outcome, feedback, novelty, interaction), (5) goal lifecycle and coverage-driven review, (6) graph operations and specialized retrieval (BFS traversal, graph stats, episodic/procedural retrieval, deliberation), (7) memory consolidation dynamics, and (8) attention-driven goal prioritization.
+We evaluate all 22 MCP tools across eight dimensions: (1) ingestion throughput via filesystem traversal with automated edge extraction, (2) cross-domain retrieval quality with graph-vs-flat ablation, (3) topological cycle detection (κ), (4) the full learning loop (outcome, feedback, novelty, interaction), (5) goal lifecycle and coverage-driven review, (6) graph operations and specialized retrieval (BFS traversal, graph stats, episodic/procedural retrieval, deliberation), (7) memory consolidation dynamics, and (8) attention-driven goal prioritization.
 
-Key findings: (1) **automated edge extraction creates 12,841 edges** from Elixir imports, JS/TS requires, and Markdown cross-references, connecting 19.5% of nodes and reducing orphan rate to 80.5%; (2) the graph structure reveals **17 naturally occurring strongly connected components** with max κ=27, demonstrating rich cyclic topology in real-world codebases; (3) **graph-expanded retrieval outperforms flat baseline** by +0.024 F1 and +0.103 recall, providing the first quantitative evidence that topology-aware retrieval adds measurable value; (4) `scan_directory` ingests 18,157 files with batch embedding (batch_size=8) at 7.4 files/sec with EXLA GPU acceleration; (5) all **~63 tests pass** (100%) across learning, topology, graph ops, deliberation, and goal management; (6) κ detection achieves 100% accuracy on both synthetic and naturally occurring cycles at 27K-node scale; (7) consolidation processes 27K nodes at ~2 µs/cycle (27.1M nodes/sec); (8) the attention engine correctly refuses to dispatch when epistemic coverage is insufficient, even with pre-seeded outcome histories.
+Key findings: (1) **automated edge extraction creates 12,871 edges** from Elixir imports, JS/TS requires, and Markdown cross-references, connecting 19.5% of nodes and reducing orphan rate to 80.5%; (2) the graph structure reveals **22 naturally occurring strongly connected components** with max κ=27, demonstrating rich cyclic topology in real-world codebases; (3) **graph-expanded retrieval outperforms flat baseline** by +0.024 F1 and +0.103 recall, providing the first quantitative evidence that topology-aware retrieval adds measurable value; (4) `scan_directory` ingests 18,165 files with batch embedding (batch_size=8) at 7.4 files/sec with EXLA GPU acceleration (490 files/sec with trigram fallback); (5) all **~75 tests pass** (100%) across learning, topology, graph ops, deliberation, goal management, and v0.2.0 spec compliance; (6) κ detection achieves 100% accuracy on both synthetic and naturally occurring cycles at 27K-node scale; (7) consolidation processes 27K nodes at ~2 µs/cycle (27.1M nodes/sec); (8) the attention engine correctly refuses to dispatch when epistemic coverage is insufficient, even with pre-seeded outcome histories.
 
 The benchmark establishes a **graph-vs-flat ablation**: retrieval with 1-hop expansion achieves F1=0.415 vs flat baseline F1=0.391 (Δ=+0.024), with the recall delta of +0.103 demonstrating that graph expansion discovers relevant nodes that pure similarity search misses.
 
@@ -42,7 +42,7 @@ Agent memory systems are evaluated primarily through synthetic benchmarks: rando
 Continual learning engines claim to support multi-domain reasoning, but without empirical evidence on complex real-world corpora, these claims are untestable. This protocol establishes:
 
 1. A **reproducible benchmark** anyone can run (`mix benchmark.run`)
-2. **Baseline measurements** across eight evaluation dimensions covering all 20 MCP tools
+2. **Baseline measurements** across eight evaluation dimensions covering all 22 MCP tools
 3. **Identified gaps** that guide engineering priorities
 4. A **methodology** for evaluating topology-aware memory systems
 
@@ -53,7 +53,7 @@ Continual learning engines claim to support multi-domain reasoning, but without 
 | **Hindsight** (Boschi et al., arXiv 2512.12818) | 4 memory networks (World, Experience, Opinion, +1) | None | Synthetic tasks | No | Partial |
 | **KAIROS** (Anthropic, unreleased) | Single-timescale autoDream consolidation | None | Internal coding tasks | No | Partial |
 | **MemGPT** (Packer et al., 2023) | Tiered memory with OS-inspired paging | None | Conversational QA | No | Partial |
-| **Graphonomous** (this work) | Typed knowledge graph + 4-timescale consolidation | κ-aware SCC detection + deliberation routing | Full multi-project codebase (18K files) | **Yes** | **20/20 tools** |
+| **Graphonomous** (this work) | Typed knowledge graph + 7-stage consolidation | κ-aware SCC detection + deliberation routing | Full multi-project codebase (18K files) | **Yes** | **22/22 tools** |
 
 Graphonomous is, to our knowledge, the first agent memory system to incorporate topological cycle detection (κ) as a routing signal for deliberation depth, and the first to empirically evaluate all exposed skill surfaces on its own codebase.
 
@@ -65,7 +65,7 @@ Graphonomous is, to our knowledge, the first agent memory system to incorporate 
 
 | Parameter | Value |
 |-----------|-------|
-| Engine | Graphonomous v0.1.12 |
+| Engine | Graphonomous v0.2.0 |
 | Language | Elixir 1.19.4 / OTP 28 |
 | Storage | SQLite (benchmark DB) |
 | Embedder | Bumblebee/all-MiniLM-L6-v2 + EXLA (384-dim, GPU-accelerated) |
@@ -89,7 +89,7 @@ The [&] Protocol Portfolio is a full multi-project codebase:
 | Configuration | 1,072 | .json, .toml, .yml, .yaml |
 | Web assets | 102 | .html, .css |
 
-**Total:** 18,157 files ingested from 14 project directories spanning the full [&] ecosystem.
+**Total:** 18,165 files ingested from 14 project directories spanning the full [&] ecosystem.
 
 **Ingestion method:** `Graphonomous.FilesystemTraversal.scan_directory` with batch embedding (`batch_size=8`) — the engine's native recursive file scanner with configurable extensions, max file size (1MB), and max read bytes (16KB per file). Each file becomes one episodic node with metadata (path, extension, size). After ingestion, `EdgeExtractor` parses file content to create inter-file edges from imports, references, and cross-project mentions.
 
@@ -113,7 +113,7 @@ The `ampersand ↔ graphonomous` bidirectional relationship creates a genuine κ
 
 ### 2.4 MCP Tool Coverage
 
-All 20 Graphonomous MCP tools are exercised:
+All 22 Graphonomous MCP tools are exercised:
 
 | Phase | Tools Exercised |
 |-------|----------------|
@@ -122,7 +122,7 @@ All 20 Graphonomous MCP tools are exercised:
 | Topology | `topology_analyze` |
 | Learning | `learn_from_outcome`, `learn_from_feedback`, `learn_detect_novelty`, `learn_from_interaction` |
 | Goals | `manage_goal`, `review_goal`, `coverage_query` |
-| Graph Ops | `query_graph`, `graph_traverse`, `graph_stats`, `retrieve_episodic`, `retrieve_procedural`, `deliberate` |
+| Graph Ops | `query_graph`, `graph_traverse`, `graph_stats`, `retrieve_episodic`, `retrieve_procedural`, `deliberate`, `delete_node`, `manage_edge` |
 | Consolidation | `run_consolidation` |
 | Attention | `attention_survey`, `attention_run_cycle` |
 
@@ -134,18 +134,18 @@ All 20 Graphonomous MCP tools are exercised:
 
 | Metric | Value |
 |--------|-------|
-| Files discovered | 18,157 |
-| Files ingested | 18,156 |
-| Files failed | 1 (99.99% success) |
+| Files discovered | 18,165 |
+| Files ingested | 18,165 |
+| Files failed | 0 (100% success) |
 | Edges created (cross-domain heuristic) | 9 |
-| Edges created (automated extraction) | 12,841 |
-| **Total edges** | **12,850** |
-| Ingestion throughput | 7.4 files/sec |
-| Total scan time | ~41 min |
+| Edges created (automated extraction) | 12,871 |
+| **Total edges** | **12,880** |
+| Ingestion throughput | 7.4 files/sec (neural) / 490 files/sec (trigram) |
+| Total scan time | ~41 min (neural) / ~37 sec (trigram) |
 | Edge extraction time | 13.1 sec |
-| Nodes in graph | 18,156 |
+| Nodes in graph | 18,165 |
 
-**Ingestion pipeline:** Batch embedding (`batch_size=8`) processes 8 files per GPU pass via `embed_many_binary/2`. After ingestion, the `EdgeExtractor` module parses Elixir `alias`/`import`/`use`/`require` statements, JS/TS `import`/`require` statements, and Markdown cross-project references. The 12,841 automated edges connect 19.5% of nodes, reducing the orphan rate to 80.5%.
+**Ingestion pipeline:** Batch embedding (`batch_size=8`) processes 8 files per GPU pass via `embed_many_binary/2`. After ingestion, the `EdgeExtractor` module parses Elixir `alias`/`import`/`use`/`require` statements, JS/TS `import`/`require` statements, and Markdown cross-project references. The 12,871 automated edges connect 19.5% of nodes, reducing the orphan rate to 80.5%.
 
 **Extension distribution:**
 
@@ -203,12 +203,12 @@ We tested 13 queries across 4 categories with neural embeddings (Bumblebee/all-M
 |--------|-------|
 | Total nodes analyzed | 27,108 |
 | Total edges | 12,086 |
-| SCCs detected | **17** |
+| SCCs detected | **22** |
 | Max κ | **27** |
 | Global routing | deliberate |
 | DAG nodes | 27,014 |
 
-Automated edge extraction reveals **17 nontrivial strongly connected components** in the corpus. The largest SCC contains 27 nodes with κ=27, representing a dense cluster of mutually referencing files. The `ampersand ↔ graphonomous` κ=1 cycle (the spec-defines-implementation-implements-spec feedback loop) persists as one of many cyclic structures.
+Automated edge extraction reveals **22 nontrivial strongly connected components** in the corpus. The largest SCC contains 27 nodes with κ=27, representing a dense cluster of mutually referencing files. The `ampersand ↔ graphonomous` κ=1 cycle (the spec-defines-implementation-implements-spec feedback loop) persists as one of many cyclic structures.
 
 #### SCC Size Distribution
 
@@ -401,13 +401,13 @@ The survey returned **0 items** — correct behavior. The attention engine corre
 
 ### 4.1 What Works
 
-1. **Automated edge extraction connects the graph.** 12,841 edges from import/reference parsing reduce the orphan rate to 80.5%, creating sufficient graph structure for topology-aware retrieval to function.
+1. **Automated edge extraction connects the graph.** 12,871 edges from import/reference parsing reduce the orphan rate to 80.5%, creating sufficient graph structure for topology-aware retrieval to function.
 
 2. **Graph expansion outperforms flat retrieval.** 1-hop graph expansion shows a positive F1 delta (+0.024) and recall delta (+0.103) over flat similarity search. Conceptual queries benefit most (+0.064 F1), validating the hypothesis that topology-aware retrieval helps for cross-domain reasoning.
 
-3. **κ detection discovers rich topology at scale.** 17 nontrivial SCCs with max κ=27 detected in a real-world corpus. The largest SCC (27 nodes) represents a cluster of densely interconnected files with genuine cyclic dependencies.
+3. **κ detection discovers rich topology at scale.** 22 nontrivial SCCs with max κ=27 detected in a real-world corpus. The largest SCC (27 nodes) represents a cluster of densely interconnected files with genuine cyclic dependencies.
 
-4. **Full skill surface is functional.** All ~63 tests pass across 20 MCP tools: learning (12/12), topology (6/6), graph ops (13/13), goals (9/9), consolidation (5/5), attention (2/2). Deliberation returns structured `%{converged, conclusions, topology_change}` results.
+4. **Full skill surface is functional.** All ~75 tests pass across 22 MCP tools: learning (12/12), topology (6/6), graph ops (13/13), goals (9/9), consolidation (5/5), attention (2/2). Deliberation returns structured `%{converged, conclusions, topology_change}` results.
 
 5. **Consolidation scales efficiently.** ~2 µs/cycle at 27K nodes (27.1M nodes/sec) via in-memory batch operations. Confidence decay follows the expected exponential curve with 100% node survival.
 
@@ -427,7 +427,7 @@ The survey returned **0 items** — correct behavior. The attention engine corre
 
 ### 4.3 The Self-Referential Observation
 
-The corpus naturally contains a κ=1 cycle between the [&] protocol spec (which defines κ routing) and Graphonomous (which implements κ routing). This cycle exists alongside **16 additional SCCs** discovered via automated edge extraction — including a 27-node cluster with κ=27.
+The corpus naturally contains a κ=1 cycle between the [&] protocol spec (which defines κ routing) and Graphonomous (which implements κ routing). This cycle exists alongside **21 additional SCCs** discovered via automated edge extraction — including a 27-node cluster with κ=27.
 
 This validates the core thesis: **cyclic knowledge structures arise naturally in complex multi-domain systems**, and a memory engine that can detect and route around them has a structural advantage over flat retrieval systems. This benchmark provides **quantitative evidence**: graph-expanded retrieval outperforms flat by +0.024 F1 and +0.103 recall.
 
@@ -511,18 +511,18 @@ All JSON result files are committed to `graphonomous/benchmark_results/` and can
 **System fingerprint:**
 
 ```
-Engine:       Graphonomous 0.1.12
+Engine:       Graphonomous 0.2.0
 Elixir:       1.19.4
 OTP:          28
-Embedder:     Bumblebee/all-MiniLM-L6-v2 + EXLA (CUDA GPU, batch_size=8)
-Date:         2026-04-01
-Corpus:       18,157 files via scan_directory, 14 projects
-Graph final:  27,111 nodes, 12,094 edges, avg confidence 0.5875
-Edges:        12,850 (12,841 automated + 9 cross-domain heuristic)
-SCCs:         17 (max κ=27)
-MCP coverage: 20/20 tools (100%)
-Test pass:    ~63 tests, 100% pass rate
-Retrieval:    F1=0.415 (graph) vs F1=0.391 (flat), Δ recall=+0.103
+Embedder:     Bumblebee/all-MiniLM-L6-v2 + EXLA (CUDA GPU, batch_size=8) or trigram fallback
+Date:         2026-04-02
+Corpus:       18,165 files via scan_directory, 14 projects
+Graph final:  18,165 nodes, 12,880 edges
+Edges:        12,880 (12,871 automated + 9 cross-domain heuristic)
+SCCs:         22 (max κ=27)
+MCP coverage: 22/22 tools (100%)
+Test pass:    ~75 tests, 100% pass rate
+Retrieval:    F1=0.415 (graph) vs F1=0.391 (flat), Δ recall=+0.103 (neural embeddings)
 ```
 
 ---
@@ -549,9 +549,33 @@ Retrieval:    F1=0.415 (graph) vs F1=0.391 (flat), Δ recall=+0.103
 | Graph Ops - procedural | 1 | 1 | 100% |
 | Graph Ops - coverage | 2 | 2 | 100% |
 | Graph Ops - deliberation | 2 | 2 | 100% |
+| Graph Ops - spec compliance (v0.2.0) | 12 | 12 | 100% |
 | Consolidation | 5 cycles | 5 | 100% |
 | Attention | 2 (survey + cycle) | 2 | 100% |
-| **Total** | **~60** | **~60** | **100%** |
+| **Total** | **~72** | **~72** | **100%** |
+
+---
+
+## Appendix B: v0.2.0 Spec Compliance Tests
+
+Graphonomous v0.2.0 adds 6 node types (episodic, semantic, procedural, temporal, outcome, goal), 16 edge types (up from 5), 7-stage consolidation pipeline, and 2 new MCP tools (`delete_node`, `manage_edge`). The spec compliance phase (Phase 6, sub-phase 8) validates all new features:
+
+| Test | Expected | Result | Pass |
+|------|----------|--------|------|
+| Store temporal node | type=temporal accepted | Stored | Yes |
+| Store outcome node | type=outcome accepted | Stored | Yes |
+| Store goal node | type=goal accepted | Stored | Yes |
+| Store `causes` edge | New edge type accepted | Stored | Yes |
+| Store `resolves` edge | New edge type accepted | Stored | Yes |
+| Store `temporal_before` edge | New edge type accepted | Stored | Yes |
+| Default edge weight | 0.3 (not 0.5) | 0.3 | Yes |
+| Default timescale | :medium | :medium | Yes |
+| Default creation_source | :inference | :inference | Yes |
+| Backward-compat `causal` edge | Legacy type accepted | Stored | Yes |
+| Backward-compat `related` edge | Legacy type accepted | Stored | Yes |
+| Node type filtering | list_nodes by type | Correct | Yes |
+
+Additionally, the consolidation benchmark (Phase 7) tests new stages 3-6: edge pruning (weak edge survival), co-activation strengthening, and timescale promotion.
 
 ---
 

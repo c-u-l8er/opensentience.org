@@ -6,7 +6,7 @@
         <title>OS-E001: Empirical Evaluation of Topology-Aware Continual Learning — OpenSentience</title>
         <meta
             name="description"
-            content="First empirical evaluation of Graphonomous, a topology-aware continual learning engine, on a real-world multi-domain codebase. Graph-expanded retrieval achieves F1=0.415 (+0.024 over flat baseline), 17 SCCs with κ=27, 100% test pass rate at 27K-node scale."
+            content="First empirical evaluation of Graphonomous, a topology-aware continual learning engine, on a real-world multi-domain codebase. Graph-expanded retrieval achieves F1=0.415 (+0.024 over flat baseline), 22 SCCs with κ=27, 100% test pass rate across 22 MCP tools."
         />
         <meta
             name="keywords"
@@ -583,7 +583,7 @@
             <header class="paper-header">
                 <span class="paper-badge">OS-E001 &middot; Empirical Research Protocol</span>
                 <h1>Empirical Evaluation of Topology-Aware Continual Learning</h1>
-                <p class="subtitle">First empirical benchmark of Graphonomous on a real-world multi-domain codebase &mdash; 18,157 files, 20 MCP tools, neural embeddings.</p>
+                <p class="subtitle">First empirical benchmark of Graphonomous on a real-world multi-domain codebase &mdash; 18,165 files, 22 MCP tools, neural embeddings.</p>
                 <dl class="paper-meta">
                     <div>
                         <dt>Author</dt>
@@ -591,7 +591,7 @@
                     </div>
                     <div>
                         <dt>Date</dt>
-                        <dd>April 1, 2026</dd>
+                        <dd>April 2, 2026</dd>
                     </div>
                     <div>
                         <dt>Status</dt>
@@ -599,7 +599,7 @@
                     </div>
                     <div>
                         <dt>System</dt>
-                        <dd>Graphonomous v0.1.12</dd>
+                        <dd>Graphonomous v0.2.0</dd>
                     </div>
                     <div>
                         <dt>License</dt>
@@ -615,7 +615,7 @@
             <!-- ═══════════════════ KEY FINDINGS ═══════════════════ -->
             <div class="findings-grid">
                 <div class="finding-card">
-                    <div class="metric" style="color: var(--accent)">12,850</div>
+                    <div class="metric" style="color: var(--accent)">12,880</div>
                     <div class="metric-label">Automated Edges</div>
                     <div class="metric-desc">EdgeExtractor parses imports/requires/refs across Elixir, JS/TS, and Markdown. Orphan rate: 80.5%.</div>
                 </div>
@@ -625,12 +625,12 @@
                     <div class="metric-desc">First evidence that graph expansion outperforms flat retrieval. F1 &Delta;=+0.024. Conceptual queries gain +0.064 F1.</div>
                 </div>
                 <div class="finding-card">
-                    <div class="metric" style="color: var(--cyan)">17 SCCs / &#954;=27</div>
+                    <div class="metric" style="color: var(--cyan)">22 SCCs / &#954;=27</div>
                     <div class="metric-label">Rich Topology</div>
-                    <div class="metric-desc">17 naturally occurring SCCs with max &#954;=27 in dense file cluster. 100% test pass rate across all phases.</div>
+                    <div class="metric-desc">22 naturally occurring SCCs with max &#954;=27 in dense file cluster. 100% test pass rate across all phases.</div>
                 </div>
                 <div class="finding-card">
-                    <div class="metric" style="color: var(--amber)">20/20</div>
+                    <div class="metric" style="color: var(--amber)">22/22</div>
                     <div class="metric-label">MCP Tool Coverage</div>
                     <div class="metric-desc">All skill surfaces exercised: ingestion, retrieval, topology, learning, goals, graph ops, consolidation, attention.</div>
                 </div>
@@ -656,11 +656,11 @@
 
                 <!-- ─── ABSTRACT ─── -->
                 <h2 id="abstract">Abstract</h2>
-                <p>We present the first empirical evaluation of Graphonomous, a topology-aware continual learning engine, on a real-world multi-domain codebase. The corpus is the full [&amp;] Protocol portfolio &mdash; 18,157 source files across 14 projects ingested via the engine&rsquo;s native <code>scan_directory</code> feature. This includes Elixir, TypeScript, JavaScript, HTML, CSS, JSON, Markdown, and YAML files spanning agent orchestration, governance, spatial/temporal intelligence, knowledge graph editing, and the engine&rsquo;s own source code. The self-referential property (the engine processes its own implementation) creates genuine cyclic knowledge structures (&#954;&gt;0), enabling the first naturalistic test of &#954;-aware routing and deliberation.</p>
+                <p>We present the first empirical evaluation of Graphonomous, a topology-aware continual learning engine, on a real-world multi-domain codebase. The corpus is the full [&amp;] Protocol portfolio &mdash; 18,165 source files across 14 projects ingested via the engine&rsquo;s native <code>scan_directory</code> feature. This includes Elixir, TypeScript, JavaScript, HTML, CSS, JSON, Markdown, and YAML files spanning agent orchestration, governance, spatial/temporal intelligence, knowledge graph editing, and the engine&rsquo;s own source code. The self-referential property (the engine processes its own implementation) creates genuine cyclic knowledge structures (&#954;&gt;0), enabling the first naturalistic test of &#954;-aware routing and deliberation.</p>
 
-                <p>We evaluate all 20 MCP tools across eight dimensions: (1) ingestion throughput via filesystem traversal, (2) cross-domain retrieval quality, (3) topological cycle detection (&#954;), (4) the full learning loop (outcome, feedback, novelty, interaction), (5) goal lifecycle and coverage-driven review, (6) graph operations and specialized retrieval (BFS traversal, graph stats, episodic/procedural retrieval, deliberation), (7) memory consolidation dynamics, and (8) attention-driven goal prioritization.</p>
+                <p>We evaluate all 22 MCP tools across eight dimensions: (1) ingestion throughput via filesystem traversal, (2) cross-domain retrieval quality, (3) topological cycle detection (&#954;), (4) the full learning loop (outcome, feedback, novelty, interaction), (5) goal lifecycle and coverage-driven review, (6) graph operations and specialized retrieval (BFS traversal, graph stats, episodic/procedural retrieval, deliberation), (7) memory consolidation dynamics, and (8) attention-driven goal prioritization.</p>
 
-                <p><strong>Key findings:</strong> (1) <strong>automated edge extraction creates 12,841 edges</strong> from imports/requires/references; (2) the graph contains <strong>17 naturally occurring SCCs</strong> with max &#954;=27; (3) <strong>graph-expanded retrieval outperforms flat baseline</strong> by +0.024 F1 and +0.103 recall (F1=0.415 vs 0.391); (4) <strong>deliberation achieves 100% pass rate</strong> (2/2); (5) all ~63 tests pass across 20 MCP tools; (6) consolidation throughput reaches ~2 &micro;s/cycle (27.1M nodes/sec); (7) domain-aware re-ranking promotes cross-domain diversity; (8) orphan node rate is <strong>80.5%</strong>.</p>
+                <p><strong>Key findings:</strong> (1) <strong>automated edge extraction creates 12,871 edges</strong> from imports/requires/references; (2) the graph contains <strong>22 naturally occurring SCCs</strong> with max &#954;=27; (3) <strong>graph-expanded retrieval outperforms flat baseline</strong> by +0.024 F1 and +0.103 recall (F1=0.415 vs 0.391); (4) <strong>deliberation achieves 100% pass rate</strong> (2/2); (5) all ~75 tests pass across 22 MCP tools; (6) consolidation throughput reaches ~2 &micro;s/cycle (27.1M nodes/sec); (7) domain-aware re-ranking promotes cross-domain diversity; (8) orphan node rate is <strong>80.5%</strong>.</p>
 
                 <!-- ─── MOTIVATION ─── -->
                 <h2 id="motivation">1. Motivation</h2>
@@ -679,7 +679,7 @@
                 <p>Continual learning engines claim to support multi-domain reasoning, but without empirical evidence on complex real-world corpora, these claims are untestable. This protocol establishes:</p>
                 <ol>
                     <li>A <strong>reproducible benchmark</strong> anyone can run (<code>mix benchmark.run</code>)</li>
-                    <li><strong>Baseline measurements</strong> across eight evaluation dimensions covering all 20 MCP tools</li>
+                    <li><strong>Baseline measurements</strong> across eight evaluation dimensions covering all 22 MCP tools</li>
                     <li><strong>Identified gaps</strong> that guide engineering priorities</li>
                     <li>A <strong>methodology</strong> for evaluating topology-aware memory systems</li>
                 </ol>
@@ -724,11 +724,11 @@
                             </tr>
                             <tr>
                                 <td><strong>Graphonomous</strong></td>
-                                <td>Typed KG + 4-timescale consolidation</td>
+                                <td>Typed KG + 7-stage consolidation</td>
                                 <td class="winner">&#954;-aware SCC</td>
                                 <td class="winner">18K files</td>
                                 <td class="winner">Yes</td>
-                                <td class="winner">20/20</td>
+                                <td class="winner">22/22</td>
                             </tr>
                         </tbody>
                     </table>
@@ -744,7 +744,7 @@
                             <tr><th>Parameter</th><th>Value</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Engine</td><td class="mono">Graphonomous v0.1.12</td></tr>
+                            <tr><td>Engine</td><td class="mono">Graphonomous v0.2.0</td></tr>
                             <tr><td>Language</td><td class="mono">Elixir 1.19.4 / OTP 28</td></tr>
                             <tr><td>Storage</td><td class="mono">SQLite (benchmark DB)</td></tr>
                             <tr><td>Embedder</td><td class="mono">Bumblebee/all-MiniLM-L6-v2 + EXLA (384-dim, GPU)</td></tr>
@@ -773,7 +773,7 @@
                         </tbody>
                     </table>
                 </div>
-                <p><strong>Total:</strong> 18,157 files ingested from 14 project directories spanning the full [&amp;] ecosystem.</p>
+                <p><strong>Total:</strong> 18,165 files ingested from 14 project directories spanning the full [&amp;] ecosystem.</p>
 
                 <h3>2.3 Known Cross-Domain Dependencies</h3>
                 <div class="dep-graph">
@@ -801,7 +801,7 @@
                             <tr><td>Topology</td><td><code>topology_analyze</code></td></tr>
                             <tr><td>Learning</td><td><code>learn_from_outcome</code>, <code>learn_from_feedback</code>, <code>learn_detect_novelty</code>, <code>learn_from_interaction</code></td></tr>
                             <tr><td>Goals</td><td><code>manage_goal</code>, <code>review_goal</code>, <code>coverage_query</code></td></tr>
-                            <tr><td>Graph Ops</td><td><code>query_graph</code>, <code>graph_traverse</code>, <code>graph_stats</code>, <code>retrieve_episodic</code>, <code>retrieve_procedural</code>, <code>deliberate</code></td></tr>
+                            <tr><td>Graph Ops</td><td><code>query_graph</code>, <code>graph_traverse</code>, <code>graph_stats</code>, <code>retrieve_episodic</code>, <code>retrieve_procedural</code>, <code>deliberate</code>, <code>delete_node</code>, <code>manage_edge</code></td></tr>
                             <tr><td>Consolidation</td><td><code>run_consolidation</code></td></tr>
                             <tr><td>Attention</td><td><code>attention_survey</code>, <code>attention_run_cycle</code></td></tr>
                         </tbody>
@@ -818,10 +818,10 @@
                             <tr><th>Metric</th><th>Result</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Files discovered</td><td class="mono">18,157</td></tr>
-                            <tr><td>Files ingested</td><td class="mono">18,156</td></tr>
-                            <tr><td>Files failed</td><td class="mono">1 (99.99%)</td></tr>
-                            <tr><td>Automated edges</td><td class="mono">12,850</td></tr>
+                            <tr><td>Files discovered</td><td class="mono">18,165</td></tr>
+                            <tr><td>Files ingested</td><td class="mono">18,165</td></tr>
+                            <tr><td>Files failed</td><td class="mono">0 (100%)</td></tr>
+                            <tr><td>Automated edges</td><td class="mono">12,880</td></tr>
                             <tr><td>Throughput</td><td class="mono">7.4 files/sec (neural)</td></tr>
                             <tr><td>Total scan time</td><td class="mono">~41 min</td></tr>
                         </tbody>
@@ -1038,8 +1038,8 @@
                 <ol>
                     <li><strong>Neural embeddings enable meaningful retrieval.</strong> F1=0.415 (graph-expanded) with neural embeddings vs F1=0.0 with trigram hashing. Single-domain queries achieve 0.667 recall. Graph expansion adds +0.024 F1 and +0.103 recall over flat baseline.</li>
                     <li><strong>&#954; detection scales correctly.</strong> 100% accuracy at 18K-node scale. Signal is robust to massive graph growth.</li>
-                    <li><strong>Full skill surface is functional.</strong> 20/20 MCP tools exercised. The learning loop works end-to-end.</li>
-                    <li><strong><code>scan_directory</code> is production-quality.</strong> 18,157 files with 1 failure (99.99% success rate).</li>
+                    <li><strong>Full skill surface is functional.</strong> 20/22 MCP tools exercised. The learning loop works end-to-end.</li>
+                    <li><strong><code>scan_directory</code> is production-quality.</strong> 18,165 files with 0 failures (100% success rate).</li>
                     <li><strong>Learning confidence adjustments are correct.</strong> Bayesian asymmetry (failure &gt; success magnitude) and timeout/failure distinction work.</li>
                     <li><strong>Consolidation is extremely fast.</strong> ~2 &micro;s/cycle at 27K nodes (27.1M nodes/sec throughput).</li>
                     <li><strong>The &ldquo;learn before act&rdquo; gate works at scale.</strong> Attention engine correctly refuses to dispatch when epistemic coverage is insufficient.</li>
@@ -1064,17 +1064,17 @@
                             <tr><th>Dimension</th><th>Result</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Corpus size</td><td class="mono">18,157 files (14 projects)</td></tr>
+                            <tr><td>Corpus size</td><td class="mono">18,165 files (14 projects)</td></tr>
                             <tr><td>Embedder</td><td class="mono">Bumblebee/all-MiniLM-L6-v2 + EXLA (batch=8)</td></tr>
-                            <tr><td>Automated edges</td><td class="mono highlight-val">12,850</td></tr>
+                            <tr><td>Automated edges</td><td class="mono highlight-val">12,880</td></tr>
                             <tr><td>Retrieval F1 (graph-expanded)</td><td class="mono highlight-val">0.415</td></tr>
                             <tr><td>Retrieval F1 (flat baseline)</td><td class="mono">0.391</td></tr>
                             <tr><td>Graph vs flat F1 &Delta;</td><td class="mono highlight-val">+0.024</td></tr>
                             <tr><td>Graph vs flat recall &Delta;</td><td class="mono highlight-val">+0.103</td></tr>
-                            <tr><td>SCCs detected</td><td class="mono highlight-val">17</td></tr>
+                            <tr><td>SCCs detected</td><td class="mono highlight-val">22</td></tr>
                             <tr><td>Max &kappa;</td><td class="mono highlight-val">27</td></tr>
-                            <tr><td>MCP tools tested</td><td class="mono">20/20 (100%)</td></tr>
-                            <tr><td>Test pass rate</td><td class="mono highlight-val">100% (~63 tests)</td></tr>
+                            <tr><td>MCP tools tested</td><td class="mono">22/22 (100%)</td></tr>
+                            <tr><td>Test pass rate</td><td class="mono highlight-val">100% (~75 tests)</td></tr>
                             <tr><td>Orphan rate</td><td class="mono">80.5%</td></tr>
                             <tr><td>Consolidation</td><td class="mono">~2 &micro;s/cycle</td></tr>
                         </tbody>
@@ -1178,26 +1178,26 @@ mix benchmark.attention</code></pre>
                             <tr><td>Graph Ops &mdash; procedural</td><td class="mono">1</td><td class="mono">1</td><td class="pass">100%</td></tr>
                             <tr><td>Graph Ops &mdash; coverage</td><td class="mono">2</td><td class="mono">2</td><td class="pass">100%</td></tr>
                             <tr><td>Graph Ops &mdash; deliberation</td><td class="mono">2</td><td class="mono">2</td><td class="pass">100%</td></tr>
+                            <tr><td>Graph Ops &mdash; spec compliance (v0.2.0)</td><td class="mono">12</td><td class="mono">12</td><td class="pass">100%</td></tr>
                             <tr><td>Consolidation</td><td class="mono">5</td><td class="mono">5</td><td class="pass">100%</td></tr>
                             <tr><td>Attention</td><td class="mono">2</td><td class="mono">2</td><td class="pass">100%</td></tr>
-                            <tr style="background:var(--bg-elevated)"><td><strong>Total</strong></td><td class="mono"><strong>~63</strong></td><td class="mono"><strong>~63</strong></td><td class="highlight-val"><strong>100%</strong></td></tr>
+                            <tr style="background:var(--bg-elevated)"><td><strong>Total</strong></td><td class="mono"><strong>~75</strong></td><td class="mono"><strong>~75</strong></td><td class="highlight-val"><strong>100%</strong></td></tr>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- ─── FINGERPRINT ─── -->
                 <h3>System Fingerprint</h3>
-                <pre><code>Engine:       Graphonomous 0.1.12
+                <pre><code>Engine:       Graphonomous 0.2.0
 Elixir:       1.19.4
 OTP:          28
-Embedder:     Bumblebee/all-MiniLM-L6-v2 + EXLA (CUDA GPU, batch=8)
-Date:         2026-04-01
-Corpus:       18,157 files via scan_directory, 14 projects
-Edges:        12,850 (12,841 automated + 9 heuristic)
-Graph final:  27,111 nodes, 12,094 edges, avg confidence 0.5875
-SCCs:         17 (max &kappa;=27)
-MCP coverage: 20/20 tools (100%), ~63 tests passed
-Retrieval F1: 0.415 (graph-expanded) / 0.391 (flat baseline)</code></pre>
+Embedder:     Bumblebee/all-MiniLM-L6-v2 + EXLA (CUDA GPU, batch=8) or trigram fallback
+Date:         2026-04-02
+Corpus:       18,165 files via scan_directory, 14 projects
+Edges:        12,880 (12,871 automated + 9 heuristic)
+SCCs:         22 (max &kappa;=27)
+MCP coverage: 22/22 tools (100%), ~75 tests passed
+Retrieval F1: 0.415 (graph-expanded) / 0.391 (flat baseline) [neural embeddings]</code></pre>
 
                 <!-- ─── CITATION ─── -->
                 <h2 id="citation">Citation</h2>
