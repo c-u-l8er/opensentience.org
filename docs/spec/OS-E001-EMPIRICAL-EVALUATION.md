@@ -3,10 +3,10 @@
 ## OpenSentience Empirical Research Protocol
 
 **Date:** April 2, 2026
-**Status:** Complete (updated for v0.2.0)
+**Status:** Complete (updated for v0.3.0)
 **Author:** Travis Burandt, [&] Ampersand Box Design
 **License:** Apache 2.0 (open research)
-**System Under Test:** Graphonomous v0.2.0
+**System Under Test:** Graphonomous v0.3.0
 **Reproduction:** `cd graphonomous && mix benchmark.run`
 
 ---
@@ -696,6 +696,46 @@ Graphonomous v0.2.0 adds 6 node types (episodic, semantic, procedural, temporal,
 | Node type filtering | list_nodes by type | Correct | Yes |
 
 Additionally, the consolidation benchmark (Phase 7) tests new stages 3-6: edge pruning (weak edge survival), co-activation strengthening, and timescale promotion.
+
+---
+
+## Appendix C: v0.3.0 Benchmark Results
+
+Graphonomous v0.3.0 adds 10 continual learning capabilities validated by GraphMemBench (120 scenarios across 15 categories) and 6 new MCP tools (28 total).
+
+### New Capabilities
+
+| Capability | Category | Validated By |
+|------------|----------|-------------|
+| Belief revision (AGM-style) | P0 | GraphMemBench Cat 2 |
+| Conflict-aware consolidation (Stage 4.5) | P0 | GraphMemBench Cat 3 |
+| Two-phase retrieval (Q-value utility) | P1 | GraphMemBench Cat 4 |
+| Budget-aware forgetting + GDPR hard delete | P1 | GraphMemBench Cat 5 |
+| Scoped uncertainty propagation (Wilson intervals) | P2 | GraphMemBench Cat 6 |
+| Procedural metadata + precondition matching | P2 | GraphMemBench Cat 7 |
+| Multi-agent schema prep (agent_id) | P2 | GraphMemBench Cat 8 |
+| Causal edge metadata prep | P3 | GraphMemBench Cat 11 |
+
+### Key Metrics
+
+| Metric | v0.2.0 | v0.3.0 |
+|--------|--------|--------|
+| MCP tools | 22 | 28 |
+| Unit tests | ~240 | ~305 |
+| GraphMemBench scenarios | — | 120/120 pass |
+| κ activation rate | theoretical | >15% validated |
+| LongMemEval SHR | 90.4% | >90.4% |
+| Forgetting precision | — | 1.0 (GDPR compliant) |
+| Competitor adapters | — | 5 (1 live + 4 stubs) |
+
+### GraphMemBench Category Breakdown
+
+| Phase | Categories | Scenarios | Pass Rate |
+|-------|-----------|-----------|-----------|
+| Phase 1 (P0+P1) | 1-5 (Kappa, Belief, Conflict, Retrieval, Forgetting) | 40 | 100% |
+| Phase 2 (P2) | 6-10 (Uncertainty, Procedural, Multi-Agent, Integration, Stress) | 40 | 100% |
+| Phase 3 (P3) | 11-15 (Causal, E2E, Regression, Adapters, Reporting) | 40 | 100% |
+| **Total** | **15** | **120** | **100%** |
 
 ---
 
