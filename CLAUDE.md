@@ -10,7 +10,7 @@ Research arm of [&] Ampersand Box Design. Publishes theoretical foundations, emp
 
 | Protocol | ID | [&] Primitive | Status |
 |---|---|---|---|
-| Continual Learning | OS-001 | `&memory.graph` | v0.1.12 shipped (Graphonomous) |
+| Continual Learning | OS-001 | `&memory.graph` | v0.3.3 shipped (Graphonomous) |
 | Topological Routing (κ) | OS-002 | `&reason.deliberate` | spec complete |
 | Deliberation Orchestrator | OS-003 | `&reason.deliberate` | spec complete |
 | Attention Engine | OS-004 | meta-reasoning | spec complete |
