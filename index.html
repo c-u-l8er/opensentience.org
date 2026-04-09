@@ -909,6 +909,7 @@
                     <li><a href="#verify">Proof</a></li>
                     <li><a href="#architecture">Architecture</a></li>
                     <li><a href="#governance">Governance</a></li>
+                    <li><a href="#get-started">Get Started</a></li>
                     <li><a href="#references">References</a></li>
                     <li><a href="https://docs.opensentience.org">Docs</a></li>
                     <li><a href="https://ampersandboxdesign.com">← [&]</a></li>
@@ -929,9 +930,7 @@
                 <a href="#protocols" class="btn btn-primary"
                     >Read the Protocols</a
                 >
-                <a
-                    href="https://docs.opensentience.org"
-                    class="btn"
+                <a href="https://docs.opensentience.org" class="btn"
                     >Documentation</a
                 >
                 <a
@@ -943,6 +942,26 @@
                     href="https://ampersandboxdesign.com/protocol.html"
                     class="btn"
                     >[&] Protocol Spec</a
+                >
+            </div>
+            <div
+                style="
+                    display: inline-block;
+                    margin: 1.5rem 0 0.5rem;
+                    padding: 0.6rem 1.2rem;
+                    background: var(--accent-glow);
+                    border: 1px solid var(--border-accent);
+                    border-radius: 8px;
+                    font-family: var(--mono);
+                    font-size: 0.82rem;
+                "
+            >
+                <strong style="color: var(--accent)">NEW:</strong> OS-009 PRISM
+                &mdash; self-improving CL benchmark.
+                <a
+                    href="#protocols"
+                    style="color: var(--accent); margin-left: 0.5rem"
+                    >Read more &darr;</a
                 >
             </div>
         </header>
@@ -1186,9 +1205,7 @@
                         service.
                     </p>
                     <div class="paper-tags">
-                        <span class="paper-tag status-draft"
-                            >draft</span
-                        >
+                        <span class="paper-tag status-draft">draft</span>
                         <span class="paper-tag">&govern.identity</span>
                         <span class="paper-tag"
                             >Immune system — self/non-self discrimination</span
@@ -1202,20 +1219,59 @@
                     </div>
                     <h3>Pipeline Enforcement and Quality Gates</h3>
                     <p class="paper-desc">
-                        The enforcement runtime that sits above agents and
-                        below humans. Orchestrates [&] pipelines, enforces
-                        governance contracts, gates execution on epistemic
-                        confidence. Five components: PipelineEnforcer,
-                        QualityGate, ContractValidator, SprintController,
-                        ContextManager.
+                        The enforcement runtime that sits above agents and below
+                        humans. Orchestrates [&] pipelines, enforces governance
+                        contracts, gates execution on epistemic confidence. Five
+                        components: PipelineEnforcer, QualityGate,
+                        ContractValidator, SprintController, ContextManager.
                     </p>
                     <div class="paper-tags">
-                        <span class="paper-tag status-draft"
-                            >draft</span
-                        >
+                        <span class="paper-tag status-draft">draft</span>
                         <span class="paper-tag">&govern.harness</span>
                         <span class="paper-tag"
-                            >Supervisory attentional system — Norman &amp; Shallice (1986)</span
+                            >Supervisory attentional system — Norman &amp;
+                            Shallice (1986)</span
+                        >
+                    </div>
+                </div>
+
+                <div
+                    class="paper-card reveal"
+                    data-primitive="evaluation"
+                    style="
+                        border-color: var(--accent);
+                        box-shadow: 0 0 20px var(--accent-glow);
+                    "
+                >
+                    <div class="paper-number" style="color: var(--accent)">
+                        OS-009 &middot; PRISM
+                    </div>
+                    <h3>Protocol for Rating Iterative System Memory</h3>
+                    <p class="paper-desc">
+                        The first self-improving continual learning benchmark. 9
+                        CL dimensions, 3-layer judging (transcripts &rarr;
+                        dimension judges &rarr; meta-judges), IRT difficulty
+                        calibration, and scenario evolution. Two closed loops
+                        interlocking: PRISM improves the benchmark, Graphonomous
+                        improves the memory. We used it to benchmark ourselves
+                        &mdash; score went from 0.10 to 0.99 in 4 cycles, then
+                        adversarial testing crashed it back to 0.45 and we fixed
+                        real bugs.
+                    </p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec"
+                            >in development</span
+                        >
+                        <span class="paper-tag">&memory + &reason</span>
+                        <span class="paper-tag"
+                            >IRT &middot; Rasch (1960), Lord (1980)</span
+                        >
+                        <span class="paper-tag"
+                            ><a
+                                href="https://prism.opensentience.org"
+                                style="color: inherit"
+                                >prism.opensentience.org</a
+                            ></span
                         >
                     </div>
                 </div>
@@ -1865,6 +1921,159 @@ autonomy: {
                             distributed state sync.
                         </p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════ GET STARTED ═══════════════════ -->
+        <section id="get-started" class="container">
+            <div class="section-label">Prompts</div>
+            <h2>Get started with <em>OpenSentience</em></h2>
+            <p
+                style="
+                    color: var(--text-secondary);
+                    max-width: 680px;
+                    margin-bottom: 2.5rem;
+                "
+            >
+                These prompts work in Claude Code, Codex, or any MCP-capable
+                agent. Copy them to bootstrap the Graphonomous + PRISM dual loop
+                on your own repo.
+            </p>
+
+            <div style="display: grid; gap: 2rem">
+                <div
+                    style="
+                        background: var(--bg-card);
+                        border: 1px solid var(--border);
+                        border-radius: 10px;
+                        padding: 2rem;
+                    "
+                >
+                    <h3
+                        style="
+                            font-family: var(--mono);
+                            font-size: 0.9rem;
+                            color: var(--cyan);
+                            margin-bottom: 1rem;
+                        "
+                    >
+                        Bootstrap Graphonomous Memory
+                    </h3>
+                    <pre
+                        style="
+                            font-family: var(--mono);
+                            font-size: 0.8rem;
+                            color: var(--text);
+                            line-height: 1.6;
+                            white-space: pre-wrap;
+                        "
+                    >
+Start a Graphonomous memory session for this repo.
+1. retrieve(action: "context", query: "session context")
+2. Check active goals: act(action: "manage_goal", goal_operation: "list_goals")
+3. Survey attention: route(action: "attention_survey")
+Then proceed with my task, storing durable knowledge as we go.</pre
+                    >
+                </div>
+
+                <div
+                    style="
+                        background: var(--bg-card);
+                        border: 1px solid var(--border);
+                        border-radius: 10px;
+                        padding: 2rem;
+                    "
+                >
+                    <h3
+                        style="
+                            font-family: var(--mono);
+                            font-size: 0.9rem;
+                            color: var(--accent);
+                            margin-bottom: 1rem;
+                        "
+                    >
+                        Run a PRISM Evaluation Cycle
+                    </h3>
+                    <pre
+                        style="
+                            font-family: var(--mono);
+                            font-size: 0.8rem;
+                            color: var(--text);
+                            line-height: 1.6;
+                            white-space: pre-wrap;
+                        "
+                    >
+Run a PRISM evaluation cycle against your memory system:
+1. config(action: "register_system", name: "graphonomous", transport: "stdio")
+2. compose(action: "byor_register", repo_url: ".", commit_range: "HEAD~20..HEAD")
+3. compose(action: "byor_discover") &mdash; find CL events in commit history
+4. compose(action: "scenarios") &mdash; generate evaluation scenarios
+5. interact(action: "run") for each scenario
+6. observe(action: "judge_transcript") with L2 dimension scoring
+7. reflect(action: "analyze_gaps") to find weak dimensions
+8. Store results: act(action: "store_node") with cycle outcomes
+Repeat. Each cycle sharpens both the benchmark and the memory.</pre
+                    >
+                </div>
+
+                <div
+                    style="
+                        background: var(--bg-card);
+                        border: 1px solid var(--border);
+                        border-radius: 10px;
+                        padding: 2rem;
+                    "
+                >
+                    <h3
+                        style="
+                            font-family: var(--mono);
+                            font-size: 0.9rem;
+                            color: var(--rose);
+                            margin-bottom: 1rem;
+                        "
+                    >
+                        The Self-Improvement Story (Cycles 1&ndash;6)
+                    </h3>
+                    <p
+                        style="
+                            color: var(--text-secondary);
+                            font-size: 0.9rem;
+                            line-height: 1.7;
+                            margin-bottom: 1rem;
+                        "
+                    >
+                        We ran 6 PRISM cycles benchmarking Graphonomous against
+                        itself. Cycle 1 scored 0.10 (cold start). Cycle 2 jumped
+                        to 0.76 after seeding 9 procedural nodes. Cycle 3 hit
+                        0.95 with full 9-dimension coverage. Cycle 4 reached
+                        0.99 with independent judges.
+                    </p>
+                    <p
+                        style="
+                            color: var(--text-secondary);
+                            font-size: 0.9rem;
+                            line-height: 1.7;
+                            margin-bottom: 1rem;
+                        "
+                    >
+                        Then cycle 5 broke it: adversarial nodes with 0.29
+                        confidence outranked correct nodes at 0.80+ because BM25
+                        wasn&rsquo;t confidence-weighted. PRISM caught the
+                        vulnerability. We shipped 3 code fixes. Cycle 6 tested
+                        generalization across business and operations domains
+                        &mdash; vocabulary gaps exposed, more work to do.
+                    </p>
+                    <p
+                        style="
+                            color: var(--text-dim);
+                            font-size: 0.85rem;
+                            font-family: var(--mono);
+                        "
+                    >
+                        That&rsquo;s the dual loop working: the benchmark
+                        improves the system, the system improves the benchmark.
+                    </p>
                 </div>
             </div>
         </section>

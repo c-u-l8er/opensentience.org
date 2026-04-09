@@ -510,6 +510,31 @@ Since LongMemEval's standard evaluation uses GPT-4o as a judge (which requires A
 
 For abstention questions, accuracy is measured by whether the system returns low-confidence results (avg score < 0.15 or < 3 results).
 
+#### LLM Judge Evaluation (P3-Q1)
+
+In addition to the self-contained QA Proxy, we support a full **LLM-as-judge** evaluation pipeline via `mix benchmark.longmemeval --judge`. This aligns with the GPT-4o judge methodology used by competitors (Hindsight, OMEGA, Mastra, agentmemory) and enables direct score comparison.
+
+The judge pipeline reuses the same `Mix.Tasks.Benchmark.LlmJudge` module built for the BEAM benchmark, with a two-stage generate-then-score architecture:
+
+1. **Generator** — given the question and retrieved context, an LLM generates a natural-language answer. The generator prompt includes ability-specific instructions tuned for each of the 5 LongMemEval abilities (information extraction, multi-session reasoning, temporal reasoning, knowledge updates, abstention).
+2. **Judge** — a separate LLM call scores the generated answer against the expected answer on a 3-point scale (1.0 = correct, 0.5 = partial, 0.0 = incorrect).
+
+Generator and judge can use different backends:
+
+| Backend | Env Var | Default Model |
+|---------|---------|---------------|
+| Claude API | `ANTHROPIC_API_KEY` | claude-haiku-4-5 |
+| OpenRouter | `OPENROUTER_API_KEY` + `OPENROUTER_MODEL` | gemma-4-12b-a4b-it:free |
+| LMStudio (local) | `GRAPHONOMOUS_JUDGE_BACKEND=lmstudio` | gemma-4-e4b-it |
+
+Split generator/judge example (generate locally, judge in cloud):
+```
+GRAPHONOMOUS_JUDGE_BACKEND=lmstudio GRAPHONOMOUS_JUDGE_SCORER=openrouter \
+  mix benchmark.longmemeval --judge --limit 50
+```
+
+Judge results are reported as **Judge QA Accuracy** alongside the proxy score, both in aggregate and per-ability breakdown.
+
 ### 3.9.3 Results (v0.3.3 — nomic-embed-text-v2-moe, 500 Questions)
 
 | Metric | Value |
@@ -573,7 +598,7 @@ PPR is flag-gated off by default. LongMemEval queries typically retrieve from 1�
 | Letta / MemGPT | — | 65.0% | Tiered memory |
 | GPT-4 128K (full ctx) | — | 63.5% | Full context, no memory system |
 
-**Important context:** Competitor QA scores use GPT-4o as an answer-quality judge, while our QA Proxy score uses keyword recall and session hit rates. These metrics are not directly comparable — our QA Proxy systematically underestimates true QA accuracy because keyword matching is stricter than semantic judgment. The **Session Hit Rate (98.7%)** is the more meaningful metric for comparing memory retrieval systems, as it isolates the memory system's contribution from the reader LLM's synthesis ability. By SHR, Graphonomous outperforms all competitors for which SHR data is available.
+**Important context:** Competitor QA scores use GPT-4o as an answer-quality judge, while our default QA Proxy score uses keyword recall and session hit rates. These metrics are not directly comparable — our QA Proxy systematically underestimates true QA accuracy because keyword matching is stricter than semantic judgment. Running with `--judge` enables LLM-judged scoring that is directly comparable to competitor methodology. The **Session Hit Rate (98.7%)** is the more meaningful metric for comparing memory retrieval systems, as it isolates the memory system's contribution from the reader LLM's synthesis ability. By SHR, Graphonomous outperforms all competitors for which SHR data is available.
 
 ### 3.9.5 Embedder Progression
 
@@ -626,7 +651,7 @@ Results are written to `graphonomous/benchmark_results/longmemeval.json`.
 - [x] Implement graph algorithms library (Dijkstra, DAG, matching, Louvain, incremental SCC, triangles)
 - [x] Learned abstention threshold (96.7% accuracy, 29/30 correct)
 - [ ] PPR retrieval boost (implemented but flag-gated off — net negative on LongMemEval, may help denser graphs)
-- [ ] LLM judge evaluation (P3-Q1, planned)
+- [x] LLM judge evaluation (P3-Q1, `mix benchmark.longmemeval --judge`)
 - [ ] Dual timestamps (documentDate vs eventDate) for temporal reasoning
 - [ ] Single-timescale ablation (remove multi-timescale consolidation)
 - [ ] Compare with Hindsight's retain/recall/reflect API on same corpus
