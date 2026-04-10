@@ -9,20 +9,31 @@ runtime governance layer of the [&] Protocol ecosystem.
 
 ## What Is OpenSentience?
 
-OpenSentience is **not a product**. It is two things:
+OpenSentience is **not a product**. It is three things:
 
 1. **A research organization** that publishes cognitive protocols — formal
    specifications grounding AI agent architecture in cognitive science.
 2. **A thin governance shim** (`open_sentience` hex package) that enforces
    permission, lifecycle, and autonomy policies on OTP-supervised agents.
+3. **The home of two cross-cutting protocols** — OS-009 PRISM (diagnostic
+   benchmark) and OS-010 PULSE (loop manifest standard) — that sit above the
+   eight cognitive primitives and turn the [&] portfolio into a measurable,
+   composable, accountable agent substrate.
 
-The research output is eight numbered protocols (OS-001 through OS-008).
-The runtime output is the Elixir package implementing OS-006 (governance shim)
-and OS-008 (agent harness).
+The research output is **ten numbered protocols** organized in two layers:
+- **Cognitive primitives** (OS-001 through OS-008) — one capability each
+- **Cross-cutting protocols** (OS-009 PRISM, OS-010 PULSE) — diagnostic + temporal layers above the primitives
+
+The runtime output includes the Elixir governance package implementing OS-006
+(shim) and OS-008 (harness), the **PRISM benchmark engine** (`/PRISM/`,
+Elixir/OTP, Fly.io, 6 MCP machines), and the **PULSE manifest standard**
+(`/PULSE/`, JSON Schema + reference manifests).
 
 ---
 
-## The Eight Cognitive Protocols
+## The Ten Protocols
+
+### Cognitive Primitives (OS-001 — OS-008)
 
 | Protocol | Name | Cognitive Basis | Implemented By |
 |----------|------|-----------------|----------------|
@@ -35,9 +46,19 @@ and OS-008 (agent harness).
 | OS-007 | Adversarial Robustness | Immune system | OpenSentience security module |
 | OS-008 | Agent Harness | Supervisory attentional system | OpenSentience harness module |
 
-Each protocol maps a well-established cognitive science finding to a concrete
-software architecture. The protocols are independent but composable — an agent
-can adopt any subset.
+### Cross-Cutting Protocols (OS-009, OS-010)
+
+| Protocol | Name | Layer | Implemented By |
+|----------|------|-------|----------------|
+| **OS-009** | **PRISM** — Protocol for Rating Iterative System Memory | **Diagnostic algebra** (measures loops over time) | `/PRISM/` Elixir/OTP, Fly.io, 6 MCP machines, [prism.opensentience.org](https://prism.opensentience.org) |
+| **OS-010** | **PULSE** — Protocol for Uniform Loop State Exchange | **Temporal algebra** (declares how loops cycle) | `/PULSE/` manifest standard, JSON Schema, reference manifests, [pulse.opensentience.org](https://pulse.opensentience.org) |
+
+Each cognitive primitive maps a well-established cognitive science finding to a
+concrete software architecture. The cross-cutting protocols sit above them:
+PRISM measures how well a closed memory loop performs over time; PULSE
+declares how any loop in the [&] ecosystem cycles, nests, and signals across
+boundaries. Both are independent of one another and independent of [&] — a
+system may adopt one without the others.
 
 ---
 
@@ -98,6 +119,9 @@ research
 faq
 spec/README
 spec/OS-008-HARNESS
+spec/OS-009-PRISM-SPECIFICATION
+spec/OS-010-PULSE-SPECIFICATION
+spec/OS-E001-EMPIRICAL-EVALUATION
 ```
 
 ```{toctree}
@@ -125,7 +149,7 @@ If you are new to OpenSentience, follow this path:
 2. **positioning** — where OpenSentience fits in the agent governance landscape
 3. **architecture** — how the governance shim is built (OTP internals)
 4. **quickstart** — install the hex package and run your first governed agent
-5. **ecosystem-overview** — how all eight protocols connect across the [&] ecosystem
+5. **ecosystem-overview** — how all ten protocols connect across the [&] ecosystem
 6. **harness-engineering** — the emerging discipline of harness design and OS-008's position
 7. **runtime-walkthrough** — follow a concrete agent through governance + harness orchestration
 8. **competitive-landscape** — how OpenSentience compares to alternative approaches
@@ -135,8 +159,11 @@ If you are new to OpenSentience, follow this path:
 12. **skills/** — hands-on implementation skills for the governance shim
 
 For deep protocol specifics:
-- **spec/README** — the full technical specification (OS-001 through OS-007)
+- **spec/README** — the full technical specification (all ten protocols)
 - **spec/OS-008-HARNESS** — the Agent Harness Protocol specification
+- **spec/OS-009-PRISM-SPECIFICATION** — PRISM diagnostic benchmark protocol
+- **spec/OS-010-PULSE-SPECIFICATION** — PULSE loop manifest standard
+- **spec/OS-E001-EMPIRICAL-EVALUATION** — empirical evaluation of topology-aware continual learning
 
 ---
 
@@ -157,6 +184,37 @@ OS-007 Security:  "Is this agent under attack?"
 
 All three log to the same append-only audit trail, creating a unified
 compliance record from protocol to permission to pipeline.
+
+---
+
+## The Three-Protocol Stack
+
+Above the cognitive primitives, OpenSentience publishes three sibling protocols
+that together turn the [&] portfolio into a measurable, composable, accountable
+agent substrate:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  PRISM (OS-009) — measures loops over time   diagnostic │
+├──────────────────────────────────────────────────────────┤
+│  PULSE (OS-010) — declares loops + signals    temporal  │
+├──────────────────────────────────────────────────────────┤
+│  [&] Protocol     — composes capabilities     structural│
+└──────────────────────────────────────────────────────────┘
+```
+
+| Layer  | Question                                          | Artifact                           |
+|--------|---------------------------------------------------|------------------------------------|
+| [&]    | What can each agent do, and how do they compose?  | `*.ampersand.json`                 |
+| PULSE  | How do their processes cycle and signal each other? | `*.pulse.json` (loop manifest)   |
+| PRISM  | How well do those cycles actually work over time? | Diagnostic reports + leaderboards  |
+
+A loop is **PULSE-conforming** if its manifest validates against
+`pulse-loop-manifest.v0.1.json` and its runtime passes the 12-test conformance
+suite. A system is **PRISM-evaluable** automatically once it is PULSE-conforming
+— PRISM's `compose` phase reads the manifest, injects scenarios at the declared
+`retrieve` boundary, and observes outcomes via the declared `learn` phase.
+Adoption order is typically [&] → PULSE → PRISM.
 
 ---
 
@@ -184,11 +242,15 @@ autonomy control, pipeline enforcement, and audit logging around it.
 ## Founding Thesis
 
 OpenSentience exists because intelligence without governance is generation
-without accumulation. The eight protocols formalize what structured accumulation
+without accumulation. The ten protocols formalize what structured accumulation
 requires: memory that consolidates, routing that detects cycles, deliberation
 that resolves conflict, attention that prioritizes, resources that adapt,
-governance that enforces boundaries, security that detects threats, and a
-harness that orchestrates the entire pipeline.
+governance that enforces boundaries, security that detects threats, a harness
+that orchestrates the entire pipeline, **diagnostics that measure whether the
+loop actually learns** (PRISM), and a **temporal manifest** that lets every
+loop in the ecosystem declare how it cycles and signals (PULSE).
 
 The shim is deliberately thin. Governance should cost less than 1% of the
-system it governs.
+system it governs. PULSE is a manifest standard with no required runtime.
+PRISM runs as a separate benchmark engine that any system can opt into via
+its PULSE manifest.

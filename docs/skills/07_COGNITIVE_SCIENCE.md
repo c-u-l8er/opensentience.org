@@ -1,7 +1,10 @@
 # Skill 07 — Cognitive Science Foundations
 
-> Research grounding for each of the eight protocols: the theories, the papers,
-> the design constraints, and the open questions.
+> Research grounding for each of the ten protocols: the theories, the papers,
+> the design constraints, and the open questions. Eight cognitive primitives
+> grounded in cognitive science / neuroscience, plus two cross-cutting
+> protocols (OS-009 PRISM, OS-010 PULSE) grounded in psychometrics and
+> closed-loop control theory.
 
 ---
 
@@ -163,6 +166,107 @@ and working memory updating (monitoring and revising held information).
 
 ---
 
+## OS-007: Adversarial Robustness — Self/Non-Self Discrimination
+
+**Theoretical grounding:** Adaptive immunity theory (Burnet 1959; Janeway 1989).
+
+**Theory:** Biological immune systems distinguish self from non-self through
+a combination of innate pattern recognition and adaptive memory. The same
+architecture maps cleanly to agent threat detection: known-good behavior is
+"self," novel attack patterns are "non-self," and the system must learn to
+recognize new threats without misclassifying legitimate variation.
+
+**Design constraints for OS-007:**
+- Five threat categories with explicit detection rules
+- Defense protocols must be reversible (quarantine before destroy)
+- Integration with OS-006 for permission revocation and OS-008 for circuit
+  breaking — the immune response is enacted by the governance and harness
+  layers
+
+---
+
+## OS-008: Supervisory Attentional System
+
+**Key paper:** Norman & Shallice (1986). "Attention to action: Willed and
+automatic control of behavior."
+
+**Theory:** Routine behavior runs automatically through contention scheduling
+between learned action schemas. A *supervisory attentional system* intervenes
+when novel, dangerous, or constraint-violating situations arise. The
+supervisory system does not execute behavior directly — it modulates which
+schemas are allowed to run.
+
+**Design constraints for OS-008:**
+- The harness is the runtime that calls the agent, not a tool the agent calls
+- It enforces pipeline ordering, quality gates, sprint contracts, and context
+  management
+- It intervenes when prerequisites are not met or when quality thresholds are
+  not crossed — but it does not generate the agent's outputs
+
+---
+
+## OS-009: PRISM — Meta-Cognition + Psychometrics
+
+**Key references:**
+- Rasch, G. (1960). "Probabilistic models for some intelligence and attainment
+  tests." (Item Response Theory foundation)
+- Lord, F. M. (1980). "Applications of item response theory to practical testing
+  problems."
+- Green, D. M. & Swets, J. A. (1966). "Signal detection theory and
+  psychophysics."
+- Flavell, J. H. (1979). "Metacognition and cognitive monitoring." (Meta-cognition)
+
+**Theory:** Measuring whether a system *learns* (rather than merely *answers*)
+requires the same toolkit psychometricians built for measuring human learning:
+calibrated item difficulty, separation of item-quality from learner-quality
+parameters, and detection of response bias. PRISM applies IRT to scenario
+calibration and signal detection theory to dimension scoring, then closes the
+meta-cognitive loop by reflecting on its own scenarios and evolving them.
+
+**Design constraints for OS-009:**
+- 9 continual-learning dimensions (retention, plasticity, transfer,
+  contradiction handling, etc.) — each with calibrated scoring rubrics
+- 4-phase evaluation loop: compose → interact → observe → reflect → diagnose
+  (the diagnostic must itself be a closed loop)
+- BYOR ingestion — point PRISM at any repo and it generates scenarios
+- IRT calibration of scenario difficulty across cycles
+- **PULSE-aware:** PRISM's `interact` phase reads any system's PULSE manifest
+  at runtime and drives the inner loop through its declared phases
+
+---
+
+## OS-010: PULSE — Closed-Loop Control Theory + Temporal Cognition
+
+**Key references:**
+- Wiener, N. (1948). "Cybernetics: or Control and Communication in the Animal
+  and the Machine." (Closed-loop control foundation)
+- Allen, J. F. (1983). "Maintaining knowledge about temporal intervals."
+  (Interval algebra)
+- CloudEvents v1 specification (CNCF, 2019). (Event envelope standard)
+
+**Theory:** Wiener's cybernetics established that intelligent behavior — in
+animals or machines — requires closed feedback loops with explicit phases:
+sense, decide, act, observe, adjust. Allen's interval algebra formalized the
+13 possible relationships between temporal intervals, providing a vocabulary
+for describing how loops can nest, overlap, and signal one another. PULSE
+combines these into a manifest standard: every loop in the [&] portfolio
+declares its phases in the same vocabulary, and cross-loop signals use
+CloudEvents v1 envelopes so that loops can compose without bespoke adapters.
+
+**Design constraints for OS-010:**
+- 5 canonical phase kinds (`retrieve`, `route`, `act`, `learn`, `consolidate`)
+  cover the closed-loop control archetype; custom phases extend it without
+  breaking the schema
+- 5 canonical cross-loop tokens (`TopologyContext`, `DeliberationResult`,
+  `OutcomeSignal`, `ReputationUpdate`, `ConsolidationEvent`) cover the
+  observed inter-system signaling needs
+- 7 invariants (phase atomicity, feedback immutability, append-only audit,
+  kappa routing, quorum before commit, outcome grounding, trace ID
+  propagation) encode the structural correctness conditions
+- A 12-test conformance suite makes "PULSE-conforming" objectively verifiable
+
+---
+
 ## Open Research Questions
 
 1. **Cross-protocol interaction:** How do attention biases (OS-004) affect
@@ -185,5 +289,17 @@ and working memory updating (monitoring and revising held information).
    flag agents whose audit trails show increasing denial rates?
 
 6. **Temporal cognition:** Is time-awareness a distinct cognitive capability
-   that warrants a seventh protocol, or is it a cross-cutting concern
-   addressed by existing protocols?
+   that warrants its own protocol, or is it a cross-cutting concern? *Status:*
+   addressed by OS-010 PULSE as a temporal algebra (loop manifest standard)
+   sitting above the cognitive primitives — a cross-cutting protocol rather
+   than a ninth cognitive primitive.
+
+7. **PRISM scenario evolution (OS-009):** How aggressively should PRISM evolve
+   scenarios between cycles? Too aggressive and the system optimizes for
+   adversarial noise; too conservative and learning improvement plateaus.
+
+8. **PULSE nesting depth (OS-010):** What is the practical maximum nesting
+   depth before cross-loop signal volume becomes a substrate burden? The
+   triple-loop case (PRISM → Graphonomous → Deliberation) is well-understood;
+   four- and five-loop nesting (e.g., adding OS-008 Harness as an outer
+   layer) is an open empirical question.

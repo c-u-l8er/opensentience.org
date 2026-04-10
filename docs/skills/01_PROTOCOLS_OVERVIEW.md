@@ -1,16 +1,28 @@
-# Skill 01 — The Eight Cognitive Protocols
+# Skill 01 — The Ten Protocols
 
-> OS-001 through OS-008: what each protocol specifies, which product
-> implements it, and the cognitive science behind it.
+> OS-001 through OS-010: what each protocol specifies, which product
+> implements it, and the cognitive science behind it. Eight cognitive
+> primitives plus two cross-cutting protocols (PRISM diagnostic, PULSE
+> temporal).
 
 ---
 
 ## Overview
 
-OpenSentience publishes eight numbered protocols. Each formalizes a cognitive
-capability required for governed, self-improving AI agents. The protocols
-are independent specifications — they can be adopted individually or
-composed together.
+OpenSentience publishes ten numbered protocols organized in two layers:
+
+- **Cognitive primitives (OS-001 — OS-008)** — eight individual capabilities,
+  each grounded in a cognitive science thread.
+- **Cross-cutting protocols (OS-009 PRISM, OS-010 PULSE)** — two sibling
+  protocols that sit above the cognitive primitives and above the [&]
+  structural composition layer. PULSE declares how every loop in the
+  ecosystem cycles, nests, and signals; PRISM measures how well those loops
+  actually learn over time.
+
+The protocols are independent specifications — they can be adopted
+individually or composed together. A system may publish a PULSE manifest
+without implementing any cognitive primitive, and PRISM can benchmark any
+PULSE-conforming system without bespoke per-system integration.
 
 ---
 
@@ -142,6 +154,96 @@ self-regulate — it either does nothing or does everything.
 
 ---
 
+## OS-007: Adversarial Robustness
+
+**Cognitive basis:** Immune system — self/non-self discrimination
+
+**What it specifies:**
+- Five threat categories: prompt injection, model poisoning, side-channel,
+  identity spoofing, resource exhaustion
+- Detection rules per category
+- Defense protocols: quarantine, circuit-break, escalate
+- Integration with OS-006 for permission revocation and OS-008 for circuit
+  breaking
+
+**Implemented by:** OpenSentience security module (draft)
+
+---
+
+## OS-008: Agent Harness
+
+**Cognitive basis:** Supervisory attentional system (Norman & Shallice 1986)
+
+**What it specifies:**
+- Pipeline ordering enforcement (retrieve → route → act → learn)
+- Quality gates between pipeline stages
+- Sprint contracts: bounded execution with explicit goals and success criteria
+- Context management: 60% threshold, compaction, Graphonomous overflow
+- Generator-evaluator separation for adversarial grading
+
+**Implemented by:** OpenSentience harness module (draft)
+
+---
+
+## OS-009: PRISM — Protocol for Rating Iterative System Memory
+
+**Cognitive basis:** Meta-cognition + psychometrics (Item Response Theory,
+signal detection theory)
+
+**What it specifies:**
+- 9 continual-learning dimensions (retention, plasticity, transfer,
+  contradiction handling, etc.)
+- 4-phase evaluation loop: compose → interact → observe → reflect → diagnose
+- BYOR (Bring Your Own Repo) ingestion — point PRISM at any repo and it will
+  generate scenarios
+- IRT calibration of scenario difficulty
+- Leaderboards, regression detection, fix suggestions
+- **PULSE-aware:** reads any system's PULSE manifest at runtime and injects
+  scenarios at the declared `retrieve` boundary, observing outcomes via the
+  declared `learn` phase
+
+**Design constraint:** A diagnostic that measures *learning over time* must
+itself be a closed loop — it must reflect on its own scenarios and evolve
+them based on what the inner loop fails on. Hence the 4-phase evaluation
+structure.
+
+**Implemented by:** `/PRISM/` Elixir/OTP codebase, Fly.io, 6 MCP machines
+(`compose`, `interact`, `observe`, `reflect`, `diagnose`, `config`),
+[prism.opensentience.org](https://prism.opensentience.org)
+
+---
+
+## OS-010: PULSE — Protocol for Uniform Loop State Exchange
+
+**Cognitive basis:** Closed-loop control theory (Wiener cybernetics 1948) +
+temporal cognition (Allen interval algebra 1983)
+
+**What it specifies:**
+- Loop manifest schema (JSON Schema): `pulse-loop-manifest.v0.1.json`
+- 5 canonical phase kinds: `retrieve`, `route`, `act`, `learn`, `consolidate`
+  (+ custom phases via `custom_kind`)
+- 5 canonical cross-loop tokens (CloudEvents v1 envelopes):
+  `TopologyContext`, `DeliberationResult`, `OutcomeSignal`, `ReputationUpdate`,
+  `ConsolidationEvent`
+- 6 cadence types: `event`, `periodic`, `streaming`, `idle`,
+  `cross_loop_signal`, `manual`
+- 6 substrate slots: `memory`, `policy`, `audit`, `auth`, `transport`, `time`
+- 7 invariants: `phase_atomicity`, `feedback_immutability`,
+  `append_only_audit`, `kappa_routing`, `quorum_before_commit`,
+  `outcome_grounding`, `trace_id_propagation`
+- 12-test conformance suite — a runtime is **PULSE-conforming** when its
+  manifest validates and all 12 tests pass
+
+**Design constraint:** Loops must be declarable in a vocabulary that is
+independent of their implementation language, runtime, or cognitive
+architecture. The same manifest schema must work for a SQLite-backed
+knowledge graph, a Cloudflare Worker, and a Phoenix LiveView.
+
+**Implemented by:** `/PULSE/` directory — JSON Schema + 11 reference
+manifests covering every [&] portfolio loop, [pulse.opensentience.org](https://pulse.opensentience.org)
+
+---
+
 ## Protocol-to-Product Map
 
 | Protocol | Primary Implementation | Secondary |
@@ -152,6 +254,10 @@ self-regulate — it either does nothing or does everything.
 | OS-004 | Graphonomous | — |
 | OS-005 | Graphonomous | Agentelic |
 | OS-006 | open_sentience | — |
+| OS-007 | OpenSentience security module | — |
+| OS-008 | OpenSentience harness module | — |
+| **OS-009** | **`/PRISM/` Elixir/OTP** | — |
+| **OS-010** | **`/PULSE/` manifest standard** | Every portfolio product publishes a conforming manifest |
 
 ---
 
@@ -165,4 +271,8 @@ self-regulate — it either does nothing or does everything.
    consolidation events (OS-001)?
 4. **Multi-agent kappa:** How does topological routing (OS-002) work across
    agent boundaries?
-5. **Temporal protocols:** Should time-awareness be a seventh protocol?
+5. **PRISM scenario evolution:** How aggressively should PRISM evolve scenarios
+   between cycles? Too aggressive and the system optimizes for adversarial
+   noise; too conservative and improvement plateaus.
+6. **PULSE nesting depth:** What is the practical maximum nesting depth before
+   the cross-loop signal volume becomes a substrate burden?

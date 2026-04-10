@@ -9,9 +9,13 @@
 
 ## Quick Orientation
 
-OpenSentience is the **governance layer** for the [&] Protocol ecosystem.
-It publishes eight cognitive protocols (OS-001 through OS-008) and ships one
-runtime artifact — the `open_sentience` hex package implementing OS-006.
+OpenSentience is the **governance, diagnostic, and temporal layer** for the [&]
+Protocol ecosystem. It publishes ten numbered protocols organized in two
+layers — eight cognitive primitives (OS-001 through OS-008) and two
+cross-cutting protocols (OS-009 PRISM diagnostic, OS-010 PULSE temporal) — and
+ships three runtime artifacts: the `open_sentience` hex package implementing
+OS-006 governance shim and OS-008 agent harness, the **PRISM benchmark engine**
+(`/PRISM/`), and the **PULSE manifest standard** (`/PULSE/`).
 
 The shim wraps OTP-supervised agents with:
 - **Permissions** — what the agent may access
@@ -37,7 +41,7 @@ Every governed agent follows this rhythm:
 
 | File | What It Teaches |
 |------|----------------|
-| [01_PROTOCOLS_OVERVIEW.md](01_PROTOCOLS_OVERVIEW.md) | The eight cognitive protocols and their cognitive science grounding |
+| [01_PROTOCOLS_OVERVIEW.md](01_PROTOCOLS_OVERVIEW.md) | The ten protocols (eight cognitive primitives + OS-009 PRISM + OS-010 PULSE) and their cognitive science grounding |
 | [02_AGENT_LIFECYCLE.md](02_AGENT_LIFECYCLE.md) | State machine: installed through removed |
 | [03_PERMISSIONS.md](03_PERMISSIONS.md) | Permission taxonomy, evaluation order, glob patterns |
 | [04_AUTONOMY_LEVELS.md](04_AUTONOMY_LEVELS.md) | Graduated autonomy: observe, advise, act |
@@ -79,6 +83,10 @@ Every governed agent follows this rhythm:
 | OS-004 | Attention Engine | Survey/triage/dispatch cycle, salience scoring, goal bias |
 | OS-005 | Model Tier Adaptation | local_small / local_large / cloud_frontier, escalation rules |
 | OS-006 | Agent Governance Shim | Permissions, lifecycle, autonomy, audit |
+| OS-007 | Adversarial Robustness | Threat detection, identity verification, circuit breakers |
+| OS-008 | Agent Harness | Pipeline ordering, quality gates, sprint contracts, context management |
+| **OS-009** | **PRISM** — Protocol for Rating Iterative System Memory | 9 CL dimensions, 4-phase evaluation loop (compose → interact → observe → reflect → diagnose), BYOR, IRT calibration |
+| **OS-010** | **PULSE** — Protocol for Uniform Loop State Exchange | Loop manifest standard, 5 canonical phase kinds, 5 cross-loop tokens (CloudEvents v1), 7 invariants, 12-test conformance suite |
 
 ---
 

@@ -2,7 +2,7 @@
 
 This document is the research-oriented companion for the OpenSentience protocol suite.
 
-Its purpose is to explain **why each cognitive protocol is grounded in a specific area of cognitive science**, how that grounding constrains design, and which open questions remain. Each numbered protocol (OS-001 through OS-008) maps to a research thread that provides both theoretical justification and falsifiable design constraints.
+Its purpose is to explain **why each protocol is grounded in a specific area of cognitive science**, how that grounding constrains design, and which open questions remain. Each numbered protocol (OS-001 through OS-010) maps to a research thread that provides both theoretical justification and falsifiable design constraints.
 
 This is not a literature review. It is a structured overview of the research threads that support the protocol design.
 
@@ -10,9 +10,9 @@ This is not a literature review. It is a structured overview of the research thr
 
 ## Executive Summary
 
-OpenSentience publishes eight numbered protocols, each defining a cognitive primitive for machine intelligence. Every protocol is grounded in an established area of cognitive science, neuroscience, or systems biology. The grounding is not decorative — it provides design constraints that shape implementation and generate testable predictions.
+OpenSentience publishes ten numbered protocols organized in two layers: eight cognitive primitives (OS-001 through OS-008) defining individual cognitive capabilities, and two cross-cutting protocols (OS-009 PRISM diagnostic, OS-010 PULSE temporal) that sit above them. Every protocol is grounded in an established area of cognitive science, neuroscience, systems biology, control theory, or psychometrics. The grounding is not decorative — it provides design constraints that shape implementation and generate testable predictions.
 
-The eight research threads are:
+The ten research threads are:
 
 | # | Protocol | Research Thread | Core Reference |
 |---|----------|----------------|----------------|
@@ -24,8 +24,10 @@ The eight research threads are:
 | 6 | OS-006: Governance Shim | Executive function | Miyake et al. 2000 |
 | 7 | OS-007: Adversarial Robustness | Immune system | Adaptive immunity theory |
 | 8 | OS-008: Agent Harness | Supervisory attentional system | Norman & Shallice 1986 |
+| 9 | **OS-009: PRISM** | Meta-cognition + psychometrics | Item Response Theory (Rasch 1960; Lord 1980); Signal Detection Theory (Green & Swets 1966) |
+| 10 | **OS-010: PULSE** | Closed-loop control theory + temporal cognition | Wiener cybernetics (1948); Allen interval algebra (1983); CloudEvents v1 |
 
-The common pattern: each protocol takes a well-understood biological or cognitive mechanism, identifies the architectural constraint it implies, and translates that constraint into a protocol-level requirement.
+The common pattern: each protocol takes a well-understood biological, cognitive, or control-theoretic mechanism, identifies the architectural constraint it implies, and translates that constraint into a protocol-level requirement.
 
 ---
 
@@ -428,29 +430,33 @@ Can the harness learn to harness more effectively? If quality gate failures are 
 
 ## 10. Cross-Cutting Theme: The Protocol Stack as Cognitive Architecture
 
-The eight protocols are not independent modules — they form a layered cognitive architecture where each protocol depends on and constrains the others.
+The ten protocols are not independent modules — they form a layered cognitive architecture where each protocol depends on and constrains the others. The eight cognitive primitives (OS-001 through OS-008) are wrapped by two cross-cutting protocols (OS-009 PRISM and OS-010 PULSE) that sit above them and above the [&] structural composition layer.
 
 ```
-OS-008 (Harness)           — orchestrates everything below
+OS-009 PRISM (diagnostic)  — measures how well any closed loop learns over time
+OS-010 PULSE (temporal)    — declares how every loop in the ecosystem cycles
+                              and signals; PRISM reads PULSE manifests at runtime
   |
-  +-- OS-006 (Governance)  — permissions, lifecycle, audit
-  |
-  +-- OS-004 (Attention)   — what to focus on
-  |     |
-  |     +-- OS-002 (Routing) — how to traverse the knowledge graph
-  |           |
-  |           +-- OS-001 (Learning) — the knowledge graph itself
-  |
-  +-- OS-003 (Deliberation) — how to resolve contested decisions
-  |
-  +-- OS-005 (Model Tiers)  — how much compute to spend
-  |
-  +-- OS-007 (Robustness)   — how to defend against adversarial inputs
+  +-- OS-008 (Harness)           — orchestrates everything below
+        |
+        +-- OS-006 (Governance)  — permissions, lifecycle, audit
+        |
+        +-- OS-004 (Attention)   — what to focus on
+        |     |
+        |     +-- OS-002 (Routing) — how to traverse the knowledge graph
+        |           |
+        |           +-- OS-001 (Learning) — the knowledge graph itself
+        |
+        +-- OS-003 (Deliberation) — how to resolve contested decisions
+        |
+        +-- OS-005 (Model Tiers)  — how much compute to spend
+        |
+        +-- OS-007 (Robustness)   — how to defend against adversarial inputs
 ```
 
-This layering is itself a research claim: that machine cognition benefits from the same kind of functional decomposition found in biological cognitive architectures. The protocols are separable (unity/diversity, per Miyake et al. 2000), but they share a common substrate — the knowledge graph (OS-001) and the governance layer (OS-006).
+This layering is itself a research claim: that machine cognition benefits from the same kind of functional decomposition found in biological cognitive architectures, *and* that those architectures need a temporal manifest (PULSE) and a learning-quality benchmark (PRISM) sitting above the cognitive primitives to be measurable, composable, and accountable. The cognitive protocols are separable (unity/diversity, per Miyake et al. 2000), but they share a common substrate — the knowledge graph (OS-001), the governance layer (OS-006), and the PULSE manifest contract that lets every loop in the ecosystem describe its temporal structure in the same vocabulary.
 
-The strongest evidence for this architecture is not theoretical but practical: the [&] portfolio companies implement these protocols independently, yet they compose into coherent systems because the protocol interfaces are well-defined.
+The strongest evidence for this architecture is not theoretical but practical: the [&] portfolio companies implement these protocols independently, yet they compose into coherent systems because the protocol interfaces are well-defined and every product publishes a PULSE-conforming loop manifest. PRISM is the canonical consumer of those manifests but not the only one — Delegatic governance, FleetPrompt reputation, and OS-008 harness orchestration all read PULSE manifests at runtime.
 
 ---
 
@@ -459,10 +465,13 @@ The strongest evidence for this architecture is not theoretical but practical: t
 If you are exploring the repository through the lens of this research overview, a useful order is:
 
 1. This document — research grounding and open questions
-2. `docs/spec/README.md` — full protocol specification (OS-001 through OS-007)
+2. `docs/spec/README.md` — full protocol specification (OS-001 through OS-010)
 3. `docs/spec/OS-008-HARNESS.md` — agent harness protocol
-4. `docs/architecture.md` — system architecture
-5. `docs/faq.md` — frequently asked questions
+4. `docs/spec/OS-009-PRISM-SPECIFICATION.md` — PRISM diagnostic benchmark protocol
+5. `docs/spec/OS-010-PULSE-SPECIFICATION.md` — PULSE loop manifest standard
+6. `docs/spec/OS-E001-EMPIRICAL-EVALUATION.md` — empirical evaluation of topology-aware continual learning
+7. `docs/architecture.md` — system architecture
+8. `docs/faq.md` — frequently asked questions
 
 This path moves from: theory, to protocol, to architecture, to practical concerns.
 

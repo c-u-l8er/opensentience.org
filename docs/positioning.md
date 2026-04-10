@@ -6,9 +6,9 @@
 
 ## 1. Introduction
 
-OpenSentience is the research arm and runtime governance layer of the [&] Protocol ecosystem. It publishes eight numbered cognitive protocols (OS-001 through OS-008), each grounded in cognitive science, and ships a single thin runtime artifact: the `open_sentience` hex package implementing OS-006 (Agent Governance Shim).
+OpenSentience is the research arm and runtime governance layer of the [&] Protocol ecosystem. It publishes ten numbered protocols organized in two layers: eight cognitive primitives (OS-001 through OS-008), each grounded in cognitive science, and two cross-cutting protocols — **OS-009 PRISM** (diagnostic algebra that measures how well a closed memory loop actually learns over time) and **OS-010 PULSE** (temporal algebra that lets every loop in the ecosystem declare how it cycles, nests, and signals across boundaries). It ships three runtime artifacts: the `open_sentience` hex package implementing OS-006 (Agent Governance Shim), the **PRISM benchmark engine** (`/PRISM/`, Elixir/OTP, Fly.io, 6 MCP machines, [prism.opensentience.org](https://prism.opensentience.org)), and the **PULSE manifest standard** (`/PULSE/`, JSON Schema + reference manifests, [pulse.opensentience.org](https://pulse.opensentience.org)).
 
-OpenSentience is not a product. It is a research organization that produces specifications, cognitive science grounding, and one enforcement shim. The [&] portfolio companies implement the protocols. OpenSentience defines them, validates their theoretical foundations, and provides the minimal governance layer that ties them together at runtime.
+OpenSentience is not a product. It is a research organization that produces specifications, cognitive science grounding, and three enforcement/diagnostic artifacts. The [&] portfolio companies implement the protocols. OpenSentience defines them, validates their theoretical foundations, and provides the minimal governance, diagnostic, and temporal layers that tie them together at runtime.
 
 The problem it addresses is straightforward: the agent ecosystem has mature tools for building agents but no standard primitives for governing them.
 
@@ -51,6 +51,16 @@ OpenSentience occupies a specific layer: between capability declaration and capa
 │              (monitoring, approval, policy)                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
+│   OS-009: PRISM  (diagnostic — measures loops over time)    │
+│   9 CL dimensions, BYOR, IRT, leaderboards                  │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   OS-010: PULSE  (temporal — declares how loops cycle)      │
+│   Loop manifest standard, 5 phase kinds, 5 tokens           │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
 │   OS-008: Agent Harness                                     │
 │   Pipeline enforcement, quality gates, sprint contracts     │
 │                                                             │
@@ -61,9 +71,9 @@ OpenSentience occupies a specific layer: between capability declaration and capa
 │                                                             │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│   [&] Protocol                                              │
-│   Capability declaration: &memory, &reason, &time,          │
-│   &space, &govern  (ampersand.json)                         │
+│   [&] Protocol  (structural — composes capabilities)        │
+│   &memory, &reason, &time, &space, &govern                  │
+│   (ampersand.json)                                          │
 │                                                             │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
@@ -80,6 +90,13 @@ OpenSentience occupies a specific layer: between capability declaration and capa
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+PRISM and PULSE sit **above** OS-008 in this stack, but they are conceptually
+sibling cross-cutting protocols rather than another layer of enforcement: PULSE
+declares how every loop in the ecosystem cycles, nests, and signals; PRISM
+reads any PULSE-conforming manifest and benchmarks the inner loop's learning
+quality. Both are independent of [&], independent of OS-006/OS-007/OS-008, and
+independent of one another — a system may adopt one without the others.
 
 The key relationship: the [&] Protocol declares *what* an agent is composed of. OpenSentience governs *how* that composition behaves at runtime. The implementations do the actual cognitive work. OpenSentience does not do work — it constrains work.
 
@@ -109,13 +126,13 @@ OpenSentience operates at the runtime level. It governs the agent process itself
 
 ## 5. What OpenSentience Adds
 
-### 5.1 Eight Cognitive Protocols
+### 5.1 Ten Protocols (Eight Cognitive Primitives + Two Cross-Cutting)
 
-OpenSentience publishes eight protocols. Each defines a cognitive primitive, grounds it in established cognitive science, and specifies the interface contract that implementations must satisfy.
+OpenSentience publishes ten protocols organized in two layers. The eight cognitive primitives each define one capability, ground it in established cognitive science, and specify the interface contract that implementations must satisfy. The two cross-cutting protocols sit above them and above [&]'s structural composition layer.
 
 | Protocol | Name | Cognitive Grounding | [&] Primitive | Status |
 |---|---|---|---|---|
-| OS-001 | Continual Learning | Hippocampal consolidation (McClelland et al. 1995) | `&memory.graph` | Shipped (Graphonomous) |
+| OS-001 | Continual Learning | Hippocampal consolidation (McClelland et al. 1995) | `&memory.graph` | Shipped (Graphonomous v0.4) |
 | OS-002 | Topological Routing (kappa) | Working memory gating (O'Reilly & Frank 2006) | `&reason.deliberate` | Spec complete |
 | OS-003 | Deliberation Orchestrator | Dual-process theory (Kahneman 2011) | `&reason.deliberate` | Spec complete |
 | OS-004 | Attention Engine | Endogenous attention (Desimone & Duncan 1995) | meta-reasoning | Spec complete |
@@ -123,8 +140,10 @@ OpenSentience publishes eight protocols. Each defines a cognitive primitive, gro
 | OS-006 | Agent Governance Shim | Executive function (Miyake et al. 2000) | governance | In development |
 | OS-007 | Adversarial Robustness | Immune system — self/non-self discrimination | `&govern.identity` | Draft |
 | OS-008 | Agent Harness | Supervisory attentional system (Norman & Shallice 1986) | `&govern.harness` | Draft |
+| **OS-009** | **PRISM** — Protocol for Rating Iterative System Memory | Meta-cognition + psychometrics (IRT, signal detection theory) | `&memory + &reason` (diagnostic) | v3.0 in development |
+| **OS-010** | **PULSE** — Protocol for Uniform Loop State Exchange | Closed-loop control theory + temporal cognition | `&memory + &govern + &time` (temporal) | v0.1 draft |
 
-The first five protocols (OS-001 through OS-005) define cognitive capabilities. The last three (OS-006 through OS-008) define governance capabilities. Together, they provide a complete specification for how an agent system should remember, reason, attend, adapt, defend itself, and be governed.
+The first five protocols (OS-001 through OS-005) define cognitive capabilities. OS-006 through OS-008 define the governance stack. OS-009 PRISM and OS-010 PULSE are sibling cross-cutting protocols: PULSE declares how loops cycle and signal, PRISM measures how well those loops actually learn over time. Together, the ten protocols provide a complete specification for how an agent system should remember, reason, attend, adapt, defend itself, be governed, declare its temporal structure, and prove its learning capacity over time.
 
 ### 5.2 The Governance Shim (OS-006)
 
@@ -161,7 +180,7 @@ The cognitive grounding is Norman and Shallice's Supervisory Attentional System 
 
 **Graduated autonomy.** The three-level model (observe, advise, act) is a practical response to a real deployment problem: organizations need to build trust in agents incrementally. Binary on/off autonomy forces a premature commitment.
 
-**Protocols, not products.** The eight protocols are specifications that any implementation can satisfy. This keeps the governance layer open and prevents vendor lock-in. OpenSentience ships one implementation (OS-006); the rest are implemented by other [&] portfolio companies or by any conforming third party.
+**Protocols, not products.** The ten protocols are specifications that any implementation can satisfy. This keeps the governance, diagnostic, and temporal layers open and prevents vendor lock-in. OpenSentience ships three implementations directly (OS-006 governance shim, OS-009 PRISM benchmark engine, OS-010 PULSE manifest standard); the rest are implemented by other [&] portfolio companies or by any conforming third party. PULSE in particular is BYOL — Bring Your Own Loop — any system that publishes a manifest validating against `pulse-loop-manifest.v0.1.json` is automatically PULSE-conforming and PRISM-evaluable.
 
 ---
 
@@ -214,9 +233,12 @@ An alternative implementation in Python or TypeScript would need to import a sta
 
 ### If you want to understand the protocols
 
-1. `docs/spec/README.md` section 4 — all eight protocols with cognitive science grounding
+1. `docs/spec/README.md` section 4 — all ten protocols with cognitive science grounding
 2. `docs/spec/README.md` section 5 — cognitive science mapping table and open research questions
 3. `docs/spec/OS-008-HARNESS.md` — the harness protocol in full (pipeline enforcement, quality gates, sprint contracts)
+4. `docs/spec/OS-009-PRISM-SPECIFICATION.md` — PRISM diagnostic benchmark protocol
+5. `docs/spec/OS-010-PULSE-SPECIFICATION.md` — PULSE loop manifest standard
+6. `docs/spec/OS-E001-EMPIRICAL-EVALUATION.md` — empirical evaluation of topology-aware continual learning
 
 ### If you want to understand the governance shim implementation
 

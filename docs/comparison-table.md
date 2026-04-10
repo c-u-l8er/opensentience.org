@@ -10,7 +10,7 @@ Comparison tables for OpenSentience runtime governance relative to agent framewo
 - **None** means the system has no equivalent concept.
 - **Partial** or qualified entries describe limited coverage.
 - Comparisons reflect each system's public documentation as of early 2026. Features may change.
-- OpenSentience protocols (OS-001 through OS-008) are defined in `opensentience.org/docs/spec/README.md`.
+- OpenSentience protocols (OS-001 through OS-010) are defined in `opensentience.org/docs/spec/README.md`. OS-009 (PRISM) and OS-010 (PULSE) have separate specification files.
 
 ---
 
@@ -26,7 +26,9 @@ Comparison tables for OpenSentience runtime governance relative to agent framewo
 | Quality gates | OS-008: separate evaluator context, adversarial grading | None | None | None | Validators | None | None |
 | Sprint contracts | OS-008: planner, generator, evaluator with acceptance criteria | Task assignment | None | None | None | None | None |
 | Context management | OS-008: 60% threshold, compaction, Graphonomous overflow | None | Checkpoints | None | None | None | None |
-| Cognitive grounding | 8 protocols, each mapped to cognitive science | None | None | None | None | None | None |
+| Cognitive grounding | 10 protocols (8 cognitive primitives + PRISM diagnostic + PULSE temporal), each mapped to cognitive science | None | None | None | None | None | None |
+| Loop manifest standard | OS-010 PULSE: declarative manifest with 5 phase kinds, 5 cross-loop tokens, 12-test conformance suite | None | None | None | None | None | None |
+| Continual-learning benchmark | OS-009 PRISM: 9 CL dimensions, BYOR ingestion, IRT calibration, leaderboards | None | None | None | None | None | None |
 | Runtime overhead | < 1% CPU, < 2us permission check | N/A | N/A | N/A | Per-call latency | Per-call latency | Cloud latency |
 | Architecture | Elixir/OTP hex package (shim) | Python framework | Python framework | Python/.NET framework | Python library | Python library | Cloud service |
 | Portability | Apache 2.0, any OTP child_spec | Framework-locked | Framework-locked | Framework-locked | Provider-agnostic | Provider-agnostic | AWS-locked |
@@ -46,6 +48,8 @@ Comparison tables for OpenSentience runtime governance relative to agent framewo
 | OS-006 | Governance | Permissions, lifecycle, autonomy | Runtime (open_sentience hex) |
 | OS-007 | Security | Adversarial threats | Runtime (planned) |
 | OS-008 | Harness | Pipeline ordering, quality gates, sprint contracts | Runtime (planned) |
+| **OS-009** | **Diagnostic** | How well a closed memory loop actually learns over time | **Runtime (PRISM Elixir/OTP, Fly.io, 6 MCP machines)** |
+| **OS-010** | **Temporal** | How loops cycle, nest, and signal across boundaries | **Manifest standard (no required runtime; JSON Schema validation + 12-test conformance suite)** |
 
 ---
 

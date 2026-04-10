@@ -7,19 +7,26 @@
 
 ## Is OpenSentience a product?
 
-No. OpenSentience is a **research organization** that publishes cognitive
-protocols (OS-001 through OS-008) and ships runtime artifacts — the
-`open_sentience` hex package implementing OS-006 (governance shim) and
-OS-008 (agent harness).
+No. OpenSentience is a **research organization** that publishes ten numbered
+protocols organized in two layers — eight cognitive primitives (OS-001 through
+OS-008) and two cross-cutting protocols (OS-009 PRISM diagnostic, OS-010 PULSE
+temporal) — and ships three runtime artifacts: the `open_sentience` hex package
+implementing OS-006 (governance shim) and OS-008 (agent harness), the **PRISM
+benchmark engine** (`/PRISM/`, Elixir/OTP, Fly.io, 6 MCP machines), and the
+**PULSE manifest standard** (`/PULSE/`, JSON Schema + reference manifests).
 
 It does not have a UI, a SaaS offering, or a pricing page. The hex package is
-a library dependency consumed by other [&] ecosystem products.
+a library dependency consumed by other [&] ecosystem products. PRISM runs as
+a separate benchmark engine that any system can opt into via its PULSE
+manifest. PULSE is a manifest standard with no required runtime.
 
 ---
 
-## Why eight protocols?
+## Why ten protocols?
 
-Each protocol maps to a well-established finding in cognitive science:
+The eight cognitive primitives each map to a well-established finding in
+cognitive science. The two cross-cutting protocols add diagnostic and temporal
+algebras above the cognitive layer:
 
 | Protocol | Cognitive Basis |
 |----------|----------------|
@@ -31,12 +38,18 @@ Each protocol maps to a well-established finding in cognitive science:
 | OS-006 Governance Shim | Executive function (Miyake et al. 2000) |
 | OS-007 Adversarial Robustness | Immune system — self/non-self discrimination |
 | OS-008 Agent Harness | Supervisory attentional system (Norman & Shallice 1986) |
+| **OS-009 PRISM** | Meta-cognition + psychometrics (IRT, signal detection theory) |
+| **OS-010 PULSE** | Closed-loop control theory + temporal cognition |
 
 The original six protocols covered cognitive primitives and runtime governance.
 OS-007 was added to address adversarial threats (prompt injection, knowledge
 poisoning, agent impersonation). OS-008 was added to enforce pipeline ordering,
 quality gates, and sprint contracts — the missing orchestration layer above
-OS-006.
+OS-006. OS-009 PRISM was added once we needed a way to measure how well a
+closed memory loop actually learns over time. OS-010 PULSE was added once we
+realized every loop in the [&] portfolio could be described with the same
+manifest schema, and that PRISM could read those manifests at runtime instead
+of requiring bespoke per-system integration.
 
 ---
 

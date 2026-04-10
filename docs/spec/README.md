@@ -14,9 +14,10 @@
 OpenSentience is the **research arm and runtime governance layer** of the [&] Protocol ecosystem. It publishes theoretical foundations, empirical protocols, and open questions about machine cognition — then ships a thin governance shim (OS-006) that wraps any OTP-based agent system with permissions, audit trails, lifecycle management, and autonomy levels.
 
 OpenSentience is **not a product**. It is a research organization that produces:
-1. **Eight numbered protocols** (OS-001 through OS-008) — each defining a cognitive primitive
-2. **One runtime artifact** — the governance shim hex package (`open_sentience`) implementing OS-006
-3. **Published research** — cognitive science grounding for all eight protocols, empirical benchmarks, open questions
+1. **Eight cognitive primitives** (OS-001 through OS-008) — each defining one cognitive capability
+2. **Two cross-cutting protocols** (OS-009 PRISM, OS-010 PULSE) — sibling diagnostic + temporal layers above the primitives
+3. **One runtime artifact** — the governance shim hex package (`open_sentience`) implementing OS-006
+4. **Published research** — cognitive science grounding for all ten protocols, empirical benchmarks, open questions
 
 The other [&] products implement the protocols. OpenSentience defines them, grounds them in theory, and provides the thin enforcement layer that ties them together at runtime.
 
@@ -50,7 +51,7 @@ The industry builds agents like scripts — deploy and pray. OpenSentience provi
 
 Models generate answers. Systems accumulate intelligence. Durable intelligence requires memory, evidence, time, and interaction with the world. A language model that cannot remember yesterday, weigh evidence across sessions, or learn from deployment context is a generator — not an intelligent system.
 
-OpenSentience's eight protocols define the primitives required to bridge that gap: continual memory (OS-001), topological routing (OS-002), structured deliberation (OS-003), attentional triage (OS-004), adaptive model selection (OS-005), governed execution (OS-006), adversarial defense (OS-007), and orchestration harness (OS-008).
+OpenSentience's eight cognitive primitives define the capabilities required to bridge that gap: continual memory (OS-001), topological routing (OS-002), structured deliberation (OS-003), attentional triage (OS-004), adaptive model selection (OS-005), governed execution (OS-006), adversarial defense (OS-007), and orchestration harness (OS-008). Two cross-cutting protocols sit above them: **OS-009 PRISM** is the diagnostic algebra that measures how well a memory loop performs over time, and **OS-010 PULSE** is the temporal algebra that declares how any loop in the [&] ecosystem cycles, nests, and signals across boundaries. Together with [&] (the structural composition layer), PRISM and PULSE form the three-protocol stack: **[&] composes agents, PULSE gives them a heartbeat, PRISM measures their effect.**
 
 ### 1.4 Why Elixir
 
@@ -64,7 +65,7 @@ The governance shim is fundamentally a **supervision wrapper with policy enforce
 
 ### 1.5 One-Liner
 
-> "The research foundation and governance shim for machine cognition — eight protocols, one thin runtime."
+> "The research foundation and governance shim for machine cognition — ten protocols (eight cognitive primitives + PRISM + PULSE), three runtime artifacts (governance shim + PRISM benchmark engine + PULSE manifest standard)."
 
 ---
 
@@ -175,9 +176,23 @@ Each `OpenSentience.AgentLifecycle` GenStateMachine:
 
 ---
 
-## 4. The Eight Protocols
+## 4. The Ten Protocols
 
-OpenSentience publishes eight numbered protocols. Each defines a cognitive primitive, grounds it in theory, and specifies the interface contract that implementations must satisfy.
+OpenSentience publishes ten numbered protocols. The first eight (OS-001–OS-008) each define a single **cognitive primitive** — one capability of an intelligent agent system, grounded in cognitive science and specified as an interface contract. The final two (OS-009 PRISM, OS-010 PULSE) are **cross-cutting sibling protocols** that sit above the primitives — PRISM measures how well a closed memory loop performs over time, and PULSE declares how any loop cycles, nests, and signals across boundaries.
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  PRISM (OS-009)  — measures loops over time   diagnostic │
+├──────────────────────────────────────────────────────────┤
+│  PULSE (OS-010)  — declares loops + signals    temporal  │
+├──────────────────────────────────────────────────────────┤
+│  OS-001 … OS-008 — cognitive primitives        capability│
+├──────────────────────────────────────────────────────────┤
+│  [&]             — composes capabilities       structural│
+└──────────────────────────────────────────────────────────┘
+```
+
+PRISM and PULSE are independent of one another and independent of [&]: a system may adopt one without adopting the others. Adoption order is typically [&] → PULSE → PRISM, mirroring how HTTP, HTML, and CSS became ubiquitous separately before converging in the browser.
 
 ### 4.1 OS-001: Continual Learning Protocol
 
@@ -456,6 +471,58 @@ OS-007 extends the audit trail schema with security-specific event types:
 ```
 
 **Key insight from immunology:** The adaptive immune system distinguishes self from non-self through pattern matching against known signatures (T-cell receptors) and anomaly detection against baseline behavior (innate immunity). OS-007 mirrors both: known-signature defense (manifest hash verification, canary tokens) and anomaly defense (confidence drift detection, budget monitoring).
+
+### 4.8 OS-008: Agent Harness Protocol
+
+**Status:** Draft
+**Implements:** `&govern.harness`
+**Reference Implementation:** OS-008 harness module (planned, layered above OS-006)
+**Cognitive Grounding:** Procedural knowledge — sprint contracts, pipeline ordering
+
+OS-008 is the orchestration harness layer. It sits **above** OS-006 governance and enforces pipeline ordering, quality gates, sprint contracts, and context-window management for any [&]-composable agent system. OS-006 says *"this agent may do X"*; OS-008 says *"the agents must do X then Y then Z, and the result of Y gates Z."*
+
+See `docs/spec/OS-008-HARNESS.md` for the full specification.
+
+### 4.9 OS-009: PRISM — Protocol for Rating Iterative System Memory
+
+**Status:** v3.0 in development (`/PRISM/` codebase, subdomain `prism.opensentience.org`)
+**Implements:** Diagnostic algebra over `&memory + &reason`
+**Reference Implementation:** PRISM (Elixir/OTP, Fly.io, 6 MCP machines)
+**Cognitive Grounding:** Item Response Theory, longitudinal psychometrics, BYOR (Bring Your Own Repo)
+
+PRISM is the **diagnostic** layer of the three-protocol stack. It is a self-improving continual-learning benchmark that measures how well a registered memory system performs across nine cognitive-load dimensions through a four-phase evaluation loop (compose → interact → observe → reflect → diagnose). PRISM does not require its own loop manifest — it reads any PRISM-evaluable system's PULSE manifest and injects scenarios at the declared `retrieve` boundary, observing outcomes via the declared `learn` phase.
+
+Key properties:
+- **Nine CL dimensions:** retention, generalization, plasticity, stability, sample-efficiency, transfer, compositionality, robustness, calibration
+- **Four-phase loop:** compose (scenarios) → interact (run against system) → observe (judge transcripts) → reflect (recalibrate, evolve) → diagnose (leaderboard, regressions, fix suggestions)
+- **BYOR:** any memory system (Graphonomous, Mem0, Letta, Zep, custom) can register and be benchmarked
+- **IRT calibration:** scenario difficulty parameters are learned over time across runs
+- **Outputs:** diagnostic reports, leaderboards, regression alerts, task-fit recommendations
+
+See `docs/spec/OS-009-PRISM-SPECIFICATION.md` for the full specification.
+
+### 4.10 OS-010: PULSE — Protocol for Uniform Loop State Exchange
+
+**Status:** v0.1 draft (`/PULSE/` directory, subdomain `pulse.opensentience.org`)
+**Implements:** Temporal algebra over `&memory + &govern + &time`
+**Reference Implementation:** Manifest standard (`pulse-loop-manifest.v0.1.json`) + reference manifests for graphonomous, prism, agentromatic
+**Cognitive Grounding:** Statecharts, Petri-net safety, CloudEvents, biological circadian / ultradian rhythms
+
+PULSE is the **temporal** layer of the three-protocol stack. It is a manifest standard — not a runtime — that lets any closed feedback loop in the [&] ecosystem declare its phases, cadence, nesting, substrates, invariants, and cross-loop signal connections in a single JSON file: `<loop>.pulse.json`. PULSE makes loops uniformly observable and composable without prescribing how they are implemented (BYOL — Bring Your Own Loop).
+
+Key properties:
+- **Five canonical phase kinds:** `retrieve`, `route`, `act`, `learn`, `consolidate` (plus `custom` with required `custom_kind`)
+- **Five canonical cross-loop tokens:** `TopologyContext`, `DeliberationResult`, `OutcomeSignal`, `ReputationUpdate`, `ConsolidationEvent`
+- **Six cadence types:** `event`, `periodic`, `streaming`, `idle`, `cross_loop_signal`, `manual` (with optional fallback)
+- **Six substrate slots:** `memory`, `policy`, `audit`, `auth`, `transport`, `time` (canonical substrates: Graphonomous for memory, Delegatic for policy/audit, OpenSentience for auth)
+- **Seven invariants:** `phase_atomicity`, `feedback_immutability`, `append_only_audit`, `kappa_routing`, `quorum_before_commit`, `outcome_grounding`, `trace_id_propagation`
+- **Unbounded nesting:** loops declare `parent_loop` and `inner_loops`, enabling triple- and higher-order nesting (PRISM → Graphonomous → Deliberation today; OS-008 Harness on top tomorrow)
+- **CloudEvents v1 envelopes** for all cross-loop signal connections, with explicit delivery semantics (`at_least_once`, `at_most_once`, `exactly_once`)
+- **12-test conformance suite** validates that a runtime correctly implements the manifest
+
+A loop is **PULSE-conforming** if its manifest validates against the v0.1 schema and its runtime passes all 12 conformance tests. A system is **PRISM-evaluable** automatically once it is PULSE-conforming.
+
+See `docs/spec/OS-010-PULSE-SPECIFICATION.md` for the full specification, and `/PULSE/manifests/` for reference manifests.
 
 ### 5.1 Open Research Questions
 

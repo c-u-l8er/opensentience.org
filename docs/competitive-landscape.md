@@ -63,7 +63,7 @@ These organizations publish theoretical principles for AI safety. None of them p
 
 | | Anthropic (Constitutional AI) | OpenAI (safety frameworks) | OpenSentience |
 |---|---|---|---|
-| Output | Research papers, internal guardrails | Internal safety processes | **Numbered protocols (OS-001 through OS-008) with formal specs** |
+| Output | Research papers, internal guardrails | Internal safety processes | **Numbered protocols (OS-001 through OS-010) with formal specs** |
 | Runtime enforcement | Internal to Claude | Internal to GPT | **Open hex package (`open_sentience`) anyone can deploy** |
 | Cognitive grounding | Constitutional principles (normative) | RLHF alignment (training-time) | **Cognitive science mapping (each protocol to established theory)** |
 | External adoption | Not a protocol | Not a protocol | **Apache 2.0, spec-driven, third-party implementable** |
@@ -122,17 +122,19 @@ The AgenTroMatic and Delegatic specs — both grounded in OpenSentience protocol
 
 ## OpenSentience differentiators
 
-Seven structural advantages that no competitor combines:
+Nine structural advantages that no competitor combines:
 
 | # | Differentiator | Detail |
 |---|---|---|
-| 1 | **Protocol-first** | Numbered specs (OS-001 through OS-008) with formal definitions, not just code |
+| 1 | **Protocol-first** | Numbered specs (OS-001 through OS-010) with formal definitions, not just code |
 | 2 | **Cognitive science grounding** | Each protocol maps to established cognitive science — continual learning to memory consolidation, attention to executive function, deliberation to dual-process theory |
 | 3 | **Graduated autonomy** | Three levels (observe, advise, act) — no other system provides runtime-adjustable autonomy with audit trails for each transition |
 | 4 | **Topology-derived governance** | kappa-routing (OS-002) decides deliberation rights — governance emerges from graph structure, not from configuration files |
 | 5 | **Thin shim architecture** | < 1% overhead, < 2 microsecond permission checks via ETS — governance that costs nothing at runtime |
 | 6 | **Harness enforcement (OS-008)** | Pipeline ordering, quality gates, sprint contracts, context management — the deployable artifact that Anthropic's research says is necessary |
-| 7 | **Open (Apache 2.0)** | Every protocol, every spec, every reference implementation — no lock-in, no proprietary layer |
+| 7 | **Diagnostic algebra (OS-009 PRISM)** | 9 continual-learning dimensions, BYOR ingestion, IRT calibration, leaderboards — measures whether a closed memory loop actually learns over time, not just whether it answers questions |
+| 8 | **Temporal algebra (OS-010 PULSE)** | Loop manifest standard with 5 canonical phase kinds, 5 cross-loop tokens (CloudEvents v1), 7 invariants, and a 12-test conformance suite — turns inter-system integration from ad-hoc to algebraic |
+| 9 | **Open (Apache 2.0)** | Every protocol, every spec, every reference implementation — no lock-in, no proprietary layer |
 
 ---
 
