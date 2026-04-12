@@ -164,7 +164,7 @@
 
             /* ─── HERO ─── */
             .hero {
-                padding: 10rem 0 6rem;
+                padding: 10rem 0 0em;
                 text-align: center;
                 position: relative;
             }
@@ -269,6 +269,149 @@
                 color: #000;
                 border-color: #babafe;
                 box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
+            }
+            .btn-github {
+                background: #f4f4f5;
+                color: #09090b;
+                border-color: #f4f4f5;
+                box-shadow: 0 4px 15px rgba(244, 244, 245, 0.15);
+                gap: 0.5rem;
+            }
+            .btn-github:hover {
+                background: #fff;
+                color: #000;
+                border-color: #fff;
+                box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
+            }
+            .btn-github svg {
+                width: 18px;
+                height: 18px;
+                fill: currentColor;
+            }
+
+            /* ─── SHOWCASE ─── */
+            .showcase {
+                padding: 4rem 0 2rem;
+            }
+            .showcase-label {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--text-secondary);
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+            .showcase-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+            @media (max-width: 700px) {
+                .showcase-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+            .showcase-card {
+                position: relative;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 2rem 2rem 1.8rem;
+                background: var(--bg-card);
+                transition: all 0.3s ease;
+                overflow: hidden;
+                text-decoration: none;
+                color: var(--text);
+                display: block;
+            }
+            .showcase-card:hover {
+                border-color: var(--text-dim);
+                background: var(--bg-card-hover);
+                transform: translateY(-4px);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+                color: var(--text);
+            }
+            .showcase-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+            }
+            .showcase-card--prism::before {
+                background: linear-gradient(
+                    90deg,
+                    #8b5cf6,
+                    #6366f1,
+                    #3b82f6,
+                    #06b6d4,
+                    #10b981,
+                    #eab308,
+                    #f97316,
+                    #ef4444
+                );
+            }
+            .showcase-card--pulse::before {
+                background: linear-gradient(90deg, #00f5d4, #00b4d8, #4cc9f0);
+            }
+            .showcase-card .card-protocol {
+                font-family: var(--mono);
+                font-size: 0.65rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                margin-bottom: 0.8rem;
+                display: inline-block;
+                padding: 0.25rem 0.6rem;
+                border-radius: 4px;
+            }
+            .showcase-card--prism .card-protocol {
+                color: #c4b5fd;
+                background: rgba(139, 92, 246, 0.15);
+            }
+            .showcase-card--pulse .card-protocol {
+                color: #00f5d4;
+                background: rgba(0, 245, 212, 0.12);
+            }
+            .showcase-card h3 {
+                font-family: var(--serif);
+                font-weight: 400;
+                font-size: 1.5rem;
+                margin-bottom: 0.6rem;
+                letter-spacing: -0.01em;
+            }
+            .showcase-card p {
+                font-family: var(--sans);
+                font-size: 0.9rem;
+                color: var(--text-secondary);
+                line-height: 1.55;
+                margin-bottom: 1.2rem;
+            }
+            .showcase-card .card-features {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            .showcase-card .card-feature {
+                font-family: var(--mono);
+                font-size: 0.68rem;
+                color: var(--text-dim);
+                letter-spacing: 0.04em;
+            }
+            .showcase-card .card-arrow {
+                position: absolute;
+                bottom: 1.8rem;
+                right: 2rem;
+                font-family: var(--sans);
+                font-size: 0.8rem;
+                color: var(--text-dim);
+                transition:
+                    color 0.2s,
+                    transform 0.2s;
+            }
+            .showcase-card:hover .card-arrow {
+                color: var(--accent);
+                transform: translateX(3px);
             }
 
             /* ─── SECTIONS ─── */
@@ -918,54 +1061,78 @@
         </nav>
 
         <header class="hero container">
-            <span class="hero-badge">Open Research Initiative</span>
-            <h1>Open research into<br /><em>machine cognition</em></h1>
+            <span class="hero-badge"
+                >10 Published Protocols &mdash; OS-001 through OS-010</span
+            >
+            <h1>The science behind<br /><em>machines that learn</em></h1>
             <p class="subtitle">
-                Published protocols for structured memory, topological
-                deliberation, autonomous attention, and agent governance.
-                Because the questions about machine understanding matter as much
-                as the products.
+                Ten open protocols for structured memory, topological routing,
+                deliberation, temporal algebra, and self-improving benchmarks.
+                Everything an agent needs to remember, reason, and prove it
+                works.
             </p>
             <div class="cta-row">
+                <a
+                    href="https://github.com/c-u-l8er/opensentience.org"
+                    class="btn btn-github"
+                    ><svg viewBox="0 0 16 16">
+                        <path
+                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                        /></svg
+                    >Star on GitHub</a
+                >
                 <a href="#protocols" class="btn btn-primary"
                     >Read the Protocols</a
                 >
                 <a href="https://docs.opensentience.org" class="btn"
                     >Documentation</a
                 >
-                <a
-                    href="https://github.com/c-u-l8er/AmpersandBoxDesign"
-                    class="btn"
-                    >GitHub</a
-                >
-                <a
-                    href="https://ampersandboxdesign.com/protocol.html"
-                    class="btn"
-                    >[&] Protocol Spec</a
-                >
-            </div>
-            <div
-                style="
-                    display: inline-block;
-                    margin: 1.5rem 0 0.5rem;
-                    padding: 0.6rem 1.2rem;
-                    background: var(--accent-glow);
-                    border: 1px solid var(--border-accent);
-                    border-radius: 8px;
-                    font-family: var(--mono);
-                    font-size: 0.82rem;
-                "
-            >
-                <strong style="color: var(--accent)">NEW:</strong> OS-009 PRISM
-                + OS-010 PULSE &mdash; self-improving CL benchmark and the
-                circulatory system that powers it.
-                <a
-                    href="#protocols"
-                    style="color: var(--accent); margin-left: 0.5rem"
-                    >Read more &darr;</a
-                >
             </div>
         </header>
+
+        <!-- ═══════════════════ SHOWCASE: PRISM + PULSE ═══════════════════ -->
+        <div class="showcase container" style="padding-bottom: 5em">
+            <p class="showcase-label">Two systems. One research program.</p>
+            <div class="showcase-grid">
+                <a
+                    href="https://prism.opensentience.org"
+                    class="showcase-card showcase-card--prism"
+                >
+                    <span class="card-protocol">OS-009</span>
+                    <h3>PRISM</h3>
+                    <p>
+                        The first self-improving benchmark for agent memory.
+                        Nine continual-learning dimensions, git-grounded
+                        scenarios, three-layer judging, and a leaderboard that
+                        evolves as systems do.
+                    </p>
+                    <div class="card-features">
+                        <span class="card-feature">9 CL dimensions</span>
+                        <span class="card-feature">4-phase loop</span>
+                        <span class="card-feature">IRT calibration</span>
+                    </div>
+                    <span class="card-arrow">&rarr;</span>
+                </a>
+                <a
+                    href="https://pulse.opensentience.org"
+                    class="showcase-card showcase-card--pulse"
+                >
+                    <span class="card-protocol">OS-010</span>
+                    <h3>PULSE</h3>
+                    <p>
+                        The temporal algebra for closed-loop systems. Every loop
+                        declares its phases, cadence, substrates, and cross-loop
+                        signals in a single manifest file.
+                    </p>
+                    <div class="card-features">
+                        <span class="card-feature">5 canonical phases</span>
+                        <span class="card-feature">*.pulse.json</span>
+                        <span class="card-feature">CloudEvents v1</span>
+                    </div>
+                    <span class="card-arrow">&rarr;</span>
+                </a>
+            </div>
+        </div>
 
         <!-- ═══════════════════ THESIS ═══════════════════ -->
         <section id="thesis" class="container">
@@ -1022,8 +1189,8 @@
                 closed-loop systems over time, and <strong>PULSE</strong>
                 declares how those loops cycle and signal each other. Together
                 they form a complete substrate: an agent that knows what it
-                knows, knows what it doesn't know, decides what to do about
-                it, and is benchmarkable end-to-end without ever being asked.
+                knows, knows what it doesn't know, decides what to do about it,
+                and is benchmarkable end-to-end without ever being asked.
             </p>
 
             <div class="papers-grid">
@@ -1300,17 +1467,17 @@
                         &mdash; phases, cadence, substrates, invariants, and
                         cross-loop signaling. Five canonical phase kinds, six
                         cadence types, five canonical tokens, seven invariants.
-                        Any conforming loop becomes automatically PRISM-evaluable
-                        without integration work. The circulatory system that
-                        makes [&] a stack instead of a pile.
+                        Any conforming loop becomes automatically
+                        PRISM-evaluable without integration work. The
+                        circulatory system that makes [&] a stack instead of a
+                        pile.
                     </p>
                     <div class="paper-tags">
-                        <span class="paper-tag status-spec"
-                            >v0.1 draft</span
-                        >
+                        <span class="paper-tag status-spec">v0.1 draft</span>
                         <span class="paper-tag">&memory + &govern + &time</span>
                         <span class="paper-tag"
-                            >CloudEvents &middot; Statecharts &middot; Petri-net safety</span
+                            >CloudEvents &middot; Statecharts &middot; Petri-net
+                            safety</span
                         >
                         <span class="paper-tag"
                             ><a
