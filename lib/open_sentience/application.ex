@@ -7,6 +7,7 @@ defmodule OpenSentience.Application do
   def start(_type, _args) do
     children = [
       {Registry, keys: :unique, name: OpenSentience.Harness.Registry},
+      {OpenSentience.Harness.CrossSessionLearning, []},
       {OpenSentience.Harness.Supervisor, []}
     ]
 
