@@ -253,15 +253,15 @@ Extended event types include: `pipeline_stage_completed`, `pipeline_stage_blocke
 
 ## Success Criteria
 
-- [ ] PipelineEnforcer blocks tool calls that violate prerequisites (retrieve-before-act)
-- [ ] QualityGate spawns evaluator in isolated context and grades against acceptance criteria
-- [ ] ContractValidator enforces hard constraints as blocks, soft as warnings, escalation triggers
-- [ ] SprintController manages planner→generator→evaluator state machine with iteration loop
-- [ ] ContextManager triggers compaction at 55% and offloads >20K token results
-- [ ] Session supervises all 5 components and is workspace-scoped
-- [ ] MCP server exposes 4 harness tools and responds to tool discovery
-- [ ] Model tier adaptation adjusts harness behavior for local_small/local_large/cloud_frontier
-- [ ] Dark factory session lifecycle processes SpecPrompt → Agentelic → OS-008 chain
-- [ ] Cross-session learning retrieves prior failures for same {agent_id, spec_hash}
-- [ ] Delegatic policy blocks override OS-008 pipeline approvals
-- [ ] Full audit trail with provenance linking for every harness action
+- [x] PipelineEnforcer blocks tool calls that violate prerequisites (retrieve-before-act)
+- [x] QualityGate spawns evaluator in isolated context and grades against acceptance criteria
+- [x] ContractValidator enforces hard constraints as blocks, soft as warnings, escalation triggers
+- [x] SprintController manages planner→generator→evaluator state machine with iteration loop
+- [x] ContextManager triggers compaction at 55% and offloads >20K token results
+- [x] Session supervises all 5 components and is workspace-scoped
+- [x] MCP server exposes 4 harness tools and responds to tool discovery
+- [x] Model tier adaptation adjusts harness behavior for local_small/local_large/cloud_frontier
+- [x] Dark factory session lifecycle processes SpecPrompt → Agentelic → OS-008 chain
+- [x] Cross-session learning retrieves prior failures for same {agent_id, spec_hash}
+- [x] Delegatic policy blocks override OS-008 pipeline approvals
+- [x] Full audit trail with provenance linking for every harness action
