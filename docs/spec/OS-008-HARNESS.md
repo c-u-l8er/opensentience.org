@@ -909,13 +909,15 @@ OS-008 exposes harness operations as MCP tools for external orchestrators:
   "inputSchema": {
     "type": "object",
     "properties": {
+      "workspace_id":     { "type": "string", "format": "uuid", "description": "amp.workspaces ID — scopes all retrieval, storage, and policy checks" },
       "task_description": { "type": "string" },
+      "agent_id":         { "type": "string", "format": "uuid", "description": "agentelic.agents ID (dark factory mode)" },
       "goal_id":          { "type": "string", "description": "Delegatic goal ID" },
       "ampersand_spec":   { "type": "string", "description": "Path or URL to ampersand.json" },
       "model_tier":       { "type": "string", "enum": ["local_small", "local_large", "cloud_frontier"] },
       "autonomy_level":   { "type": "string", "enum": ["observe", "advise", "act"] }
     },
-    "required": ["task_description"]
+    "required": ["workspace_id", "task_description"]
   }
 }
 ```
@@ -976,7 +978,87 @@ OS-008 exposes harness operations as MCP tools for external orchestrators:
 
 ---
 
-## 14. Open Research Questions
+## 14. Multi-Tenant Dark Factory Integration
+
+### 14.1 Workspace-Scoped Sessions
+
+OS-008 sessions operate within the shared [&] Supabase ecosystem. Each session is scoped to a workspace:
+
+```elixir
+defmodule OpenSentience.Harness.Session do
+  # Session is always workspace-scoped
+  field :workspace_id, :binary_id          # amp.workspaces — inherited from triggering agent
+  field :user_id, :binary_id              # amp.profiles (Supabase Auth) — who/what started the session
+  field :agent_id, :binary_id             # agentelic.agents — which agent is being built/tested
+  field :trigger_event, :map              # CloudEvents envelope that triggered this session
+end
+```
+
+Workspace scoping ensures:
+- PipelineEnforcer only allows retrieval from workspace-scoped Graphonomous data
+- QualityGate evaluators cannot access other workspaces' knowledge
+- ContractValidator checks governance policies scoped to the workspace's Delegatic org
+- Audit trail entries include `workspace_id` for multi-tenant audit compliance
+- Subagent delegation inherits parent session's workspace scope
+
+### 14.2 Cross-Session Learning (Resolved)
+
+**Previously open question #5.** Now resolved:
+
+Yes — retried sessions SHOULD access prior session traces. Implementation:
+
+1. On session failure, the harness stores a structured outcome node in Graphonomous:
+   ```
+   {type: "harness_outcome", status: "failed", session_id, workspace_id,
+    sprint_results: [...], failure_reason, context_snapshot_ref}
+   ```
+2. On session retry, PipelineEnforcer's mandatory retrieval phase pulls prior harness outcomes for the same `{agent_id, spec_hash}` tuple
+3. The planner receives prior failure context and adapts its sprint decomposition
+4. This creates a closed learning loop: harness → Graphonomous → harness (next attempt)
+
+Cross-session learning is workspace-scoped — one workspace's harness failures do not leak to another.
+
+### 14.3 Pipeline Enforcement × Delegatic Conflict Resolution
+
+When OS-008 pipeline says "proceed" but Delegatic policy says "block", **Delegatic wins**. Rationale:
+
+- OS-008 enforces **operational correctness** (did you retrieve before acting?)
+- Delegatic enforces **organizational policy** (are you allowed to act at all?)
+- Policy is a superset of pipeline: an action that passes pipeline checks may still violate policy
+- An action that violates pipeline checks is blocked before Delegatic is consulted
+
+**Enforcement order (unchanged from section 6, clarified):**
+```
+1. PipelineEnforcer: Prerequisites met? NO → Block (operational)
+2. ContractValidator: [&] governance OK? NO → Block (contractual)
+3. Delegatic (via OS-006): Org policy OK? NO → Block (organizational)
+4. All pass → Execute
+```
+
+Delegatic blocks are logged as `policy_violation` audit events (not `pipeline_violation`), enabling distinct operational vs. policy failure analysis.
+
+### 14.4 Dark Factory Session Lifecycle
+
+In dark factory mode, harness sessions are triggered by Agentelic pipeline events (not human invocation):
+
+```
+SpecPrompt ConsolidationEvent
+  → Agentelic retrieve_spec
+  → Agentelic route_pipeline
+  → OS-008 Harness.start_session(workspace_id, agent_id, spec_hash)
+    → PipelineEnforcer: retrieve → topology → deliberate(if κ>0) → act
+    → QualityGate: generator ↔ evaluator loop per sprint
+    → ContractValidator: [&] governance checks
+    → ContextManager: compaction + subagent delegation
+  → On all sprints pass: Agentelic.Build.status = :succeeded
+  → Agentelic emits ConsolidationEvent to FleetPrompt
+```
+
+The harness does NOT make LLM model choices — it defers to Agentelic's model tier configuration. The harness enforces the pipeline regardless of which model runs the generation.
+
+---
+
+## 15. Open Research Questions
 
 OS-008 raises several research questions that extend OpenSentience's existing agenda:
 
@@ -988,7 +1070,7 @@ OS-008 raises several research questions that extend OpenSentience's existing ag
 
 4. **Harness-as-governance-topology:** The harness itself (planner → generator → evaluator) has κ > 0 — the evaluator's feedback creates a cycle. Does this meta-level κ need its own deliberation strategy? Is the iteration loop itself a deliberation?
 
-5. **Cross-session harness learning:** If a harness session fails and is retried, should the second attempt have access to the first attempt's Graphonomous trace? This creates a learning loop across harness invocations — the harness learns how to harness.
+5. ~~**Cross-session harness learning:**~~ Resolved in section 14.2 above.
 
 6. **Context degradation as cognitive fatigue:** The 60% rule mirrors human cognitive fatigue — sustained focus degrades performance before physical limits are reached. Can the harness detect quality degradation before the 60% threshold by monitoring evaluation pass rates over time?
 
@@ -996,7 +1078,7 @@ OS-008 raises several research questions that extend OpenSentience's existing ag
 
 ---
 
-## 15. Relationship to Industry Harness Patterns
+## 16. Relationship to Industry Harness Patterns
 
 OS-008 is positioned relative to the emerging harness engineering discipline:
 
@@ -1023,7 +1105,7 @@ OS-008 is positioned relative to the emerging harness engineering discipline:
 
 ---
 
-## 16. Implementation Phases
+## 17. Implementation Phases
 
 ### Phase 1: Pipeline Enforcement (Weeks 1–4)
 - PipelineEnforcer with prerequisite rules
@@ -1055,7 +1137,7 @@ OS-008 is positioned relative to the emerging harness engineering discipline:
 
 ---
 
-## 17. Cognitive Science References
+## 18. Cognitive Science References
 
 | Concept | Reference | Application in OS-008 |
 |---------|-----------|----------------------|
