@@ -18,7 +18,11 @@ defmodule OpenSentience.Harness.Session do
   require Logger
 
   alias OpenSentience.Harness.AuditEntry
+  alias OpenSentience.Harness.ContractValidator
+  alias OpenSentience.Harness.ContextManager
   alias OpenSentience.Harness.PipelineEnforcer
+  alias OpenSentience.Harness.QualityGate
+  alias OpenSentience.Harness.SprintController
   alias OpenSentience.Harness.Telemetry
 
   @type autonomy :: :observe | :advise | :act
@@ -90,6 +94,14 @@ defmodule OpenSentience.Harness.Session do
     GenServer.call(server, :audit_log)
   end
 
+  @doc """
+  Returns PIDs of all child components.
+  """
+  @spec components(GenServer.server()) :: map()
+  def components(server) do
+    GenServer.call(server, :components)
+  end
+
   def child_spec(opts) do
     id = Keyword.get(opts, :session_id, :erlang.unique_integer())
 
@@ -106,24 +118,43 @@ defmodule OpenSentience.Harness.Session do
   def init(opts) do
     session_id = Keyword.fetch!(opts, :session_id)
 
-    # Start the PipelineEnforcer as a linked process
-    enforcer_opts = [
-      session_id: session_id,
-      workspace_id: Keyword.get(opts, :workspace_id)
-    ]
+    model_tier = Keyword.get(opts, :model_tier, :cloud_frontier)
+    workspace_id = Keyword.get(opts, :workspace_id)
+    governance_block = Keyword.get(opts, :governance_block)
 
-    {:ok, enforcer_pid} = PipelineEnforcer.start_link(enforcer_opts)
+    # Start all child components as linked processes
+    {:ok, enforcer_pid} =
+      PipelineEnforcer.start_link(session_id: session_id, workspace_id: workspace_id)
+
+    {:ok, quality_gate_pid} =
+      QualityGate.start_link(session_id: session_id)
+
+    {:ok, contract_validator_pid} =
+      ContractValidator.start_link(
+        session_id: session_id,
+        governance_block: governance_block
+      )
+
+    {:ok, sprint_controller_pid} =
+      SprintController.start_link(session_id: session_id, model_tier: model_tier)
+
+    {:ok, context_manager_pid} =
+      ContextManager.start_link(session_id: session_id, model_tier: model_tier)
 
     state = %{
       session_id: session_id,
-      workspace_id: Keyword.get(opts, :workspace_id),
+      workspace_id: workspace_id,
       user_id: Keyword.get(opts, :user_id),
       agent_id: Keyword.get(opts, :agent_id),
       goal_id: Keyword.get(opts, :goal_id),
       autonomy_level: Keyword.get(opts, :autonomy_level, :act),
-      model_tier: Keyword.get(opts, :model_tier, :cloud_frontier),
+      model_tier: model_tier,
       started_at: DateTime.utc_now(),
       enforcer: enforcer_pid,
+      quality_gate: quality_gate_pid,
+      contract_validator: contract_validator_pid,
+      sprint_controller: sprint_controller_pid,
+      context_manager: context_manager_pid,
       status: :active
     }
 
@@ -175,6 +206,20 @@ defmodule OpenSentience.Harness.Session do
   def handle_call(:audit_log, _from, state) do
     log = PipelineEnforcer.audit_log(state.enforcer)
     {:reply, log, state}
+  end
+
+  # -- Component accessors --
+
+  @impl true
+  def handle_call(:components, _from, state) do
+    {:reply,
+     %{
+       enforcer: state.enforcer,
+       quality_gate: state.quality_gate,
+       contract_validator: state.contract_validator,
+       sprint_controller: state.sprint_controller,
+       context_manager: state.context_manager
+     }, state}
   end
 
   @impl true
