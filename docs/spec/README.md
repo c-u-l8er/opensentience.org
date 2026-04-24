@@ -16,8 +16,9 @@ OpenSentience is the **research arm and runtime governance layer** of the [&] Pr
 OpenSentience is **not a product**. It is a research organization that produces:
 1. **Eight cognitive primitives** (OS-001 through OS-008) — each defining one cognitive capability
 2. **Two cross-cutting protocols** (OS-009 PRISM, OS-010 PULSE) — sibling diagnostic + temporal layers above the primitives
-3. **One runtime artifact** — the governance shim hex package (`open_sentience`) implementing OS-006
-4. **Published research** — cognitive science grounding for all ten protocols, empirical benchmarks, open questions
+3. **One sensorimotor protocol** (OS-011 Embodiment) — behavioral loop for `&body.*` providers (browser, OS, future vision/voice/motor)
+4. **One runtime artifact** — the governance shim hex package (`open_sentience`) implementing OS-006
+5. **Published research** — cognitive science grounding for all eleven protocols, empirical benchmarks, open questions
 
 The other [&] products implement the protocols. OpenSentience defines them, grounds them in theory, and provides the thin enforcement layer that ties them together at runtime.
 
@@ -512,7 +513,7 @@ PULSE is the **temporal** layer of the three-protocol stack. It is a manifest st
 
 Key properties:
 - **Five canonical phase kinds:** `retrieve`, `route`, `act`, `learn`, `consolidate` (plus `custom` with required `custom_kind`)
-- **Five canonical cross-loop tokens:** `TopologyContext`, `DeliberationResult`, `OutcomeSignal`, `ReputationUpdate`, `ConsolidationEvent`
+- **Six canonical cross-loop tokens:** `TopologyContext`, `DeliberationResult`, `OutcomeSignal`, `ReputationUpdate`, `ConsolidationEvent`, `SurpriseSignal` (v0.1.1, added for OS-011 Embodiment)
 - **Six cadence types:** `event`, `periodic`, `streaming`, `idle`, `cross_loop_signal`, `manual` (with optional fallback)
 - **Six substrate slots:** `memory`, `policy`, `audit`, `auth`, `transport`, `time` (canonical substrates: Graphonomous for memory, Delegatic for policy/audit, OpenSentience for auth)
 - **Seven invariants:** `phase_atomicity`, `feedback_immutability`, `append_only_audit`, `kappa_routing`, `quorum_before_commit`, `outcome_grounding`, `trace_id_propagation`
@@ -523,6 +524,29 @@ Key properties:
 A loop is **PULSE-conforming** if its manifest validates against the v0.1 schema and its runtime passes all 12 conformance tests. A system is **PRISM-evaluable** automatically once it is PULSE-conforming.
 
 See `docs/spec/OS-010-PULSE-SPECIFICATION.md` for the full specification, and `/PULSE/manifests/` for reference manifests.
+
+### 4.11 OS-011: Embodiment Protocol
+
+**Status:** v0.1 draft (canonical URL `embodiment.opensentience.org`)
+**Implements:** `&body.*` (new sensorimotor primitive in [&] Protocol draft v0.1.0)
+**Reference Implementations (planned):** Graphonomous (Elixir) for trace storage; agent-browser adapter for `&body.browser`; OpenClaw / Pi.dev extensions for `&body.os`; Claude Computer Use wrapper for `&body.os` coordinate mode
+**Cognitive Grounding:** Motor cortex + cerebellum + proprioception (neuroscience); Gibson's affordances (1977, 1979); Smith & Gasser sensorimotor grounding (2005); ACT-R/E embodied spatial module (Trafton 2013); Wolpert forward models in motor control (1998)
+**Depends on:** OS-001 (Continual Learning), OS-004 (Attention), OS-006 (Agent Governance), OS-008 (Harness), OS-010 (PULSE v0.1.1+)
+
+OS-011 closes the perception-action gap in the first ten protocols. Before OS-011, perception and action were smeared across `&reason` (implicit action generation), MCP tool calls (implicit perception), and `&memory.episodic` (retrospective trace recall). OS-011 defines the typed behavioral loop — `perceive → affordances → act → encode_state → trace → surprise → learn` — that every `&body.*` provider implements.
+
+Key properties:
+- **Five standard operations per body subtype:** `perceive`, `act`, `affordances`, `encode_state`, `replay`
+- **Canonical InteractionTrace schema:** typed record of a perception-action cycle with state hashes, typed actions, outcomes, latencies, and provenance
+- **Policy-filtered affordances:** unauthorized actions do not appear in the affordance set (enforcement at the body boundary, not post-hoc)
+- **Deterministic state encoding:** `sha256(canonical_json(stable_fields))` enables cross-machine replay
+- **Fail-fast replay:** state-hash divergence halts replay and reports the failed edge; destructive actions re-authorize at replay
+- **Forward models + SurpriseSignal:** agents that predict action outcomes emit SurpriseSignal when predictions diverge; consumed by `&memory.episodic`, PRISM, and FleetPrompt
+- **Twelve conformance tests** validate perceive-before-act, affordance boundedness, deterministic encoding, and replay fail-fast
+
+OS-011 is the protocol foundation for the computer-use agent category — a typed contract that OpenClaw, Claude Computer Use, Pi.dev agents, and agent-browser users can all satisfy to gain interoperable continual learning, cross-machine skill transfer via FleetPrompt, and benchmarkable embodiment fidelity via PRISM.
+
+See `docs/spec/OS-011-EMBODIMENT.md` for the full specification.
 
 ### 5.1 Open Research Questions
 
