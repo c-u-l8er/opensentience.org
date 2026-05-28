@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            SCOPE (OS-012) — Spatial algebra for multi-agent coordination
+        </title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            /* ─────────────────────────────────────────────────────────────
+               SCOPE wears a distinct "blueprint" theme — a deep prussian-blue
+               drafting canvas with a coordinate grid, cyan accent, and an amber
+               counterpoint. The spatial protocol should *look* spatial. It
+               shares the [&] typography (Cormorant / JetBrains / Inter) and
+               structural layout with its sibling pages, but inverts the palette
+               so it reads as the cartographic member of the family.
+               ───────────────────────────────────────────────────────────── */
+            :root {
+                --paper: #0d1c2b; /* deep blueprint navy — page canvas */
+                --paper-deep: #0a1622; /* darker inset */
+                --paper-soft: #13293c; /* card / panel surface */
+                --ink: #dbe8f1; /* primary text */
+                --ink-soft: #9cb8cb; /* secondary text */
+                --ink-faint: #5f7d93; /* muted / labels */
+                --rule: #294557; /* borders */
+                --rule-soft: #1d3346; /* faint borders */
+                --proved: #57c7d4; /* primary accent — cyan */
+                --proved-bg: #123a44;
+                --shipped: #7fc9a0;
+                --shipped-bg: #16352a;
+                --named: #c9a96a;
+                --sketched: #5f7d93;
+                --pass: #6fc9a0; /* "in v0.1" green */
+                --pass-bg: #14392f;
+                --fail: #e8a23d; /* dependency amber — warm pop on blue */
+                --fail-bg: #3a2a14;
+
+                --family-topological: #e8a23d;
+                --family-spatial: #57c7d4; /* spatial is the hero family */
+                --family-temporal: #7fc9b8;
+                --family-governance: #c9a96a;
+
+                --font-display: "Cormorant Garamond", Georgia, serif;
+                --font-mono: "JetBrains Mono", "IBM Plex Mono", monospace;
+                --font-body: "Inter", system-ui, sans-serif;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background: var(--paper);
+                color: var(--ink);
+                font-family: var(--font-body);
+                font-size: 15px;
+                line-height: 1.6;
+                /* Blueprint coordinate grid — fine 28px cells inside coarse
+                   112px frames, plus a soft radial vignette toward the edges. */
+                background-image:
+                    radial-gradient(
+                        circle at 50% 0%,
+                        rgba(87, 199, 212, 0.06),
+                        transparent 60%
+                    ),
+                    linear-gradient(
+                        rgba(87, 199, 212, 0.07) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(87, 199, 212, 0.07) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        rgba(87, 199, 212, 0.03) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(87, 199, 212, 0.03) 1px,
+                        transparent 1px
+                    );
+                background-size:
+                    100% 100%,
+                    112px 112px,
+                    112px 112px,
+                    28px 28px,
+                    28px 28px;
+                background-attachment: fixed;
+            }
+            .wrap {
+                max-width: 1080px;
+                margin: 0 auto;
+                padding: 56px 36px 120px;
+            }
+
+            /* Masthead */
+            header.mast {
+                border-bottom: 1px solid var(--ink);
+                padding-bottom: 32px;
+                margin-bottom: 56px;
+            }
+            .mast .eyebrow {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ink-soft);
+                margin-bottom: 18px;
+            }
+            .mast h1 {
+                font-family: var(--font-display);
+                font-weight: 500;
+                font-size: 60px;
+                line-height: 1.02;
+                margin: 0 0 18px;
+                letter-spacing: -0.01em;
+            }
+            .mast h1 em {
+                font-style: italic;
+                color: var(--proved);
+            }
+            .mast .sub {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 21px;
+                color: var(--ink-soft);
+                max-width: 800px;
+                line-height: 1.4;
+            }
+            .mast .meta {
+                margin-top: 24px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                color: var(--ink-faint);
+                display: flex;
+                gap: 28px;
+                flex-wrap: wrap;
+            }
+            .mast .meta .draft {
+                color: var(--proved);
+                font-weight: 600;
+            }
+
+            /* Section frames */
+            section.panel {
+                margin: 56px 0;
+            }
+            .panel-head {
+                display: flex;
+                align-items: baseline;
+                gap: 18px;
+                border-bottom: 1px solid var(--rule);
+                padding-bottom: 10px;
+                margin-bottom: 24px;
+            }
+            .panel-num {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--ink-faint);
+                letter-spacing: 0.15em;
+            }
+            .panel-head h2 {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 30px;
+                margin: 0;
+                letter-spacing: -0.005em;
+            }
+            .panel-head .tag {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                color: var(--ink-faint);
+                margin-left: auto;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+            }
+            .panel-intro {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 18px;
+                color: var(--ink-soft);
+                margin-bottom: 24px;
+                max-width: 820px;
+                line-height: 1.45;
+            }
+            .panel p.body-copy {
+                max-width: 820px;
+                margin-bottom: 14px;
+            }
+            .panel p.body-copy code,
+            .closing p code,
+            .struct + p code {
+                font-family: var(--font-mono);
+                font-size: 12.5px;
+                background: var(--paper-deep);
+                padding: 1px 5px;
+                border-radius: 2px;
+            }
+
+            /* Struct / code blocks */
+            .struct {
+                background: var(--paper-soft);
+                border: 1px solid var(--ink);
+                padding: 20px 24px;
+                margin: 16px 0;
+            }
+            .struct h4 {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+                border-bottom: 1px dashed var(--rule);
+            }
+            .struct pre {
+                font-family: var(--font-mono);
+                font-size: 13px;
+                line-height: 1.7;
+                color: var(--ink);
+                white-space: pre-wrap;
+            }
+            .struct pre .kw {
+                color: var(--proved);
+                font-weight: 600;
+            }
+            .struct pre .ty {
+                color: var(--family-temporal);
+                font-weight: 600;
+            }
+            .struct pre .op {
+                color: var(--family-spatial);
+            }
+            .struct pre .com {
+                color: var(--ink-faint);
+                font-style: italic;
+            }
+            .struct pre .lit {
+                color: var(--family-governance);
+            }
+
+            /* Two-gap cards (verb / noun) */
+            .gap-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .gap {
+                border: 1px solid var(--ink);
+                background: var(--paper-soft);
+                padding: 22px 24px;
+            }
+            .gap .glyph {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 13px;
+                letter-spacing: 0.1em;
+                color: var(--family-spatial);
+                text-transform: uppercase;
+            }
+            .gap h3 {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 23px;
+                margin: 6px 0 10px;
+            }
+            .gap p {
+                font-size: 14px;
+                line-height: 1.6;
+                margin-bottom: 10px;
+            }
+            .gap .subsumes {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                border-top: 1px dashed var(--rule);
+                padding-top: 10px;
+            }
+
+            /* Mapping table */
+            table.map {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 18px 0;
+                font-size: 14px;
+            }
+            table.map th,
+            table.map td {
+                text-align: left;
+                padding: 11px 14px;
+                border-bottom: 1px solid var(--rule-soft);
+                vertical-align: top;
+            }
+            table.map th {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                border-bottom: 1px solid var(--rule);
+            }
+            table.map td code {
+                font-family: var(--font-mono);
+                font-size: 12.5px;
+                color: var(--family-spatial);
+            }
+            table.map td .prod {
+                font-weight: 600;
+            }
+
+            /* Status / scope rows */
+            .row-list {
+                display: grid;
+                gap: 12px;
+            }
+            .row {
+                border: 1px solid var(--rule);
+                background: var(--paper-soft);
+                padding: 14px 18px;
+                display: grid;
+                grid-template-columns: 120px 1fr;
+                gap: 18px;
+                align-items: baseline;
+            }
+            .row .k {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+            }
+            .row .v {
+                font-size: 14px;
+                line-height: 1.55;
+            }
+            .row .v code {
+                font-family: var(--font-mono);
+                font-size: 12.5px;
+                background: var(--paper-deep);
+                padding: 1px 5px;
+                border-radius: 2px;
+            }
+
+            .badge {
+                display: inline-block;
+                font-family: var(--font-mono);
+                font-size: 9px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                padding: 3px 8px;
+                border-radius: 2px;
+                margin-right: 6px;
+            }
+            .badge.in {
+                background: var(--pass-bg);
+                color: var(--pass);
+                font-weight: 700;
+            }
+            .badge.defer {
+                background: var(--paper-deep);
+                color: var(--ink-faint);
+            }
+            .badge.dep {
+                background: var(--fail-bg);
+                color: var(--fail);
+                font-weight: 700;
+            }
+
+            /* Prior-art chips */
+            .priorart {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 8px;
+            }
+            .priorart .chip {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                border: 1px solid var(--rule);
+                background: var(--paper-soft);
+                padding: 6px 11px;
+                color: var(--ink-soft);
+            }
+            .priorart .chip b {
+                color: var(--ink);
+            }
+
+            /* Closing */
+            .closing {
+                margin-top: 60px;
+                padding: 28px 32px;
+                border: 1px solid var(--ink);
+                background: var(--paper-soft);
+            }
+            .closing h3 {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 24px;
+                margin-bottom: 14px;
+            }
+            .closing p {
+                font-family: var(--font-body);
+                font-size: 15px;
+                line-height: 1.65;
+                margin-bottom: 12px;
+                max-width: 800px;
+            }
+            .closing p em {
+                font-style: italic;
+                color: var(--ink-soft);
+            }
+
+            footer.colophon {
+                margin-top: 60px;
+                padding-top: 24px;
+                border-top: 1px solid var(--ink);
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--ink-faint);
+                letter-spacing: 0.05em;
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 14px;
+            }
+
+            @media (max-width: 880px) {
+                .wrap {
+                    padding: 32px 22px 80px;
+                }
+                .mast h1 {
+                    font-size: 38px;
+                }
+                .gap-grid {
+                    grid-template-columns: 1fr;
+                }
+                .row {
+                    grid-template-columns: 1fr;
+                    gap: 6px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav
+            property="scope"
+            theme="dark"
+            style="
+                --amp-nav-accent: #57c7d4;
+                --amp-nav-bg: rgba(10, 22, 34, 0.86);
+                --amp-nav-border: #294557;
+            "
+        ></amp-nav>
+        <div class="wrap">
+            <header class="mast">
+                <div class="eyebrow">
+                    OpenSentience · OS-012 · SCOPE · v0.1 draft
+                </div>
+                <h1>
+                    SCOPE — <em>awareness for typed regions</em>, across
+                    substrates.
+                </h1>
+                <p class="sub">
+                    One spatial protocol pair. A <code>Region</code> algebra says
+                    <em>where</em> in any substrate — geo, grid, document,
+                    graph. A typed <code>SpatialClaim</code> envelope says
+                    <em>who is doing what, how hard, until when</em>. Fifteen
+                    multi-agent coordination dimensions collapse into two cuts —
+                    and the GeoFleetic ↔ RuneFort bridge falls out for free.
+                </p>
+                <div class="meta">
+                    <span class="draft">v0.1 draft · sections 0–17</span>
+                    <span>OS-012 · supersedes OS-015 Viewport Binding</span>
+                    <span>[&] primitive: &amp;space.region + &amp;space.claim</span>
+                    <span>depends on PULSE v0.1.2</span>
+                </div>
+            </header>
+
+            <!-- ════════════════════════════ -->
+            <!-- I. The collapse              -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">I.</span>
+                    <h2>The collapse: 15 dimensions → 2 gaps</h2>
+                    <span class="tag">the architectural finding</span>
+                </div>
+                <p class="panel-intro">
+                    The cleanest result of the spatial-coordination research:
+                    fifteen things the multi-agent literature treats as separate
+                    problems are the same primitive at different time horizons
+                    and coupling strengths. Naming the two underlying gaps is
+                    cheaper than shipping fifteen protocols — and the unification
+                    is what nobody else has.
+                </p>
+
+                <div class="gap-grid">
+                    <div class="gap">
+                        <div class="glyph">Gap A · the verb layer</div>
+                        <h3>SpatialClaim envelope</h3>
+                        <p>
+                            A typed assertion of intent over a region. Carries
+                            <code>kind</code> (presence, edit, reserve,
+                            territory, coverage, memory, handoff),
+                            <code>strength</code> (advisory · soft · exclusive),
+                            a time <code>horizon</code>, confidence, and a
+                            <code>supersedes</code> chain for conflict
+                            resolution.
+                        </p>
+                        <p>
+                            Carried over CloudEvents v1 — the same envelope PULSE
+                            already uses for cross-loop tokens.
+                        </p>
+                        <div class="subsumes">
+                            Subsumes 6: shared spatial state · intent broadcast ·
+                            conflict resolution · presence · attention/salience ·
+                            territory/role
+                        </div>
+                    </div>
+                    <div class="gap">
+                        <div class="glyph">Gap B · the noun layer</div>
+                        <h3>N-D Region algebra</h3>
+                        <p>
+                            A discriminated union of region
+                            <code>kind</code>s with substrate-agnostic
+                            operations:
+                            <code>contains</code> · <code>overlaps</code> ·
+                            <code>distance</code> · <code>union</code> ·
+                            <code>buffer</code> · <code>project</code>.
+                        </p>
+                        <p>
+                            Allen interval algebra (temporal), RCC-8
+                            (geographic), and Manhattan (grid) all exist
+                            <em>separately</em> today. The unification across
+                            substrates is what's missing.
+                        </p>
+                        <div class="subsumes">
+                            Subsumes 4: cognitive viewports · spatial memory
+                            tagging · N-D substrates · spatio-temporal traces
+                        </div>
+                    </div>
+                </div>
+
+                <div class="struct">
+                    <h4>The unifying SpatialClaim envelope</h4>
+                    <pre><span class="kw">type</span> <span class="ty">SpatialClaim</span> = {
+  agent:      <span class="ty">AgentId</span>,
+  region:     <span class="ty">Region</span>,            <span class="com">// the noun — see Gap B</span>
+  kind:       <span class="ty">ClaimKind</span>,         <span class="com">// presence | edit | reserve | territory | coverage | memory | handoff</span>
+  strength:   <span class="ty">Strength</span>,          <span class="com">// advisory | soft | exclusive</span>
+  horizon:    <span class="ty">TimeHorizon</span>,       <span class="com">// "active during phase X" / "valid until window Y"</span>
+  confidence: <span class="ty">[0, 1]</span>,
+  supersedes: <span class="ty">ClaimId[]</span>,         <span class="com">// conflict-resolution chain</span>
+  trace_id:   <span class="ty">TraceId</span>             <span class="com">// CloudEvents v1 correlation</span>
+}
+
+<span class="kw">type</span> <span class="ty">Region</span> = { <span class="kw">kind</span>: <span class="lit">"grid"</span> | <span class="lit">"document_span"</span> | <span class="lit">"graph_subgraph"</span>, ... }
+              <span class="com">// v0.1 minimum — geo / file_range / viewport deferred to v0.2</span></pre>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- II. One type per substrate   -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">II.</span>
+                    <h2>One region type, every substrate</h2>
+                    <span class="tag">the bridge nobody built</span>
+                </div>
+                <p class="panel-intro">
+                    Today every portfolio piece picks its own region type and
+                    they never interoperate. SCOPE makes them <em>kinds</em> of
+                    one <code>Region</code>. The long-hand-wavy GeoFleetic ↔
+                    RuneFort synergy becomes a concrete, two-line bridge.
+                </p>
+
+                <table class="map">
+                    <thead>
+                        <tr>
+                            <th>Region kind</th>
+                            <th>Maps onto</th>
+                            <th>v0.1 status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>grid</code></td>
+                            <td>
+                                <span class="prod">RuneFort</span> layout
+                                primitives — rooms / claims / neighbors over an
+                                integer grid
+                            </td>
+                            <td><span class="badge in">in v0.1</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>document_span</code></td>
+                            <td>
+                                <span class="prod">BendScript</span> graph
+                                regions — typed inline link facets over
+                                <code>bend:doc#blk.spn</code> URIs
+                            </td>
+                            <td><span class="badge in">in v0.1</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>graph_subgraph</code></td>
+                            <td>
+                                <span class="prod">Graphonomous</span> —
+                                region-scoped retrieval over graph hops
+                            </td>
+                            <td><span class="badge in">in v0.1</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>geo</code></td>
+                            <td>
+                                <span class="prod">GeoFleetic</span> GeoJSON
+                                polygons / geofences
+                            </td>
+                            <td><span class="badge defer">v0.2</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>document</code></td>
+                            <td>
+                                Shared whiteboard / canvas — multiple agents
+                                emitting presence + intent + territory claims
+                            </td>
+                            <td><span class="badge defer">v0.2</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p class="body-copy">
+                    <strong>The bridge, concretely:</strong> a fleet asset
+                    entering a geofence (GeoFleetic) emits a
+                    <code>SpatialClaim{kind: presence, region: geo}</code>, which
+                    a RuneFort renderer displays as a state binding on the
+                    corresponding grid tile
+                    (<code>region: grid</code>). A geographic region and a
+                    grid-cell room become two <code>kind</code>s of the same
+                    type. That's the test that A + B are the right cuts: the
+                    "shared whiteboard for LLM agents" falls out with
+                    <em>no new primitive</em> — a <code>document</code> region
+                    plus presence / intent / attention / territory claims, with
+                    Deliberatic for hard conflicts and Graphonomous persisting
+                    claims as semantic nodes.
+                </p>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- III. v0.1 scope               -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">III.</span>
+                    <h2>What v0.1 commits to — consumer-gated</h2>
+                    <span class="tag">honest surface area</span>
+                </div>
+                <p class="panel-intro">
+                    Architecture review against the stack and the competitive
+                    landscape (tf2, W3C Web Annotation, MAPF/CBS, Yjs awareness,
+                    etcd leases) found the draft's surface area ~40% larger than
+                    current consumers justify. v0.1 ships only what a real
+                    consumer needs today; the rest defers with explicit
+                    commitments.
+                </p>
+
+                <div class="row-list">
+                    <div class="row">
+                        <div class="k">Region kinds</div>
+                        <div class="v">
+                            <span class="badge in">3 in v0.1</span>
+                            <code>grid</code>, <code>document_span</code>,
+                            <code>graph_subgraph</code>.
+                            <span class="badge defer">deferred</span>
+                            <code>file_range</code> (no range-level consumer),
+                            <code>viewport</code> (no multi-agent-per-viewport
+                            consumer yet).
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="k">Claim kinds</div>
+                        <div class="v">
+                            <span class="badge in">6–7 in v0.1</span>
+                            <code>presence</code>, <code>edit</code>,
+                            <code>reserve</code>, <code>territory</code>,
+                            <code>coverage</code>, <code>memory</code>,
+                            <code>handoff</code>.
+                            <span class="badge defer">deferred</span>
+                            <code>avoid</code>/<code>hazard</code> →
+                            <code>scope.robotics.v1</code>. Dropped
+                            <code>attention</code> (overlaps presence),
+                            <code>observation</code>/<code>drift</code> (already
+                            PULSE <code>OutcomeSignal</code> /
+                            <code>SurpriseSignal</code>).
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="k">Strength levels</div>
+                        <div class="v">
+                            <span class="badge in">3 in v0.1</span>
+                            <code>advisory</code>, <code>soft</code>,
+                            <code>exclusive</code>.
+                            <span class="badge defer">deferred</span>
+                            <code>mandatory</code> — until a fencing-token
+                            mechanism exists (the etcd / Chubby / Redlock lesson:
+                            without monotonic claim versions per
+                            <code>(frame, region)</code>, stale clients act after
+                            expiry).
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="k">Subscription</div>
+                        <div class="v">
+                            <span class="badge in">promoted to v0.1</span>
+                            The whole stack is event-driven (PULSE / Graphonomous
+                            / PRISM are all CloudEvents-based). Without
+                            subscription, agents must poll a static document —
+                            so it's the core feature of a coordination protocol,
+                            not a v0.2 nicety.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- IV. Dependencies              -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">IV.</span>
+                    <h2>Hard prerequisites before v0.1 final</h2>
+                    <span class="tag">what must ship first</span>
+                </div>
+                <p class="panel-intro">
+                    SCOPE doesn't stand alone. Two dependencies are blocking and
+                    documented as such — naming them honestly is part of the
+                    protocol-extraction discipline.
+                </p>
+
+                <div class="row-list">
+                    <div class="row">
+                        <div class="k">
+                            <span class="badge dep">blocking</span>
+                        </div>
+                        <div class="v">
+                            <strong>PULSE v0.1.2 vendor-namespace tokens.</strong>
+                            PULSE v0.1.1's closed token enum cannot accept
+                            <code>scope.v1.*</code> tokens. The vendor-namespace
+                            mechanism must be specified before SCOPE can be
+                            normatively conformant.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="k">
+                            <span class="badge dep">blocking</span>
+                        </div>
+                        <div class="v">
+                            <strong>Graphonomous region field.</strong> The Node
+                            schema has no <code>region</code> field today.
+                            Region-scoped retrieval is the correct division of
+                            labor, but it's a parallel Graphonomous-side
+                            dependency that SCOPE v0.1 must document.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="k">field naming</div>
+                        <div class="v">
+                            Reconcile <code>horizon</code> (richer time-window:
+                            "active during phase X" / "valid until window Y")
+                            vs. the draft's <code>expires_at</code> (single
+                            timestamp) before v0.1 final. <code>horizon</code>
+                            wins — it maps cleaner onto PULSE phases.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="k">[&] framing</div>
+                        <div class="v">
+                            SCOPE <em>introduces</em> <code>region</code> and
+                            <code>claim</code> as new <code>&amp;space.*</code>
+                            subtypes (today: <code>fleet</code> /
+                            <code>route</code> / <code>geofence</code>) —
+                            backward-compatible, not a "v0.2 maturation."
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- V. Prior art                  -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">V.</span>
+                    <h2>Prior art — two genuine novelties, the rest assembly</h2>
+                    <span class="tag">honest positioning</span>
+                </div>
+                <p class="panel-intro">
+                    SCOPE's two real inventions are substrate-agnostic frames
+                    (lifted from tf2, generalized beyond rigid-body transforms)
+                    and substrate-agnostic typed claims with a strength gradient
+                    (synthesized from etcd/Chubby + Yjs awareness + MAPF).
+                    Everything else is careful assembly — and SCOPE cites it.
+                </p>
+                <div class="priorart">
+                    <span class="chip"><b>ROS REP&nbsp;105 / tf2</b> — frames</span>
+                    <span class="chip"><b>W3C Web Annotation</b> — selectors via refinedBy</span>
+                    <span class="chip"><b>MAPF / Conflict-Based Search</b> — typed conflicts</span>
+                    <span class="chip"><b>Yjs awareness · Liveblocks presence</b> — ephemeral TTL claims</span>
+                    <span class="chip"><b>etcd leases · Chubby</b> — advisory locks + strength</span>
+                </div>
+                <p class="body-copy" style="margin-top: 18px">
+                    The empty seat is real: ROS2 tf2 is poses-only, DDS-RTPS QoS
+                    is topic-bound, Liveblocks/Yjs awareness is untyped, Figma
+                    multiplayer is proprietary cursors, the Contract Net Protocol
+                    is an algorithm without a carrier, and MASCN (AAMAS 2025) is
+                    a concept paper. The recommended pitch —
+                    <em>"awareness for typed regions, across substrates"</em> —
+                    names the analog every collaborative-software builder already
+                    has cached, then the three concrete extensions (typed
+                    regions, frames, strengths) that justify a new protocol.
+                </p>
+            </section>
+
+            <div class="closing">
+                <h3>Status: v0.1 draft, consumer-gated revision in progress</h3>
+                <p>
+                    A SCOPE v0.1 draft exists (sections 0–17). The next move is
+                    <em>not</em> green-field spec work — it's consumer-gated
+                    scope reduction plus a subscription contract, gated on PULSE
+                    v0.1.2 and a Graphonomous <code>region</code> field. SCOPE
+                    delivers six-plus coordination dimensions at once and is
+                    cheaper than the six protocols it replaces; it sequences
+                    <em>after</em> the half-built primitives are finished, per
+                    the stack's "finish what's half-built first" principle.
+                </p>
+                <p>
+                    Engineering risks the draft must answer, paid-for lessons
+                    from production predecessors: fencing tokens for
+                    <code>mandatory</code> (Kleppmann via etcd/Chubby), multiple
+                    selectors per anchor for <code>document_span</code> drift
+                    (W3C <code>refinedBy</code>, not single anchors),
+                    UTF-16/UTF-8/grapheme encoding negotiation (LSP
+                    <code>PositionEncodingKind</code>), logical clocks for
+                    <code>expires_at</code> skew, tombstone GC for superseded
+                    chains, a binary wire profile for &gt;1&nbsp;Hz presence, and
+                    signed claims (A2A v1.0 Signed Agent Cards — unsigned claims
+                    are spoofable).
+                </p>
+            </div>
+
+            <footer class="colophon">
+                <div>OpenSentience · OS-012 SCOPE · v0.1 draft</div>
+                <div>
+                    spatial collapse · regions + claims · GeoFleetic ↔ RuneFort
+                    bridge
+                </div>
+                <div>depends on PULSE v0.1.2 · sequenced after Tier S</div>
+            </footer>
+        </div>
+    </body>
+</html>

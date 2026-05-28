@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Proof: ⊆ — Monotonic Inheritance · OpenSentience</title>
+        <meta
+            name="description"
+            content="The proof that a child context in Delegatic inherits a strict subset of its parent's permissions — privilege escalation is rejected at write time and verified by the authorization kernel and the L14 consume-soundness law."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/proofs/proof.css" />
+    </head>
+    <body style="--accent: #8c6d3f">
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav property="opensentience" theme="light"></amp-nav>
+
+        <div class="wrap">
+            <nav class="crumb">
+                <a href="/invariants.html">Periodic Table of Agent Invariants</a>
+                <span>›</span>
+                <span>Group IV · Governance</span>
+            </nav>
+
+            <header class="proof-head">
+                <div class="glyph-box">
+                    <span class="num">15</span>
+                    <span class="sym glyph">⊆</span>
+                    <span class="lab">Monotonic</span>
+                </div>
+                <div class="head-text">
+                    <div class="eyebrow">OS-006 Delegatic kernel</div>
+                    <h1>⊆ — Monotonic Inheritance</h1>
+                    <span class="badge">Proved</span>
+                </div>
+            </header>
+
+            <p class="lede">
+                A team cannot grant its members a capability the team itself does
+                not hold. Every child context inherits a strict subset of its
+                parent's permissions, and any attempt to escalate beyond the
+                parent is rejected before it is written. Privilege only ever
+                narrows as you descend the delegation tree.
+            </p>
+
+            <h2><span class="n">01</span>The claim</h2>
+            <p>
+                Let <code>perms(c)</code> be the permission set of context
+                <code>c</code> with parent <code>p</code>. The invariant is a
+                subset law on the delegation lattice:
+            </p>
+            <div class="formal">
+∀ child c with parent p:   perms(c) ⊆ perms(p)
+
+Attempted escalation (perms(c) ⊄ perms(p)) is rejected at write time.
+Auditing the root bounds everything reachable downstream.</div>
+
+            <h2><span class="n">02</span>The evidence</h2>
+            <div class="evidence-card">
+                <span class="src">delegatic/ v0.1.0 · authorization kernel</span>
+                <p style="margin: 0">
+                    The kernel computes the effective permission set as a lattice
+                    meet against the parent and refuses any grant that would
+                    exceed it. Covered by the 42-test kernel suite, including the
+                    privilege-escalation rejection cases.
+                </p>
+            </div>
+            <div class="evidence-card">
+                <span class="src"
+                    >workbench/app/src/lib/ia/ · L14 (consume soundness)</span
+                >
+                <p style="margin: 0">
+                    <code>gate.authority</code> projects an over-broad child grant
+                    into a value whose σ (conflict set) is non-empty, so
+                    <code>consume(value, { sigma_empty })</code> refuses it. Law
+                    L14 guarantees the gate only passes when σ is genuinely empty
+                    — i.e. when inheritance really was monotonic.
+                </p>
+            </div>
+
+            <h2><span class="n">03</span>Verify it yourself</h2>
+            <div class="formal">
+cd delegatic && mix test            # escalation rejected at write time
+cd workbench/app
+npm test -- ia/laws.test.ts         # L14 — consume soundness backs gate.authority</div>
+
+            <h2><span class="n">04</span>What authority ⊆ grants</h2>
+            <p>
+                ⊆ grants <em>privilege containment</em>. Because authority only
+                ever shrinks downward, the blast radius of any delegated context
+                is bounded by its ancestors — you never have to read the whole
+                tree to know what a leaf can do. It is the lattice complement to
+                ⊘ (no cycles): one bounds depth, the other bounds breadth.
+            </p>
+
+            <footer>
+                <span>© 2026 Ampersand Box Design · OS-006 Delegatic</span>
+                <span>
+                    <a href="/proofs/no-cycles.html">← ⊘ No cycles</a> ·
+                    <a href="/proofs/deny-default.html">⊥ Deny default →</a>
+                </span>
+            </footer>
+        </div>
+    </body>
+</html>

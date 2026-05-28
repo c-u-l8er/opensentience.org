@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Proof: ⊘ — No Cycles in Authority · OpenSentience</title>
+        <meta
+            name="description"
+            content="The proof that the Delegatic authority graph is acyclic by construction — no delegation loops, enforced at write time and verified by the authorization kernel and the L14 consume-soundness law."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/proofs/proof.css" />
+    </head>
+    <body style="--accent: #8c6d3f">
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav property="opensentience" theme="light"></amp-nav>
+
+        <div class="wrap">
+            <nav class="crumb">
+                <a href="/invariants.html">Periodic Table of Agent Invariants</a>
+                <span>›</span>
+                <span>Group IV · Governance</span>
+            </nav>
+
+            <header class="proof-head">
+                <div class="glyph-box">
+                    <span class="num">14</span>
+                    <span class="sym glyph">⊘</span>
+                    <span class="lab">No cycles</span>
+                </div>
+                <div class="head-text">
+                    <div class="eyebrow">OS-006 Delegatic kernel</div>
+                    <h1>⊘ — No Cycles in Authority</h1>
+                    <span class="badge">Proved</span>
+                </div>
+            </header>
+
+            <p class="lede">
+                Where the knowledge graph welcomes cycles — that is what κ is for
+                — the authority graph forbids them. Delegation is acyclic by
+                construction: no chain of "A may delegate to B" can ever loop back
+                on itself. Privilege loops and infinite delegation chains are
+                impossible, not merely detected.
+            </p>
+
+            <h2><span class="n">01</span>The claim</h2>
+            <p>
+                Let the authority graph <code>A</code> have an edge
+                <code>u → v</code> whenever principal <code>u</code> may delegate
+                to principal <code>v</code>. The invariant is:
+            </p>
+            <div class="formal">
+∀ paths in A:  no path revisits a node     (A is a DAG)
+
+Enforced at write time:  a delegation edge that would close a cycle is rejected
+                         before it is ever committed — not flagged on read.</div>
+            <p>
+                This is the structural opposite of κ. The same Tarjan machinery
+                that <em>detects</em> cycles in knowledge (to route to
+                deliberation) is used here to <em>refuse</em> cycles in authority
+                (to preserve the chain of responsibility).
+            </p>
+
+            <h2><span class="n">02</span>The evidence</h2>
+            <div class="evidence-card">
+                <span class="src">delegatic/ v0.1.0 · authorization kernel</span>
+                <p style="margin: 0">
+                    The Delegatic kernel (Policy + PolicyStore + HMAC-signed
+                    AuthorizationBlock + Authorizer) admits an authority edge only
+                    when it preserves acyclicity. Covered by the kernel's 42-test
+                    suite (25 unit + 3 integration + 14 MCP).
+                </p>
+            </div>
+            <div class="evidence-card">
+                <span class="src"
+                    >workbench/app/src/lib/ia/ · L14 (consume soundness)</span
+                >
+                <p style="margin: 0">
+                    The Workbench <code>gate.authority</code> proof gate projects
+                    each authorization decision into an Invariant Arithmetic value
+                    whose <code>authority_path</code> must be a simple path, then
+                    calls <code>consume(value, { sigma_empty })</code>. Law L14
+                    (fast-check, 1000 trials) guarantees the gate passes
+                    <em>only</em> when the value genuinely satisfies the
+                    requirement — soundness, not optimism.
+                </p>
+            </div>
+
+            <h2><span class="n">03</span>Verify it yourself</h2>
+            <div class="formal">
+cd delegatic && mix test            # authorization kernel — acyclicity at write time
+cd workbench/app
+npm test -- ia/laws.test.ts         # L14 — consume soundness backs gate.authority</div>
+
+            <h2><span class="n">04</span>What authority ⊘ grants</h2>
+            <p>
+                ⊘ grants <em>delegation safety</em>: because authority cannot
+                loop, the chain of responsibility always terminates at a root
+                grantor. Auditing the root tells you the whole story. This is the
+                first of four Delegatic kernel invariants — ⊘, ⊆, ⊥, ⊕ — that
+                together make agent governance structurally honest.
+            </p>
+
+            <footer>
+                <span>© 2026 Ampersand Box Design · OS-006 Delegatic</span>
+                <span>
+                    <a href="/invariants.html">← Periodic Table</a> ·
+                    <a href="/proofs/monotonic-inheritance.html"
+                        >⊆ Monotonic →</a
+                    >
+                </span>
+            </footer>
+        </div>
+    </body>
+</html>

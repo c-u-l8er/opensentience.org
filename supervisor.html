@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>The Supervisor — Invariant-driven teacher · OpenSentience</title>
+        <meta
+            name="description"
+            content="The Supervisor is the [&] dark-factory teacher: it takes one invariant from the Periodic Table as commission and autonomously produces a verified curriculum of skills that prove it. Spec-stage (v0.2 draft)."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            /* ─────────────────────────────────────────────────────────────
+               The Supervisor wears a "chalkboard" theme — a deep slate-green
+               lecture board with chalk-white text, chalk-yellow emphasis, and
+               mint/tan chalk accents. The teacher loop should *look* like a
+               classroom. It keeps the [&] typography (Cormorant / JetBrains /
+               Inter) and the full page structure, but inverts the palette so it
+               reads as the pedagogical member of the family — distinct from the
+               cream-paper pages and from SCOPE's blueprint blue.
+               ───────────────────────────────────────────────────────────── */
+            :root {
+                --paper: #233029; /* chalkboard slate-green — page */
+                --paper-deep: #1a241f; /* darker inset */
+                --paper-soft: #2b3a32; /* card / panel surface */
+                --ink: #eef0e6; /* chalk white */
+                --ink-soft: #bac5b6; /* soft chalk */
+                --ink-faint: #7e8b7c; /* faint chalk / labels */
+                --rule: #3f4f45; /* board trim */
+                --rule-soft: #32413a; /* faint trim */
+                --proved: #e8c35a; /* chalk-yellow emphasis */
+                --shipped: #8fc9a3; /* mint chalk */
+                --spec: #d2b985; /* tan chalk */
+                --family-temporal: #8fc9b8;
+                --family-governance: #d6b97a;
+                --font-display: "Cormorant Garamond", Georgia, serif;
+                --font-mono: "JetBrains Mono", "IBM Plex Mono", monospace;
+                --font-body: "Inter", system-ui, sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                background: var(--paper);
+                color: var(--ink);
+                font-family: var(--font-body);
+                line-height: 1.6;
+                overflow-x: hidden;
+                position: relative;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 100;
+                opacity: 0.05;
+                /* faint chalk-dust grain — light specks, screen-blended onto
+                   the dark board so it lifts rather than darkens */
+                mix-blend-mode: screen;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.95 0 0 0 0 0.88 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            }
+
+            .wrap {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 0 2.5rem 7rem;
+            }
+
+            /* ── Masthead ── */
+            .masthead {
+                padding: 3.5rem 0 2rem;
+                border-bottom: 1px solid var(--rule);
+            }
+            .masthead-top {
+                display: flex;
+                justify-content: space-between;
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                margin-bottom: 2rem;
+            }
+            h1.title {
+                font-family: var(--font-display);
+                font-weight: 500;
+                font-size: clamp(2.6rem, 6vw, 5rem);
+                line-height: 0.98;
+                letter-spacing: -0.02em;
+                margin-bottom: 1rem;
+            }
+            h1.title em {
+                font-style: italic;
+                color: var(--proved);
+                font-weight: 400;
+            }
+            .subtitle {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+                color: var(--ink-soft);
+                max-width: 54ch;
+            }
+            .crumb {
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                margin: 2.5rem 0 0;
+            }
+            .crumb a {
+                color: var(--ink-soft);
+                text-decoration: none;
+                border-bottom: 1px solid var(--rule);
+            }
+            .crumb a:hover {
+                color: var(--proved);
+            }
+
+            /* ── Status banner ── */
+            .status-banner {
+                display: flex;
+                gap: 1.5rem;
+                align-items: flex-start;
+                background: var(--paper-deep);
+                border-left: 4px solid var(--spec);
+                padding: 1.25rem 1.5rem;
+                margin: 2.5rem 0;
+                font-size: 0.92rem;
+            }
+            .status-banner .badge {
+                flex-shrink: 0;
+                font-family: var(--font-mono);
+                font-size: 0.65rem;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                background: var(--spec);
+                color: var(--paper);
+                padding: 0.35rem 0.6rem;
+                border-radius: 2px;
+                margin-top: 0.1rem;
+            }
+            .status-banner code {
+                font-family: var(--font-mono);
+                font-size: 0.82em;
+                background: var(--paper-soft);
+                padding: 0.05em 0.35em;
+                border: 1px solid var(--rule);
+            }
+
+            /* ── Sections ── */
+            section {
+                margin-top: 3.5rem;
+            }
+            h2 {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 2rem;
+                letter-spacing: -0.01em;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: baseline;
+                gap: 0.75rem;
+            }
+            h2 .n {
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+                color: var(--proved);
+                letter-spacing: 0.1em;
+            }
+            p {
+                margin-bottom: 1rem;
+                max-width: 70ch;
+                color: var(--ink-soft);
+            }
+            p strong,
+            li strong {
+                color: var(--ink);
+            }
+            code {
+                font-family: var(--font-mono);
+                font-size: 0.85em;
+                background: var(--paper-deep);
+                padding: 0.05em 0.35em;
+                border: 1px solid var(--rule);
+                color: var(--ink);
+            }
+
+            .jtbd {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 1.4rem;
+                line-height: 1.5;
+                color: var(--ink);
+                border-left: 4px solid var(--proved);
+                padding: 0.5rem 0 0.5rem 1.5rem;
+                margin: 1.5rem 0;
+                max-width: 60ch;
+            }
+
+            /* central invariant conditions */
+            .claim-list {
+                list-style: none;
+                counter-reset: claim;
+                display: grid;
+                gap: 1rem;
+                margin-top: 1.5rem;
+            }
+            .claim-list li {
+                counter-increment: claim;
+                background: var(--paper-soft);
+                border: 1px solid var(--rule);
+                padding: 1.1rem 1.3rem 1.1rem 3.2rem;
+                position: relative;
+                color: var(--ink-soft);
+            }
+            .claim-list li::before {
+                content: counter(claim, lower-alpha);
+                position: absolute;
+                left: 1.1rem;
+                top: 1rem;
+                font-family: var(--font-mono);
+                font-weight: 700;
+                color: var(--proved);
+            }
+
+            /* loop table */
+            .loop {
+                display: grid;
+                gap: 0;
+                border: 1px solid var(--ink);
+                margin-top: 1.5rem;
+            }
+            .loop-row {
+                display: grid;
+                grid-template-columns: 130px 1fr;
+                border-bottom: 1px solid var(--rule);
+            }
+            .loop-row:last-child {
+                border-bottom: none;
+            }
+            .loop-phase {
+                font-family: var(--font-mono);
+                font-size: 0.8rem;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                padding: 1rem 1.2rem;
+                background: var(--paper-deep);
+                border-right: 1px solid var(--rule);
+                color: var(--proved);
+            }
+            .loop-body {
+                padding: 1rem 1.2rem;
+                font-size: 0.92rem;
+                color: var(--ink-soft);
+            }
+
+            /* faculty cards */
+            .faculty {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 1rem;
+                margin-top: 1.5rem;
+            }
+            .faculty .card {
+                border: 1px solid var(--rule);
+                background: var(--paper-soft);
+                padding: 1.25rem;
+            }
+            .faculty .card h3 {
+                font-family: var(--font-display);
+                font-size: 1.3rem;
+                font-weight: 600;
+                margin-bottom: 0.25rem;
+            }
+            .faculty .card .role {
+                font-family: var(--font-mono);
+                font-size: 0.68rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--family-governance);
+                margin-bottom: 0.6rem;
+            }
+            .faculty .card p {
+                font-size: 0.88rem;
+                margin: 0;
+            }
+
+            .composes {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 0.75rem;
+                margin-top: 1.5rem;
+                list-style: none;
+            }
+            .composes li {
+                font-size: 0.9rem;
+                color: var(--ink-soft);
+                padding: 0.9rem 1rem;
+                border: 1px dashed var(--rule);
+            }
+            .composes li b {
+                display: block;
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--shipped);
+                margin-bottom: 0.35rem;
+            }
+
+            ul.plain {
+                margin: 1rem 0 1rem 1.2rem;
+                color: var(--ink-soft);
+                max-width: 70ch;
+            }
+            ul.plain li {
+                margin-bottom: 0.5rem;
+            }
+
+            footer {
+                border-top: 1px solid var(--rule);
+                margin-top: 4rem;
+                padding-top: 1.5rem;
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                letter-spacing: 0.08em;
+                color: var(--ink-faint);
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1.5rem;
+                justify-content: space-between;
+            }
+            footer a {
+                color: var(--ink-soft);
+                text-decoration: none;
+                border-bottom: 1px solid var(--rule);
+            }
+            footer a:hover {
+                color: var(--proved);
+            }
+
+            @media (max-width: 600px) {
+                .wrap {
+                    padding: 0 1.25rem 4rem;
+                }
+                .loop-row {
+                    grid-template-columns: 1fr;
+                }
+                .loop-phase {
+                    border-right: none;
+                    border-bottom: 1px solid var(--rule);
+                }
+            }
+        </style>
+    </head>
+    <body style="padding-top: 56px">
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav
+            property="supervisor"
+            theme="dark"
+            style="
+                --amp-nav-accent: #e8c35a;
+                --amp-nav-bg: rgba(26, 36, 31, 0.88);
+                --amp-nav-border: #3f4f45;
+            "
+        ></amp-nav>
+
+        <div class="wrap">
+            <header class="masthead">
+                <div class="masthead-top">
+                    <span>OpenSentience · Academy</span>
+                    <span>The Teacher Loop</span>
+                </div>
+                <h1 class="title">The <em>Supervisor</em></h1>
+                <p class="subtitle">
+                    An invariant-driven, autonomous teacher: give it one
+                    invariant from the Periodic Table and it produces a verified
+                    curriculum of skills that prove it holds.
+                </p>
+                <p class="crumb">
+                    <a href="/invariants.html">← Periodic Table of Agent Invariants</a>
+                    &nbsp;·&nbsp;
+                    <a href="https://workbench.opensentience.org">Workbench →</a>
+                </p>
+            </header>
+
+            <div class="status-banner">
+                <span class="badge">Spec · v0.2 draft</span>
+                <div>
+                    The Supervisor is <strong>spec-stage</strong>, not yet
+                    shipped. The v0.1 data layer (<code>TeacherCharter</code>,
+                    <code>CurriculumBundle</code>, the <code>CellLedger</code>)
+                    is in-tree under
+                    <code>workbench/docs/spec/SUPERVISOR.md</code>; the v0.2
+                    orchestration layer — MCP-tool awareness, the
+                    devil's-advocate panel, Registrar scaffolding — is specified
+                    but the loop has not been built. This page describes the
+                    design, not a running product. Spec date 2026-05-27.
+                </div>
+            </div>
+
+            <section>
+                <h2><span class="n">§0</span> The job to be done</h2>
+                <p>
+                    The Workbench teaches <strong>one skill at a time</strong>
+                    with a human in the loop. The Supervisor is the next surface
+                    of the same dark-factory loop: it takes an
+                    <strong>invariant as its commission</strong> and
+                    autonomously generates, teaches, verifies, and stores a
+                    whole <em>curriculum</em> of skills that demonstrate that
+                    invariant across the space where it can manifest.
+                </p>
+                <blockquote class="jtbd">
+                    "I have a property my agents must satisfy. Produce a library
+                    of skills that prove the property holds, under conditions I
+                    name, with a budget I cap. Hand me back one diffable
+                    artifact that a third party can verify without running my
+                    stack."
+                </blockquote>
+                <p>
+                    Concretely: a teacher told <em>"produce skills that
+                    demonstrate <code>gate.replay_fidelity</code> under every
+                    body × turn-count × redaction-profile combination, within a
+                    $2 / 30-minute budget"</em> returns a
+                    <code>CurriculumBundle</code> whose every skill independently
+                    passes the named gate.
+                </p>
+            </section>
+
+            <section>
+                <h2><span class="n">§1</span> The central invariant</h2>
+                <p>
+                    This is the one line the Supervisor exists to make true — and
+                    every architectural decision serves it. A curriculum is
+                    <em>not</em> valid because the teacher LLM believes it
+                    covered the domain. It is valid because:
+                </p>
+                <ol class="claim-list">
+                    <li>
+                        every skill in the bundle
+                        <strong>independently satisfies the invariant's proof
+                        gate</strong> — the same gate processor PRISM runs on
+                        third-party submissions, so the teacher never grades its
+                        own homework;
+                    </li>
+                    <li>
+                        a <strong>devil's-advocate agent</strong> that did not
+                        produce the skill failed to find a cheap-pass exploit;
+                        and
+                    </li>
+                    <li>
+                        coverage of the declared manifestation space is reported
+                        with a <strong>Wilson lower bound</strong> the user can
+                        read — what was covered, and what is still frontier.
+                    </li>
+                </ol>
+            </section>
+
+            <section>
+                <h2><span class="n">§2</span> The teacher loop</h2>
+                <p>
+                    The Supervisor declares itself as a five-phase
+                    <strong>PULSE loop</strong>, identical in shape to the
+                    Graphonomous and PRISM canonical loops — so it nests cleanly
+                    inside the dual-loop architecture.
+                </p>
+                <div class="loop">
+                    <div class="loop-row">
+                        <div class="loop-phase">retrieve</div>
+                        <div class="loop-body">
+                            Pull any prior <code>CurriculumBundle</code>s for the
+                            same invariant and any prior skills tagged with it
+                            (Graphonomous <code>retrieve</code>).
+                        </div>
+                    </div>
+                    <div class="loop-row">
+                        <div class="loop-phase">route</div>
+                        <div class="loop-body">
+                            Frontier check: compute
+                            <code>manifestation_space \ visited</code> and pick
+                            the next unvisited cell that maximizes expected
+                            information gain.
+                        </div>
+                    </div>
+                    <div class="loop-row">
+                        <div class="loop-phase">act</div>
+                        <div class="loop-body">
+                            <code>factory.run_one(goal, body, model)</code> — the
+                            existing per-skill teach loop — produces one
+                            SkillBundle for the routed cell.
+                        </div>
+                    </div>
+                    <div class="loop-row">
+                        <div class="loop-phase">learn</div>
+                        <div class="loop-body">
+                            <code>verifyBundle(...)</code>: run the invariant's
+                            proof gate. If it passes, mark the cell covered and
+                            update confidence (Graphonomous
+                            <code>learn</code>).
+                        </div>
+                    </div>
+                    <div class="loop-row">
+                        <div class="loop-phase">consolidate</div>
+                        <div class="loop-body">
+                            When budget is exhausted, the coverage target is hit,
+                            or the frontier is empty: emit the
+                            <code>CurriculumBundle</code>, seal it with a content
+                            hash, persist.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2><span class="n">§3</span> The faculty panel</h2>
+                <p>
+                    Every routed cell runs through a panel of three distinct
+                    roles. The panel is the antibody against gate weakness — but
+                    the <strong>proof gate stays authoritative</strong>: when the
+                    advocate finds a passing-but-trivial skill, that is a signal
+                    to strengthen the gate, not to veto the skill.
+                </p>
+                <div class="faculty">
+                    <div class="card">
+                        <h3>Lead teacher</h3>
+                        <div class="role">faculty.lead</div>
+                        <p>
+                            Drives the teach loop and produces the SkillBundle.
+                            It only produces — it never decides whether it
+                            passed.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h3>Devil's advocate</h3>
+                        <div class="role">faculty.advocate · advisory</div>
+                        <p>
+                            Runs in a separate context and tries to expose
+                            cheap-pass, spec-gaming, or trivial passes. Sees the
+                            recorded edges and the invariant's prose — but not
+                            the gate's executable predicate.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h3>Examiner</h3>
+                        <div class="role">proof gate · authoritative</div>
+                        <p>
+                            The PRISM gate processor computes the binary verdict.
+                            This is what makes a curriculum verifiable by a third
+                            party without running the teacher's stack.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2><span class="n">§4</span> What it composes</h2>
+                <p>
+                    The Supervisor introduces <strong>no new protocols</strong>.
+                    Its claim is that it is the only invariant-indexed teacher
+                    formulation consistent with what the [&amp;] Stack has
+                    <em>already shipped</em>:
+                </p>
+                <ul class="composes">
+                    <li>
+                        <b>Periodic Table</b> enumerates the invariants a charter
+                        can name.
+                    </li>
+                    <li>
+                        <b>PRISM</b> implements gates that <em>are</em> invariants
+                        (<code>gate.replay_fidelity</code>,
+                        <code>gate.authority</code>, …).
+                    </li>
+                    <li>
+                        <b>Graphonomous</b> implements the epistemic frontier
+                        (Wilson intervals) and coverage scoring.
+                    </li>
+                    <li>
+                        <b>Workbench</b> already produces verified skill bundles.
+                    </li>
+                    <li>
+                        <b>PULSE</b> declares the cross-loop tokens the teacher
+                        loop circulates.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2><span class="n">§5</span> What a v0.1 Supervisor is not</h2>
+                <ul class="plain">
+                    <li>Not a marketplace of charters — it accepts pasted JSON, full stop.</li>
+                    <li>Not a recommender for which invariant to teach next.</li>
+                    <li>Not multi-invariant — one invariant per charter (compositions are later).</li>
+                    <li>
+                        Not a guarantee that every manifestation can be covered
+                        within a given budget — it reports what was covered and
+                        what is frontier-remaining.
+                    </li>
+                    <li>Not a substitute for human curation before publication.</li>
+                </ul>
+            </section>
+
+            <footer>
+                <span>OpenSentience · Academy · The Supervisor (spec v0.2 draft)</span>
+                <span>
+                    <a href="/invariants.html">Periodic Table</a> ·
+                    <a href="/invariant-arithmetic.html">Invariant Arithmetic</a> ·
+                    <a href="https://workbench.opensentience.org">Workbench</a>
+                </span>
+            </footer>
+        </div>
+    </body>
+</html>

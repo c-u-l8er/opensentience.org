@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Proof: π — Phase Ordering · OpenSentience</title>
+        <meta
+            name="description"
+            content="The proof that PULSE loop phases obey a fixed partial order — retrieve ≤ route ≤ act ≤ learn ≤ consolidate — enforced by the Invariant Arithmetic chain operation and verified by property tests."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/proofs/proof.css" />
+    </head>
+    <body style="--accent: #6b8e7f">
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav property="opensentience" theme="light"></amp-nav>
+
+        <div class="wrap">
+            <nav class="crumb">
+                <a href="/invariants.html">Periodic Table of Agent Invariants</a>
+                <span>›</span>
+                <span>Group III · Temporal</span>
+            </nav>
+
+            <header class="proof-head">
+                <div class="glyph-box">
+                    <span class="num">10</span>
+                    <span class="sym">π</span>
+                    <span class="lab">Phase order</span>
+                </div>
+                <div class="head-text">
+                    <div class="eyebrow">OS-010 PULSE v0.1</div>
+                    <h1>π — Phase Ordering</h1>
+                    <span class="badge">Proved</span>
+                    <span class="badge alt">Property-tested</span>
+                </div>
+            </header>
+
+            <p class="lede">
+                A compliant cognitive loop moves through its phases in one
+                direction. PULSE's first invariant says that the five canonical
+                phases form a partial order, and no loop may run them backward
+                inside a single cycle. The Invariant Arithmetic
+                <code>chain</code> operation makes this a type-level fact: two
+                values compose only if their phases respect the order.
+            </p>
+
+            <h2><span class="n">01</span>The claim</h2>
+            <p>
+                Let <code>phase(v) ∈ {retrieve, route, act, learn, consolidate}</code>
+                carry a total order by index. Composition by <code>chain</code>
+                is phase-graded: it succeeds exactly when the phases do not move
+                backward.
+            </p>
+            <div class="formal">
+phase order:  retrieve ≤ route ≤ act ≤ learn ≤ consolidate
+
+L8 (refusal):  phase(a) >  phase(b)  ⟹  chain(a, b) refuses with a π-violation
+L9 (success):  phase(a) ≤  phase(b)  ⟹  chain(a, b) succeeds</div>
+            <p>
+                Conversational traces contain many cycles — each new user
+                message resets the loop to <code>retrieve</code>. The checker
+                segments a trace at those boundaries and requires monotonicity
+                <em>within</em> each cycle, never across them.
+            </p>
+
+            <h2><span class="n">02</span>The evidence</h2>
+            <p>
+                π is not proved by exhaustive enumeration (as κ is) but by
+                property-based testing: laws L8 and L9 are asserted against a
+                thousand randomly generated value pairs, and the
+                <code>chain</code> implementation is checked to refuse every
+                backward pair and accept every forward pair.
+            </p>
+            <div class="evidence-card">
+                <span class="src"
+                    >workbench/app/src/lib/ia/laws.test.ts · L8–L9</span
+                >
+                <p style="margin: 0">
+                    fast-check property test, 1000 trials each. L8: any pair with
+                    a strictly higher source phase is refused with a phase
+                    violation. L9: any forward-or-equal pair composes cleanly.
+                </p>
+            </div>
+            <div class="evidence-card">
+                <span class="src"
+                    >workbench/app/src/lib/ia/phase_check.ts ·
+                    checkPhaseOrder()</span
+                >
+                <p style="margin: 0">
+                    Runs <code>chain</code> across consecutive edges of a real
+                    interaction trace, segmented at <code>user_message</code>
+                    boundaries, and reports every backward phase transition. This
+                    is the gate that PRISM and the Workbench replay harness use
+                    to judge trace integrity.
+                </p>
+            </div>
+            <ul class="verify-list">
+                <li>
+                    <span class="k">PULSE conformance</span><br />
+                    Phase ordering is one of seven PULSE v0.1 invariants; covered
+                    by the 12-test conformance suite.
+                </li>
+                <li>
+                    <span class="k">Canonical phases</span><br />
+                    The five phases match the Graphonomous machine architecture
+                    exactly: retrieve · route · act · learn · consolidate.
+                </li>
+            </ul>
+
+            <h2><span class="n">03</span>Verify it yourself</h2>
+            <div class="formal">
+cd workbench/app
+npm test -- ia/laws.test.ts        # L8, L9 — phase-graded chain
+npm test -- ia/phase_check.test.ts # trace-level monotonicity</div>
+
+            <h2><span class="n">04</span>What authority π grants</h2>
+            <p>
+                π grants <em>loop integrity</em>. A loop that can be shown to
+                respect phase order can be trusted to declare its own cadence
+                honestly — which is what lets one loop's output become another
+                loop's input across the [&amp;] · PULSE · PRISM stack without
+                hidden reentrancy. It is the temporal counterpart to κ's
+                structural routing.
+            </p>
+
+            <footer>
+                <span>© 2026 Ampersand Box Design · OS-010 PULSE</span>
+                <span>
+                    <a href="/invariants.html">← Periodic Table</a> ·
+                    <a href="/invariant-arithmetic.html"
+                        >Invariant Arithmetic →</a
+                    >
+                </span>
+            </footer>
+        </div>
+    </body>
+</html>

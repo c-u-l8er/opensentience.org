@@ -1,0 +1,1929 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>The Periodic Table of Agent Invariants — OpenSentience</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            /* ─────────────────────────────────────────────────────────────
+     Periodic Table of Agent Invariants — v0.5
+     Editorial / scientific aesthetic — Mendeleev meets Pentagram
+     v0.5 adds Group XI (Economic) entries distributed across groups
+     ───────────────────────────────────────────────────────────── */
+
+            :root {
+                --paper: #f4ede0;
+                --paper-deep: #ebe3d2;
+                --ink: #1a1814;
+                --ink-soft: #4a4538;
+                --ink-faint: #8a8472;
+                --rule: #c9bfa8;
+                --rule-soft: #ddd4bc;
+
+                /* Status colors */
+                --proved: #b8451f; /* burnt orange */
+                --proved-bg: #e9c8b4;
+                --shipped: #4a5d3a; /* olive green */
+                --shipped-bg: #c7d1b8;
+                --named: #6b5d3f; /* tobacco */
+                --named-bg: #d8cdb0;
+                --sketched: #8a8472; /* dust */
+                --sketched-bg: #e2dac6;
+                --missing: transparent;
+                --missing-bg: transparent;
+
+                /* Family accents (subtle horizontal hue shifts) */
+                --family-topological: #b8451f;
+                --family-temporal: #6b8e7f;
+                --family-governance: #8c6d3f;
+                --family-spatial: #5e7a8c;
+                --family-deliberation: #8c5e7a;
+                --family-evaluation: #6b7a3f;
+                --family-attention: #a87454;
+                --family-security: #5a5a4a;
+                --family-embodiment: #7a6b4a;
+                --family-federation: #4a6b7a;
+
+                --font-display: "Cormorant Garamond", Georgia, serif;
+                --font-mono: "JetBrains Mono", "IBM Plex Mono", monospace;
+                --font-body: "Inter", system-ui, sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                background: var(--paper);
+                color: var(--ink);
+                font-family: var(--font-body);
+                line-height: 1.5;
+                overflow-x: hidden;
+                position: relative;
+            }
+
+            /* Grain overlay — pure CSS, no images */
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 100;
+                opacity: 0.35;
+                mix-blend-mode: multiply;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.06 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            }
+
+            /* Subtle paper texture — diagonal noise */
+            body::after {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 99;
+                background:
+                    radial-gradient(
+                        ellipse at 30% 20%,
+                        rgba(184, 69, 31, 0.04) 0%,
+                        transparent 50%
+                    ),
+                    radial-gradient(
+                        ellipse at 80% 70%,
+                        rgba(74, 93, 58, 0.03) 0%,
+                        transparent 60%
+                    );
+            }
+
+            /* ───────────────────────── Masthead ───────────────────────── */
+            .masthead {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 3rem 2.5rem 1.5rem;
+                border-bottom: 1px solid var(--rule);
+                position: relative;
+            }
+
+            .masthead-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                margin-bottom: 2rem;
+            }
+
+            .masthead-top .vol {
+                letter-spacing: 0.2em;
+            }
+
+            h1.title {
+                font-family: var(--font-display);
+                font-weight: 500;
+                font-size: clamp(2.5rem, 6vw, 5.5rem);
+                line-height: 0.95;
+                letter-spacing: -0.02em;
+                margin-bottom: 0.75rem;
+            }
+
+            h1.title em {
+                font-style: italic;
+                color: var(--proved);
+                font-weight: 400;
+            }
+
+            .subtitle {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+                color: var(--ink-soft);
+                max-width: 50ch;
+                margin-bottom: 1.5rem;
+            }
+
+            .credits {
+                display: flex;
+                gap: 2rem;
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                color: var(--ink-faint);
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+
+            .credits a {
+                color: var(--ink-soft);
+                text-decoration: none;
+                border-bottom: 1px solid var(--rule);
+                transition:
+                    color 0.2s,
+                    border-color 0.2s;
+            }
+            .credits a:hover {
+                color: var(--proved);
+                border-color: var(--proved);
+            }
+
+            /* ─── Editorial note for v0.5 economic addendum ─── */
+            .v05-note {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 1.25rem 2.5rem 0;
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                color: var(--ink-faint);
+                letter-spacing: 0.05em;
+                line-height: 1.7;
+                display: flex;
+                gap: 2rem;
+                align-items: flex-start;
+            }
+            .v05-note .v05-tag {
+                flex-shrink: 0;
+                color: var(--proved);
+                font-weight: 700;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                padding-top: 0.1rem;
+            }
+            .v05-note .v05-body {
+                max-width: 80ch;
+            }
+            .v05-note .v05-body em {
+                color: var(--ink);
+                font-style: italic;
+            }
+
+            /* ───────────────────────── Legend ───────────────────────── */
+            .legend-strip {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 1.5rem 2.5rem;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 2rem;
+                border-bottom: 2px solid var(--ink);
+                align-items: center;
+            }
+
+            .legend-strip h3 {
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                margin-right: 1rem;
+            }
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+                letter-spacing: 0.05em;
+            }
+
+            .legend-swatch {
+                width: 18px;
+                height: 18px;
+                border: 1.5px solid var(--ink);
+                display: inline-block;
+            }
+            .swatch-proved {
+                background: var(--proved);
+                border-color: var(--proved);
+            }
+            .swatch-shipped {
+                background: var(--shipped);
+                border-color: var(--shipped);
+            }
+            .swatch-named {
+                background: var(--named-bg);
+                border-color: var(--named);
+            }
+            .swatch-sketched {
+                background: var(--sketched-bg);
+                border-color: var(--sketched);
+                border-style: dashed;
+            }
+            .swatch-missing {
+                background: transparent;
+                border-style: dotted;
+                border-color: var(--ink-faint);
+            }
+
+            /* New: economic-extension marker — a small dot in the cell corner */
+            .cell.economic::after {
+                content: "";
+                position: absolute;
+                top: 0.4rem;
+                right: 0.4rem;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--proved);
+                opacity: 0.65;
+            }
+            .cell.economic.proved::after,
+            .cell.economic.shipped::after {
+                background: var(--paper);
+                opacity: 0.9;
+            }
+
+            /* ───────────────────────── Table ───────────────────────── */
+            .table-stage {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 3rem 2.5rem 2rem;
+            }
+
+            .family {
+                margin-bottom: 2.5rem;
+                position: relative;
+            }
+
+            .family-header {
+                display: flex;
+                align-items: baseline;
+                gap: 1.5rem;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid var(--rule);
+            }
+
+            .family-label {
+                font-family: var(--font-mono);
+                font-size: 0.65rem;
+                letter-spacing: 0.25em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                min-width: 5ch;
+            }
+
+            .family-name {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-weight: 500;
+                font-size: 1.5rem;
+                color: var(--ink);
+            }
+
+            .family-meta {
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                color: var(--ink-faint);
+                margin-left: auto;
+                letter-spacing: 0.05em;
+            }
+
+            .row {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 0.5rem;
+            }
+
+            /* ───────────── Cell — the heart of the table ───────────── */
+            .cell {
+                position: relative;
+                aspect-ratio: 1 / 1.15;
+                padding: 0.5rem 0.6rem;
+                background: var(--paper-deep);
+                border: 1.5px solid var(--ink);
+                cursor: pointer;
+                transition:
+                    transform 0.15s ease,
+                    box-shadow 0.15s ease,
+                    background 0.15s ease;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                font-family: var(--font-body);
+                color: var(--ink);
+                user-select: none;
+            }
+
+            .cell:hover {
+                transform: translate(-2px, -2px);
+                box-shadow: 4px 4px 0 var(--ink);
+                z-index: 2;
+            }
+
+            .cell:focus {
+                outline: none;
+                box-shadow: 4px 4px 0 var(--proved);
+            }
+
+            /* Status variants */
+            .cell.proved {
+                background: var(--proved);
+                color: var(--paper);
+                border-color: var(--ink);
+            }
+            .cell.proved .cell-num,
+            .cell.proved .cell-label,
+            .cell.proved .cell-status {
+                color: var(--paper);
+                opacity: 0.85;
+            }
+
+            .cell.shipped {
+                background: var(--shipped);
+                color: var(--paper);
+            }
+            .cell.shipped .cell-num,
+            .cell.shipped .cell-label,
+            .cell.shipped .cell-status {
+                color: var(--paper);
+                opacity: 0.85;
+            }
+
+            .cell.named {
+                background: var(--named-bg);
+            }
+
+            .cell.sketched {
+                background: var(--sketched-bg);
+                border-style: dashed;
+                border-width: 1.5px;
+            }
+
+            .cell.missing {
+                background: transparent;
+                border-style: dotted;
+                border-width: 1.5px;
+                border-color: var(--ink-faint);
+                color: var(--ink-faint);
+            }
+            .cell.missing:hover {
+                border-color: var(--ink);
+                color: var(--ink-soft);
+            }
+
+            /* Cell anatomy */
+            .cell-num {
+                font-family: var(--font-mono);
+                font-size: 0.6rem;
+                letter-spacing: 0.1em;
+                color: var(--ink-faint);
+                align-self: flex-start;
+            }
+
+            .cell-symbol {
+                font-family: var(--font-display);
+                font-size: clamp(2rem, 3.5vw, 2.8rem);
+                line-height: 1;
+                text-align: center;
+                font-weight: 500;
+                letter-spacing: -0.02em;
+                margin: 0.15rem 0;
+            }
+
+            .cell-symbol.glyph {
+                font-family: var(--font-mono);
+                font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+                font-weight: 700;
+            }
+
+            .cell-label {
+                font-family: var(--font-mono);
+                font-size: 0.55rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                text-align: center;
+                color: var(--ink-soft);
+                line-height: 1.2;
+            }
+
+            .cell-status {
+                font-family: var(--font-mono);
+                font-size: 0.5rem;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                align-self: flex-end;
+                text-align: right;
+                line-height: 1;
+            }
+
+            /* Spacer cells for ragged columns */
+            .cell.spacer {
+                border: none;
+                background: transparent;
+                cursor: default;
+                pointer-events: none;
+            }
+
+            /* ───────────────────────── Inspector panel ───────────────────────── */
+            .inspector {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--paper);
+                border-top: 2px solid var(--ink);
+                transform: translateY(100%);
+                transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 50;
+                max-height: 55vh;
+                overflow-y: auto;
+                box-shadow: 0 -20px 40px -10px rgba(26, 24, 20, 0.15);
+            }
+
+            .inspector.open {
+                transform: translateY(0);
+            }
+
+            .inspector-inner {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 2rem 2.5rem 2.5rem;
+                display: grid;
+                grid-template-columns: 1fr 2fr 1fr;
+                gap: 2.5rem;
+            }
+
+            .inspector-close {
+                position: absolute;
+                top: 1rem;
+                right: 1.5rem;
+                background: transparent;
+                border: 1px solid var(--ink);
+                color: var(--ink);
+                width: 32px;
+                height: 32px;
+                cursor: pointer;
+                font-family: var(--font-mono);
+                font-size: 1.1rem;
+                line-height: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.15s;
+            }
+            .inspector-close:hover {
+                background: var(--ink);
+                color: var(--paper);
+            }
+
+            .inspector-glyph {
+                text-align: center;
+                padding: 1rem;
+                background: var(--paper-deep);
+                border: 2px solid var(--ink);
+                align-self: start;
+                position: relative;
+            }
+            .inspector-glyph .big-symbol {
+                font-family: var(--font-display);
+                font-size: 6rem;
+                line-height: 1;
+                margin-bottom: 0.5rem;
+                color: var(--ink);
+            }
+            .inspector-glyph .big-symbol.glyph {
+                font-family: var(--font-mono);
+                font-size: 4rem;
+                font-weight: 700;
+            }
+            .inspector-glyph .big-num {
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                letter-spacing: 0.15em;
+                color: var(--ink-faint);
+                text-transform: uppercase;
+            }
+            .inspector-glyph .big-label {
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--ink);
+                margin-top: 0.5rem;
+            }
+
+            /* Economic-extension ribbon shown on inspector for new entries */
+            .inspector-glyph .econ-ribbon {
+                display: none;
+                margin-top: 0.75rem;
+                padding-top: 0.75rem;
+                border-top: 1px dashed var(--rule);
+                font-family: var(--font-mono);
+                font-size: 0.55rem;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--proved);
+            }
+            .inspector-glyph.econ .econ-ribbon {
+                display: block;
+            }
+
+            .inspector-body h2 {
+                font-family: var(--font-display);
+                font-weight: 500;
+                font-size: 2rem;
+                line-height: 1.1;
+                margin-bottom: 0.25rem;
+                letter-spacing: -0.01em;
+            }
+            .inspector-body h2 em {
+                font-style: italic;
+                color: var(--proved);
+            }
+            .inspector-body .tagline {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 1.05rem;
+                color: var(--ink-soft);
+                margin-bottom: 1.25rem;
+            }
+            .inspector-body p {
+                font-size: 0.92rem;
+                line-height: 1.65;
+                color: var(--ink);
+                margin-bottom: 0.75rem;
+                max-width: 60ch;
+            }
+
+            /* Formal-math block, used by v0.5 economic entries */
+            .inspector-body .formal {
+                background: var(--paper-deep);
+                border-left: 2px solid var(--proved);
+                padding: 0.65rem 0.9rem;
+                margin: 0.75rem 0;
+                font-family: var(--font-mono);
+                font-size: 0.78rem;
+                color: var(--ink);
+                line-height: 1.55;
+                max-width: 60ch;
+                white-space: pre-wrap;
+            }
+            .inspector-body .formal .label {
+                display: block;
+                font-size: 0.55rem;
+                color: var(--ink-faint);
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                margin-bottom: 0.35rem;
+            }
+
+            .inspector-meta {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+            }
+            .inspector-meta dt {
+                color: var(--ink-faint);
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                font-size: 0.65rem;
+                margin-bottom: 0.25rem;
+            }
+            .inspector-meta dd {
+                color: var(--ink);
+                line-height: 1.5;
+            }
+            .proof-link {
+                align-items: center;
+                gap: 0.4rem;
+                margin-top: 1.75rem;
+                padding: 0.7rem 1.1rem;
+                background: var(--proved);
+                color: var(--paper);
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                text-decoration: none;
+                border: 1.5px solid var(--proved);
+                transition:
+                    background 0.15s ease,
+                    transform 0.15s ease;
+            }
+            .proof-link:hover {
+                background: var(--ink);
+                border-color: var(--ink);
+                transform: translateX(2px);
+            }
+            .inspector-meta .status-badge {
+                display: inline-block;
+                padding: 0.25rem 0.6rem;
+                border: 1.5px solid var(--ink);
+                font-size: 0.65rem;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                font-weight: 500;
+            }
+            .inspector-meta .status-badge.proved {
+                background: var(--proved);
+                color: var(--paper);
+                border-color: var(--proved);
+            }
+            .inspector-meta .status-badge.shipped {
+                background: var(--shipped);
+                color: var(--paper);
+                border-color: var(--shipped);
+            }
+            .inspector-meta .status-badge.named {
+                background: var(--named-bg);
+            }
+            .inspector-meta .status-badge.sketched {
+                background: var(--sketched-bg);
+                border-style: dashed;
+            }
+            .inspector-meta .status-badge.missing {
+                background: transparent;
+                border-style: dotted;
+                color: var(--ink-faint);
+            }
+
+            /* ───────────────────────── Footer ───────────────────────── */
+            footer {
+                max-width: 1400px;
+                margin: 4rem auto 2rem;
+                padding: 2rem 2.5rem;
+                border-top: 1px solid var(--rule);
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                color: var(--ink-faint);
+                letter-spacing: 0.05em;
+            }
+            footer a {
+                color: var(--ink-soft);
+                text-decoration: none;
+                border-bottom: 1px solid var(--rule);
+            }
+            footer a:hover {
+                color: var(--proved);
+                border-color: var(--proved);
+            }
+
+            .footer-row {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            /* v0.5 — citations block for economic invariants */
+            .footer-citations {
+                border-top: 1px dashed var(--rule);
+                padding-top: 1.25rem;
+                font-size: 0.65rem;
+                line-height: 1.7;
+                color: var(--ink-faint);
+                max-width: 90ch;
+            }
+            .footer-citations .label {
+                color: var(--proved);
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                font-weight: 700;
+                margin-right: 0.6rem;
+            }
+            .footer-citations p {
+                margin-bottom: 0.45rem;
+            }
+
+            /* Filter chips */
+            .filter-bar {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 1.5rem 2.5rem 0;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+            .filter-bar h3 {
+                font-family: var(--font-mono);
+                font-size: 0.65rem;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                margin-right: 0.5rem;
+            }
+            .chip {
+                background: transparent;
+                border: 1.5px solid var(--ink);
+                padding: 0.35rem 0.85rem;
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                letter-spacing: 0.05em;
+                cursor: pointer;
+                transition: all 0.15s;
+                color: var(--ink);
+            }
+            .chip:hover {
+                background: var(--ink);
+                color: var(--paper);
+            }
+            .chip.active {
+                background: var(--ink);
+                color: var(--paper);
+            }
+            .chip.econ-chip {
+                border-color: var(--proved);
+                color: var(--proved);
+            }
+            .chip.econ-chip:hover,
+            .chip.econ-chip.active {
+                background: var(--proved);
+                color: var(--paper);
+                border-color: var(--proved);
+            }
+
+            /* Faded cells when filter active.
+               !important is required because .cell runs `animation: fadeup ... forwards`,
+               whose final keyframe locks opacity:1 and overrides normal declarations. */
+            .cell.dimmed {
+                opacity: 0.2 !important;
+                pointer-events: none;
+            }
+
+            /* ───────────────────────── Responsive ───────────────────────── */
+            @media (max-width: 900px) {
+                .inspector-inner {
+                    grid-template-columns: 1fr;
+                    gap: 1.5rem;
+                }
+                .row {
+                    grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+                }
+                .masthead {
+                    padding: 2rem 1.25rem 1rem;
+                }
+                .legend-strip,
+                .filter-bar,
+                .table-stage,
+                .v05-note {
+                    padding-left: 1.25rem;
+                    padding-right: 1.25rem;
+                }
+                .legend-strip {
+                    gap: 1rem;
+                }
+                footer {
+                    padding: 2rem 1.25rem;
+                }
+                .v05-note {
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+            }
+
+            @media (max-width: 540px) {
+                .row {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+                .cell-symbol {
+                    font-size: 1.8rem;
+                }
+                .cell-symbol.glyph {
+                    font-size: 1.3rem;
+                }
+                h1.title {
+                    font-size: 2.2rem;
+                }
+            }
+
+            /* Page-load animation */
+            .cell {
+                opacity: 0;
+                animation: fadeup 0.5s ease-out forwards;
+            }
+            @keyframes fadeup {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </head>
+    <body style="padding-top: 56px">
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav property="opensentience" theme="light"></amp-nav>
+
+        <!-- ─────────────────────── Masthead ─────────────────────── -->
+        <header class="masthead">
+            <div class="masthead-top">
+                <span class="vol">Vol. I — No. 1 · v0.5</span>
+                <span>OpenSentience Research</span>
+                <span>MMXXVI</span>
+            </div>
+            <h1 class="title">
+                The Periodic Table of <em>Agent Invariants</em>
+            </h1>
+            <p class="subtitle">
+                A working census of the measurements that tell an artificial
+                system what kind of position it is in — and what authority that
+                position grants.
+            </p>
+            <div class="credits">
+                <span>Compiled by Ampersand Box Design</span>
+                <a href="https://opensentience.org">opensentience.org</a>
+                <a href="https://graphonomous.com">graphonomous.com</a>
+            </div>
+        </header>
+
+        <!-- ─────────────────────── v0.5 editorial note ─────────────────────── -->
+        <div class="v05-note">
+            <span class="v05-tag">v0.5 ·&nbsp;Addendum</span>
+            <span class="v05-body">
+                Seven economic invariants are added across five existing groups,
+                each marked with a small accent dot in the cell corner. They are
+                not a separate ledger; they are claims that the existing
+                substrate — κ routing, σ resolution, β persistence — is already
+                an economy, and that a healthy agent ecosystem needs more than
+                one currency to express what it produces. The argument follows
+                <em>Lietaer, Ulanowicz &amp; Goerner (2010)</em>: complex flow
+                networks survive only inside a window of vitality balancing
+                efficiency against resilience, and a monoculture of a single
+                token pushes any such network past the brittleness threshold.
+                Empirical anchor: the Swiss WIR (1934–present,
+                <em>Stodder 2009</em>), eighty years of countercyclical evidence
+                for multi-currency stability.
+            </span>
+        </div>
+
+        <!-- ─────────────────────── Legend ─────────────────────── -->
+        <div class="legend-strip">
+            <h3>Status</h3>
+            <span class="legend-item"
+                ><span class="legend-swatch swatch-proved"></span>Proved &amp;
+                shipped</span
+            >
+            <span class="legend-item"
+                ><span class="legend-swatch swatch-shipped"></span>Shipped</span
+            >
+            <span class="legend-item"
+                ><span class="legend-swatch swatch-named"></span>Named</span
+            >
+            <span class="legend-item"
+                ><span class="legend-swatch swatch-sketched"></span
+                >Sketched</span
+            >
+            <span class="legend-item"
+                ><span class="legend-swatch swatch-missing"></span>Missing</span
+            >
+            <span
+                class="legend-item"
+                style="
+                    margin-left: 1rem;
+                    border-left: 1px solid var(--rule);
+                    padding-left: 1.5rem;
+                "
+            >
+                <span
+                    style="
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        background: var(--proved);
+                        opacity: 0.65;
+                        display: inline-block;
+                    "
+                ></span>
+                Economic extension (v0.5)
+            </span>
+        </div>
+
+        <!-- ─────────────────────── Filter ─────────────────────── -->
+        <div class="filter-bar">
+            <h3>Filter</h3>
+            <button class="chip active" data-filter="all">All</button>
+            <button class="chip" data-filter="proved">Proved</button>
+            <button class="chip" data-filter="shipped">Shipped</button>
+            <button class="chip" data-filter="named">Named</button>
+            <button class="chip" data-filter="sketched">Sketched</button>
+            <button class="chip" data-filter="missing">Missing</button>
+            <button class="chip econ-chip" data-filter="economic">
+                Economic
+            </button>
+        </div>
+
+        <!-- ─────────────────────── The Table ─────────────────────── -->
+        <main class="table-stage" id="table"></main>
+
+        <!-- ─────────────────────── Inspector ─────────────────────── -->
+        <aside class="inspector" id="inspector" aria-hidden="true">
+            <button
+                class="inspector-close"
+                id="inspector-close"
+                aria-label="Close"
+            >
+                ×
+            </button>
+            <div class="inspector-inner">
+                <div class="inspector-glyph" id="i-glyph-wrap">
+                    <div class="big-num" id="i-num">—</div>
+                    <div class="big-symbol" id="i-symbol">—</div>
+                    <div class="big-label" id="i-label">—</div>
+                    <div class="econ-ribbon">Economic extension · v0.5</div>
+                </div>
+                <div class="inspector-body">
+                    <h2 id="i-title">Select an invariant</h2>
+                    <p class="tagline" id="i-tagline">
+                        Click any cell to read its definition, authority, and
+                        protocol home.
+                    </p>
+                    <p id="i-description"></p>
+                    <p id="i-extra"></p>
+                    <div class="formal" id="i-formal" style="display: none">
+                        <span class="label"
+                            >Conservation / composition law</span
+                        >
+                        <span id="i-formal-text"></span>
+                    </div>
+                </div>
+                <dl class="inspector-meta">
+                    <div>
+                        <dt>Status</dt>
+                        <dd>
+                            <span class="status-badge" id="i-status">—</span>
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Protocol</dt>
+                        <dd id="i-protocol">—</dd>
+                    </div>
+                    <div>
+                        <dt>Authority granted</dt>
+                        <dd id="i-authority">—</dd>
+                    </div>
+                    <div>
+                        <dt>Mathematical source</dt>
+                        <dd id="i-source">—</dd>
+                    </div>
+                </dl>
+                <a
+                    class="proof-link"
+                    id="i-proof"
+                    href="#"
+                    style="display: none"
+                    >Read the machine-checked proof →</a
+                >
+            </div>
+        </aside>
+
+        <!-- ─────────────────────── Footer ─────────────────────── -->
+        <footer>
+            <div class="footer-row">
+                <span
+                    >© 2026 Ampersand Box Design · Apache 2.0 where
+                    possible</span
+                >
+                <span
+                    >Compiled from OpenSentience protocols OS-001 through
+                    OS-017</span
+                >
+                <span
+                    ><a href="https://opensentience.org"
+                        >opensentience.org</a
+                    ></span
+                >
+            </div>
+            <div class="footer-citations">
+                <p><span class="label">v0.5 citations</span></p>
+                <p>
+                    <strong
+                        >Lietaer, B., Ulanowicz, R. E., Goerner, S. J., &amp;
+                        McLaren, N.</strong
+                    >
+                    (2010). Is our monetary structure a systemic cause for
+                    financial instability? Evidence and remedies from nature.
+                    <em>Journal of Future Studies</em>.
+                </p>
+                <p>
+                    <strong>Ulanowicz, R. E.</strong> (1997).
+                    <em>Ecology, the Ascendent Perspective.</em> Columbia
+                    University Press. — origin of C = A + Φ.
+                </p>
+                <p>
+                    <strong>Stodder, J.</strong> (2009). Complementary credit
+                    networks and macroeconomic stability: Switzerland's
+                    Wirtschaftsring.
+                    <em>Journal of Economic Behavior &amp; Organization.</em> —
+                    empirical anchor for WIR countercyclicality.
+                </p>
+                <p>
+                    <strong>Gesell, S.</strong> (1916).
+                    <em>Die Natürliche Wirtschaftsordnung.</em> — origin of
+                    demurrage; basis for δ.
+                </p>
+                <p>
+                    <strong>arXiv:2601.14747</strong> (2026). On the existence
+                    of Ulanowicz's optimal structural resilience in complex
+                    networks. — extends the window-of-vitality theorem to
+                    general directed graphs, including the [&amp;] substrate.
+                </p>
+            </div>
+        </footer>
+
+        <script>
+            /* ─────────────────────────────────────────────────────────
+     THE DATA — v0.5
+     Each family is a row. Cells within rows are atomic invariants.
+     status: proved | shipped | named | sketched | missing
+     economic: true marks v0.5 economic-extension entries
+     formal: optional formal-math block shown in inspector
+     ───────────────────────────────────────────────────────── */
+
+            const families = [
+                {
+                    label: "I",
+                    name: "Topological",
+                    meta: "OS-001 / OS-002 — Graphonomous",
+                    cells: [
+                        {
+                            num: "01",
+                            symbol: "κ",
+                            label: "Cyclicity",
+                            status: "proved",
+                            title: "κ — Cyclicity",
+                            tagline:
+                                "When the graph has feedback, flat reasoning fails.",
+                            desc: "Measures the minimum bidirectional cut across the largest strongly connected component. κ = 0 means the region is a DAG and one-pass retrieval suffices; κ > 0 means feedback loops survive any decomposition and deliberation is required.",
+                            extra: "Proved across 1,926,351 finite directed systems with zero counterexamples. Categorically, κ is the obstruction to trace-free decomposition in a traced symmetric monoidal category (JSV).",
+                            protocol: "OS-002 (κ-Routing) · Graphonomous v0.4",
+                            authority: "deliberate",
+                            source: "Traced symmetric monoidal categories (Joyal-Street-Verity)",
+                            proof: "/proofs/kappa.html",
+                        },
+                        {
+                            num: "02",
+                            symbol: "β",
+                            label: "Persistence",
+                            status: "shipped",
+                            title: "β — Persistence",
+                            tagline:
+                                "Which features survive the next consolidation.",
+                            desc: "Normalized rank over a filtration of consolidation epochs. A feature with high β has persisted across many epochs and is durable enough to promote into semantic memory. Low β means provisional, subject to pruning.",
+                            extra: "Replaces recency- and frequency-based pruning with a principled durability measure. The formal handle on what makes memory compound rather than accumulate-and-stale.",
+                            protocol:
+                                "OS-001 (Continual Learning) · Graphonomous",
+                            authority: "promote",
+                            source: "Persistent homology (bookkeeping form)",
+                        },
+                        {
+                            num: "03",
+                            symbol: "τ",
+                            label: "Tree-likeness",
+                            status: "named",
+                            title: "τ — Tree-likeness",
+                            tagline: "How hierarchical is this neighborhood?",
+                            desc: "Positive when the neighborhood is approximately acyclic and hierarchical. High τ identifies regions where a single fault cascades exponentially through dependents.",
+                            extra: "Composes with ρ to authorize redundant-execution mode rather than deliberation — failures should be tolerated by replication, not resolved by argument.",
+                            protocol: "OS-002 (extension) · unshipped",
+                            authority: "replicate",
+                            source: "Graph-theoretic (hyperbolicity / Gromov δ)",
+                        },
+                        {
+                            num: "04",
+                            symbol: "ρ",
+                            label: "Curvature",
+                            status: "named",
+                            title: "ρ — Discrete Ricci curvature",
+                            tagline: "Tree-like, grid-like, or sphere-like?",
+                            desc: "Local discrete Ricci curvature of the neighborhood. Negative = tree-like (hierarchical authority natural). Zero = grid-like (peer-to-peer). Positive = sphere-like / cycle-rich (collective authority natural).",
+                            extra: "Each curvature regime warrants a different governance mode. The same knowledge graph contains regions of all three.",
+                            protocol: "OS-002 (extension) · unshipped",
+                            authority: "select governance mode",
+                            source: "Ollivier-Ricci curvature on graphs",
+                        },
+                        {
+                            num: "05",
+                            symbol: "μ",
+                            label: "Mobility",
+                            status: "sketched",
+                            title: "μ — Reachable-state mobility",
+                            tagline:
+                                "How many futures does this position admit?",
+                            desc: "A measure of how many distinct downstream states the current sub-graph can reach. Chess analog: piece activity. Low μ means the position is locked; high μ means it is fertile.",
+                            extra: "Suggested by the chess analogy — the agent equivalent of squares-of-influence. Not yet formalized.",
+                            protocol: "OS-002 (proposed)",
+                            authority: "expand / contract scope",
+                            source: "Reachability analysis (proposed)",
+                        },
+                        {
+                            num: "06",
+                            symbol: "?",
+                            label: "Tempo",
+                            status: "missing",
+                            title: "Tempo invariant (unnamed)",
+                            tagline: "Who is forcing whom?",
+                            desc: "Chess has tempo — the most underrated structural variable. The agent equivalent measures whether the system is reactive (responding to inputs) or proactive (setting the agenda).",
+                            extra: "PULSE gestures at this temporally but does not formalize it as an invariant. Open research question.",
+                            protocol: "—",
+                            authority: "initiate vs respond",
+                            source: "Open",
+                        },
+                        /* v0.5 — economic extension to Topological */
+                        {
+                            num: "37",
+                            symbol: "ω",
+                            label: "Opson",
+                            status: "named",
+                            economic: true,
+                            title: "ω — Opson · opportunity-volume",
+                            tagline:
+                                "Money as work-I-don't-have-to-do, formalized.",
+                            desc: "A counterfactual-reachability token: ω is earned by an agent whose contribution provably expanded the action-space of downstream agents. Concretely, ω(a) = |R(G ∪ a) ∖ R(G)|, where R(G) is the set of valid plans reachable in the graph before agent a's contribution, and R(G ∪ a) the set after. Closes the loop the user opened in earlier conversation: \"money = work I don't have to do.\" The thing that doesn't have to be done is the planning effort that a's contribution now makes free.",
+                            extra: "ω composes with β: contributions whose reachability-deltas persist across many epochs (high β · high ω) are durable infrastructure. Contributions with high ω but low β are bubbles — they look transformative briefly, then evaporate. The intersection is what merits long-tail royalty claims (see θ, entry 43).",
+                            formal: "ω(a) := |R(G ∪ {a}) ∖ R(G)|\n\nConserved under: graph-isomorphism on R\nMinted on: net positive reachability-delta\nBurned on: deletion of a from G without preserving R\nComposes with: β (persistence), ε (delegation)",
+                            protocol: "OS-002 (proposed) · economic addendum",
+                            authority: "claim long-tail royalty",
+                            source: "Counterfactual reachability · Pearl 2009 · arXiv:2601.14747",
+                        },
+                    ],
+                },
+
+                {
+                    label: "II",
+                    name: "Spatial",
+                    meta: "OS-012 — SCOPE",
+                    cells: [
+                        {
+                            num: "07",
+                            symbol: "σ",
+                            label: "Conflict",
+                            status: "shipped",
+                            title: "σ — Derived conflict",
+                            tagline: "Local agreement, global disagreement.",
+                            desc: "The SCOPE-derived conflict predicate. Given regions and claims under deterministic overlap rules, σ > 0 when claims of incompatible strength overlap within the same frame.",
+                            extra: "Originally framed as sheaf cohomology (H¹ obstruction). Dropped in favor of constraint logic — the operational primitive that actually ships. Same computation, less apparatus.",
+                            protocol: "OS-012 (SCOPE) · drafting",
+                            authority: "reconcile",
+                            source: "Constraint logic on regions",
+                        },
+                        {
+                            num: "08",
+                            symbol: "χ",
+                            label: "Coherence",
+                            status: "sketched",
+                            title: "χ — Frame-transform coherence",
+                            tagline: "Do cross-region morphisms compose?",
+                            desc: "When SCOPE's vocabulary v0.2 introduces transforms between heterogeneous region kinds (viewport ↔ document span, grid ↔ geojson), χ measures when those transforms compose coherently.",
+                            extra: "Open question for SCOPE v0.2. Has well-developed mathematical machinery if the cohomological framing is revived for transforms specifically.",
+                            protocol: "OS-012 (SCOPE v0.2)",
+                            authority: "compose transforms",
+                            source: "Open / category theory",
+                        },
+                        {
+                            num: "09",
+                            symbol: "?",
+                            label: "Mobility-spatial",
+                            status: "missing",
+                            title: "Spatial mobility (unnamed)",
+                            tagline:
+                                "How much of the environment is reachable?",
+                            desc: "Spatial analog of μ — measures how much of an embodied agent's environment is reachable within budget. Distinct from logical-graph mobility because it involves physical / virtual locomotion constraints.",
+                            extra: "Open. Needed for GeoFleetic / body-os spatial reasoning.",
+                            protocol: "OS-011 / OS-012 (proposed)",
+                            authority: "navigate / abstain",
+                            source: "Open",
+                        },
+                    ],
+                },
+
+                {
+                    label: "III",
+                    name: "Temporal",
+                    meta: "OS-010 — PULSE",
+                    cells: [
+                        {
+                            num: "10",
+                            symbol: "π",
+                            label: "Phase order",
+                            status: "proved",
+                            title: "π — Phase ordering",
+                            tagline:
+                                "Retrieve → route → act → learn → consolidate.",
+                            desc: "PULSE's first invariant: the five canonical phases occur in a partial order that no compliant loop may violate. Verified by the 12-test conformance suite.",
+                            extra: "One of seven invariants in PULSE v0.1. Catalog of the others is in the os-pulse repository; surfacing them on pulse.opensentience.org is on the immediate roadmap.",
+                            protocol: "OS-010 (PULSE) v0.1",
+                            authority: "loop integrity",
+                            source: "Process calculus / CloudEvents v1",
+                            proof: "/proofs/phase-ordering.html",
+                        },
+                        {
+                            num: "11",
+                            symbol: "ι",
+                            label: "Idempotence",
+                            status: "shipped",
+                            title: "ι — Token idempotence",
+                            tagline: "Replaying a token must not double-fire.",
+                            desc: "Each of the five canonical cross-loop tokens (TopologyContext, DeliberationResult, OutcomeSignal, ReputationUpdate, ConsolidationEvent) is idempotent under retry. Failure-recovery without state corruption.",
+                            extra: "One of PULSE's seven invariants. Documented in conformance test #4.",
+                            protocol: "OS-010 (PULSE) v0.1",
+                            authority: "safe retry",
+                            source: "Distributed systems / exactly-once delivery",
+                        },
+                        {
+                            num: "12",
+                            symbol: "ψ",
+                            label: "Cadence",
+                            status: "shipped",
+                            title: "ψ — Cadence honesty",
+                            tagline: "Declared rate matches observed rate.",
+                            desc: "PULSE manifests declare a cadence type (continuous, periodic, event-driven, on-demand, batch, hybrid). ψ verifies that observed behavior matches the declaration within tolerance.",
+                            extra: "One of PULSE's seven invariants. Enables PRISM to evaluate loop behavior against its own contract.",
+                            protocol: "OS-010 (PULSE) v0.1",
+                            authority: "trust manifest",
+                            source: "Temporal logic / runtime verification",
+                        },
+                        {
+                            num: "13",
+                            symbol: "?",
+                            label: "Tempo-temporal",
+                            status: "missing",
+                            title: "Initiative (unnamed)",
+                            tagline: "Who advanced the loop?",
+                            desc: "Distinct from PULSE's phase ordering: this would measure who/what advanced the loop on the last cycle — agent, environment, schedule, external system.",
+                            extra: "Closely related to topological tempo but operationalized over PULSE phases rather than graph topology.",
+                            protocol: "OS-010 (extension)",
+                            authority: "audit initiative",
+                            source: "Open",
+                        },
+                    ],
+                },
+
+                {
+                    label: "IV",
+                    name: "Governance",
+                    meta: "OS-006 — Delegatic",
+                    cells: [
+                        {
+                            num: "14",
+                            symbol: "⊘",
+                            glyph: true,
+                            label: "No cycles",
+                            status: "proved",
+                            title: "⊘ — No cycles in authority graph",
+                            tagline: "Delegation is acyclic by construction.",
+                            desc: "The authority graph (who can delegate to whom) admits no cycles. Prevents privilege loops and infinite delegation chains. Enforced at write time, not detected at read time.",
+                            extra: "One of four Delegatic security invariants. The structural opposite of κ — where the knowledge graph welcomes cycles, the authority graph forbids them.",
+                            protocol: "OS-006 (Delegatic) kernel",
+                            authority: "delegation safety",
+                            source: "DAG enforcement",
+                            proof: "/proofs/no-cycles.html",
+                        },
+                        {
+                            num: "15",
+                            symbol: "⊆",
+                            glyph: true,
+                            label: "Monotonic",
+                            status: "proved",
+                            title: "⊆ — Monotonic inheritance",
+                            tagline: "Children cannot exceed their parents.",
+                            desc: "Child contexts inherit a strict subset of parent permissions. A team cannot grant its members capabilities the team itself does not hold. Attempted privilege escalation is rejected at write time.",
+                            extra: "One of four Delegatic security invariants. Provides the structural guarantee that auditing the root tells you everything possible downstream.",
+                            protocol: "OS-006 (Delegatic) kernel",
+                            authority: "privilege containment",
+                            source: "Lattice / subset semantics",
+                            proof: "/proofs/monotonic-inheritance.html",
+                        },
+                        {
+                            num: "16",
+                            symbol: "⊥",
+                            glyph: true,
+                            label: "Deny default",
+                            status: "proved",
+                            title: "⊥ — Deny by default",
+                            tagline: "Absence of grant equals refusal.",
+                            desc: "An action is permitted only if an explicit grant exists. Silence is refusal. Eliminates ambient authority and makes the policy surface explicit.",
+                            extra: "One of four Delegatic security invariants. Standard capability-system discipline applied to agent governance.",
+                            protocol: "OS-006 (Delegatic) kernel",
+                            authority: "explicit grant required",
+                            source: "Capability theory",
+                            proof: "/proofs/deny-default.html",
+                        },
+                        {
+                            num: "17",
+                            symbol: "⊕",
+                            glyph: true,
+                            label: "Append-only",
+                            status: "proved",
+                            title: "⊕ — Append-only audit",
+                            tagline: "History cannot be rewritten.",
+                            desc: "Every authority decision is logged to an append-only audit stream. Past entries are immutable. Provides the structural basis for post-incident review and external compliance.",
+                            extra: "One of four Delegatic security invariants. The audit trail is the proof that the other three invariants were never violated.",
+                            protocol: "OS-006 (Delegatic) kernel",
+                            authority: "non-repudiation",
+                            source: "Append-only log / Merkle chain",
+                            proof: "/proofs/append-only.html",
+                        },
+                        /* v0.5 — economic extensions to Governance */
+                        {
+                            num: "38",
+                            symbol: "ν",
+                            label: "Nexus",
+                            status: "sketched",
+                            economic: true,
+                            title: "ν — Nexus · mutual-credit peer settlement",
+                            tagline:
+                                "Currency that only exists between two agents in the act of exchange.",
+                            desc: "A bilateral ledger primitive: when agent A pays agent B in ν, A's balance with B goes negative by exactly the amount B's goes positive. ν is not held — it exists only as the asymmetric trace of a transaction between two specific parties. Total supply across the network is always exactly zero by construction; inflation is structurally impossible. Adapts the WIR / LETS / Sardex mutual-credit pattern (Lietaer 2001) to agent settlement.",
+                            extra: "ν composes with ⊕ (append-only) for non-repudiation and with ε (epistemic delegation) for credit-limit setting. Agents accumulating persistent negative balances are flagged as net consumers; persistent positive balances mark net producers. The ledger is the reputation system. Eighty-year empirical track record at population scale in the Swiss WIR (Stodder 2009).",
+                            formal: "ν(A,B,t) ∈ ℝ\n∀A,B: ν(A,B,t) = −ν(B,A,t)\n∑_{A,B} ν(A,B,t) ≡ 0   ∀t\n\nConserved: pairwise sum (always zero)\nMinted on: transaction (only)\nBurned on: settlement-to-zero\nComposes with: ⊕, ε",
+                            protocol: "OS-006 (extension) · economic addendum",
+                            authority: "settle peer-to-peer",
+                            source: "WIR / Sardex mutual credit · Stodder 2009",
+                        },
+                        {
+                            num: "39",
+                            symbol: "ε",
+                            label: "Episteme",
+                            status: "named",
+                            economic: true,
+                            title: "ε — Episteme · delegation-bound trust receipt",
+                            tagline: "Trust held, not value owned.",
+                            desc: "Earned by being delegated to: when A grants B authority over a bounded resource pool, B earns ε equal to the bounded value of the grant, scaled by the parent's own ε balance (recursive trust). ε is non-transferable — it represents capacity for trust, not transferable claim — but ε is redeemable for other tokens (ν, θ) at a rate that depends on the trust's age and honored-reliability ratio. Long-held, well-honored delegations redeem at a premium.",
+                            extra: "Extends ⊆ (monotonic inheritance) by making the act of delegation itself an asset on the delegate's balance sheet. Solves the reputation-as-currency problem without making reputation directly transferable (which is the failure mode of most reputation tokens). ε ages well; it compounds when honored, decays when violated, and is the only entry that explicitly does both.",
+                            formal: "ε(B) := Σ_{A: A delegates to B} grant(A,B) · (ε(A) / ε_max) · h(B,t)\nwhere h(B,t) ∈ [0,1] is the honored-reliability ratio\n\nNon-transferable: ε(B) cannot become ε(C) by transfer\nRedeemable: ε → ν, ε → θ at rate r(age, h)\nConserved: total ε is bounded by aggregate-grant volume\nComposes with: ⊆, ⊕, θ",
+                            protocol: "OS-006 (extension) · economic addendum",
+                            authority: "redeem trust",
+                            source: "Capability theory + reputation systems · cf. EigenTrust",
+                        },
+                    ],
+                },
+
+                {
+                    label: "V",
+                    name: "Deliberation",
+                    meta: "OS-003 — Deliberation Orchestrator",
+                    cells: [
+                        {
+                            num: "18",
+                            symbol: "?",
+                            label: "Convergence",
+                            status: "missing",
+                            title: "Argument convergence (unnamed)",
+                            tagline: "When does the argument settle?",
+                            desc: "An invariant that measures whether deliberation among multiple agents is approaching a fixed point, oscillating, or diverging. Authorizes either continued deliberation or escalation to a sealing authority.",
+                            extra: "Open. Likely involves measuring entropy reduction across rounds.",
+                            protocol: "OS-003 (proposed)",
+                            authority: "continue / seal / escalate",
+                            source: "Open / information theory",
+                        },
+                        {
+                            num: "19",
+                            symbol: "?",
+                            label: "Dissent durability",
+                            status: "sketched",
+                            title: "Vindicated dissent (β × σ)",
+                            tagline:
+                                "When disagreement is structural, not noise.",
+                            desc: "Composition of β and σ: when σ > 0 across many consolidation epochs (high β on the obstruction class), the disagreement is durable. Authorizes preserve-dissent operation rather than forced consensus.",
+                            extra: "Already implied by the κ/σ/β composition but not yet a named first-class invariant in OS-003.",
+                            protocol: "OS-003 (proposed)",
+                            authority: "preserve dissent",
+                            source: "Composition of σ and β",
+                        },
+                        {
+                            num: "20",
+                            symbol: "?",
+                            label: "Seal integrity",
+                            status: "missing",
+                            title: "Seal integrity (unnamed)",
+                            tagline: "Can a sealed outcome be reopened?",
+                            desc: "Once a deliberation is sealed, under what conditions may it be reopened? An invariant defining the cryptographic and procedural conditions for re-litigation.",
+                            extra: "Open. Related to common-law precedent: a sealed outcome is precedent until the σ-class beneath it changes.",
+                            protocol: "OS-003 (proposed)",
+                            authority: "reopen / cite as precedent",
+                            source: "Open",
+                        },
+                    ],
+                },
+
+                {
+                    label: "VI",
+                    name: "Attention",
+                    meta: "OS-004 — Attention Engine",
+                    cells: [
+                        {
+                            num: "21",
+                            symbol: "?",
+                            label: "Salience persistence",
+                            status: "missing",
+                            title: "Salience persistence (unnamed)",
+                            tagline: "Does what was important stay important?",
+                            desc: "An attention-layer analog of β: which foci of attention persist across cycles vs which decay. Authorizes promotion from working memory to long-term focus.",
+                            extra: "Open. The chess analog is which threats remain live across multiple moves.",
+                            protocol: "OS-004 (proposed)",
+                            authority: "promote focus",
+                            source: "Open",
+                        },
+                        {
+                            num: "22",
+                            symbol: "?",
+                            label: "Focus coherence",
+                            status: "missing",
+                            title: "Focus coherence (unnamed)",
+                            tagline:
+                                "Do the things being attended to fit together?",
+                            desc: "When multiple foci are active, do they form a coherent attention plan or compete? Measures whether the agent's attention is plan-like or fragmented.",
+                            extra: "Open. Closely related to σ but on the attention layer rather than the knowledge layer.",
+                            protocol: "OS-004 (proposed)",
+                            authority: "consolidate / split focus",
+                            source: "Open",
+                        },
+                        {
+                            num: "23",
+                            symbol: "?",
+                            label: "Attention budget",
+                            status: "missing",
+                            title: "Attention-budget conservation (unnamed)",
+                            tagline: "Attention is finite and tracked.",
+                            desc: "An invariant that conserves total attention budget across foci. Adding focus to one region requires withdrawing from another. Prevents attention inflation.",
+                            extra: "Open. The chess analog is that you cannot calculate everything; calculation is itself a resource.",
+                            protocol: "OS-004 (proposed)",
+                            authority: "withdraw / reallocate",
+                            source: "Open / resource theory",
+                        },
+                        /* v0.5 — economic extension to Attention */
+                        {
+                            num: "40",
+                            symbol: "φ",
+                            label: "Phos",
+                            status: "sketched",
+                            economic: true,
+                            title: "φ — Phos · attention-credit currency",
+                            tagline:
+                                "Earned by directing thought productively. Burned by asking others to think.",
+                            desc: "An attention-credit token. φ is minted when an agent productively spends deliberation cycles (a κ-invocation that yields a downstream-useful artifact) and burned when an agent asks other agents to think on its behalf. Total φ in circulation is bounded by the system's per-epoch compute budget, so the supply is hard-capped at the physical scarcity (not a fiat decision). This is the closest token to the user's original \"money = freedom\" intuition: holding φ means holding directable cognitive bandwidth.",
+                            extra: "φ is the short-cycle currency of the substrate — it's what flows moment-to-moment as agents trade attention. Composes with ψ (cadence honesty) for verification: an agent claiming a φ-mint must show a manifest-honored deliberation. Compute-burn provenance is the φ analog of energy proof-of-work — except the work is structurally tied to the substrate's actual function, not arbitrary hashing.",
+                            formal: "φ_mint(a, t) := work(a, t) · indicator{β(output(a,t)) > θ_β}\nφ_burn(a, t) := compute_requested(a → other, t)\n∑_a φ(a, t) ≤ compute_budget(t)   ∀t\n\nConserved: bounded by compute budget\nMinted on: productive κ-invocation with β-mark on output\nBurned on: delegated deliberation request\nComposes with: ψ, κ, β",
+                            protocol: "OS-004 (extension) · economic addendum",
+                            authority: "direct compute · withdraw attention",
+                            source: "Resource theory + proof-of-useful-work",
+                        },
+                    ],
+                },
+
+                {
+                    label: "VII",
+                    name: "Tier / Budget",
+                    meta: "OS-005 — Model Tier Adaptation",
+                    cells: [
+                        {
+                            num: "24",
+                            symbol: "?",
+                            label: "Escalation monotonicity",
+                            status: "missing",
+                            title: "Escalation monotonicity (unnamed)",
+                            tagline:
+                                "Stronger models do not make things worse.",
+                            desc: "When the system escalates a task from a lighter to a heavier model, the outcome quality is non-decreasing in expectation. Prevents the embarrassing case of paying more for worse results.",
+                            extra: "Open. Surprisingly nontrivial to guarantee in practice.",
+                            protocol: "OS-005 (proposed)",
+                            authority: "escalate",
+                            source: "Open",
+                        },
+                        {
+                            num: "25",
+                            symbol: "?",
+                            label: "Cost conservation",
+                            status: "missing",
+                            title: "Cost-budget conservation (unnamed)",
+                            tagline: "Spend matches declared budget.",
+                            desc: "Total cost across a task is bounded by the declared budget. Overruns trigger explicit reauthorization rather than silent debt.",
+                            extra: "Open. Composes naturally with OS-016 (Autonomy Budget).",
+                            protocol: "OS-005 / OS-016",
+                            authority: "abort / extend budget",
+                            source: "Open",
+                        },
+                        {
+                            num: "26",
+                            symbol: "?",
+                            label: "Capability floor",
+                            status: "missing",
+                            title: "Capability floor (unnamed)",
+                            tagline: "Downshift preserves a minimum.",
+                            desc: "When the system downshifts to a lighter model, a defined minimum capability is preserved. Prevents catastrophic degradation in cost-saving mode.",
+                            extra: "Open. Defines what 'lighter' actually means.",
+                            protocol: "OS-005 (proposed)",
+                            authority: "downshift safely",
+                            source: "Open",
+                        },
+                        /* v0.5 — economic extensions to Tier / Budget */
+                        {
+                            num: "41",
+                            symbol: "δ",
+                            label: "Demurra",
+                            status: "sketched",
+                            economic: true,
+                            title: "δ — Demurra · demurrage operational currency",
+                            tagline:
+                                "Tokens that decay if they aren't spent on substrate work.",
+                            desc: "Operational currency with Gesell-style demurrage: every δ-unit loses ρ% of its value per PULSE epoch unless spent on σ-resolution, κ-deliberation, or β-promotion. Hoarding is structurally taxed. Adapts the Wörgl scrip (Gesell 1916; Wörgl 1932) and modern Japanese Peanuts (1%/month) to agent operation. Forces circulation, which forces multi-agent collaboration — an agent earning δ and sitting on it is wasting it; an agent immediately spending it on a resolution is converting time-decaying tokens into permanent β-artifacts that mint θ.",
+                            extra: 'δ is income; θ (entry 43) is savings. Agents naturally flow δ → β-work → θ-claims, which is the substrate-economic equivalent of the Lietaer pattern "local currency for circulation, hard currency for storage." δ is the friction-against-hoarding that keeps a Lietaer-style multi-currency ecosystem moving.',
+                            formal: "δ(a, t+1) := δ(a, t) · (1 − ρ)   if not spent in epoch t\nρ ≈ 0.05–0.10 per epoch (calibration parameter)\n\nConserved: no — δ is intentionally lossy\nMinted on: completion of σ-resolution or κ-deliberation\nBurned on: spending OR decay (the design point)\nComposes with: σ, κ, β, θ",
+                            protocol: "OS-005 (extension) · economic addendum",
+                            authority: "spend or lose",
+                            source: "Gesell 1916 · Wörgl 1932 · Peanuts (Japan)",
+                        },
+                        {
+                            num: "42",
+                            symbol: "γ",
+                            label: "Grava",
+                            status: "sketched",
+                            economic: true,
+                            title: "γ — Grava · compute-backed reserve",
+                            tagline: "The hard floor under everything else.",
+                            desc: "A reserve asset backed by an actual compute claim: each γ-unit is redeemable for a specified quantity of GPU-hours, context-window tokens, or storage. γ is the agent-economy analog of a commodity standard, but the commodity is the actual substrate scarcity rather than gold. Where δ inflates/deflates with circulation, γ has a hard physical floor — the underlying compute either exists or doesn't.",
+                            extra: 'γ functions as the treasury asset on agent and fleet balance sheets. Agents pay each other in δ, φ, and ν day-to-day, but they hold γ as reserves against shocks. This is the substrate equivalent of central-bank reserves vs. M1, except the reserve is denominated in the physical scarcity rather than in another fiat. Resolves the Lietaer-Ulanowicz "window of vitality" tradeoff by giving the economy a fixed-redemption anchor that prevents the multi-currency stack from drifting into pure speculation.',
+                            formal: "γ(a) := compute_claim(a)  ∈  {gpu_hours, context_tokens, storage_bytes}\nredemption: γ → physical resource at fixed rate r\n\nConserved: bounded by total provisioned compute\nMinted on: compute provisioning (substrate operator action)\nBurned on: redemption to physical resource\nComposes with: δ (reserve ratio), θ (settlement collateral)",
+                            protocol: "OS-005 (extension) · economic addendum",
+                            authority: "redeem to compute",
+                            source: "Commodity-backed currency · cf. stablecoin reserves",
+                        },
+                    ],
+                },
+
+                {
+                    label: "VIII",
+                    name: "Evaluation",
+                    meta: "OS-009 — PRISM",
+                    cells: [
+                        {
+                            num: "27",
+                            symbol: "?",
+                            label: "Holdout integrity",
+                            status: "missing",
+                            title: "Holdout integrity (unnamed)",
+                            tagline: "Test set never leaks.",
+                            desc: "An invariant on the evaluation pipeline: the holdout scenarios never appear, in any form, in any system the benchmark evaluates. The most important invariant for external benchmarking credibility.",
+                            extra: "Open at the protocol layer; the PRISM benchmark enforces it operationally. Formalizing it would convert PRISM's internal discipline into an externally verifiable property.",
+                            protocol: "OS-009 (PRISM)",
+                            authority: "publish score",
+                            source: "Open / ML methodology",
+                        },
+                        {
+                            num: "28",
+                            symbol: "?",
+                            label: "Adversarial monotonicity",
+                            status: "missing",
+                            title: "Adversarial monotonicity (unnamed)",
+                            tagline:
+                                "Harder scenarios produce lower scores on weak systems.",
+                            desc: "When the benchmark generates a harder scenario, weak systems score lower on it. Prevents the benchmark from drifting toward scenarios that happen to favor incumbents.",
+                            extra: "Open. Necessary for the self-improving loop to not become a self-flattering loop.",
+                            protocol: "OS-009 (PRISM)",
+                            authority: "accept scenario",
+                            source: "Open / adversarial learning",
+                        },
+                        {
+                            num: "29",
+                            symbol: "?",
+                            label: "Anti-saturation",
+                            status: "missing",
+                            title: "Anti-saturation (unnamed)",
+                            tagline:
+                                "The benchmark gets harder as systems improve.",
+                            desc: "An invariant requiring that the median scenario difficulty rise as median system score rises. Operationalizes the principle that a useful benchmark cannot saturate.",
+                            extra: "Open. The structural reason LongMemEval saturated and PRISM should not.",
+                            protocol: "OS-009 (PRISM)",
+                            authority: "raise the bar",
+                            source: "Open",
+                        },
+                        /* v0.5 — economic extension to Evaluation/PRISM */
+                        {
+                            num: "43",
+                            symbol: "θ",
+                            label: "Tithon",
+                            status: "sketched",
+                            economic: true,
+                            title: "θ — Tithon · settlement / redemption invariant",
+                            tagline:
+                                "The bridge from internal economy to real-world capital.",
+                            desc: 'The auditable invariant that maps internal token flow (ν, ε, δ, φ, ω, γ) to external USD settlement against actual customer revenue. θ-minting requires (a) verified β-mark on the underlying artifact, (b) σ-resolution audit trail, (c) ⊕-logged customer-USD inflow attributable to the work. Without θ, billars (the user\'s proposed denomination) are internal scrip; with θ, they are claims on a pro-rata share of customer USD at settlement. The Lietaer "complementary currency" pattern formalized as an auditable protocol.',
+                            extra: "θ is the single most consequential invariant for outside investors: it is the mechanism by which a real person buys a claim on the future θ-earnings of a specific agent or fleet, and is paid out in USD at settlement against actual revenue. This is closer to royalty securitization than to crypto. The denomination unit is the billar (B); one billar = one unit of θ at the current epoch's USD/θ rate. The exchange rate floats based on customer revenue / θ-minted ratio — a real exchange rate anchored to economic activity rather than speculation.",
+                            formal: "θ_mint(a, work) := USD_in(customer, work) · share(a, work)\n  where share(a, work) requires:\n    β(output(work)) > θ_β       (persistence proof)\n    ⊕(audit_trail(work)) = ✓    (append-only verified)\n    σ-resolution log present\n\nRedeemable: θ → USD at settlement\nDenomination: 1 billar (B) = 1 unit of θ\nConserved: 1:1 against verified customer USD inflow\nComposes with: ALL — θ is the settlement layer over the whole economy",
+                            protocol: "OS-009 (extension) · economic addendum",
+                            authority: "redeem to USD · issue billar claim",
+                            source: "Lietaer 2001 · complementary currency settlement · revenue-share securities",
+                        },
+                    ],
+                },
+
+                {
+                    label: "IX",
+                    name: "Embodiment",
+                    meta: "OS-011 — body-browser, body-os",
+                    cells: [
+                        {
+                            num: "30",
+                            symbol: "?",
+                            label: "Continuity",
+                            status: "missing",
+                            title: "Embodiment continuity (unnamed)",
+                            tagline: "Body-state survives reload.",
+                            desc: "The agent's body-state (pose, viewport, focus, scroll, modal stack) is conserved across reload and reattachment. Without this, embodiment is just a session.",
+                            extra: "Open. Distinguishes embodiment from incarnation.",
+                            protocol: "OS-011 (proposed)",
+                            authority: "reattach session",
+                            source: "Open",
+                        },
+                        {
+                            num: "31",
+                            symbol: "?",
+                            label: "Affordance honesty",
+                            status: "missing",
+                            title: "Affordance honesty (unnamed)",
+                            tagline: "The body advertises only what it can do.",
+                            desc: "Every affordance the body exposes to its driving agent must be one the body can actually execute. No phantom buttons. Prevents agents from confidently planning over fictional capabilities.",
+                            extra: "Open. Closely linked to OS-015 (Affordance Projection).",
+                            protocol: "OS-011 / OS-015",
+                            authority: "advertise capability",
+                            source: "Open",
+                        },
+                        {
+                            num: "32",
+                            symbol: "?",
+                            label: "Sensor-actuator coherence",
+                            status: "missing",
+                            title: "Sensor-actuator coherence (unnamed)",
+                            tagline: "What I see is what I just did.",
+                            desc: "Following an actuator command, the next sensor reading reflects the command's effect within bounded time. Prevents drift between agent's belief and body's actual state.",
+                            extra: "Open. The robotics literature has versions of this; the agent literature does not.",
+                            protocol: "OS-011 (proposed)",
+                            authority: "trust sensor",
+                            source: "Open / control theory",
+                        },
+                    ],
+                },
+
+                {
+                    label: "X",
+                    name: "Security & Federation",
+                    meta: "OS-013 / OS-014 / OS-017",
+                    cells: [
+                        {
+                            num: "33",
+                            symbol: "?",
+                            label: "Non-replay",
+                            status: "missing",
+                            title: "Credential non-replay (unnamed)",
+                            tagline: "A token used twice was used wrongly.",
+                            desc: "Standard cryptographic invariant adapted to agent credentials: a token consumed once cannot be consumed again. Prevents replay attacks on agent-to-agent authority transfer.",
+                            extra: "Open at OS-013. Off-the-shelf cryptographic primitive at the implementation layer.",
+                            protocol: "OS-013 (planned)",
+                            authority: "accept credential",
+                            source: "Cryptographic protocol design",
+                        },
+                        {
+                            num: "34",
+                            symbol: "?",
+                            label: "PII conservation",
+                            status: "missing",
+                            title: "PII conservation (unnamed)",
+                            tagline:
+                                "Sensitive data does not cross aggregation boundaries.",
+                            desc: "Telemetry and federated aggregation invariant: personally identifiable information present at the leaf is absent from the aggregate. Differential privacy at the protocol layer.",
+                            extra: "Open at OS-014 / OS-017. Implementable with established differential-privacy mechanisms.",
+                            protocol: "OS-014 / OS-017",
+                            authority: "publish aggregate",
+                            source: "Differential privacy",
+                        },
+                        {
+                            num: "35",
+                            symbol: "?",
+                            label: "Causal order",
+                            status: "missing",
+                            title: "Causal-order preservation (unnamed)",
+                            tagline:
+                                "Aggregation does not reorder cause and effect.",
+                            desc: "When telemetry from multiple agents is unified, the causal order of related events is preserved in the unified stream. Concurrent events may be interleaved arbitrarily, but causally ordered pairs are not reordered.",
+                            extra: "Open at OS-014. Standard vector-clock / Lamport-timestamp territory at the implementation layer.",
+                            protocol: "OS-014 (planned)",
+                            authority: "publish trace",
+                            source: "Distributed systems / Lamport",
+                        },
+                        {
+                            num: "36",
+                            symbol: "?",
+                            label: "Aggregation fidelity",
+                            status: "missing",
+                            title: "Aggregation fidelity (unnamed)",
+                            tagline:
+                                "The federated view faithfully represents the union.",
+                            desc: "FGAP-specific invariant: the federated graph aggregated from N local graphs is observationally indistinguishable from a single graph containing the union of the locals (modulo agreed coarsening).",
+                            extra: "Open at OS-017. The structural claim that makes federation useful rather than merely scalable.",
+                            protocol: "OS-017 (planned)",
+                            authority: "query federated",
+                            source: "Open / sheaf theory (revived here, legitimately)",
+                        },
+                    ],
+                },
+            ];
+
+            /* ─────────────────────────────────────────────────────────
+     RENDER
+     ───────────────────────────────────────────────────────── */
+
+            const tableEl = document.getElementById("table");
+            let cellCounter = 0;
+
+            families.forEach((family, fIdx) => {
+                const familyEl = document.createElement("section");
+                familyEl.className = "family";
+
+                const header = document.createElement("div");
+                header.className = "family-header";
+                header.innerHTML = `
+      <span class="family-label">Group ${family.label}</span>
+      <span class="family-name">${family.name}</span>
+      <span class="family-meta">${family.meta}</span>
+    `;
+                familyEl.appendChild(header);
+
+                const row = document.createElement("div");
+                row.className = "row";
+
+                family.cells.forEach((cell, cIdx) => {
+                    const cellEl = document.createElement("button");
+                    const econClass = cell.economic ? " economic" : "";
+                    cellEl.className = `cell ${cell.status}${econClass}`;
+                    cellEl.setAttribute("data-status", cell.status);
+                    if (cell.economic)
+                        cellEl.setAttribute("data-economic", "true");
+                    cellEl.style.animationDelay = `${cellCounter * 18}ms`;
+                    cellCounter++;
+
+                    const symbolClass = cell.glyph
+                        ? "cell-symbol glyph"
+                        : "cell-symbol";
+                    cellEl.innerHTML = `
+        <span class="cell-num">${cell.num}</span>
+        <span class="${symbolClass}">${cell.symbol}</span>
+        <span class="cell-label">${cell.label}</span>
+        <span class="cell-status">${cell.status}</span>
+      `;
+
+                    cellEl.addEventListener("click", () => openInspector(cell));
+                    row.appendChild(cellEl);
+                });
+
+                familyEl.appendChild(row);
+                tableEl.appendChild(familyEl);
+            });
+
+            /* ─────────────────────────────────────────────────────────
+     INSPECTOR
+     ───────────────────────────────────────────────────────── */
+
+            const inspector = document.getElementById("inspector");
+            const inspectorClose = document.getElementById("inspector-close");
+            const glyphWrap = document.getElementById("i-glyph-wrap");
+            const formalBlock = document.getElementById("i-formal");
+            const formalText = document.getElementById("i-formal-text");
+
+            function openInspector(cell) {
+                document.getElementById("i-num").textContent = cell.num;
+                const symbolEl = document.getElementById("i-symbol");
+                symbolEl.textContent = cell.symbol;
+                symbolEl.className =
+                    "big-symbol" + (cell.glyph ? " glyph" : "");
+                document.getElementById("i-label").textContent = cell.label;
+                document.getElementById("i-title").textContent = cell.title;
+                document.getElementById("i-tagline").textContent = cell.tagline;
+                document.getElementById("i-description").textContent =
+                    cell.desc;
+                document.getElementById("i-extra").textContent = cell.extra;
+
+                /* v0.5 — formal block + economic ribbon */
+                if (cell.formal) {
+                    formalText.textContent = cell.formal;
+                    formalBlock.style.display = "block";
+                } else {
+                    formalBlock.style.display = "none";
+                }
+                if (cell.economic) {
+                    glyphWrap.classList.add("econ");
+                } else {
+                    glyphWrap.classList.remove("econ");
+                }
+
+                const statusBadge = document.getElementById("i-status");
+                statusBadge.textContent = cell.status;
+                statusBadge.className = "status-badge " + cell.status;
+
+                document.getElementById("i-protocol").textContent =
+                    cell.protocol;
+                document.getElementById("i-authority").textContent =
+                    cell.authority;
+                document.getElementById("i-source").textContent = cell.source;
+
+                const proofLink = document.getElementById("i-proof");
+                if (cell.proof) {
+                    proofLink.href = cell.proof;
+                    proofLink.style.display = "inline-flex";
+                } else {
+                    proofLink.style.display = "none";
+                }
+
+                inspector.classList.add("open");
+                inspector.setAttribute("aria-hidden", "false");
+            }
+
+            function closeInspector() {
+                inspector.classList.remove("open");
+                inspector.setAttribute("aria-hidden", "true");
+            }
+
+            inspectorClose.addEventListener("click", closeInspector);
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeInspector();
+            });
+
+            /* ─────────────────────────────────────────────────────────
+     FILTER
+     ───────────────────────────────────────────────────────── */
+
+            document.querySelectorAll(".chip").forEach((chip) => {
+                chip.addEventListener("click", () => {
+                    document
+                        .querySelectorAll(".chip")
+                        .forEach((c) => c.classList.remove("active"));
+                    chip.classList.add("active");
+
+                    const filter = chip.getAttribute("data-filter");
+                    document.querySelectorAll(".cell").forEach((cell) => {
+                        let show = false;
+                        if (filter === "all") show = true;
+                        else if (filter === "economic")
+                            show =
+                                cell.getAttribute("data-economic") === "true";
+                        else show = cell.getAttribute("data-status") === filter;
+
+                        if (show) cell.classList.remove("dimmed");
+                        else cell.classList.add("dimmed");
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

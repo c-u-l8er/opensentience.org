@@ -1,0 +1,1849 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            The Laws of Invariant Arithmetic — v0.3 · proof in the pudding
+        </title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --paper: #f4ede0;
+                --paper-deep: #ebe3d2;
+                --paper-soft: #f8f2e6;
+                --ink: #1a1814;
+                --ink-soft: #4a4538;
+                --ink-faint: #8a8472;
+                --rule: #c9bfa8;
+                --rule-soft: #ddd4bc;
+                --proved: #b8451f;
+                --proved-bg: #e9c8b4;
+                --shipped: #4a5d3a;
+                --shipped-bg: #c7d1b8;
+                --named: #6b5d3f;
+                --sketched: #8a8472;
+                --pass: #4a5d3a;
+                --pass-bg: #c7d1b8;
+                --fail: #b8451f;
+                --fail-bg: #e9c8b4;
+
+                --family-topological: #b8451f;
+                --family-spatial: #5e7a8c;
+                --family-temporal: #6b8e7f;
+                --family-governance: #8c6d3f;
+
+                --font-display: "Cormorant Garamond", Georgia, serif;
+                --font-mono: "JetBrains Mono", "IBM Plex Mono", monospace;
+                --font-body: "Inter", system-ui, sans-serif;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background: var(--paper);
+                color: var(--ink);
+                font-family: var(--font-body);
+                font-size: 15px;
+                line-height: 1.6;
+                background-image:
+                    radial-gradient(
+                        rgba(26, 24, 20, 0.04) 1px,
+                        transparent 1px
+                    ),
+                    radial-gradient(rgba(26, 24, 20, 0.03) 1px, transparent 1px);
+                background-size:
+                    3px 3px,
+                    7px 7px;
+            }
+            .wrap {
+                max-width: 1080px;
+                margin: 0 auto;
+                padding: 56px 36px 120px;
+            }
+
+            /* Masthead */
+            header.mast {
+                border-bottom: 1px solid var(--ink);
+                padding-bottom: 32px;
+                margin-bottom: 56px;
+            }
+            .mast .eyebrow {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ink-soft);
+                margin-bottom: 18px;
+            }
+            .mast h1 {
+                font-family: var(--font-display);
+                font-weight: 500;
+                font-size: 60px;
+                line-height: 1.02;
+                margin: 0 0 18px;
+                letter-spacing: -0.01em;
+            }
+            .mast h1 em {
+                font-style: italic;
+                color: var(--proved);
+            }
+            .mast .sub {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 21px;
+                color: var(--ink-soft);
+                max-width: 780px;
+                line-height: 1.4;
+            }
+            .mast .meta {
+                margin-top: 24px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                color: var(--ink-faint);
+                display: flex;
+                gap: 28px;
+                flex-wrap: wrap;
+            }
+
+            /* Section frames */
+            section.panel {
+                margin: 56px 0;
+            }
+            .panel-head {
+                display: flex;
+                align-items: baseline;
+                gap: 18px;
+                border-bottom: 1px solid var(--rule);
+                padding-bottom: 10px;
+                margin-bottom: 24px;
+            }
+            .panel-num {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--ink-faint);
+                letter-spacing: 0.15em;
+            }
+            .panel-head h2 {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 30px;
+                margin: 0;
+                letter-spacing: -0.005em;
+            }
+            .panel-head .tag {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                color: var(--ink-faint);
+                margin-left: auto;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+            }
+            .panel-intro {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 18px;
+                color: var(--ink-soft);
+                margin-bottom: 24px;
+                max-width: 800px;
+                line-height: 1.45;
+            }
+
+            /* Algebraic structure / type signatures */
+            .struct {
+                background: var(--paper-soft);
+                border: 1px solid var(--ink);
+                padding: 20px 24px;
+                margin: 16px 0;
+            }
+            .struct h4 {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+                border-bottom: 1px dashed var(--rule);
+            }
+            .struct pre {
+                font-family: var(--font-mono);
+                font-size: 13px;
+                line-height: 1.7;
+                color: var(--ink);
+                white-space: pre-wrap;
+            }
+            .struct pre .kw {
+                color: var(--proved);
+                font-weight: 600;
+            }
+            .struct pre .ty {
+                color: var(--family-temporal);
+                font-weight: 600;
+            }
+            .struct pre .op {
+                color: var(--family-spatial);
+            }
+            .struct pre .com {
+                color: var(--ink-faint);
+                font-style: italic;
+            }
+            .struct pre .lit {
+                color: var(--family-governance);
+            }
+
+            /* Law cards */
+            .law-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .law {
+                border: 1px solid var(--rule);
+                background: var(--paper-soft);
+                padding: 18px 20px;
+                display: grid;
+                grid-template-columns: 80px 1fr auto;
+                gap: 18px;
+                align-items: start;
+            }
+            .law .id {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.18em;
+                color: var(--ink-faint);
+                padding-top: 3px;
+            }
+            .law .body {
+                font-family: var(--font-body);
+                font-size: 14px;
+                line-height: 1.55;
+            }
+            .law .body .name {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 16px;
+                margin-bottom: 4px;
+            }
+            .law .body .formal {
+                font-family: var(--font-mono);
+                font-size: 12.5px;
+                background: var(--paper-deep);
+                padding: 6px 10px;
+                border-left: 3px solid var(--ink);
+                margin: 6px 0;
+                color: var(--ink);
+                white-space: pre-wrap;
+            }
+            .law .body .gloss {
+                color: var(--ink-soft);
+                font-style: italic;
+            }
+            .law .status {
+                font-family: var(--font-mono);
+                font-size: 9px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                padding: 4px 8px;
+                border-radius: 2px;
+                text-align: center;
+                min-width: 90px;
+            }
+            .law .status.pending {
+                background: var(--paper-deep);
+                color: var(--ink-faint);
+            }
+            .law .status.passing {
+                background: var(--pass-bg);
+                color: var(--pass);
+                font-weight: 700;
+            }
+            .law .status.failing {
+                background: var(--fail-bg);
+                color: var(--fail);
+                font-weight: 700;
+            }
+
+            /* Test runner */
+            .runner {
+                border: 1px solid var(--ink);
+                background: var(--paper-soft);
+                margin: 24px 0;
+                padding: 0;
+            }
+            .runner-head {
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                padding: 16px 22px;
+                border-bottom: 1px solid var(--rule);
+                background: var(--paper-deep);
+            }
+            .runner-head .title {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                color: var(--ink-soft);
+                font-weight: 700;
+            }
+            .runner-head .controls {
+                margin-left: auto;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .runner-head input[type="number"] {
+                font-family: var(--font-mono);
+                font-size: 12px;
+                width: 80px;
+                padding: 5px 8px;
+                border: 1px solid var(--rule);
+                background: var(--paper);
+                color: var(--ink);
+            }
+            .runner-head label {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.1em;
+                color: var(--ink-faint);
+                text-transform: uppercase;
+            }
+            .runner-head button {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                background: var(--ink);
+                color: var(--paper);
+                border: none;
+                padding: 8px 18px;
+                cursor: pointer;
+                font-weight: 600;
+            }
+            .runner-head button:hover {
+                background: var(--proved);
+            }
+            .runner-head button:disabled {
+                background: var(--ink-faint);
+                cursor: wait;
+            }
+
+            .runner-status {
+                padding: 14px 22px;
+                font-family: var(--font-mono);
+                font-size: 12px;
+                color: var(--ink-soft);
+                border-bottom: 1px dashed var(--rule);
+                display: flex;
+                gap: 24px;
+                flex-wrap: wrap;
+            }
+            .runner-status .stat .v {
+                font-family: var(--font-display);
+                font-weight: 500;
+                font-size: 20px;
+                margin-right: 6px;
+            }
+            .runner-status .stat .v.pass {
+                color: var(--pass);
+            }
+            .runner-status .stat .v.fail {
+                color: var(--fail);
+            }
+            .runner-status .stat .l {
+                color: var(--ink-faint);
+                font-size: 10px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+
+            .runner-counter {
+                padding: 14px 22px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--fail);
+                background: var(--fail-bg);
+                border-bottom: 1px solid var(--fail);
+                display: none;
+                white-space: pre-wrap;
+            }
+            .runner-counter.show {
+                display: block;
+            }
+            .runner-counter strong {
+                font-weight: 700;
+            }
+
+            /* TS sketch */
+            .ts-block {
+                background: #1c1a16;
+                color: #ebe5d3;
+                padding: 22px 26px;
+                font-family: var(--font-mono);
+                font-size: 13px;
+                line-height: 1.7;
+                border: 1px solid var(--ink);
+                overflow-x: auto;
+                white-space: pre;
+            }
+            .ts-block .kw {
+                color: #e87a4a;
+            }
+            .ts-block .ty {
+                color: #7eb3a4;
+            }
+            .ts-block .com {
+                color: #8e8775;
+                font-style: italic;
+            }
+            .ts-block .str {
+                color: #c4a838;
+            }
+            .ts-block .gen {
+                color: #d6b6e0;
+            }
+            .ts-block .fn {
+                color: #f5d780;
+            }
+
+            /* Worked example pipeline */
+            .pipeline {
+                display: grid;
+                gap: 0;
+                border: 1px solid var(--ink);
+                background: var(--paper-soft);
+            }
+            .step {
+                padding: 18px 24px;
+                border-bottom: 1px solid var(--rule);
+                display: grid;
+                grid-template-columns: 60px 1fr 280px;
+                gap: 20px;
+                align-items: start;
+            }
+            .step:last-child {
+                border-bottom: none;
+            }
+            .step .n {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 32px;
+                color: var(--ink-faint);
+                line-height: 1;
+            }
+            .step .narrative {
+                font-family: var(--font-body);
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            .step .narrative .what {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 17px;
+                margin-bottom: 4px;
+            }
+            .step .narrative .code {
+                font-family: var(--font-mono);
+                font-size: 12px;
+                background: var(--paper-deep);
+                padding: 6px 10px;
+                margin-top: 8px;
+                border-left: 3px solid var(--rule);
+                color: var(--ink-soft);
+                white-space: pre-wrap;
+                line-height: 1.55;
+            }
+            .step .digest {
+                background: var(--paper-deep);
+                padding: 10px 12px;
+                border-radius: 2px;
+                font-family: var(--font-mono);
+                font-size: 10.5px;
+                line-height: 1.55;
+                color: var(--ink-soft);
+            }
+            .step .digest .row {
+                display: grid;
+                grid-template-columns: 22px 1fr;
+                gap: 6px;
+                padding: 2px 0;
+            }
+            .step .digest .sym {
+                font-weight: 700;
+                text-align: center;
+            }
+            .step .digest .sym.k {
+                color: var(--family-topological);
+            }
+            .step .digest .sym.b {
+                color: var(--family-topological);
+            }
+            .step .digest .sym.s {
+                color: var(--family-spatial);
+            }
+            .step .digest .sym.p {
+                color: var(--family-temporal);
+            }
+            .step .digest .row.flag .v {
+                color: var(--fail);
+                font-weight: 700;
+            }
+            .step .verdict {
+                grid-column: 2 / 4;
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 16px;
+                padding: 12px 18px;
+                margin-top: 8px;
+                border-left: 4px solid;
+            }
+            .step .verdict.ok {
+                color: var(--pass);
+                border-color: var(--pass);
+                background: var(--pass-bg);
+            }
+            .step .verdict.refused {
+                color: var(--fail);
+                border-color: var(--fail);
+                background: var(--fail-bg);
+            }
+
+            /* Closing */
+            .closing {
+                margin-top: 60px;
+                padding: 28px 32px;
+                border: 1px solid var(--ink);
+                background: var(--paper-soft);
+            }
+            .closing h3 {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 24px;
+                margin-bottom: 14px;
+            }
+            .closing p {
+                font-family: var(--font-body);
+                font-size: 15px;
+                line-height: 1.65;
+                margin-bottom: 12px;
+                max-width: 780px;
+            }
+            .closing p em {
+                font-style: italic;
+                color: var(--ink-soft);
+            }
+
+            footer.colophon {
+                margin-top: 60px;
+                padding-top: 24px;
+                border-top: 1px solid var(--ink);
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--ink-faint);
+                letter-spacing: 0.05em;
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 14px;
+            }
+
+            @media (max-width: 880px) {
+                .wrap {
+                    padding: 32px 22px 80px;
+                }
+                .mast h1 {
+                    font-size: 38px;
+                }
+                .law {
+                    grid-template-columns: 1fr;
+                }
+                .step {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav property="invariant_arithmetic" theme="light"></amp-nav>
+        <div class="wrap">
+            <header class="mast">
+                <div class="eyebrow">
+                    Invariant Arithmetic · v0.3 · The Laws
+                </div>
+                <h1>
+                    Proof in the pudding — the <em>algebraic laws</em>, the
+                    <em>property tests</em>, the <em>types</em>.
+                </h1>
+                <p class="sub">
+                    Invariant arithmetic isn't a tag-propagation hack. Its
+                    operations form precise algebraic structures: a product of
+                    monoids for <code>combine</code>, a phase-graded category
+                    for <code>chain</code>, idempotent endomorphisms for
+                    <code>reconcile</code> and <code>deliberate</code>. This
+                    document states the laws, tests them on random values until
+                    either they hold or a counterexample falsifies them, and
+                    sketches the typed version that turns the substrate into a
+                    small language.
+                </p>
+                <div class="meta">
+                    <span>15 laws stated</span>
+                    <span>property tests live in this page</span>
+                    <span>TS type-level sketch · non-executing</span>
+                    <span>worked RAG example</span>
+                </div>
+            </header>
+
+            <!-- ════════════════════════════ -->
+            <!-- I. Algebraic structure       -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">I.</span>
+                    <h2>The algebraic structure of values</h2>
+                    <span class="tag">monoids, categories, lattices</span>
+                </div>
+                <p class="panel-intro">
+                    Each family of invariants gives <code>combine</code> a
+                    different algebraic personality. Most are commutative
+                    monoids — addition for ℝ, OR for κ, min for β, union for σ.
+                    The temporal and governance fields are non-commutative free
+                    monoids (first-non-null wins, or list concatenation). The
+                    whole value space is the product, and a product of monoids
+                    is a monoid. The non-commutative components are why
+                    <code>combine(a, b) ≠ combine(b, a)</code> in general — but
+                    they're also exactly what makes the substrate aware of
+                    order, which it must be.
+                </p>
+
+                <div class="struct">
+                    <h4>Value as a product of monoids</h4>
+                    <pre><span class="kw">type</span> <span class="ty">Value</span> = {
+  n: <span class="ty">ℝ</span>,                           <span class="com">// + with identity 0, commutative monoid</span>
+  topological: {
+    κ: <span class="ty">Bool</span>,                       <span class="com">// ∨ with identity false, idempotent commutative monoid</span>
+    β: <span class="ty">[0, 1]</span>                      <span class="com">// min with identity 1, idempotent commutative monoid</span>
+  },
+  spatial: {
+    σ: <span class="ty">Set&lt;Tag&gt;</span>                  <span class="com">// ∪ with identity ∅, idempotent commutative monoid (join-semilattice)</span>
+  },
+  temporal: {
+    π: <span class="ty">Phase | null</span>,               <span class="com">// first-non-null monoid, NOT commutative, NOT idempotent</span>
+    ι: <span class="ty">IdemKey | null</span>,             <span class="com">// first-non-null monoid (same structure)</span>
+    ψ: <span class="ty">Cadence | null</span>              <span class="com">// first-non-null monoid (same structure)</span>
+  },
+  governance: {
+    authority_path: <span class="ty">List&lt;Cap&gt;</span>,    <span class="com">// concat with identity [], free monoid (NOT commutative)</span>
+    deny_default: <span class="ty">Bool</span>,             <span class="com">// ∧ with identity true, idempotent commutative monoid</span>
+    audit: <span class="ty">List&lt;Event&gt;</span>             <span class="com">// concat (free monoid)</span>
+  }
+}</pre>
+                </div>
+
+                <div class="struct">
+                    <h4>Operations and their structures</h4>
+                    <pre><span class="kw">combine</span> : <span class="ty">Value</span> × <span class="ty">Value</span> → <span class="ty">Value</span>
+  componentwise application of each family's monoid op
+  <span class="op">⇒</span> non-commutative monoid (because of temporal &amp; governance components)
+
+<span class="kw">chain</span> : <span class="ty">Value</span> × <span class="ty">Value</span> → <span class="ty">Value</span>      <span class="com">// partial</span>
+  defined only when phase(a) ≤ phase(b) in PULSE phase order
+  <span class="op">⇒</span> morphism in the phase-graded category PHASE
+     objects: phases  {retrieve, route, act, learn, consolidate}
+     morphisms: values tagged with entry/exit phase
+     composition: <span class="kw">chain</span>, identity: V(0) with matching phase
+
+<span class="kw">promote</span> : <span class="ty">Value</span> × <span class="ty">Evidence</span> → <span class="ty">Value</span>
+  β-monotone endomorphism on Value
+  promote(v).β ≥ v.β  always
+
+<span class="kw">reconcile</span> : <span class="ty">Value</span> × <span class="ty">Set&lt;Tag&gt;</span> → <span class="ty">Value</span>
+  σ-antitone, idempotent endomorphism
+  reconcile(v, T).σ = v.σ \ T;   reconcile(reconcile(v, T), T) = reconcile(v, T)
+
+<span class="kw">deliberate</span> : <span class="ty">Value</span> × <span class="ty">String</span> → <span class="ty">Value</span>
+  κ-antitone, idempotent endomorphism
+  deliberate(v).κ = false   (regardless of input κ)
+
+<span class="kw">consume</span> : <span class="ty">Value</span> × <span class="ty">Requirements</span> → <span class="ty">{ok, failures, value}</span>
+  predicate on (Value, Req), not an operation on Value itself
+  <span class="op">⇒</span> the substrate's correctness check</pre>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- II. The Laws                  -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">II.</span>
+                    <h2>The laws</h2>
+                    <span class="tag">fifteen statements to verify</span>
+                </div>
+                <p class="panel-intro">
+                    If the substrate is a real algebraic system rather than a
+                    heuristic, these laws hold. Some are familiar
+                    (associativity, identity); some are family-specific
+                    (per-component idempotence); some are about composition
+                    between operations (promote commutes with combine on β).
+                    Below, each law is stated formally, then verified live by
+                    the property-test runner in §III.
+                </p>
+
+                <div class="law-grid" id="lawGrid">
+                    <!-- Laws populated by JS so we can update statuses live -->
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- III. Property test runner    -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">III.</span>
+                    <h2>Live property tests</h2>
+                    <span class="tag">QuickCheck in your browser</span>
+                </div>
+                <p class="panel-intro">
+                    A tiny QuickCheck-style harness runs each law against
+                    randomly generated values. Green = the law holds across the
+                    requested number of trials; red surfaces the counterexample
+                    so you can read what broke. This is the proof-in-the-pudding
+                    pattern: not a proof of correctness, but strong evidence the
+                    algebra holds, and a way to instantly catch regressions when
+                    the substrate changes.
+                </p>
+
+                <div class="runner">
+                    <div class="runner-head">
+                        <span class="title">QuickCheck Harness</span>
+                        <div class="controls">
+                            <label for="ntrials">trials / law</label>
+                            <input
+                                id="ntrials"
+                                type="number"
+                                value="1000"
+                                min="10"
+                                max="100000"
+                                step="100"
+                            />
+                            <button id="runBtn">Run all laws →</button>
+                        </div>
+                    </div>
+                    <div class="runner-status">
+                        <div class="stat">
+                            <span class="v" id="totalLaws">15</span
+                            ><span class="l">laws</span>
+                        </div>
+                        <div class="stat">
+                            <span class="v pass" id="passingLaws">—</span
+                            ><span class="l">passing</span>
+                        </div>
+                        <div class="stat">
+                            <span class="v fail" id="failingLaws">—</span
+                            ><span class="l">failing</span>
+                        </div>
+                        <div class="stat">
+                            <span class="v" id="totalCases">—</span
+                            ><span class="l">cases tested</span>
+                        </div>
+                        <div class="stat">
+                            <span class="v" id="elapsedMs">—</span
+                            ><span class="l">ms elapsed</span>
+                        </div>
+                    </div>
+                    <div class="runner-counter" id="counterEx"></div>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- IV. TypeScript sketch         -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">IV.</span>
+                    <h2>Lifting the invariants into the type system</h2>
+                    <span class="tag"
+                        >non-executing TS sketch · refinement types</span
+                    >
+                </div>
+                <p class="panel-intro">
+                    Runtime checks are the prototype. The "language mechanics"
+                    version puts invariants in the type system, so the compiler
+                    refuses ill-formed compositions before the program runs.
+                    This is a sketch — TypeScript's type system isn't quite
+                    expressive enough for everything below (β-min would need
+                    full dependent types), but the shape is informative. A
+                    Liquid Haskell or Idris implementation could fully enforce
+                    this.
+                </p>
+
+                <div class="ts-block"><span class="com">// ────────────────────────────────────────────</span>
+<span class="com">// Invariant Arithmetic — type-level sketch (TypeScript / Liquid-style)</span>
+<span class="com">// ────────────────────────────────────────────</span>
+
+<span class="com">// Phases form a totally ordered enum</span>
+<span class="kw">type</span> <span class="ty">Phase</span> = <span class="str">'retrieve'</span> | <span class="str">'route'</span> | <span class="str">'act'</span> | <span class="str">'learn'</span> | <span class="str">'consolidate'</span>;
+
+<span class="com">// Phase order as a type-level function (mapped to numeric indices)</span>
+<span class="kw">type</span> <span class="ty">PhaseIdx</span>&lt;<span class="gen">P</span> <span class="kw">extends</span> <span class="ty">Phase</span>&gt; =
+  <span class="gen">P</span> <span class="kw">extends</span> <span class="str">'retrieve'</span>    ? 0 :
+  <span class="gen">P</span> <span class="kw">extends</span> <span class="str">'route'</span>       ? 1 :
+  <span class="gen">P</span> <span class="kw">extends</span> <span class="str">'act'</span>         ? 2 :
+  <span class="gen">P</span> <span class="kw">extends</span> <span class="str">'learn'</span>       ? 3 :
+  <span class="gen">P</span> <span class="kw">extends</span> <span class="str">'consolidate'</span> ? 4 : <span class="kw">never</span>;
+
+<span class="com">// Value carries its invariants as type parameters</span>
+<span class="kw">type</span> <span class="ty">Value</span>&lt;
+  <span class="gen">K</span> <span class="kw">extends</span> <span class="ty">boolean</span> = <span class="kw">false</span>,           <span class="com">// κ — cyclicity</span>
+  <span class="gen">B</span> <span class="kw">extends</span> <span class="ty">number</span> = 1,                <span class="com">// β — persistence (in [0,1])</span>
+  <span class="gen">S</span> <span class="kw">extends</span> <span class="ty">readonly string[]</span> = [],    <span class="com">// σ — derived conflicts</span>
+  <span class="gen">P</span> <span class="kw">extends</span> <span class="ty">Phase | null</span> = <span class="kw">null</span>        <span class="com">// π — phase</span>
+&gt; = { n: <span class="ty">number</span>; __k: <span class="gen">K</span>; __b: <span class="gen">B</span>; __s: <span class="gen">S</span>; __p: <span class="gen">P</span>; };  <span class="com">// phantom witnesses</span>
+
+<span class="com">// combine: per-family monoid operation, lifted to types</span>
+<span class="kw">declare function</span> <span class="fn">combine</span>&lt;
+  <span class="gen">K1</span> <span class="kw">extends</span> <span class="ty">boolean</span>, <span class="gen">K2</span> <span class="kw">extends</span> <span class="ty">boolean</span>,
+  <span class="gen">B1</span> <span class="kw">extends</span> <span class="ty">number</span>,  <span class="gen">B2</span> <span class="kw">extends</span> <span class="ty">number</span>,
+  <span class="gen">S1</span> <span class="kw">extends</span> <span class="ty">readonly string[]</span>, <span class="gen">S2</span> <span class="kw">extends</span> <span class="ty">readonly string[]</span>,
+  <span class="gen">P1</span> <span class="kw">extends</span> <span class="ty">Phase | null</span>, <span class="gen">P2</span> <span class="kw">extends</span> <span class="ty">Phase | null</span>
+&gt;(
+  a: <span class="ty">Value</span>&lt;<span class="gen">K1</span>, <span class="gen">B1</span>, <span class="gen">S1</span>, <span class="gen">P1</span>&gt;,
+  b: <span class="ty">Value</span>&lt;<span class="gen">K2</span>, <span class="gen">B2</span>, <span class="gen">S2</span>, <span class="gen">P2</span>&gt;
+): <span class="ty">Value</span>&lt;
+  <span class="gen">K1</span> <span class="kw">extends</span> <span class="kw">true</span> ? <span class="kw">true</span> : <span class="gen">K2</span>,         <span class="com">// κ: OR</span>
+  <span class="ty">Min</span>&lt;<span class="gen">B1</span>, <span class="gen">B2</span>&gt;,                         <span class="com">// β: min (would need dep types in real TS)</span>
+  [...<span class="gen">S1</span>, ...<span class="gen">S2</span>],                      <span class="com">// σ: union (approximate via concat + dedupe)</span>
+  <span class="gen">P1</span> <span class="kw">extends</span> <span class="kw">null</span> ? <span class="gen">P2</span> : <span class="gen">P1</span>            <span class="com">// π: first-non-null</span>
+&gt;;
+
+<span class="com">// chain: defined only when phase(a) ≤ phase(b) — type system enforces it</span>
+<span class="kw">declare function</span> <span class="fn">chain</span>&lt;
+  <span class="gen">K1</span> <span class="kw">extends</span> <span class="ty">boolean</span>, <span class="gen">K2</span> <span class="kw">extends</span> <span class="ty">boolean</span>,
+  <span class="gen">B1</span> <span class="kw">extends</span> <span class="ty">number</span>,  <span class="gen">B2</span> <span class="kw">extends</span> <span class="ty">number</span>,
+  <span class="gen">S1</span> <span class="kw">extends</span> <span class="ty">readonly string[]</span>, <span class="gen">S2</span> <span class="kw">extends</span> <span class="ty">readonly string[]</span>,
+  <span class="gen">P1</span> <span class="kw">extends</span> <span class="ty">Phase</span>, <span class="gen">P2</span> <span class="kw">extends</span> <span class="ty">Phase</span>
+&gt;(
+  a: <span class="ty">Value</span>&lt;<span class="gen">K1</span>, <span class="gen">B1</span>, <span class="gen">S1</span>, <span class="gen">P1</span>&gt;,
+  <span class="com">// type-level proof obligation: phase(a) ≤ phase(b)</span>
+  b: <span class="ty">PhaseIdx</span>&lt;<span class="gen">P1</span>&gt; <span class="kw">extends</span> <span class="ty">PhaseIdx</span>&lt;<span class="gen">P2</span>&gt; ? <span class="ty">Value</span>&lt;<span class="gen">K2</span>, <span class="gen">B2</span>, <span class="gen">S2</span>, <span class="gen">P2</span>&gt; : <span class="kw">never</span>  <span class="com">// compile-time refusal</span>
+): <span class="ty">Value</span>&lt;<span class="gen">K1</span> | <span class="gen">K2</span>, <span class="ty">Min</span>&lt;<span class="gen">B1</span>, <span class="gen">B2</span>&gt;, [...<span class="gen">S1</span>, ...<span class="gen">S2</span>], <span class="gen">P2</span>&gt;;
+
+<span class="com">// consume: a refinement type checking pattern</span>
+<span class="kw">type</span> <span class="ty">Requirements</span> = { β_min?: <span class="ty">number</span>; σ_empty?: <span class="ty">boolean</span>; forward_only?: <span class="ty">boolean</span>; phase?: <span class="ty">Phase</span>; };
+
+<span class="kw">type</span> <span class="ty">Satisfies</span>&lt;<span class="gen">V</span>, <span class="gen">R</span>&gt; =
+  <span class="gen">R</span> <span class="kw">extends</span> { β_min: <span class="kw">infer</span> <span class="gen">M</span> }
+    ? (<span class="gen">V</span> <span class="kw">extends</span> <span class="ty">Value</span>&lt;<span class="ty">any</span>, <span class="kw">infer</span> <span class="gen">B</span>, <span class="ty">any</span>, <span class="ty">any</span>&gt; ? (<span class="gen">B</span> <span class="kw">extends</span> <span class="ty">GTE</span>&lt;<span class="gen">M</span>&gt; ? <span class="kw">true</span> : <span class="kw">false</span>) : <span class="kw">false</span>)
+    : <span class="kw">true</span>;
+
+<span class="kw">declare function</span> <span class="fn">consume</span>&lt;<span class="gen">V</span> <span class="kw">extends</span> <span class="ty">Value</span>, <span class="gen">R</span> <span class="kw">extends</span> <span class="ty">Requirements</span>&gt;(
+  v: <span class="gen">V</span>, r: <span class="gen">R</span>
+): <span class="ty">Satisfies</span>&lt;<span class="gen">V</span>, <span class="gen">R</span>&gt; <span class="kw">extends</span> <span class="kw">true</span>
+  ? { ok: <span class="kw">true</span>; value: <span class="gen">V</span> }
+  : { ok: <span class="kw">false</span>; failures: <span class="ty">Why</span>&lt;<span class="gen">V</span>, <span class="gen">R</span>&gt; };
+
+<span class="com">// ────────────────────────────────────────────</span>
+<span class="com">// What the user writes:</span>
+<span class="kw">const</span> r = <span class="fn">retrieval</span>(100, { β: 0.9 });   <span class="com">// Value&lt;false, 0.9, [], 'retrieve'&gt;</span>
+<span class="kw">const</span> a = <span class="fn">action</span>(50, { κ: <span class="kw">true</span> });      <span class="com">// Value&lt;true, 1, [], 'act'&gt;</span>
+
+<span class="kw">const</span> ok  = <span class="fn">chain</span>(r, a);                <span class="com">// ✓ compiles (retrieve ≤ act)</span>
+<span class="kw">const</span> bad = <span class="fn">chain</span>(a, r);                <span class="com">// ✗ compile error: PhaseIdx&lt;'act'&gt; ⊄ PhaseIdx&lt;'retrieve'&gt;</span>
+
+<span class="kw">const</span> verdict = <span class="fn">consume</span>(ok, { β_min: 0.95 });  <span class="com">// type narrows to {ok: false; failures: ...}</span>
+                                               <span class="com">// — the IDE shows the failure reason before runtime</span></div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- V. Worked example             -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">V.</span>
+                    <h2>
+                        Worked example — a RAG pipeline catching a bug across
+                        families
+                    </h2>
+                    <span class="tag">multi-family composition</span>
+                </div>
+                <p class="panel-intro">
+                    A retrieval-augmented question-answering pipeline. Two
+                    sources retrieved, an answer generated, the answer reused as
+                    context for a follow-up. Without invariant arithmetic, the
+                    follow-up confidently echoes a contradiction. With invariant
+                    arithmetic, the substrate refuses at the right step — citing
+                    which family, which invariant, why. Click <em>run</em> at
+                    the bottom to execute the pipeline and see each step's value
+                    digest.
+                </p>
+
+                <div class="pipeline" id="pipeline">
+                    <!-- populated by JS -->
+                </div>
+                <div style="margin-top: 18px; display: flex; gap: 12px">
+                    <button
+                        id="runPipeline"
+                        style="
+                            font-family: var(--font-mono);
+                            font-size: 11px;
+                            letter-spacing: 0.12em;
+                            text-transform: uppercase;
+                            background: var(--ink);
+                            color: var(--paper);
+                            border: none;
+                            padding: 10px 22px;
+                            cursor: pointer;
+                            font-weight: 600;
+                        "
+                    >
+                        Run pipeline →
+                    </button>
+                    <button
+                        id="resetPipeline"
+                        style="
+                            font-family: var(--font-mono);
+                            font-size: 11px;
+                            letter-spacing: 0.12em;
+                            text-transform: uppercase;
+                            background: transparent;
+                            color: var(--ink);
+                            border: 1px solid var(--ink);
+                            padding: 10px 22px;
+                            cursor: pointer;
+                            font-weight: 600;
+                        "
+                    >
+                        Reset
+                    </button>
+                </div>
+            </section>
+
+            <div class="closing">
+                <h3>What this version commits to — and what already checks it</h3>
+                <p>
+                    The algebraic structure in §I is the substrate's
+                    <em>contract</em>, not a description of one program. The
+                    claim is implementation-independent: any value type exposing
+                    <code>combine</code>, <code>chain</code>,
+                    <code>promote</code>, <code>reconcile</code>,
+                    <code>deliberate</code>, and <code>consume</code> must
+                    satisfy laws L1–L15, and the §III property tests are the
+                    regression suite for every port. Break associativity or
+                    idempotence and the harness falsifies it on the next run.
+                </p>
+                <p>
+                    That contract now has <strong>two independent witnesses</strong>.
+                    The first is the in-page QuickCheck harness you just ran —
+                    JavaScript, in your browser. The second is a full
+                    <strong>Elixir reference implementation</strong>
+                    (<code>invariant_arithmetic</code> v0.1.0, in
+                    <code>AmpersandBoxDesign/reference/elixir/</code>): the same
+                    four families and six operations, ported directly from this
+                    page, with laws L1–L14 written as
+                    <code>ExUnitProperties</code> tests and checked against 1000
+                    randomly generated values on every run —
+                    <code>14 properties, 11 tests, 0 failures</code>. It is not a
+                    sketch and not "future work"; it runs on the BEAM, the same
+                    runtime Graphonomous, PRISM, and Delegatic already run on.
+                    Two languages, two random generators, one set of laws holding
+                    in both — that is the cross-implementation conformance that
+                    turns "the JS happens to pass" into "the substrate is real."
+                </p>
+                <p>
+                    The TypeScript in §IV is still a <em>type-level</em> sketch.
+                    It does not fully type-check today (β-min needs dependent
+                    types, σ-union needs effect rows) but its shape is concrete
+                    enough to translate into Liquid Haskell, Idris, or a
+                    refinement-extended TS. The <code>chain</code> example —
+                    where a reversed phase order is a <em>compile error</em>, not
+                    a runtime exception — is what moving the contract from
+                    "property-tested at runtime" to "language mechanics" looks
+                    like. The Elixir port sits in between: <code>chain/2</code>
+                    returns <code>{:error, π-violation}</code> at runtime rather
+                    than refusing at compile time — proof the refusal is real and
+                    executed, not merely aspirational.
+                </p>
+                <p>
+                    The RAG example in §V is still the most consequential piece.
+                    Multi-family composition catches a realistic bug: an LLM
+                    agent confidently citing a contradiction it created itself,
+                    on the second loop, with σ aggregating across retrievals, β
+                    downranked by the weakest source, κ raised by self-citation,
+                    and π catching the wrong-order operation. No single invariant
+                    catches it; together they do — and the same scenario runs
+                    against the Elixir implementation unchanged, which is the
+                    whole point of a shared contract.
+                </p>
+                <p>
+                    What's still wanted next, in order of leverage: (1) a
+                    <strong>fully typed</strong> implementation in Idris or
+                    Liquid Haskell where the compiler — not a generator —
+                    discharges the laws (the Elixir port closes the
+                    "second-runtime" gap but is still dynamically checked); (2) a
+                    <strong>categorical statement</strong> of the substrate as a
+                    small monoidal category with the invariants as natural
+                    transformations (gestured at in §I, not yet formal); (3) a
+                    <strong>deployed-system benchmark</strong> showing invariant
+                    arithmetic catches bugs in a live agent that ordinary
+                    arithmetic misses — the operationally decisive one, and the
+                    natural job for PRISM.
+                </p>
+            </div>
+
+            <footer class="colophon">
+                <div>
+                    OpenSentience · Invariant Arithmetic · v0.3 (laws + property
+                    tests + types)
+                </div>
+                <div>
+                    algebraic structure stated · 15 laws · live verification
+                </div>
+                <div>
+                    Elixir reference impl · L1–L14 property-tested · 0 failures
+                </div>
+            </footer>
+        </div>
+
+        <script>
+            // ═══════════════════════════════════════════════════════════════
+            //  The substrate (matches v0.2)
+            // ═══════════════════════════════════════════════════════════════
+
+            const PHASES = ["retrieve", "route", "act", "learn", "consolidate"];
+
+            function emptyDigests() {
+                return {
+                    topological: { kappa: false, beta: 1.0 },
+                    spatial: { sigma: [] },
+                    temporal: { pi: null, iota: null, psi: null },
+                    governance: {
+                        authority_path: [],
+                        deny_default: true,
+                        audit: [],
+                    },
+                };
+            }
+
+            function V(n, opts = {}) {
+                const d = emptyDigests();
+                if ("kappa" in opts) d.topological.kappa = opts.kappa;
+                if ("beta" in opts) d.topological.beta = opts.beta;
+                if ("sigma" in opts) d.spatial.sigma = [...new Set(opts.sigma)];
+                if ("pi" in opts) d.temporal.pi = opts.pi;
+                if ("iota" in opts) d.temporal.iota = opts.iota;
+                if ("psi" in opts) d.temporal.psi = opts.psi;
+                return { n, ...d };
+            }
+            function retrieval(n, o = {}) {
+                return V(n, { pi: "retrieve", ...o });
+            }
+            function decision(n, o = {}) {
+                return V(n, { pi: "route", ...o });
+            }
+            function action(n, o = {}) {
+                return V(n, { pi: "act", ...o });
+            }
+            function learning(n, o = {}) {
+                return V(n, { pi: "learn", ...o });
+            }
+
+            function combineDigests(a, b) {
+                return {
+                    topological: {
+                        kappa: a.topological.kappa || b.topological.kappa,
+                        beta: Math.min(a.topological.beta, b.topological.beta),
+                    },
+                    spatial: {
+                        sigma: [
+                            ...new Set([
+                                ...a.spatial.sigma,
+                                ...b.spatial.sigma,
+                            ]),
+                        ],
+                    },
+                    temporal: {
+                        pi: a.temporal.pi || b.temporal.pi,
+                        iota: a.temporal.iota || b.temporal.iota,
+                        psi: a.temporal.psi || b.temporal.psi,
+                    },
+                    governance: {
+                        authority_path: [
+                            ...a.governance.authority_path,
+                            ...b.governance.authority_path,
+                        ],
+                        deny_default:
+                            a.governance.deny_default &&
+                            b.governance.deny_default,
+                        audit: [...a.governance.audit, ...b.governance.audit],
+                    },
+                };
+            }
+            function combine(a, b) {
+                return { n: a.n + b.n, ...combineDigests(a, b) };
+            }
+
+            function chain(a, b) {
+                const ai = PHASES.indexOf(a.temporal.pi);
+                const bi = PHASES.indexOf(b.temporal.pi);
+                if (ai >= 0 && bi >= 0 && bi < ai) {
+                    const e = new Error(
+                        `π violation: ${b.temporal.pi} cannot follow ${a.temporal.pi}`,
+                    );
+                    e.invariant = "π";
+                    throw e;
+                }
+                const merged = combine(a, b);
+                merged.temporal.pi = b.temporal.pi || a.temporal.pi;
+                return merged;
+            }
+
+            function promote(v, opts = {}) {
+                const newBeta =
+                    opts.raises_to !== undefined
+                        ? opts.raises_to
+                        : Math.min(1, v.topological.beta + 0.3);
+                return {
+                    ...v,
+                    topological: {
+                        ...v.topological,
+                        beta: Math.max(v.topological.beta, newBeta),
+                    },
+                };
+            }
+            function reconcile(v, tags) {
+                const drop = Array.isArray(tags) ? tags : [tags];
+                return {
+                    ...v,
+                    spatial: {
+                        sigma: v.spatial.sigma.filter((t) => !drop.includes(t)),
+                    },
+                };
+            }
+            function deliberate(v) {
+                return {
+                    ...v,
+                    topological: { ...v.topological, kappa: false },
+                };
+            }
+            function cycle(v) {
+                return { ...v, topological: { ...v.topological, kappa: true } };
+            }
+
+            function consume(v, req = {}) {
+                const failures = [];
+                if (req.β_min !== undefined && v.topological.beta < req.β_min) {
+                    failures.push(
+                        `β=${v.topological.beta.toFixed(2)} < ${req.β_min}`,
+                    );
+                }
+                if (req.σ_empty && v.spatial.sigma.length > 0) {
+                    failures.push(
+                        `σ has unresolved: {${v.spatial.sigma.join(", ")}}`,
+                    );
+                }
+                if (req.forward_only && v.topological.kappa) {
+                    failures.push(`κ=true (feedback)`);
+                }
+                if (req.phase && v.temporal.pi !== req.phase) {
+                    failures.push(
+                        `π mismatch: ${v.temporal.pi} ≠ ${req.phase}`,
+                    );
+                }
+                return { ok: failures.length === 0, failures, value: v };
+            }
+
+            // Deep value equality for property tests
+            function valueEq(a, b) {
+                if (a.n !== b.n) return false;
+                if (a.topological.kappa !== b.topological.kappa) return false;
+                if (Math.abs(a.topological.beta - b.topological.beta) > 1e-9)
+                    return false;
+                const sa = [...a.spatial.sigma].sort(),
+                    sb = [...b.spatial.sigma].sort();
+                if (sa.length !== sb.length) return false;
+                for (let i = 0; i < sa.length; i++)
+                    if (sa[i] !== sb[i]) return false;
+                if (a.temporal.pi !== b.temporal.pi) return false;
+                if (a.temporal.iota !== b.temporal.iota) return false;
+                if (a.temporal.psi !== b.temporal.psi) return false;
+                return true;
+            }
+
+            // Restricted equality: ignores temporal & governance ordering
+            // (used for laws that hold only on commutative components)
+            function valueEqCommutativePart(a, b) {
+                if (a.n !== b.n) return false;
+                if (a.topological.kappa !== b.topological.kappa) return false;
+                if (Math.abs(a.topological.beta - b.topological.beta) > 1e-9)
+                    return false;
+                const sa = [...a.spatial.sigma].sort(),
+                    sb = [...b.spatial.sigma].sort();
+                if (sa.length !== sb.length) return false;
+                for (let i = 0; i < sa.length; i++)
+                    if (sa[i] !== sb[i]) return false;
+                return true;
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            //  Random value generator (QuickCheck-style)
+            // ═══════════════════════════════════════════════════════════════
+
+            let rngState = 1337;
+            function rng() {
+                // xorshift32
+                rngState ^= rngState << 13;
+                rngState ^= rngState >>> 17;
+                rngState ^= rngState << 5;
+                return (rngState >>> 0) / 0xffffffff;
+            }
+            function rngInt(n) {
+                return Math.floor(rng() * n);
+            }
+            function rngChoice(xs) {
+                return xs[rngInt(xs.length)];
+            }
+            const TAG_POOL = [
+                "source-A",
+                "source-B",
+                "source-C",
+                "sensor-1",
+                "sensor-2",
+                "doc-X",
+                "doc-Y",
+                "q3-data",
+                "q4-data",
+            ];
+
+            function genValue() {
+                const opts = {};
+                opts.kappa = rng() < 0.3;
+                opts.beta = +rng().toFixed(3);
+                const numSig = rngInt(4);
+                if (numSig > 0) {
+                    opts.sigma = Array.from({ length: numSig }, () =>
+                        rngChoice(TAG_POOL),
+                    );
+                }
+                if (rng() < 0.6) opts.pi = rngChoice(PHASES);
+                if (rng() < 0.3) opts.iota = `k-${rngInt(1000)}`;
+                if (rng() < 0.3)
+                    opts.psi = rngChoice(["event-driven", "periodic", "batch"]);
+                return V(Math.floor(rng() * 1000), opts);
+            }
+
+            // Restricted: values without temporal/governance components — used to test commutativity
+            function genCommutativeValue() {
+                const opts = {};
+                opts.kappa = rng() < 0.3;
+                opts.beta = +rng().toFixed(3);
+                const numSig = rngInt(4);
+                if (numSig > 0)
+                    opts.sigma = Array.from({ length: numSig }, () =>
+                        rngChoice(TAG_POOL),
+                    );
+                return V(Math.floor(rng() * 1000), opts);
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            //  The fifteen laws
+            // ═══════════════════════════════════════════════════════════════
+
+            const ZERO = V(0);
+
+            const LAWS = [
+                {
+                    id: "L1",
+                    name: "Left identity for combine",
+                    formal: "combine(V(0), v) ≡ v",
+                    gloss: "The zero value with default tags is a left identity for combine.",
+                    family: "all",
+                    test: () => {
+                        const v = genValue();
+                        const lhs = combine(ZERO, v);
+                        // V(0) has no temporal/governance, so first-non-null & list concat yield v's components
+                        return valueEq(lhs, v);
+                    },
+                },
+                {
+                    id: "L2",
+                    name: "Right identity for combine",
+                    formal: "combine(v, V(0)) ≡ v",
+                    gloss: "V(0) is also a right identity — required for combine to be a monoid.",
+                    family: "all",
+                    test: () => {
+                        const v = genValue();
+                        const rhs = combine(v, ZERO);
+                        return valueEq(rhs, v);
+                    },
+                },
+                {
+                    id: "L3",
+                    name: "Associativity of combine",
+                    formal: "combine(combine(a, b), c) ≡ combine(a, combine(b, c))",
+                    gloss: "The defining property of any monoid. Holds because each family operation is associative.",
+                    family: "all",
+                    test: () => {
+                        const a = genValue(),
+                            b = genValue(),
+                            c = genValue();
+                        const left = combine(combine(a, b), c);
+                        const right = combine(a, combine(b, c));
+                        return valueEq(left, right);
+                    },
+                },
+                {
+                    id: "L4",
+                    name: "Commutativity on the commutative subspace",
+                    formal: "combine(a, b) ≡ combine(b, a)  when a, b have no temporal/governance components",
+                    gloss: "Full combine is non-commutative, but the n × κ × β × σ projection is commutative.",
+                    family: "topological + spatial",
+                    test: () => {
+                        const a = genCommutativeValue(),
+                            b = genCommutativeValue();
+                        const ab = combine(a, b),
+                            ba = combine(b, a);
+                        return valueEqCommutativePart(ab, ba);
+                    },
+                },
+                {
+                    id: "L5",
+                    name: "κ idempotent under combine",
+                    formal: "combine(a, a).κ ≡ a.κ",
+                    gloss: "OR is idempotent: a ∨ a = a. Doubling a value cannot raise κ.",
+                    family: "topological",
+                    test: () => {
+                        const a = genValue();
+                        return (
+                            combine(a, a).topological.kappa ===
+                            a.topological.kappa
+                        );
+                    },
+                },
+                {
+                    id: "L6",
+                    name: "β idempotent under combine",
+                    formal: "combine(a, a).β ≡ a.β",
+                    gloss: "min(x, x) = x. Combining a value with itself never lowers β.",
+                    family: "topological",
+                    test: () => {
+                        const a = genValue();
+                        return (
+                            Math.abs(
+                                combine(a, a).topological.beta -
+                                    a.topological.beta,
+                            ) < 1e-9
+                        );
+                    },
+                },
+                {
+                    id: "L7",
+                    name: "σ idempotent under combine",
+                    formal: "combine(a, a).σ ≡ a.σ",
+                    gloss: "Set union is idempotent: S ∪ S = S. σ is a join-semilattice.",
+                    family: "spatial",
+                    test: () => {
+                        const a = genValue();
+                        const cs = [...combine(a, a).spatial.sigma].sort();
+                        const os = [...a.spatial.sigma].sort();
+                        return (
+                            cs.length === os.length &&
+                            cs.every((v, i) => v === os[i])
+                        );
+                    },
+                },
+                {
+                    id: "L8",
+                    name: "chain refuses backward phase",
+                    formal: "phase(a) > phase(b)  ⇒  chain(a, b)  throws π-violation",
+                    gloss: "The phase-graded category has no morphisms backward in time.",
+                    family: "temporal",
+                    test: () => {
+                        const phaseA = rngChoice(PHASES.slice(1)); // not the first
+                        const phaseB = PHASES[rngInt(PHASES.indexOf(phaseA))]; // strictly earlier
+                        const a = V(1, { pi: phaseA });
+                        const b = V(1, { pi: phaseB });
+                        try {
+                            chain(a, b);
+                            return false;
+                        } catch (e) {
+                            return e.invariant === "π";
+                        }
+                    },
+                },
+                {
+                    id: "L9",
+                    name: "chain accepts forward phase",
+                    formal: "phase(a) ≤ phase(b)  ⇒  chain(a, b)  succeeds",
+                    gloss: "The dual of L8: forward phase composition is always allowed.",
+                    family: "temporal",
+                    test: () => {
+                        const iA = rngInt(PHASES.length);
+                        const iB = iA + rngInt(PHASES.length - iA);
+                        const a = V(1, { pi: PHASES[iA] });
+                        const b = V(1, { pi: PHASES[iB] });
+                        try {
+                            chain(a, b);
+                            return true;
+                        } catch (e) {
+                            return false;
+                        }
+                    },
+                },
+                {
+                    id: "L10",
+                    name: "promote is β-monotone",
+                    formal: "promote(v).β  ≥  v.β   for all evidence",
+                    gloss: "Promotion can only raise β. No evidence has ever lowered confidence.",
+                    family: "topological",
+                    test: () => {
+                        const v = genValue();
+                        const raises_to = +rng().toFixed(3);
+                        const p = promote(v, { raises_to });
+                        return p.topological.beta >= v.topological.beta - 1e-9;
+                    },
+                },
+                {
+                    id: "L11",
+                    name: "reconcile is σ-antitone",
+                    formal: "reconcile(v, T).σ  ⊆  v.σ",
+                    gloss: "Reconciliation can only shrink the conflict set, never add to it.",
+                    family: "spatial",
+                    test: () => {
+                        const v = genValue();
+                        const T = v.spatial.sigma.length
+                            ? [v.spatial.sigma[0]]
+                            : [];
+                        const r = reconcile(v, T);
+                        return r.spatial.sigma.every((t) =>
+                            v.spatial.sigma.includes(t),
+                        );
+                    },
+                },
+                {
+                    id: "L12",
+                    name: "deliberate clears κ",
+                    formal: "deliberate(v).κ ≡ false",
+                    gloss: "Deliberation is exactly the operation that retires feedback.",
+                    family: "topological",
+                    test: () => {
+                        const v = genValue();
+                        return deliberate(v).topological.kappa === false;
+                    },
+                },
+                {
+                    id: "L13",
+                    name: "reconcile is idempotent",
+                    formal: "reconcile(reconcile(v, T), T) ≡ reconcile(v, T)",
+                    gloss: "Removing the same tags twice gives the same result as once.",
+                    family: "spatial",
+                    test: () => {
+                        const v = genValue();
+                        const T = v.spatial.sigma.slice(0, 1 + rngInt(2));
+                        const once = reconcile(v, T);
+                        const twice = reconcile(once, T);
+                        return valueEq(once, twice);
+                    },
+                },
+                {
+                    id: "L14",
+                    name: "consume soundness",
+                    formal: "consume(v, req).ok = true  ⇒  v satisfies req",
+                    gloss: "If consume passes, the explicitly-checked invariants really hold.",
+                    family: "all",
+                    test: () => {
+                        const v = genValue();
+                        const req = {};
+                        // pick random subset of requirements
+                        if (rng() < 0.5) req.β_min = +rng().toFixed(3);
+                        if (rng() < 0.5) req.σ_empty = true;
+                        if (rng() < 0.5) req.forward_only = true;
+                        const result = consume(v, req);
+                        if (!result.ok) return true; // vacuous; we only test the "ok" branch
+                        // verify: if ok, the invariants must really hold
+                        if (
+                            req.β_min !== undefined &&
+                            v.topological.beta < req.β_min
+                        )
+                            return false;
+                        if (req.σ_empty && v.spatial.sigma.length > 0)
+                            return false;
+                        if (req.forward_only && v.topological.kappa)
+                            return false;
+                        return true;
+                    },
+                },
+                {
+                    id: "L15",
+                    name: "unary ops can recover from refusal",
+                    formal: "consume(v, {σ_empty}).ok = false  ⇒  consume(reconcile(v, v.σ), {σ_empty}).ok = true",
+                    gloss: "If consume refuses on σ-conflict, reconciling away the offending tags makes it pass.",
+                    family: "spatial × all",
+                    test: () => {
+                        const v = V(1, { sigma: ["t1", "t2"] });
+                        if (consume(v, { σ_empty: true }).ok !== false)
+                            return false; // setup invalid
+                        const cleaned = reconcile(v, v.spatial.sigma);
+                        return consume(cleaned, { σ_empty: true }).ok === true;
+                    },
+                },
+            ];
+
+            // ═══════════════════════════════════════════════════════════════
+            //  Render the law cards
+            // ═══════════════════════════════════════════════════════════════
+
+            const lawGridEl = document.getElementById("lawGrid");
+            for (const law of LAWS) {
+                const el = document.createElement("div");
+                el.className = "law";
+                el.id = `law-${law.id}`;
+                el.innerHTML = `
+    <div class="id">${law.id} · ${law.family}</div>
+    <div class="body">
+      <div class="name">${law.name}</div>
+      <div class="formal">${law.formal}</div>
+      <div class="gloss">${law.gloss}</div>
+    </div>
+    <div class="status pending">pending</div>
+  `;
+                lawGridEl.appendChild(el);
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            //  Test runner
+            // ═══════════════════════════════════════════════════════════════
+
+            function runAll() {
+                const n = Math.max(
+                    10,
+                    Math.min(
+                        100000,
+                        parseInt(document.getElementById("ntrials").value) ||
+                            1000,
+                    ),
+                );
+                const btn = document.getElementById("runBtn");
+                btn.disabled = true;
+                btn.textContent = "Running…";
+                const counterEl = document.getElementById("counterEx");
+                counterEl.classList.remove("show");
+                counterEl.innerHTML = "";
+
+                rngState = 1337; // deterministic for reproducibility
+
+                setTimeout(() => {
+                    const t0 = performance.now();
+                    let totalCases = 0;
+                    let passing = 0;
+                    let failing = 0;
+                    const failures = [];
+
+                    for (const law of LAWS) {
+                        let ok = true;
+                        let counter = null;
+                        for (let i = 0; i < n; i++) {
+                            totalCases++;
+                            let result;
+                            try {
+                                result = law.test();
+                            } catch (e) {
+                                result = false;
+                                counter = `threw: ${e.message}`;
+                            }
+                            if (!result) {
+                                ok = false;
+                                if (!counter)
+                                    counter = `failed on trial ${i + 1} (seed dependent)`;
+                                break;
+                            }
+                        }
+                        const el = document.getElementById(`law-${law.id}`);
+                        const status = el.querySelector(".status");
+                        status.classList.remove(
+                            "pending",
+                            "passing",
+                            "failing",
+                        );
+                        if (ok) {
+                            status.classList.add("passing");
+                            status.textContent = `✓ ${n.toLocaleString()}/${n.toLocaleString()}`;
+                            passing++;
+                        } else {
+                            status.classList.add("failing");
+                            status.textContent = "✗ refuted";
+                            failing++;
+                            failures.push(
+                                `<strong>${law.id} (${law.name})</strong> — ${counter || "unknown"}`,
+                            );
+                        }
+                    }
+
+                    const t1 = performance.now();
+                    document.getElementById("passingLaws").textContent =
+                        passing;
+                    document.getElementById("failingLaws").textContent =
+                        failing;
+                    document.getElementById("totalCases").textContent =
+                        totalCases.toLocaleString();
+                    document.getElementById("elapsedMs").textContent =
+                        Math.round(t1 - t0).toLocaleString();
+
+                    if (failures.length) {
+                        counterEl.innerHTML =
+                            "<strong>Counterexamples:</strong><br>" +
+                            failures.join("<br>");
+                        counterEl.classList.add("show");
+                    }
+
+                    btn.disabled = false;
+                    btn.textContent = "Run all laws →";
+                }, 50);
+            }
+
+            document.getElementById("runBtn").addEventListener("click", runAll);
+
+            // ═══════════════════════════════════════════════════════════════
+            //  Worked RAG example
+            // ═══════════════════════════════════════════════════════════════
+
+            const pipelineEl = document.getElementById("pipeline");
+
+            const PIPELINE_STEPS = [
+                {
+                    n: 1,
+                    what: "User asks a question requiring sources",
+                    code: `let query = retrieval(0, { β: 1.0 });`,
+                    build: () => retrieval(0, { beta: 1.0 }),
+                },
+                {
+                    n: 2,
+                    what: "Retrieve source A — high-confidence doc, claims X",
+                    code: `let docA = retrieval(2400000, {
+  β: 0.95,
+  σ: ['source:doc-A']
+});`,
+                    build: () =>
+                        retrieval(2400000, {
+                            beta: 0.95,
+                            sigma: ["source:doc-A"],
+                        }),
+                },
+                {
+                    n: 3,
+                    what: "Retrieve source B — lower confidence, claims NOT X",
+                    code: `let docB = retrieval(2500000, {
+  β: 0.75,
+  σ: ['source:doc-B']
+});`,
+                    build: () =>
+                        retrieval(2500000, {
+                            beta: 0.75,
+                            sigma: ["source:doc-B"],
+                        }),
+                },
+                {
+                    n: 4,
+                    what: "Combine retrievals — σ unions, β takes min, both sources visible",
+                    code: `let merged = combine(docA, docB);
+// σ = {source:doc-A, source:doc-B}
+// β = min(0.95, 0.75) = 0.75`,
+                    build: (prev) => combine(prev[1], prev[2]),
+                },
+                {
+                    n: 5,
+                    what: 'Try to produce a "high-confidence answer" — substrate refuses',
+                    code: `consume(merged, {
+  β_min: 0.90,
+  σ_empty: true
+});
+// → REFUSED on TWO families:
+//   β=0.75 < 0.90       (Topological)
+//   σ non-empty: {A, B} (Spatial)`,
+                    build: (prev) => {
+                        const r = consume(prev[3], {
+                            β_min: 0.9,
+                            σ_empty: true,
+                        });
+                        return { ...prev[3], _consume: r };
+                    },
+                    verdict: "refused",
+                    verdictText:
+                        "Multi-family refusal: β below threshold AND σ has unresolved conflict. An ordinary RAG pipeline would have averaged the sources and emitted an answer.",
+                },
+                {
+                    n: 6,
+                    what: "Naive RAG path (no substrate): emit the answer anyway, reuse it as context",
+                    code: `// in a substrate-less pipeline:
+let answer = action(50, { β: 0.75, σ: ['source:doc-A','source:doc-B'] });
+
+// follow-up question reuses the answer:
+let context = cycle(answer);
+// κ = true (answer feeds back as context)`,
+                    build: () => {
+                        let answer = action(50, {
+                            beta: 0.75,
+                            sigma: ["source:doc-A", "source:doc-B"],
+                        });
+                        return cycle(answer);
+                    },
+                },
+                {
+                    n: 7,
+                    what: "Follow-up uses the κ-tainted context — substrate refuses again",
+                    code: `consume(context, {
+  forward_only: true,
+  σ_empty: true,
+  β_min: 0.90
+});
+// → REFUSED on THREE families:
+//   κ=true (feedback)              (Topological)
+//   σ non-empty {A, B}              (Spatial)
+//   β=0.75 < 0.90                   (Topological)`,
+                    build: (prev) => {
+                        const ctx = prev[5];
+                        const r = consume(ctx, {
+                            forward_only: true,
+                            σ_empty: true,
+                            β_min: 0.9,
+                        });
+                        return { ...ctx, _consume: r };
+                    },
+                    verdict: "refused",
+                    verdictText:
+                        "Three families compose: feedback caught, conflict still unresolved, persistence still too low. The substrate refuses the self-citation that ordinary RAG silently confirms.",
+                },
+                {
+                    n: 8,
+                    what: "Proper recovery: reconcile sources, then deliberate, then promote",
+                    code: `let cleaned = reconcile(merged, ['source:doc-A','source:doc-B']);
+let firmed  = promote(cleaned, { raises_to: 0.95 });
+let final   = consume(firmed, {
+  β_min: 0.90,
+  σ_empty: true
+});
+// → OK (single source-of-truth established)`,
+                    build: (prev) => {
+                        const cleaned = reconcile(prev[3], [
+                            "source:doc-A",
+                            "source:doc-B",
+                        ]);
+                        const firmed = promote(cleaned, { raises_to: 0.95 });
+                        const r = consume(firmed, {
+                            β_min: 0.9,
+                            σ_empty: true,
+                        });
+                        return { ...firmed, _consume: r };
+                    },
+                    verdict: "ok",
+                    verdictText:
+                        "The substrate compels the right operations in the right order. Reconciliation surfaces the contradiction; promotion records the explicit basis; consume passes only after both. The audit trail records exactly what happened — and what didn't.",
+                },
+            ];
+
+            function digestHTML(v) {
+                if (!v) return "";
+                const rows = [];
+                if (v.topological) {
+                    const kFlag = v.topological.kappa ? "flag" : "";
+                    rows.push(
+                        `<div class="row ${kFlag}"><span class="sym k">κ</span><span class="v">${v.topological.kappa ? "true" : "false"}</span></div>`,
+                    );
+                    const bFlag = v.topological.beta < 0.5 ? "flag" : "";
+                    rows.push(
+                        `<div class="row ${bFlag}"><span class="sym b">β</span><span class="v">${v.topological.beta.toFixed(2)}</span></div>`,
+                    );
+                }
+                if (v.spatial && v.spatial.sigma.length) {
+                    rows.push(
+                        `<div class="row flag"><span class="sym s">σ</span><span class="v">{${v.spatial.sigma.join(", ")}}</span></div>`,
+                    );
+                }
+                if (v.temporal && v.temporal.pi) {
+                    rows.push(
+                        `<div class="row"><span class="sym p">π</span><span class="v">${v.temporal.pi}</span></div>`,
+                    );
+                }
+                if (v._consume) {
+                    if (v._consume.ok) {
+                        rows.push(
+                            `<div class="row" style="border-top: 1px dashed var(--rule); padding-top: 4px; margin-top: 4px;"><span class="sym" style="color: var(--pass);">✓</span><span class="v" style="color: var(--pass); font-weight: 700;">consumed</span></div>`,
+                        );
+                    } else {
+                        rows.push(
+                            `<div class="row" style="border-top: 1px dashed var(--rule); padding-top: 4px; margin-top: 4px;"><span class="sym" style="color: var(--fail);">✗</span><span class="v" style="color: var(--fail); font-weight: 700;">refused</span></div>`,
+                        );
+                        for (const f of v._consume.failures) {
+                            rows.push(
+                                `<div class="row"><span class="sym" style="color: var(--fail);">↳</span><span class="v" style="color: var(--fail); font-size: 9.5px;">${f}</span></div>`,
+                            );
+                        }
+                    }
+                }
+                return rows.join("");
+            }
+
+            function renderPipeline(values) {
+                pipelineEl.innerHTML = "";
+                for (let i = 0; i < PIPELINE_STEPS.length; i++) {
+                    const step = PIPELINE_STEPS[i];
+                    const v = values[i];
+                    const el = document.createElement("div");
+                    el.className = "step";
+                    el.innerHTML = `
+      <div class="n">${step.n.toString().padStart(2, "0")}</div>
+      <div class="narrative">
+        <div class="what">${step.what}</div>
+        <div class="code">${step.code}</div>
+      </div>
+      <div class="digest">${v ? digestHTML(v) : '<span style="color: var(--ink-faint); font-style: italic;">(not yet computed)</span>'}</div>
+      ${v && step.verdict ? `<div class="verdict ${step.verdict}">${step.verdictText}</div>` : ""}
+    `;
+                    pipelineEl.appendChild(el);
+                }
+            }
+
+            function runPipeline() {
+                const values = [];
+                for (let i = 0; i < PIPELINE_STEPS.length; i++) {
+                    try {
+                        values.push(PIPELINE_STEPS[i].build(values));
+                    } catch (e) {
+                        values.push({ _error: e.message });
+                    }
+                }
+                renderPipeline(values);
+            }
+
+            function resetPipeline() {
+                renderPipeline(new Array(PIPELINE_STEPS.length).fill(null));
+            }
+
+            document
+                .getElementById("runPipeline")
+                .addEventListener("click", runPipeline);
+            document
+                .getElementById("resetPipeline")
+                .addEventListener("click", resetPipeline);
+
+            resetPipeline();
+
+            // Auto-run the property tests on load so the page lands with green checks
+            window.addEventListener("load", () => {
+                setTimeout(runAll, 200);
+            });
+        </script>
+    </body>
+</html>

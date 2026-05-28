@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            Topology as Warrant — structure earns the right to act ·
+            OpenSentience
+        </title>
+        <meta
+            name="description"
+            content="OS-002. Three structural invariants of the knowledge graph — κ cycles, σ conflicts, β persistence — issue per-instance warrants that authorize the deliberate, reconcile, and promote operations. Authority is not assigned by role; it is warranted by structural cause."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            /* Legal vellum (dark): sealed-document palette — dark ink ground,
+               warm parchment type, a single gold accent for the issued warrant. */
+            :root {
+                --paper: #161310;
+                --paper-deep: #221c14;
+                --paper-soft: #1e1811;
+                --ink: #e8e2d2;
+                --ink-soft: #bdb4a1;
+                --ink-faint: #8c8472;
+                --rule: #3a3327;
+                --rule-soft: #2a241b;
+                --proved: #c9a24b;
+                --proved-bg: #3a2e16;
+                --shipped: #8fae72;
+                --shipped-bg: #2c3320;
+                --named: #b8a980;
+                --sketched: #8c8472;
+                --pass: #8fae72;
+                --pass-bg: #2c3320;
+                --fail: #d9763f;
+                --fail-bg: #3a2417;
+
+                --family-topological: #d9763f;
+                --family-spatial: #7fa6bd;
+                --family-temporal: #82ad9b;
+                --family-governance: #c2a06a;
+
+                --font-display: "Cormorant Garamond", Georgia, serif;
+                --font-mono: "JetBrains Mono", "IBM Plex Mono", monospace;
+                --font-body: "Inter", system-ui, sans-serif;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background: var(--paper);
+                color: var(--ink);
+                font-family: var(--font-body);
+                font-size: 15px;
+                line-height: 1.6;
+                background-image:
+                    radial-gradient(
+                        rgba(232, 226, 210, 0.035) 1px,
+                        transparent 1px
+                    ),
+                    radial-gradient(
+                        rgba(232, 226, 210, 0.022) 1px,
+                        transparent 1px
+                    );
+                background-size:
+                    3px 3px,
+                    7px 7px;
+            }
+            .wrap {
+                max-width: 1080px;
+                margin: 0 auto;
+                padding: 56px 36px 120px;
+            }
+
+            /* Masthead */
+            header.mast {
+                border-bottom: 1px solid var(--ink);
+                padding-bottom: 32px;
+                margin-bottom: 56px;
+            }
+            .mast .eyebrow {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ink-soft);
+                margin-bottom: 18px;
+            }
+            .mast h1 {
+                font-family: var(--font-display);
+                font-weight: 500;
+                font-size: 60px;
+                line-height: 1.02;
+                margin: 0 0 18px;
+                letter-spacing: -0.01em;
+            }
+            .mast h1 em {
+                font-style: italic;
+                color: var(--proved);
+            }
+            .mast .sub {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 21px;
+                color: var(--ink-soft);
+                max-width: 800px;
+                line-height: 1.4;
+            }
+            .mast .meta {
+                margin-top: 24px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                color: var(--ink-faint);
+                display: flex;
+                gap: 28px;
+                flex-wrap: wrap;
+            }
+
+            /* Section frames */
+            section.panel {
+                margin: 56px 0;
+            }
+            .panel-head {
+                display: flex;
+                align-items: baseline;
+                gap: 18px;
+                border-bottom: 1px solid var(--rule);
+                padding-bottom: 10px;
+                margin-bottom: 24px;
+            }
+            .panel-num {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--ink-faint);
+                letter-spacing: 0.15em;
+            }
+            .panel-head h2 {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 30px;
+                margin: 0;
+                letter-spacing: -0.005em;
+            }
+            .panel-head .tag {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                color: var(--ink-faint);
+                margin-left: auto;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+            }
+            .panel-intro {
+                font-family: var(--font-display);
+                font-style: italic;
+                font-size: 18px;
+                color: var(--ink-soft);
+                margin-bottom: 24px;
+                max-width: 800px;
+                line-height: 1.45;
+            }
+            p.body {
+                max-width: 800px;
+                margin-bottom: 16px;
+            }
+            p.body code,
+            li code,
+            .panel-intro code {
+                font-family: var(--font-mono);
+                font-size: 0.85em;
+                background: var(--paper-deep);
+                padding: 1px 5px;
+                border-radius: 2px;
+            }
+            a {
+                color: var(--proved);
+                text-decoration: none;
+                border-bottom: 1px solid rgba(201, 162, 75, 0.35);
+            }
+            a:hover {
+                border-bottom-color: var(--proved);
+            }
+            ul.body {
+                max-width: 800px;
+                margin: 8px 0 18px 22px;
+            }
+            ul.body li {
+                margin-bottom: 9px;
+            }
+
+            /* Definition / structure boxes */
+            .struct {
+                background: var(--paper-soft);
+                border: 1px solid var(--ink);
+                padding: 20px 24px;
+                margin: 16px 0;
+            }
+            .struct h4 {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+                border-bottom: 1px dashed var(--rule);
+            }
+            .struct pre {
+                font-family: var(--font-mono);
+                font-size: 13px;
+                line-height: 1.7;
+                color: var(--ink);
+                white-space: pre-wrap;
+            }
+            .struct pre .kw {
+                color: var(--proved);
+                font-weight: 600;
+            }
+            .struct pre .com {
+                color: var(--ink-faint);
+                font-style: italic;
+            }
+
+            /* Invariant cards */
+            .inv {
+                border: 1px solid var(--rule);
+                background: var(--paper-soft);
+                padding: 22px 24px;
+                margin: 16px 0;
+                border-left-width: 4px;
+            }
+            .inv.k {
+                border-left-color: var(--family-topological);
+            }
+            .inv.s {
+                border-left-color: var(--family-spatial);
+            }
+            .inv.b {
+                border-left-color: var(--family-governance);
+            }
+            .inv-head {
+                display: flex;
+                align-items: baseline;
+                gap: 14px;
+                margin-bottom: 12px;
+            }
+            .inv-head .sym {
+                font-family: var(--font-display);
+                font-size: 34px;
+                font-weight: 600;
+                line-height: 1;
+            }
+            .inv.k .sym {
+                color: var(--family-topological);
+            }
+            .inv.s .sym {
+                color: var(--family-spatial);
+            }
+            .inv.b .sym {
+                color: var(--family-governance);
+            }
+            .inv-head .name {
+                font-family: var(--font-display);
+                font-size: 22px;
+                font-weight: 600;
+            }
+            .inv-head .warrant {
+                margin-left: auto;
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--ink-soft);
+                text-align: right;
+                line-height: 1.5;
+            }
+            .inv-head .warrant b {
+                color: var(--ink);
+            }
+            .inv .formal {
+                font-family: var(--font-mono);
+                font-size: 12.5px;
+                background: var(--paper-deep);
+                padding: 8px 12px;
+                border-left: 3px solid var(--ink);
+                margin: 6px 0 12px;
+                color: var(--ink);
+                white-space: pre-wrap;
+            }
+            .inv p {
+                max-width: 760px;
+                margin-bottom: 10px;
+            }
+            .status {
+                display: inline-block;
+                font-family: var(--font-mono);
+                font-size: 9px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                padding: 3px 8px;
+                border-radius: 2px;
+                font-weight: 700;
+            }
+            .status.proved {
+                background: var(--proved-bg);
+                color: var(--proved);
+            }
+            .status.draft {
+                background: var(--paper-deep);
+                color: var(--family-spatial);
+            }
+            .status.implicit {
+                background: var(--paper-deep);
+                color: var(--named);
+            }
+
+            /* Composition grid */
+            .comp-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+                gap: 16px;
+                margin: 8px 0;
+            }
+            .comp {
+                border: 1px solid var(--rule);
+                background: var(--paper-soft);
+                padding: 16px 18px;
+            }
+            .comp .f {
+                font-family: var(--font-mono);
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--ink);
+                margin-bottom: 4px;
+            }
+            .comp .nm {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 17px;
+                margin-bottom: 6px;
+            }
+            .comp p {
+                font-size: 13.5px;
+                color: var(--ink-soft);
+                line-height: 1.5;
+            }
+            .comp.triple {
+                grid-column: 1 / -1;
+                border-left: 4px solid var(--family-temporal);
+            }
+
+            /* Maturity ledger */
+            table.ledger {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px;
+                margin: 8px 0;
+            }
+            table.ledger th {
+                text-align: left;
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                border-bottom: 2px solid var(--ink);
+                padding: 0 12px 8px 0;
+            }
+            table.ledger td {
+                padding: 11px 12px 11px 0;
+                border-bottom: 1px solid var(--rule);
+                vertical-align: top;
+            }
+            table.ledger td:first-child {
+                font-family: var(--font-mono);
+                font-weight: 600;
+                white-space: nowrap;
+            }
+            table.ledger .ev {
+                color: var(--ink-soft);
+                font-size: 13px;
+            }
+
+            /* Loop diagram */
+            .loop {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                align-items: center;
+                font-family: var(--font-mono);
+                font-size: 13px;
+                margin: 16px 0;
+            }
+            .loop .ph {
+                padding: 8px 14px;
+                border: 1px solid var(--rule);
+                background: var(--paper-soft);
+                border-radius: 2px;
+            }
+            .loop .ph.hot {
+                border-color: var(--proved);
+                color: var(--proved);
+                font-weight: 600;
+                background: var(--proved-bg);
+            }
+            .loop .arr {
+                color: var(--ink-faint);
+            }
+
+            .note {
+                border-left: 3px solid var(--family-temporal);
+                background: var(--paper-soft);
+                padding: 14px 18px;
+                margin: 18px 0;
+                font-size: 14px;
+                color: var(--ink-soft);
+                max-width: 800px;
+            }
+            .note b {
+                color: var(--ink);
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                display: block;
+                margin-bottom: 6px;
+            }
+
+            footer.colophon {
+                margin-top: 64px;
+                border-top: 1px solid var(--ink);
+                padding-top: 24px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.08em;
+                color: var(--ink-faint);
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav property="topology_warrant" theme="warrant"></amp-nav>
+        <div class="wrap">
+            <header class="mast">
+                <div class="eyebrow">
+                    OS-002 · Topological Routing · the κ·σ·β thesis
+                </div>
+                <h1>
+                    Topology as <em>warrant</em> — structure earns the right to
+                    act.
+                </h1>
+                <p class="sub">
+                    Three structural invariants of an agent's knowledge graph —
+                    cycles, conflicts, persistence — don't describe data. They
+                    issue warrants. When the graph's shape supplies the cause, a
+                    specific operation becomes authorized: not granted by a
+                    supervisor, not declared in a policy file, but warranted by
+                    where you stand in the structure.
+                </p>
+                <div class="meta">
+                    <span>κ proved · 1.9M systems</span>
+                    <span>σ via SCOPE · draft</span>
+                    <span>β in consolidation</span>
+                    <span>routes the Graphonomous loop</span>
+                </div>
+            </header>
+
+            <!-- ════════════════════════════ -->
+            <!-- I. Why warrant, not authority -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">I.</span>
+                    <h2>Why “warrant,” not “authority”</h2>
+                    <span class="tag">the precise word</span>
+                </div>
+                <p class="panel-intro">
+                    “Authority” is the wrong metaphor for what the substrate
+                    actually does. Authority is a standing, role-based power —
+                    exactly the thing this mechanism replaces. What the graph
+                    issues is narrower, and more honest.
+                </p>
+                <p class="body">
+                    A <em>warrant</em> is issued on cause, authorizes one
+                    specific action, and is read off the situation rather than
+                    conferred by a superior. That is precisely how the substrate
+                    behaves. The system does not hold a standing power to
+                    deliberate. It computes, at one point in one neighborhood of
+                    the graph, whether the structure supplies the cause — and if
+                    it does, the warrant for that single operation issues, here
+                    and now. When the cause is absent, no warrant exists, and
+                    the operation is simply not authorized.
+                </p>
+                <p class="body">
+                    The word carries a second, useful sense. In epistemology a
+                    belief is <em>warranted</em> when it is justified. A
+                    topology-warranted operation is a justified one: the
+                    justification is structural and checkable, not a confidence
+                    score and not an LLM's say-so. Three kinds of structural
+                    cause, three warrants:
+                </p>
+                <ul class="body">
+                    <li>
+                        a <strong>cycle</strong> warrants
+                        <code>deliberate</code> — flat reasoning is not
+                        authorized where the graph loops back on itself;
+                    </li>
+                    <li>
+                        a <strong>conflict</strong> warrants
+                        <code>reconcile</code> — claims that cannot all hold
+                        name exactly what must be resolved;
+                    </li>
+                    <li>
+                        <strong>persistence</strong> warrants
+                        <code>promote</code> — a feature that survived, and is
+                        still reinforced, has earned durable memory.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- II. κ — the cycle warrant     -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">II.</span>
+                    <h2>κ — the cycle warrant</h2>
+                    <span class="tag">authorizes: deliberate</span>
+                </div>
+                <p class="panel-intro">
+                    A cycle means the explanation of a node depends, through the
+                    graph, on itself. Flat reasoning over such a region
+                    systematically misleads — so flat reasoning isn't warranted
+                    there.
+                </p>
+
+                <div class="inv k">
+                    <div class="inv-head">
+                        <span class="sym">κ</span>
+                        <span class="name">cyclicity</span>
+                        <span class="warrant">
+                            warrants <b>deliberate</b><br />when
+                            κ&nbsp;&gt;&nbsp;0
+                        </span>
+                    </div>
+                    <div class="formal">
+                        κ(G) = min over bipartitions (A,B) of the largest SCC of
+                        min(|A→B|, |B→A|) with κ = 0 when the largest strongly
+                        connected component has size ≤ 1.
+                    </div>
+                    <p>
+                        Detection is ordinary graph work: find the largest
+                        strongly connected component in the neighborhood
+                        (Tarjan), then the minimum bidirectional cut across its
+                        bipartitions. The categorical reason it works — why
+                        κ&nbsp;&gt;&nbsp;0 is the same thing as a non-trivial
+                        trace in a traced symmetric monoidal category
+                        (Joyal–Street–Verity, 1996) — is what tells you the
+                        cause is real rather than incidental.
+                    </p>
+                    <p>
+                        <span class="status proved">proved</span> &nbsp;Verified
+                        by exhaustive computation across 1,926,351 finite
+                        systems (directed graphs n=2–5, finite dynamical systems
+                        n=2–7) with zero counterexamples. κ is computed in the
+                        Graphonomous <code>route</code> phase today. Full proof:
+                        <a href="/proofs/kappa.html">κ — cyclicity</a>.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- III. σ — the conflict warrant -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">III.</span>
+                    <h2>σ — the conflict warrant</h2>
+                    <span class="tag">authorizes: reconcile</span>
+                </div>
+                <p class="panel-intro">
+                    Cycles tell you the graph has feedback. They don't tell you
+                    whether the actors asserting things about a region agree.
+                    That needs different machinery — not topology, not category
+                    theory, just constraint logic done carefully.
+                </p>
+
+                <div class="inv s">
+                    <div class="inv-head">
+                        <span class="sym">σ</span>
+                        <span class="name">conflict</span>
+                        <span class="warrant">
+                            warrants <b>reconcile</b><br />when
+                            σ&nbsp;&gt;&nbsp;0
+                        </span>
+                    </div>
+                    <div class="formal">
+                        σ(G) = |{ (c₁,c₂) ∈ C×C : regions overlap, claim types
+                        incompatible }| over the active claims C on regions
+                        intersecting G.
+                    </div>
+                    <p>
+                        Different actors make typed claims on shared regions. An
+                        <em>edit</em> over the same span as a
+                        <em>reserve</em> is fine; two <em>exclusive</em> claims
+                        on the same span are not. Whether a set of claims is
+                        jointly satisfiable is the question σ answers — and the
+                        load-bearing commitment is that
+                        <em>conflicts are derived, never authored</em>, so two
+                        implementations compute the same conflict set from the
+                        same input. The conflicting pair names exactly which
+                        actors disagree, on which region, under which types —
+                        which is the agenda <code>reconcile</code> needs.
+                    </p>
+                    <p>
+                        <span class="status draft">draft · SCOPE v0.1</span>
+                        &nbsp;σ is the formal name for the deterministic
+                        conflict derivation specified by
+                        <a href="/scope.html">SCOPE</a>, the spatial
+                        (<code>&amp;space</code>) primitive. The spec is
+                        drafted; the reference implementation is scaffolding.
+                        Treat σ as a precise design, not yet a runnable package.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- IV. β — the persistence warrant -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">IV.</span>
+                    <h2>β — the persistence warrant, with decay</h2>
+                    <span class="tag">authorizes: promote</span>
+                </div>
+                <p class="panel-intro">
+                    A cycle that just appeared differs from one that has held
+                    across a hundred consolidations. Treating them alike loses
+                    information; treating them alike <em>forever</em> ossifies.
+                    The fix is persistence with an explicit half-life.
+                </p>
+
+                <div class="inv b">
+                    <div class="inv-head">
+                        <span class="sym">β</span>
+                        <span class="name">persistence</span>
+                        <span class="warrant">
+                            warrants <b>promote</b><br />when β&nbsp;≥&nbsp;θ_β
+                        </span>
+                    </div>
+                    <div class="formal">
+                        β(f) = (r(f) − b(f)) · 2^(−(t − r(f)) / τ) birth b,
+                        last-reinforcement r, current epoch t, half-life τ.
+                    </div>
+                    <p>
+                        Persistence accumulates with sustained presence and
+                        decays once reinforcement stops, so incumbency can't
+                        masquerade as authority — precedent that stops being
+                        cited loses force. When β crosses θ_β a feature is
+                        warranted to move from fast retrieval memory into
+                        durable semantic structure; when it falls below
+                        threshold for several consolidations it becomes eligible
+                        for pruning.
+                    </p>
+                    <p>
+                        <span class="status implicit">in consolidation</span>
+                        &nbsp;The Graphonomous <code>consolidate</code> phase
+                        already keeps the bookkeeping β needs — birth epoch,
+                        last-touched epoch, decay — so this is the lightest
+                        delta: name the existing decay signal as an explicit
+                        invariant rather than leave it heuristic.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- V. Composition                -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">V.</span>
+                    <h2>Warrants compose</h2>
+                    <span class="tag">claimed · not yet measured</span>
+                </div>
+                <p class="panel-intro">
+                    Each warrant alone is modest. Taken pairwise and triply they
+                    give the substrate a governance vocabulary it otherwise
+                    lacks — the legal language is borrowed deliberately.
+                </p>
+                <div class="comp-grid">
+                    <div class="comp">
+                        <div class="f">κ × σ</div>
+                        <div class="nm">amendment</div>
+                        <p>
+                            A cycle <em>and</em> a conflict on the region.
+                            Deliberation is warranted, and the σ-pair tells it
+                            exactly which claims to retire and install. The
+                            substrate amends itself.
+                        </p>
+                    </div>
+                    <div class="comp">
+                        <div class="f">κ × β</div>
+                        <div class="nm">precedent</div>
+                        <p>
+                            A cycle that has persisted and is still reinforced
+                            carries the weight of precedent — similar later
+                            queries can cite the prior ruling, unless the
+                            landscape shifted. Common law, with decay.
+                        </p>
+                    </div>
+                    <div class="comp">
+                        <div class="f">σ × β</div>
+                        <div class="nm">durable dissent</div>
+                        <p>
+                            A conflict that persists across epochs isn't noise —
+                            it's a real feature of the problem. Both claims are
+                            preserved as structural facts, not flattened into
+                            forced consensus.
+                        </p>
+                    </div>
+                    <div class="comp triple">
+                        <div class="f">κ × σ × β</div>
+                        <div class="nm">constitutional evolution</div>
+                        <p>
+                            Cycle, conflict, and persistence together: a real,
+                            durable, structural disagreement. The strongest
+                            signal in the framework — resolution doesn't just
+                            seal one decision, it sets a precedent later
+                            configurations inherit, until that precedent itself
+                            decays. This is the part that needs careful
+                            engineering and empirical validation before it
+                            claims too much.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- VI. Where warrants are issued -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">VI.</span>
+                    <h2>Where the warrant is issued</h2>
+                    <span class="tag">the route phase</span>
+                </div>
+                <p class="panel-intro">
+                    The Graphonomous memory loop has five phases. The warrant is
+                    read at <code>route</code> — the phase that decides what the
+                    loop is authorized to do next.
+                </p>
+                <div class="loop">
+                    <span class="ph">retrieve</span>
+                    <span class="arr">→</span>
+                    <span class="ph hot">route</span>
+                    <span class="arr">→</span>
+                    <span class="ph">act</span>
+                    <span class="arr">→</span>
+                    <span class="ph">learn</span>
+                    <span class="arr">→</span>
+                    <span class="ph">consolidate</span>
+                </div>
+                <p class="body">
+                    At <code>route</code>, retrieval has surfaced a
+                    neighborhood. The substrate computes κ on that neighborhood;
+                    today, when κ&nbsp;&gt;&nbsp;0, it escalates to deliberation
+                    instead of returning a flat answer. As σ and β come online
+                    the same phase consults them — a conflict on a spatial
+                    sub-graph warrants reconcile, a threshold crossing at
+                    <code>consolidate</code> warrants promote. The
+                    <a href="https://pulse.opensentience.org">PULSE</a> manifest
+                    can carry the (κ, σ, β) triple as a topology-context token
+                    so every loop in the stack reads the same warrants, and
+                    <a href="https://prism.opensentience.org">PRISM</a> can
+                    measure whether warrant-triggered operations actually
+                    outperform threshold-triggered ones.
+                </p>
+                <div class="note">
+                    <b>honest status</b>
+                    κ issues real warrants in production. σ is a drafted spec. β
+                    is decay bookkeeping not yet named as an invariant. The
+                    composition vocabulary is a set of claims about what the
+                    substrate <em>should</em> do, not yet a measurement of what
+                    it has done.
+                </div>
+            </section>
+
+            <!-- ════════════════════════════ -->
+            <!-- VII. Maturity + falsification -->
+            <!-- ════════════════════════════ -->
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-num">VII.</span>
+                    <h2>What's proved, and how to break it</h2>
+                    <span class="tag">no overclaiming</span>
+                </div>
+                <p class="panel-intro">
+                    The framework is shippable in pieces and at different
+                    maturities. Naming that plainly is the point.
+                </p>
+                <table class="ledger">
+                    <thead>
+                        <tr>
+                            <th>warrant</th>
+                            <th>status</th>
+                            <th>basis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>κ → deliberate</td>
+                            <td>
+                                <span class="status proved">proved</span>
+                            </td>
+                            <td class="ev">
+                                Machine-checked over 1,926,351 systems;
+                                categorical framing; runs in the route phase.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>σ → reconcile</td>
+                            <td>
+                                <span class="status draft">draft</span>
+                            </td>
+                            <td class="ev">
+                                Deterministic conflict derivation specified in
+                                SCOPE v0.1; reference impl scaffolding.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>β → promote</td>
+                            <td>
+                                <span class="status implicit"
+                                    >in consolidation</span
+                                >
+                            </td>
+                            <td class="ev">
+                                Decay bookkeeping exists in consolidation; not
+                                yet a named invariant.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>compositions</td>
+                            <td>
+                                <span class="status implicit">claimed</span>
+                            </td>
+                            <td class="ev">
+                                Amendment / precedent / dissent / evolution —
+                                argued, not yet measured.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="body" style="margin-top: 20px">
+                    The framework should be testable, so two conjectures worth
+                    falsifying first:
+                </p>
+                <ul class="body">
+                    <li>
+                        <strong
+                            >Cycle-triggering beats
+                            uncertainty-triggering.</strong
+                        >
+                        There is a regime where escalating on κ&nbsp;&gt;&nbsp;0
+                        yields higher post-deliberation accuracy than escalating
+                        on output uncertainty, at no higher deliberation cost.
+                        If false, cycle presence isn't the right cause and we're
+                        back to thresholds.
+                    </li>
+                    <li>
+                        <strong
+                            >Conflict-aware reconciliation closes conflicts more
+                            reliably.</strong
+                        >
+                        When deliberation conditions on the specific σ-pair, it
+                        retires the conflicting claims within fewer rounds than
+                        deliberation that ignores the structure. If false,
+                        SCOPE's conflict record isn't useful as an agenda and σ
+                        should only trigger, not inform.
+                    </li>
+                </ul>
+                <div class="note" style="border-left-color: var(--ink-faint)">
+                    <b>out of scope here</b>
+                    An earlier draft read the same invariants in a second,
+                    economic register (mint / circulate / price) and proposed a
+                    multi-currency substrate. That thesis is sketched on the
+                    <a href="/invariants.html">periodic table</a> and is not
+                    load-bearing for the governance mechanic on this page. Kept
+                    separate on purpose.
+                </div>
+            </section>
+
+            <footer class="colophon">
+                <div>
+                    OpenSentience · OS-002 Topological Routing · Topology as
+                    Warrant
+                </div>
+                <div>
+                    κ proved · σ drafted in SCOPE · β in consolidation ·
+                    compositions claimed
+                </div>
+                <div>
+                    structure earns the right to act — per instance, on cause
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
