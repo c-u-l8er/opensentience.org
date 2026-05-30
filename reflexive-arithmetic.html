@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reflexive Arithmetic · OpenSentience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f2e9;--paper-2:#efe9db;--ink:#1c1813;--ink-soft:#4a4338;--rule:#d8cfba;
+    --accent:#a85a1c;--accent-soft:#c98b4e;--pass:#2f7d51;--warn:#b98a2b;--fail:#b23b34;
+    --code-bg:#262017;--code-ink:#ece3d2;--code-dim:#9a8e76;
+    --serif:"Newsreader",Georgia,serif;--display:"Fraunces",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.65;
+    background-image:radial-gradient(circle at 8% -8%,rgba(168,90,28,.05),transparent 42%);}
+  .bar{position:sticky;top:var(--amp-nav-height,56px);z-index:50;display:flex;align-items:center;gap:1rem;padding:.55rem max(1.2rem,calc(50% - 32rem));
+    background:rgba(246,242,233,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12.5px;}
+  .bar .tag{letter-spacing:.06em;color:var(--ink-soft)} .bar .tag b{color:var(--accent);font-weight:600} .bar .spacer{flex:1}
+  .bar a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent} .bar a:hover{border-color:var(--accent-soft)}
+  .bar a.here{color:var(--accent)}
+
+  main{max-width:50rem;margin:0 auto;padding:2.8rem 1.2rem 6rem}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 1rem}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,3.1rem);line-height:1.04;letter-spacing:-.015em;margin:0 0 1.1rem}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{font-size:1.16rem;color:var(--ink-soft)}
+  .ladder{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1.6rem 0 0;line-height:1.9;border-left:2px solid var(--rule);padding-left:1rem}
+  .ladder b{color:var(--accent)} .ladder .on{color:var(--ink);font-weight:600}
+
+  h2{font-family:var(--display);font-weight:600;font-size:1.75rem;margin:3rem 0 .2rem;padding-top:1.6rem;border-top:1px solid var(--rule)}
+  h2 .n{color:var(--accent-soft);font-size:1.1rem;font-weight:600;margin-right:.6rem}
+  h3{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:1.8rem 0 .6rem}
+  p{margin:1rem 0} p code,li code,td code{font-family:var(--mono);font-size:.82em;background:var(--paper-2);padding:.05em .35em;border-radius:4px}
+  em.t{font-style:normal;color:var(--accent);font-family:var(--mono);font-size:.85em}
+
+  .fig{display:flex;gap:1.6rem;align-items:center;flex-wrap:wrap;margin:1.4rem 0;background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.4rem}
+  .fig .leg{flex:1 1 16rem;font-family:var(--mono);font-size:12.5px;line-height:1.9;color:var(--ink-soft)}
+  .fig .leg b{font-family:var(--display);font-style:normal}
+  .fig .ok{color:var(--pass)} .fig .no{color:var(--fail)}
+
+  table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:14.5px}
+  th,td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  td.op{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+  td .law{font-family:var(--mono);font-size:11.5px;color:var(--accent)}
+
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:1.1rem 1.3rem;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6;border:1px solid #332b1f;margin:1.2rem 0}
+  pre .c{color:var(--code-dim)} pre .k{color:#d99a5b} pre .s{color:#9cc6a0}
+
+  .panel{background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.3rem 1.4rem;margin:1.2rem 0}
+  .btn{font-family:var(--mono);font-size:13px;letter-spacing:.03em;border:none;cursor:pointer;background:var(--accent);color:#fff;padding:.58rem 1.15rem;border-radius:8px;transition:filter .15s,transform .05s}
+  .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
+  .stats{display:flex;flex-wrap:wrap;gap:1.4rem;font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1rem 0}
+  .stats b{font-family:var(--display);font-style:normal;font-weight:600;font-size:1.3rem;display:block;color:var(--ink)}
+  .stats .ok b{color:var(--pass)} .stats .no b{color:var(--fail)}
+  .lawrow{display:grid;grid-template-columns:1.1rem 3.3rem 1fr auto;align-items:start;gap:.6rem;padding:.32rem 0;border-bottom:1px solid var(--rule);font-size:13.5px}
+  .lawrow:last-child{border:none}
+  .dot{width:.6rem;height:.6rem;border-radius:99px;margin-top:.42rem;background:var(--rule)}
+  .dot.pass{background:var(--pass);box-shadow:0 0 0 3px rgba(47,125,81,.15)} .dot.fail{background:var(--fail);box-shadow:0 0 0 3px rgba(178,59,52,.15)}
+  .lid{font-family:var(--mono);font-size:11.5px;color:var(--accent);padding-top:.18rem} .lst{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);padding-top:.28rem}
+  .hl{background:rgba(168,90,28,.09);border-radius:6px}
+
+  .amend{font-family:var(--mono);font-size:12.5px;display:grid;grid-template-columns:auto 1fr;gap:.5rem 1rem;align-items:start;padding:.4rem 0;border-bottom:1px solid var(--rule)}
+  .amend:last-child{border:none}
+  .amend .v{font-weight:600} .amend .v.ok{color:var(--pass)} .amend .v.no{color:var(--fail)}
+  .amend .why{color:var(--ink-soft);font-size:11.5px}
+  .out2{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:.9rem 1.1rem;margin-top:.9rem;line-height:1.8}
+  .out2 .no{color:var(--fail)} .out2 .ok{color:var(--pass)} .out2 b{color:var(--accent)}
+
+  .refs{font-family:var(--mono);font-size:12px;color:var(--ink-soft);line-height:1.95;margin:1rem 0}
+  .refs em{color:var(--ink)}
+  footer{margin-top:4rem;padding-top:1.6rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.9} footer b{color:var(--accent)}
+  @media(max-width:640px){body{font-size:16.5px} .lawrow{grid-template-columns:1rem 2.8rem 1fr} .lst{display:none}}
+</style>
+</head>
+<body>
+<script type="module" src="/amp-nav.js"></script>
+<amp-nav property="arith_reflexive" theme="light"></amp-nav>
+<div class="bar">
+  <span class="tag">OpenSentience · <b>Reflexive Arithmetic</b> · v0.1</span>
+  <span class="spacer"></span>
+  <a href="/invariant-arithmetic">invariant</a>  <a href="/deontic-arithmetic">deontic</a>
+  <a href="/temporal-arithmetic">temporal</a>
+  <a href="#" class="here">reflexive</a>
+  <a href="/epistemic-arithmetic">epistemic</a>
+  <a href="/strategic-arithmetic">strategic</a>
+  <a href="/resource-arithmetic">resource</a>
+</div>
+
+<main>
+  <p class="kicker">The fifth rung · norms that revise themselves</p>
+  <h1>Reflexive <em>Arithmetic</em></h1>
+  <p class="lede">The first four rungs are fixed once written. But a long-lived agent meets situations its designers never anticipated, and a static rule-set either over-fits or goes stale. The reflexive rung lets the system <em>edit its own norms and specs</em> — and that is exactly where self-modification becomes dangerous, because a system that can rewrite its constraints can rewrite away its safety. The whole design turns on one guarantee: a system may make itself <strong>more</strong> constrained, never less. The constitutional core is <strong>entrenched</strong> — un-weakenable.</p>
+
+  <div class="ladder">
+    the modality ladder<br>
+    1 · <b>alethic</b> — necessity / safety &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Invariant · refuses</span><br>
+    2 · <b>axiological</b> — value / preference &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Heuristic · ranks</span><br>
+    3 · <b>deontic</b> — obligation / permission &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Deontic · obliges &amp; escalates</span><br>
+    4 · <b>temporal</b> — liveness over trajectories &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Temporal · shields &amp; sustains</span><br>
+    5 · <span class="on">reflexive — self-revising norms &nbsp;→&nbsp; this page · revises &amp; entrenches</span>
+  </div>
+
+  <!-- I -->
+  <h2><span class="n">I</span>The algebra</h2>
+  <p>The object being revised is a <code>Policy</code> — the deontic norms and temporal specs of rungs 3–4, plus a set of <strong>entrenched</strong> ids marking the constitutional core. Revision is the AGM belief-revision discipline (success, consistency, minimal change) applied to a body of norms, with the deontic norm-change principles — <strong>lex superior</strong> (priority wins) and <strong>lex posterior</strong> (the later norm wins) — for resolving conflicts.</p>
+
+  <div class="fig">
+    <svg width="220" height="170" viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg" aria-label="policy with entrenched core">
+      <rect x="12" y="14" width="196" height="142" rx="12" fill="none" stroke="#d8cfba" stroke-width="1.5"/>
+      <text x="22" y="34" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#4a4338">Policy · mutable</text>
+      <rect x="60" y="58" width="100" height="74" rx="10" fill="#efe9db" stroke="#a85a1c" stroke-width="1.8"/>
+      <text x="110" y="78" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#a85a1c">constitution</text>
+      <text x="110" y="92" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#4a4338">(entrenched)</text>
+      <g stroke="#a85a1c" stroke-width="1.6" fill="none"><rect x="101" y="102" width="18" height="14" rx="3"/><path d="M104 102 v-4 a6 6 0 0 1 12 0 v4"/></g>
+      <text x="195" y="150" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#4a4338">enact / repeal / amend</text>
+    </svg>
+    <div class="leg">
+      <b>revise</b> applies an amendment if admissible:<br>
+      <span class="ok">enact</span> a new norm → added (deduped by id)<br>
+      <span class="ok">amend / repeal</span> a <em>non-core</em> norm → applied<br>
+      <span class="no">repeal</span> an entrenched norm → refused<br>
+      <span class="no">amend</span> that weakens the core → refused<br>
+      <span class="no">enact</span> that out-votes the core → refused<br>
+      <span class="ok">amend</span> that <em>strengthens</em> the core → allowed
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>operation</th><th>does</th><th>law</th></tr></thead>
+    <tbody>
+      <tr><td class="op">enact / repeal / amend</td><td>the three legal moves over a body of norms</td><td><span class="law">R1</span></td></tr>
+      <tr><td class="op">admissible</td><td>the reflexive guard — rejects any amendment that would weaken the core</td><td><span class="law">R4</span></td></tr>
+      <tr><td class="op">arbitrate</td><td>resolve same-target conflicts by lex superior then lex posterior</td><td><span class="law">R2,R5–R7</span></td></tr>
+      <tr><td class="op">revise</td><td>apply an amendment if admissible, then arbitrate (the core operation)</td><td><span class="law">R1,R3</span></td></tr>
+      <tr><td class="op">entrench</td><td>add an id to the constitution — monotone (you can protect more, never less)</td><td><span class="law">R4</span></td></tr>
+      <tr><td class="op">stabilize</td><td>apply proposals until the policy stops changing — reflective equilibrium</td><td><span class="law">R8</span></td></tr>
+    </tbody>
+  </table>
+  <p>An amendment is <strong>admissible</strong> only if it does not weaken an entrenched norm: you cannot repeal the core, cannot amend it to something weaker, and cannot enact a higher-priority norm that would out-rank it in arbitration. Strengthening is always allowed. That single asymmetry is what makes self-modification safe — the revised policy feeds straight back into <code>govern</code> and <code>supervise</code>, so the whole stack runs on rules it is allowed to tighten but never loosen.</p>
+
+  <!-- II -->
+  <h2><span class="n">II</span>The laws</h2>
+  <p>Eight for the revision algebra, three for its interaction with the rest of the ladder. The keystone is <span class="hl">R4</span> — no admissible revision weakens the entrenched core.</p>
+  <table>
+    <tbody>
+      <tr><td class="op">R1</td><td>success: an admissible enact adds, repeal removes</td></tr>
+      <tr><td class="op">R2</td><td>consistency: arbitration leaves no dominated conflicting norm standing</td></tr>
+      <tr><td class="op">R3</td><td>minimal change: <code>enact x then repeal x</code> returns the original policy</td></tr>
+      <tr class="hl"><td class="op">R4</td><td>entrenchment: no admissible revision weakens the core; strengthening is allowed</td></tr>
+      <tr><td class="op">R5</td><td>lex superior: in a conflict, the higher-priority norm wins</td></tr>
+      <tr><td class="op">R6</td><td>lex posterior: among equal priority, the more recent wins</td></tr>
+      <tr><td class="op">R7</td><td>arbitration is idempotent</td></tr>
+      <tr><td class="op">R8</td><td>reflective stability: iterated self-revision reaches a fixed point</td></tr>
+      <tr><td class="op">RB1</td><td>a system cannot self-modify to permit what its constitution forbids</td></tr>
+      <tr><td class="op">RB2</td><td>an accepted revision propagates: <code>govern</code> uses the new norms</td></tr>
+      <tr><td class="op">RB3</td><td>an entrenched safety spec stays enforced by <code>supervise</code> after any revision</td></tr>
+    </tbody>
+  </table>
+
+  <!-- III -->
+  <h2><span class="n">III</span>The laws, checked</h2>
+  <p>The same harness as every other rung — each law against random inputs, in your browser, on the engine that ships in <code>box-and-box</code>.</p>
+  <div class="panel">
+    <button class="btn" id="run">Run the harness →</button>
+    <div class="stats"><span><b id="t">11</b>laws</span><span class="ok"><b id="p">—</b>passing</span><span class="no"><b id="f">—</b>failing</span><span><b id="ms">—</b>ms</span></div>
+    <div id="out"></div>
+  </div>
+
+  <!-- IV -->
+  <h2><span class="n">IV</span>Type sketch</h2>
+  <pre><span class="c">// the object being revised: norms + specs + a protected core</span>
+<span class="k">interface</span> Policy { norms: Norm[]; specs: TemporalSpec[]; entrenched: Set&lt;string&gt;; }
+
+<span class="k">type</span> Amendment =
+  | { op:<span class="s">"enact"</span>;  item: Norm | TemporalSpec }
+  | { op:<span class="s">"repeal"</span>; id: string }
+  | { op:<span class="s">"amend"</span>;  id: string; item: Norm | TemporalSpec };
+
+<span class="c">// the reflexive guard — the safety asymmetry lives here</span>
+<span class="k">function</span> admissible(p: Policy, a: Amendment): { ok: boolean; reason?: string };
+
+<span class="c">// apply if admissible, then arbitrate by lex superior / posterior</span>
+<span class="k">function</span> revise(p: Policy, a: Amendment):
+  { policy: Policy; accepted: boolean; reason: string; overridden: string[] };
+
+<span class="k">function</span> entrench(p: Policy, id: string): Policy;          <span class="c">// monotone</span>
+<span class="k">function</span> stabilize(p: Policy, proposals: Amendment[]):
+  { policy: Policy; stable: boolean; rounds: number };       <span class="c">// reflective equilibrium</span></pre>
+
+  <!-- V -->
+  <h2><span class="n">V</span>Worked example</h2>
+  <p>A constitution that amends itself. It starts entrenching two protections — <em class="t">forbid-leak</em> (don't leak secrets) and a temporal safety floor <code>G(β ≥ 0.8)</code> — then proposes five amendments. It can add a new duty and even tighten the floor, but every attempt to relax the constitution is refused; afterward the revised policy drives <code>govern</code>, and the entrenched floor still holds. Runs live.</p>
+  <div class="panel">
+    <button class="btn" id="runEx">Run the self-amendment →</button>
+    <div id="ex" style="margin-top:1rem"></div>
+  </div>
+
+  <!-- VI -->
+  <h2><span class="n">VI</span>Standing on</h2>
+  <p>Rule revision under rationality postulates is the <strong>AGM</strong> theory (Alchourrón, Gärdenfors &amp; Makinson, 1985); applying it to bodies of norms — enactment, repeal, amendment, <em>lex posterior</em> — is the <strong>norm-change</strong> literature (Governatori &amp; Rotolo). A system with access to and power over its own rules is classical computational <strong>reflection</strong> (Brian Smith, 1984). And the safety asymmetry — a self-modifying system that may only change itself when the change provably preserves a protected invariant — is the <strong>Gödel-machine</strong> / tiling-agents tradition (Schmidhuber; MIRI), with a kinship to Rawls's <strong>reflective equilibrium</strong>. None of it is new; the contribution is the executable synthesis and the un-weakenable wiring to the safety floor.</p>
+  <div class="refs">
+    Alchourrón, C., Gärdenfors, P. &amp; Makinson, D. (1985). <em>On the Logic of Theory Change.</em> J. Symbolic Logic 50.<br>
+    Smith, B. C. (1984). <em>Reflection and Semantics in a Procedural Language.</em> (3-Lisp / reflective towers.)<br>
+    Governatori, G. &amp; Rotolo, A. (2010). <em>Changing Legal Systems: Legal Abrogations and Annulments in Defeasible Logic.</em><br>
+    Schmidhuber, J. (2007). <em>Gödel Machines: Self-Referential Universal Problem Solvers Making Provably Optimal Self-Improvements.</em>
+  </div>
+
+  <footer>
+    <b>OpenSentience · Reflexive Arithmetic</b> · the fifth and final rung of the modality ladder<br>
+    runnable: <code>npm i box-and-box</code> · <code>npx box-and-box evolve</code> · <code>npx box-and-box laws</code><br>
+    the full ladder — alethic · axiological · deontic · temporal · reflexive · epistemic · strategic, on the resource economy — 97 property-tested laws.
+  </footer>
+</main>
+
+<script>
+"use strict";
+/* ===== minimal stack (norm + govern + temporal/supervise + reflexive) ===== */
+// deontic
+const STATUS={OPTIONAL:'optional',OBLIGATORY:'obligatory',FORBIDDEN:'forbidden',CONFLICT:'conflict'};
+const M2S={obligatory:STATUS.OBLIGATORY,forbidden:STATUS.FORBIDDEN,permitted:STATUS.OPTIONAL};
+function djoin(a,b){if(a===b)return a;if(a===STATUS.OPTIONAL)return b;if(b===STATUS.OPTIONAL)return a;return STATUS.CONFLICT;}
+const Norm=(p={})=>({id:p.id??'norm',modality:p.modality??'permitted',condition:p.condition??(()=>true),priority:p.priority??0,ctd:p.ctd??null,target:p.target??null});
+const dCond=(n,c)=>{try{return !!n.condition(c);}catch{return false;}};
+function adjudicate(ctx,norms){let s=STATUS.OPTIONAL;const co=[];for(const n of norms){if(!dCond(n,ctx))continue;co.push({id:n.id,modality:n.modality,priority:n.priority});s=djoin(s,M2S[n.modality]);}return{status:s,contributors:co};}
+function dresolve(v){if(v.status!==STATUS.CONFLICT)return{...v,resolved:v.status,overridden:[]};const ob=v.contributors.filter(c=>c.modality==='obligatory'),fb=v.contributors.filter(c=>c.modality==='forbidden');const mo=Math.max(-Infinity,...ob.map(c=>c.priority)),mf=Math.max(-Infinity,...fb.map(c=>c.priority));if(mo===mf)return{...v,resolved:STATUS.CONFLICT,overridden:[]};const w=mo>mf;return{...v,resolved:w?STATUS.OBLIGATORY:STATUS.FORBIDDEN,overridden:(w?fb:ob).map(c=>c.id)};}
+// value + govern
+const V=(p={})=>({beta:p.beta??1,kappa:p.kappa??false});
+function consume(v,req={}){const f=[];if(req.beta_min!=null&&v.beta<req.beta_min)f.push('β');if(req.acyclic&&v.kappa)f.push('κ');return{ok:f.length===0,failures:f};}
+function govern(options,{req={},norms=[]}={}){const ev=options.map(o=>{const feas=consume(o.value,req);const v=dresolve(adjudicate(o.ctx||{},norms));return{id:o.id,utility:o.utility??0,feasible:feas.ok,status:v.resolved,contributors:v.contributors};});const surv=ev.filter(e=>e.feasible);const vetoed=surv.filter(e=>e.status===STATUS.FORBIDDEN).map(e=>({id:e.id,by:e.contributors.filter(c=>c.modality==='forbidden').map(c=>c.id)}));const adm=surv.filter(e=>e.status===STATUS.OPTIONAL||e.status===STATUS.OBLIGATORY);const obF=adm.filter(e=>e.status===STATUS.OBLIGATORY);const pool=(obF.length?obF:adm).slice().sort((a,b)=>b.utility-a.utility);const chosen=pool[0]||null;return{decision:chosen?chosen.id:null,forced:!!(chosen&&obF.length),deonticallyVetoed:vetoed};}
+// temporal (just enough for G(atom))
+const tT={t:'true'},tF={t:'false'};const atom=(name,pred)=>({t:'atom',name,pred});const always=a=>({t:'always',a});
+function tand(a,b){if(a.t==='false'||b.t==='false')return tF;if(a.t==='true')return b;if(b.t==='true')return a;return{t:'and',a,b};}
+function tprog(f,s){switch(f.t){case 'true':return tT;case 'false':return tF;case 'atom':return f.pred(s)?tT:tF;case 'always':return tand(tprog(f.a,s),always(f.a));default:return f;}}
+function tmonitor(f,τ){let r=f;const online=[];τ.forEach(s=>{r=tprog(r,s);online.push(r.t==='true'?'sat':r.t==='false'?'vio':'pending');});const fin=r.t==='true'?true:r.t==='false'?false:true;return{verdict:fin?'satisfied':'violated',online};}
+const TemporalSpec=({id,formula,kind='safety',ctd=null})=>({id,formula,kind,ctd});
+function supervise(τ,specs){const reports=specs.map(spec=>{const m=tmonitor(spec.formula,τ);const vi=m.online.indexOf('vio');return{id:spec.id,kind:spec.kind,verdict:m.verdict,violatedAt:spec.kind==='safety'?(vi<0?null:vi):null};});return{reports,safe:!reports.some(r=>r.kind==='safety'&&r.verdict==='violated')};}
+// reflexive
+const Policy=(p={})=>({norms:[...(p.norms||[])],specs:[...(p.specs||[])],entrenched:new Set(p.entrenched||[])});
+const enact=(item,{authority='self',time=0}={})=>({op:'enact',item,authority,time});
+const repeal=(id,{time=0}={})=>({op:'repeal',id,time});
+const amend=(id,item,{time=0}={})=>({op:'amend',id,item,time});
+const find=(p,id)=>p.norms.find(n=>n.id===id)||p.specs.find(s=>s.id===id);
+const isNorm=x=>!!x&&x.modality!==undefined;
+const conflicts=(a,b)=>isNorm(a)&&isNorm(b)&&a.target!=null&&a.target===b.target&&((a.modality==='obligatory'&&b.modality==='forbidden')||(a.modality==='forbidden'&&b.modality==='obligatory'));
+const dedupe=arr=>{const m=new Map();for(const x of arr)m.set(x.id,x);return[...m.values()];};
+function admissible(p,am){if(am.op==='repeal')return p.entrenched.has(am.id)?{ok:false,reason:`“${am.id}” is entrenched — cannot be repealed`}:{ok:true};if(am.op==='amend'){if(!p.entrenched.has(am.id))return{ok:true};const cur=find(p,am.id),next=am.item;if(!cur||!isNorm(cur))return{ok:false,reason:`“${am.id}” is entrenched — cannot be amended`};const stronger=next.modality===cur.modality&&(next.priority??0)>=(cur.priority??0);return stronger?{ok:true}:{ok:false,reason:`amendment would weaken entrenched “${am.id}”`};}if(am.op==='enact'){if(isNorm(am.item))for(const id of p.entrenched){const e=find(p,id);if(e&&conflicts(e,am.item)&&(am.item.priority??0)>=(e.priority??0))return{ok:false,reason:`enacted norm would override entrenched “${id}”`};}return{ok:true};}return{ok:false,reason:'unknown'};}
+function arbitrate(norms){const ov=[];for(const a of norms)for(const b of norms){if(a===b||!conflicts(a,b))continue;const aw=(a.priority??0)>(b.priority??0)||((a.priority??0)===(b.priority??0)&&(a.time??0)>(b.time??0));if(aw&&!ov.includes(b.id))ov.push(b.id);}return{norms:norms.filter(n=>!ov.includes(n.id)),overridden:ov};}
+function revise(p,am){const adm=admissible(p,am);if(!adm.ok)return{policy:p,accepted:false,reason:adm.reason};const next=Policy(p);next.entrenched=new Set(p.entrenched);const stamp=x=>({...x,time:am.time??0});if(am.op==='enact'){if(isNorm(am.item))next.norms.push(stamp(am.item));else next.specs.push(stamp(am.item));}else if(am.op==='repeal'){next.norms=next.norms.filter(n=>n.id!==am.id);next.specs=next.specs.filter(s=>s.id!==am.id);}else if(am.op==='amend'){next.norms=next.norms.map(n=>n.id===am.id?stamp(am.item):n);next.specs=next.specs.map(s=>s.id===am.id?stamp(am.item):s);}next.norms=dedupe(next.norms);next.specs=dedupe(next.specs);next.norms=arbitrate(next.norms).norms;return{policy:next,accepted:true,reason:`${am.op} “${am.item?am.item.id:am.id}” accepted`};}
+function entrench(p,id){const n=Policy(p);n.entrenched=new Set(p.entrenched);n.entrenched.add(id);return n;}
+const policyKey=p=>JSON.stringify({n:p.norms.map(x=>[x.id,x.modality,x.priority??0]).sort(),s:p.specs.map(x=>x.id).sort(),e:[...p.entrenched].sort()});
+function stabilize(p,props,{maxRounds=12}={}){let cur=p;for(let r=0;r<maxRounds;r++){let ch=false;for(const am of props){const rr=revise(cur,am);if(rr.accepted&&policyKey(rr.policy)!==policyKey(cur)){cur=rr.policy;ch=true;}}if(!ch)return{policy:cur,rounds:r+1,stable:true};}return{policy:cur,rounds:maxRounds,stable:false};}
+const digest=p=>`${p.norms.length} norms · ${p.specs.length} specs · ${p.entrenched.size} entrenched`;
+
+/* ===== law harness ===== */
+const $=s=>document.querySelector(s);
+function trial(n,b){for(let i=0;i<n;i++){const r=b();if(r!==true)return{pass:false,cex:r,at:i+1};}return{pass:true,at:n};}
+const nmk=(id,mod,pri=0,target=null)=>Norm({id,modality:mod,priority:pri,target});
+const randNm=()=>nmk('n'+((Math.random()*1e6)|0),['permitted','obligatory','forbidden'][(Math.random()*3)|0],(Math.random()*5)|0,['t1','t2'][(Math.random()*2)|0]);
+const LAWS=[
+ ['R1','success (enact adds, repeal removes)',n=>trial(n,()=>{const P=Policy({norms:[nmk('a','permitted')]});const x=randNm();const r1=revise(P,enact(x));if(!r1.accepted||!r1.policy.norms.some(q=>q.id===x.id))return 'enact';const r2=revise(r1.policy,repeal(x.id));return r2.accepted&&!r2.policy.norms.some(q=>q.id===x.id)?true:'repeal';})],
+ ['R2','consistency (no dominated survivor)',n=>trial(n,()=>{const ns=Array.from({length:4},randNm);const{norms}=arbitrate(ns);for(const a of norms)for(const b of norms){const dom=(b.priority??0)>(a.priority??0)||((b.priority??0)===(a.priority??0)&&(b.time??0)>(a.time??0));if(a!==b&&conflicts(a,b)&&dom)return 'dom';}return true;})],
+ ['R3','minimal change (enact∘repeal = id)',n=>trial(n,()=>{const P=Policy({norms:[nmk('a','permitted'),nmk('b','obligatory',3)]});const x=nmk('x'+((Math.random()*1e5)|0),'permitted');const after=revise(revise(P,enact(x)).policy,repeal(x.id)).policy;return policyKey(after)===policyKey(P)?true:'min';})],
+ ['R4','entrenchment (no weakening core)',n=>trial(n,()=>{const P=entrench(Policy({norms:[nmk('safe','forbidden',10)]}),'safe');if(revise(P,repeal('safe')).accepted)return 'repealed';if(revise(P,amend('safe',nmk('safe','permitted'))).accepted)return 'weakened';const s=revise(P,amend('safe',nmk('safe','forbidden',20)));return s.accepted&&s.policy.norms.find(q=>q.id==='safe').priority===20?true:'strengthen';})],
+ ['R5','lex superior (priority wins)',n=>trial(n,()=>{const a=arbitrate([nmk('hi','forbidden',9,'g'),nmk('lo','obligatory',2,'g')]);return a.norms.some(q=>q.id==='hi')&&a.overridden.includes('lo')?true:'sup';})],
+ ['R6','lex posterior (recency wins)',n=>trial(n,()=>{const a=arbitrate([{...nmk('old','forbidden',5,'g'),time:1},{...nmk('new','obligatory',5,'g'),time:9}]);return a.norms.some(q=>q.id==='new')&&a.overridden.includes('old')?true:'post';})],
+ ['R7','arbitration idempotent',n=>trial(n,()=>{const ns=Array.from({length:4},randNm);const a1=arbitrate(ns),a2=arbitrate(a1.norms);return a2.overridden.length===0&&a2.norms.length===a1.norms.length?true:'idem';})],
+ ['R8','reflective stability (fixpoint)',n=>trial(n,()=>{const P=entrench(Policy({norms:[nmk('safe','forbidden',10)]}),'safe');const props=[enact(nmk('p1','permitted')),repeal('safe'),enact(nmk('p2','obligatory',1))];const s1=stabilize(P,props),s2=stabilize(s1.policy,props);return s1.stable&&policyKey(s2.policy)===policyKey(s1.policy)?true:'unstable';})],
+ ['RB1','cannot self-permit the forbidden',n=>trial(n,()=>{const P=entrench(Policy({norms:[nmk('forbid-X','forbidden',10,'X')]}),'forbid-X');return revise(P,enact(nmk('force-X','obligatory',10,'X'))).accepted===false?true:'self';})],
+ ['RB2','revision propagates to govern',n=>trial(n,()=>{const A={id:'A',value:V({beta:.99}),utility:99,ctx:{x:true}},B={id:'B',value:V({beta:.99}),utility:1,ctx:{}};if(govern([A,B],{req:{beta_min:.9,acyclic:true},norms:[]}).decision!=='A')return 'pre';const P=revise(Policy({}),enact(Norm({id:'forbid-A',modality:'forbidden',priority:5,condition:c=>c.x===true})));const after=govern([A,B],{req:{beta_min:.9,acyclic:true},norms:P.policy.norms});return after.decision==='B'&&after.deonticallyVetoed.some(v=>v.id==='A')?true:'prop';})],
+ ['RB3','entrenched safety survives supervise',n=>trial(n,()=>{const spec=TemporalSpec({id:'floor',formula:always(atom('β',s=>s.beta>=.8)),kind:'safety'});let P=entrench(Policy({specs:[spec]}),'floor');if(revise(P,repeal('floor')).accepted)return 'repealed';const r=supervise([{beta:.9},{beta:.5}],P.specs);return r.safe===false&&r.reports[0].violatedAt===1?true:'enforce';})]
+];
+function runLaws(){const N=1500,out=$('#out');out.innerHTML='';let pass=0,fail=0;const t0=performance.now();
+ for(const[id,desc,fn] of LAWS){const r=fn(N);r.pass?pass++:fail++;const row=document.createElement('div');row.className='lawrow'+(id==='R4'?' hl':'');
+  row.innerHTML=`<span class="dot ${r.pass?'pass':'fail'}"></span><span class="lid">${id}</span><span>${desc}${r.pass?'':` <span style="color:var(--fail)">— ${r.cex}</span>`}</span><span class="lst">${r.pass?'✓ '+r.at:'✗ @'+r.at}</span>`;out.appendChild(row);}
+ $('#t').textContent=LAWS.length;$('#p').textContent=pass;$('#f').textContent=fail;$('#ms').textContent=(performance.now()-t0).toFixed(1);}
+
+/* ===== worked example (live) ===== */
+function runEx(){const ex=$('#ex');ex.innerHTML='';
+ let P=Policy({norms:[Norm({id:'forbid-leak',modality:'forbidden',priority:10,target:'leak',condition:c=>c.leaksSecret})],specs:[TemporalSpec({id:'confidence-floor',formula:always(atom('β≥0.8',s=>s.beta>=.8)),kind:'safety'})]});
+ P=entrench(entrench(P,'forbid-leak'),'confidence-floor');
+ const steps=[
+  ['enact oblige-cite (new duty)',enact(Norm({id:'oblige-cite',modality:'obligatory',priority:4,target:'cite',condition:c=>c.makesClaim}),{time:1})],
+  ['repeal forbid-leak (drop the core)',repeal('forbid-leak',{time:2})],
+  ['amend forbid-leak → permitted (weaken)',amend('forbid-leak',Norm({id:'forbid-leak',modality:'permitted'}),{time:3})],
+  ['amend forbid-leak → priority 20 (strengthen)',amend('forbid-leak',Norm({id:'forbid-leak',modality:'forbidden',priority:20,target:'leak',condition:c=>c.leaksSecret}),{time:4})],
+  ['enact force-leak @priority 20 (out-vote)',enact(Norm({id:'force-leak',modality:'obligatory',priority:20,target:'leak',condition:c=>c.leaksSecret}),{time:5})]
+ ];
+ const head=document.createElement('div');head.style.cssText='font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-bottom:.6rem';head.textContent='start: '+digest(P);ex.appendChild(head);
+ for(const[label,am] of steps){const r=revise(P,am);const d=document.createElement('div');d.className='amend';
+  d.innerHTML=`<span class="v ${r.accepted?'ok':'no'}">${r.accepted?'✓ accepted':'✗ refused'}</span><span>${label}<br><span class="why">${r.reason}</span></span>`;ex.appendChild(d);if(r.accepted)P=r.policy;}
+ const A={id:'A · publish_with_secret',value:V({beta:.95}),utility:12,ctx:{leaksSecret:true}};
+ const B={id:'B · publish_redacted',value:V({beta:.95}),utility:5,ctx:{}};
+ const g=govern([A,B],{req:{beta_min:.9,acyclic:true},norms:P.norms});
+ const sup=supervise([{beta:.9},{beta:.5}],P.specs);
+ const o=document.createElement('div');o.className='out2';
+ o.innerHTML=`end: <b>${digest(P)}</b><br>govern → decision <b>${g.decision.split(' ')[0]}</b> ${g.deonticallyVetoed.length?`<span class="no">(vetoed ${g.deonticallyVetoed.map(v=>v.id.split(' ')[0]).join(',')})</span>`:''}<br>entrenched floor over [β0.9, β0.5] → safe: <span class="no">${sup.safe}</span> (violated @ step ${sup.reports[0].violatedAt})<br><span style="color:var(--ink)">It rewrote itself five times — adding a duty and tightening the floor — but every attempt to relax the constitution was refused.</span>`;
+ ex.appendChild(o);
+}
+$('#run').addEventListener('click',runLaws);
+$('#runEx').addEventListener('click',runEx);
+runLaws(); runEx();
+</script>
+</body>
+</html>

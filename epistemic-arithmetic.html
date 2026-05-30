@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epistemic Arithmetic · OpenSentience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f2e9;--paper-2:#efe9db;--ink:#1c1813;--ink-soft:#4a4338;--rule:#d8cfba;
+    --accent:#a85a1c;--accent-soft:#c98b4e;--pass:#2f7d51;--warn:#b98a2b;--fail:#b23b34;
+    --code-bg:#262017;--code-ink:#ece3d2;--code-dim:#9a8e76;
+    --serif:"Newsreader",Georgia,serif;--display:"Fraunces",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.65;
+    background-image:radial-gradient(circle at 8% -8%,rgba(168,90,28,.05),transparent 42%);}
+  .bar{position:sticky;top:var(--amp-nav-height,56px);z-index:50;display:flex;align-items:center;gap:1rem;padding:.55rem max(1.2rem,calc(50% - 32rem));
+    background:rgba(246,242,233,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12.5px;}
+  .bar .tag{letter-spacing:.06em;color:var(--ink-soft)} .bar .tag b{color:var(--accent);font-weight:600} .bar .spacer{flex:1}
+  .bar a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent} .bar a:hover{border-color:var(--accent-soft)}
+  .bar a.here{color:var(--accent)}
+  main{max-width:50rem;margin:0 auto;padding:2.8rem 1.2rem 6rem}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 1rem}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,3.1rem);line-height:1.04;letter-spacing:-.015em;margin:0 0 1.1rem}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{font-size:1.16rem;color:var(--ink-soft)}
+  .ladder{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1.6rem 0 0;line-height:1.9;border-left:2px solid var(--rule);padding-left:1rem}
+  .ladder b{color:var(--accent)} .ladder .on{color:var(--ink);font-weight:600}
+  h2{font-family:var(--display);font-weight:600;font-size:1.75rem;margin:3rem 0 .2rem;padding-top:1.6rem;border-top:1px solid var(--rule)}
+  h2 .n{color:var(--accent-soft);font-size:1.1rem;font-weight:600;margin-right:.6rem}
+  h3{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:1.8rem 0 .6rem}
+  p{margin:1rem 0} p code,li code,td code{font-family:var(--mono);font-size:.82em;background:var(--paper-2);padding:.05em .35em;border-radius:4px}
+  em.t{font-style:normal;color:var(--accent);font-family:var(--mono);font-size:.85em}
+  .split{display:flex;gap:1.6rem;flex-wrap:wrap;margin:1.4rem 0;background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.4rem}
+  .split .col{flex:1 1 18rem} .split h4{font-family:var(--mono);font-size:12px;margin:0 0 .5rem}
+  .split .k{color:var(--accent)} .split .b{color:var(--warn)}
+  .split p{font-size:14px;margin:.4rem 0;color:var(--ink-soft)}
+  .fig{display:flex;gap:1.6rem;align-items:center;flex-wrap:wrap;margin:1.4rem 0;background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.4rem}
+  .fig .leg{flex:1 1 15rem;font-family:var(--mono);font-size:12px;line-height:1.85;color:var(--ink-soft)}
+  table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:14.5px}
+  th,td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  td.op{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+  td .law{font-family:var(--mono);font-size:11.5px;color:var(--accent)}
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:1.1rem 1.3rem;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6;border:1px solid #332b1f;margin:1.2rem 0}
+  pre .c{color:var(--code-dim)} pre .k{color:#d99a5b} pre .s{color:#9cc6a0}
+  .panel{background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.3rem 1.4rem;margin:1.2rem 0}
+  .btn{font-family:var(--mono);font-size:13px;letter-spacing:.03em;border:none;cursor:pointer;background:var(--accent);color:#fff;padding:.58rem 1.15rem;border-radius:8px;transition:filter .15s,transform .05s}
+  .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
+  .stats{display:flex;flex-wrap:wrap;gap:1.4rem;font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1rem 0}
+  .stats b{font-family:var(--display);font-style:normal;font-weight:600;font-size:1.3rem;display:block;color:var(--ink)}
+  .stats .ok b{color:var(--pass)} .stats .no b{color:var(--fail)}
+  .lawrow{display:grid;grid-template-columns:1.1rem 3.3rem 1fr auto;align-items:start;gap:.6rem;padding:.32rem 0;border-bottom:1px solid var(--rule);font-size:13.5px}
+  .lawrow:last-child{border:none}
+  .dot{width:.6rem;height:.6rem;border-radius:99px;margin-top:.42rem;background:var(--rule)}
+  .dot.pass{background:var(--pass);box-shadow:0 0 0 3px rgba(47,125,81,.15)} .dot.fail{background:var(--fail);box-shadow:0 0 0 3px rgba(178,59,52,.15)}
+  .lid{font-family:var(--mono);font-size:11.5px;color:var(--accent);padding-top:.18rem} .lst{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);padding-top:.28rem}
+  .hl{background:rgba(168,90,28,.09);border-radius:6px}
+  .cross{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:8px;padding:.8rem 1rem;margin-top:.8rem;line-height:1.8}
+  .cross .ok{color:var(--pass)} .cross .no{color:var(--fail)}
+  .out2{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:.9rem 1.1rem;margin:.7rem 0;line-height:1.85}
+  .out2 .no{color:var(--fail)} .out2 .ok{color:var(--pass)} .out2 b{color:var(--accent)} .out2 .step{color:var(--ink-soft);text-transform:uppercase;font-size:10.5px;letter-spacing:.08em}
+  .refs{font-family:var(--mono);font-size:12px;color:var(--ink-soft);line-height:1.95;margin:1rem 0} .refs em{color:var(--ink)}
+  footer{margin-top:4rem;padding-top:1.6rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.9} footer b{color:var(--accent)}
+  @media(max-width:640px){body{font-size:16.5px} .lawrow{grid-template-columns:1rem 2.8rem 1fr} .lst{display:none}}
+</style>
+</head>
+<body>
+<script type="module" src="/amp-nav.js"></script>
+<amp-nav property="arith_epistemic" theme="light"></amp-nav>
+<div class="bar">
+  <span class="tag">OpenSentience · <b>Epistemic Arithmetic</b> · v0.1</span>
+  <span class="spacer"></span>
+  <a href="/invariant-arithmetic">invariant</a>  <a href="/deontic-arithmetic">deontic</a>
+  <a href="/temporal-arithmetic">temporal</a>
+  <a href="/reflexive-arithmetic">reflexive</a>
+  <a href="#" class="here">epistemic</a>
+  <a href="/strategic-arithmetic">strategic</a>
+  <a href="/resource-arithmetic">resource</a>
+</div>
+
+<main>
+  <p class="kicker">The sixth rung · what the agent knows</p>
+  <h1>Epistemic <em>Arithmetic</em></h1>
+  <p class="lede">Every rung so far governs what an agent should <em>do</em>. None of them say what it <em>knows</em> — yet the whole premise of this stack is that intelligence is accumulated knowledge. This rung is the missing modality: knowledge and graded belief over <strong>possible worlds</strong>. Knowing is truth across every world you still consider possible; learning is crossing worlds off; and the difference between <em class="t">not knowing</em> and <em class="t">knowing that you don't know</em> is exactly the κ signal that tells the system when to stop and deliberate.</p>
+
+  <div class="ladder">
+    the modality ladder<br>
+    1 · <b>alethic</b> — necessity / safety &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Invariant · refuses</span><br>
+    2 · <b>axiological</b> — value / preference &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Heuristic · ranks</span><br>
+    3 · <b>deontic</b> — obligation &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Deontic · obliges &amp; escalates</span><br>
+    4 · <b>temporal</b> — liveness over time &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Temporal · shields &amp; sustains</span><br>
+    5 · <b>reflexive</b> — self-revising norms &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Reflexive · revises &amp; entrenches</span><br>
+    6 · <span class="on">epistemic — knowledge &amp; belief &nbsp;→&nbsp; this page · knows &amp; learns</span>
+  </div>
+
+  <!-- I -->
+  <h2><span class="n">I</span>The algebra</h2>
+  <p>A model is a set of <strong>possible worlds</strong> — each a way things might be — and, for each agent, an <strong>accessibility relation</strong> giving the worlds it can't yet rule out. Knowledge is the universal: <code>K φ</code> holds iff φ is true in <em>every</em> accessible world. Belief is the same shape over a weaker relation, and possibility is the dual (<code>¬K¬φ</code>).</p>
+  <div class="fig">
+    <svg width="230" height="150" viewBox="0 0 230 150" xmlns="http://www.w3.org/2000/svg" aria-label="possible worlds">
+      <circle cx="55" cy="55" r="26" fill="#efe9db" stroke="#a85a1c" stroke-width="1.8"/><text x="55" y="59" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#1c1813">p,q</text>
+      <circle cx="140" cy="55" r="26" fill="#efe9db" stroke="#a85a1c" stroke-width="1.8"/><text x="140" y="59" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#1c1813">¬p,q</text>
+      <circle cx="98" cy="116" r="26" fill="#f6f2e9" stroke="#d8cfba" stroke-width="1.5" stroke-dasharray="3 3"/><text x="98" y="120" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#9a8e76">¬p,¬q</text>
+      <line x1="80" y1="50" x2="115" y2="50" stroke="#a85a1c" stroke-width="1.4"/><line x1="80" y1="60" x2="115" y2="60" stroke="#a85a1c" stroke-width="1.4"/>
+      <text x="98" y="20" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#4a4338">considered possible</text>
+    </svg>
+    <div class="leg">
+      both <b style="color:var(--accent)">solid</b> worlds are possible:<br>
+      <b>K q</b> → <span style="color:var(--pass)">known</span> (q true in both)<br>
+      <b>K p</b> → <span style="color:var(--fail)">not known</span> (p differs)<br>
+      <b>K¬K p</b> → <span style="color:var(--accent)">a known-unknown</span><br>
+      learn <em>p</em> → drop the <b>¬p</b> world → <b>K p</b>
+    </div>
+  </div>
+
+  <h3>Knowledge vs belief — the relation makes the difference</h3>
+  <p>Both operators read "true in all accessible worlds." What separates them is the <em>shape</em> of the relation, and that single structural fact decides whether the modality is <strong>factive</strong>.</p>
+  <div class="split">
+    <div class="col"><h4 class="k">KNOWLEDGE — S5</h4>
+      <p>Accessibility is an <strong>equivalence</strong> (reflexive, transitive, symmetric). The actual world is always among those considered possible, so <code>Kφ → φ</code> — you can only know what's true. Introspective: <code>Kφ → KKφ</code> and <code>¬Kφ → K¬Kφ</code>.</p></div>
+    <div class="col"><h4 class="b">BELIEF — KD45</h4>
+      <p>Accessibility is <strong>serial but not reflexive</strong>. The actual world need not be reachable, so <code>Bφ → φ</code> <em>fails</em> — you can believe falsehoods. Still consistent (<code>¬(Bφ∧B¬φ)</code>) and introspective.</p></div>
+  </div>
+  <p>The other two operations are dynamics and pooling. <strong>Learning</strong> is a truthful public announcement: <code>announce(ψ)</code> deletes every world where ψ is false, shrinking the possibilities — so knowledge only grows. Across agents, <strong>everyone-knows</strong> is per-agent knowledge, <strong>common knowledge</strong> is its fixpoint (everyone knows that everyone knows…, computed as reachability over the union), and <strong>distributed knowledge</strong> pools information by intersecting what each agent can rule out — the group knows more than any member.</p>
+
+  <!-- II -->
+  <h2><span class="n">II</span>The laws</h2>
+  <p>Eight for the modal core, three for the bridge to the rest of the ladder. The highlighted <span class="hl">cross-check</span> is the defining split — factivity holds for knowledge and fails for belief.</p>
+  <table>
+    <tbody>
+      <tr><td class="op">E1</td><td>factivity (T): <code>Kφ → φ</code> — knowledge is truthful</td></tr>
+      <tr><td class="op">E2</td><td>distribution (K): <code>K(φ→ψ) ∧ Kφ → Kψ</code></td></tr>
+      <tr><td class="op">E3</td><td>positive introspection (4): <code>Kφ → KKφ</code></td></tr>
+      <tr><td class="op">E4</td><td>negative introspection (5): <code>¬Kφ → K¬Kφ</code> — the known-unknown</td></tr>
+      <tr><td class="op">E5</td><td>belief consistency (D): <code>¬(Bφ ∧ B¬φ)</code></td></tr>
+      <tr><td class="op">E6</td><td><code>Kφ → Bφ</code> — knowing is stronger than believing</td></tr>
+      <tr><td class="op">E7</td><td>learning monotonicity: announcement preserves knowledge</td></tr>
+      <tr><td class="op">E8</td><td>common knowledge: <code>Cφ → Eφ</code> (fixpoint of everyone-knows)</td></tr>
+      <tr><td class="op">EB1</td><td>the confidence gate is monotone in θ; <code>K</code> = belief at θ=1</td></tr>
+      <tr><td class="op">EB2</td><td>a known-unknown routes to <em>deliberate</em>, not act (the κ link)</td></tr>
+      <tr><td class="op">EB3</td><td>pooled (distributed) knowledge dominates any individual's</td></tr>
+    </tbody>
+  </table>
+
+  <!-- III -->
+  <h2><span class="n">III</span>The laws, checked</h2>
+  <p>Each law against random models in your browser — knowledge laws over random S5 partitions, belief laws over KD45 doxastic sets — on the engine that ships in <code>box-and-box</code>.</p>
+  <div class="panel">
+    <button class="btn" id="run">Run the harness →</button>
+    <div class="stats"><span><b id="t">11</b>laws</span><span class="ok"><b id="p">—</b>passing</span><span class="no"><b id="f">—</b>failing</span><span><b id="ms">—</b>ms</span></div>
+    <div id="out"></div>
+    <div class="cross" id="cross"></div>
+  </div>
+
+  <!-- IV -->
+  <h2><span class="n">IV</span>Type sketch</h2>
+  <pre><span class="c">// a model: possible worlds + per-agent accessibility</span>
+<span class="k">interface</span> Model { worlds: World[]; actual: World; access: Record&lt;Agent,(w:World)=&gt;World[]&gt;; }
+
+<span class="k">function</span> knows(m: Model, a: Agent, φ: Formula): boolean;      <span class="c">// true in all accessible worlds</span>
+<span class="k">function</span> believes(m: Model, a: Agent, φ: Formula, θ?: number): boolean; <span class="c">// graded — the β link</span>
+<span class="k">function</span> knowsItDoesntKnow(m: Model, a: Agent, φ: Formula): boolean; <span class="c">// K¬Kφ — the κ signal</span>
+<span class="k">function</span> route(m: Model, a: Agent, φ: Formula): <span class="s">"act"|"deliberate"|"uncertain"</span>;
+
+<span class="c">// learning = truthful public announcement (delete the ruled-out worlds)</span>
+<span class="k">function</span> announce(m: Model, ψ: Formula): Model;
+
+<span class="c">// multi-agent</span>
+<span class="k">function</span> everyone(m: Model, ags: Agent[], φ: Formula): boolean;
+<span class="k">function</span> common(m: Model, ags: Agent[], φ: Formula): boolean;       <span class="c">// fixpoint of everyone-knows</span>
+<span class="k">function</span> distributed(m: Model, ags: Agent[], φ: Formula): boolean;   <span class="c">// pooled</span></pre>
+
+  <!-- V -->
+  <h2><span class="n">V</span>Worked example</h2>
+  <p>An agent considers two worlds possible — <code>{p,q}</code> and <code>{¬p,q}</code>. It can't act on <code>p</code>, but it <em>can</em> detect that it can't, and route to deliberation. Then it learns <code>p</code> and the gap closes. Finally, two agents who each know half pool into distributed knowledge of the whole. Runs live.</p>
+  <div class="panel">
+    <button class="btn" id="runEx">Run the example →</button>
+    <div id="ex" style="margin-top:1rem"></div>
+  </div>
+
+  <!-- VI -->
+  <h2><span class="n">VI</span>Standing on</h2>
+  <p>Modelling knowledge as truth across accessible possible worlds is <strong>Hintikka</strong>'s (1962); the multi-agent machinery — everyone-knows, common knowledge, distributed knowledge — is <strong>Fagin, Halpern, Moses &amp; Vardi</strong>, <em>Reasoning About Knowledge</em> (1995); <strong>common knowledge</strong> as the coordination prerequisite is <strong>Aumann</strong> (1976) and Halpern &amp; Moses's coordinated-attack result; and learning as world-eliminating announcement is <strong>Plaza</strong>'s public announcement logic (1989). The connection to confidence (β as graded belief) and to κ (a known-unknown as the deliberation trigger) is what wires this rung to the rest of the stack. None of the logic is new; the contribution is the executable, property-tested synthesis.</p>
+  <div class="refs">
+    Hintikka, J. (1962). <em>Knowledge and Belief.</em> Cornell University Press.<br>
+    Aumann, R. (1976). <em>Agreeing to Disagree.</em> Annals of Statistics 4.<br>
+    Plaza, J. (1989). <em>Logics of Public Communications.</em> (Public announcement logic.)<br>
+    Fagin, Halpern, Moses &amp; Vardi (1995). <em>Reasoning About Knowledge.</em> MIT Press.
+  </div>
+
+  <footer>
+    <b>OpenSentience · Epistemic Arithmetic</b> · the sixth rung of the modality ladder<br>
+    runnable: <code>npm i box-and-box</code> · <code>npx box-and-box know</code> · <code>npx box-and-box laws</code><br>
+    the full ladder — alethic · axiological · deontic · temporal · reflexive · epistemic · strategic, on the resource economy — 97 property-tested laws.
+  </footer>
+</main>
+
+<script>
+"use strict";
+/* ===== epistemic engine (= epistemic.mjs) ===== */
+const atom=(name,pred)=>({t:'atom',name,pred}),not=a=>({t:'not',a}),and=(a,b)=>({t:'and',a,b}),or=(a,b)=>({t:'or',a,b}),implies=(a,b)=>({t:'implies',a,b});
+function holds(f,w){switch(f.t){case 'atom':return !!f.pred(w);case 'not':return !holds(f.a,w);case 'and':return holds(f.a,w)&&holds(f.b,w);case 'or':return holds(f.a,w)||holds(f.b,w);case 'implies':return !holds(f.a,w)||holds(f.b,w);default:return false;}}
+const Model=({worlds,actual,access})=>({worlds,actual,access});
+function knowsAt(m,a,w,f){const acc=m.access[a](w);return acc.length>0&&acc.every(u=>holds(f,u));}
+const believesAt=(m,a,w,f,th=0.5)=>{const acc=m.access[a](w);return acc.length===0?false:acc.filter(u=>holds(f,u)).length/acc.length>=th;};
+const knows=(m,a,f)=>knowsAt(m,a,m.actual,f);
+const believes=(m,a,f,th)=>believesAt(m,a,m.actual,f,th);
+function knowsItDoesntKnow(m,a,f){const acc=m.access[a](m.actual);return acc.length>0&&acc.every(u=>!knowsAt(m,a,u,f));}
+const route=(m,a,f)=>knows(m,a,f)?'act':knowsItDoesntKnow(m,a,f)?'deliberate':'uncertain';
+function announce(m,psi){const worlds=m.worlds.filter(w=>holds(psi,w));const keep=new Set(worlds);const access={};for(const a of Object.keys(m.access))access[a]=(w)=>m.access[a](w).filter(u=>keep.has(u));return Model({worlds,actual:m.actual,access});}
+const everyone=(m,ags,f)=>ags.every(a=>knows(m,a,f));
+function common(m,ags,f){const reach=new Set([m.actual]),st=[m.actual];while(st.length){const w=st.pop();for(const a of ags)for(const u of m.access[a](w))if(!reach.has(u)){reach.add(u);st.push(u);}}return [...reach].every(u=>holds(f,u));}
+function distributed(m,ags,f){const sets=ags.map(a=>new Set(m.access[a](m.actual)));const inter=[...sets[0]].filter(w=>sets.every(s=>s.has(w)));return inter.length>0&&inter.every(u=>holds(f,u));}
+
+/* ===== law harness ===== */
+const $=s=>document.querySelector(s);
+function trial(n,b){for(let i=0;i<n;i++){const r=b();if(r!==true)return{pass:false,cex:r,at:i+1};}return{pass:true,at:n};}
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const EATOMS=['p','q','r'];const randWorld=()=>{const w={};for(const a of EATOMS)w[a]=Math.random()<0.5;return w;};
+const PA=EATOMS.map(name=>atom(name,w=>w[name]));const eAtom=()=>PA[(Math.random()*PA.length)|0];
+function partitionModel(){const worlds=Array.from({length:3+((Math.random()*4)|0)},randWorld);const k=1+((Math.random()*worlds.length)|0);const cell=worlds.map(()=>(Math.random()*k)|0);const access={a:(w)=>{const i=worlds.indexOf(w);return worlds.filter((_,j)=>cell[j]===cell[i]);}};return Model({worlds,actual:worlds[(Math.random()*worlds.length)|0],access});}
+function beliefModel(){const worlds=Array.from({length:4+((Math.random()*3)|0)},randWorld);const D=worlds.filter(()=>Math.random()<0.5);const dox=D.length?D:[worlds[0]];return Model({worlds,actual:worlds[(Math.random()*worlds.length)|0],access:{a:()=>dox}});}
+function cmModel(ags){const worlds=Array.from({length:3+((Math.random()*4)|0)},randWorld);const access={};for(const ag of ags){const k=1+((Math.random()*worlds.length)|0);const cell=worlds.map(()=>(Math.random()*k)|0);access[ag]=(w)=>{const i=worlds.indexOf(w);return worlds.filter((_,j)=>cell[j]===cell[i]);};}return Model({worlds,actual:worlds[(Math.random()*worlds.length)|0],access});}
+const kuModel=()=>{const w1={p:true,q:false,r:false},w2={p:false,q:false,r:false};const worlds=[w1,w2];return Model({worlds,actual:w1,access:{a:()=>worlds}});};
+const LAWS=[
+ ['E1','factivity T (Kφ → φ)',n=>trial(n,()=>{const m=partitionModel(),f=eAtom();return (!knows(m,'a',f)||holds(f,m.actual))?true:'not-factive';})],
+ ['E2','distribution K',n=>trial(n,()=>{const m=partitionModel(),f=eAtom(),g=eAtom();return (!(knows(m,'a',implies(f,g))&&knows(m,'a',f))||knows(m,'a',g))?true:'no-K';})],
+ ['E3','positive introspection (Kφ → KKφ)',n=>trial(n,()=>{const m=partitionModel(),f=eAtom();if(!knows(m,'a',f))return true;return m.access['a'](m.actual).every(u=>knowsAt(m,'a',u,f))?true:'no-4';})],
+ ['E4','negative introspection (¬Kφ → K¬Kφ)',n=>trial(n,()=>{const m=partitionModel(),f=eAtom();if(knows(m,'a',f))return true;return m.access['a'](m.actual).every(u=>!knowsAt(m,'a',u,f))?true:'no-5';})],
+ ['E5','belief consistency D',n=>trial(n,()=>{const m=beliefModel(),f=eAtom();return !(believes(m,'a',f,0.6)&&believes(m,'a',not(f),0.6))?true:'inconsistent';})],
+ ['E6','knowledge ⇒ belief',n=>trial(n,()=>{const m=partitionModel(),f=eAtom();return (!knows(m,'a',f)||believes(m,'a',f,1))?true:'k-not-b';})],
+ ['E7','learning monotonicity',n=>trial(n,()=>{const m=partitionModel(),f=eAtom();if(!knows(m,'a',f))return true;const psi=eAtom();if(!holds(psi,m.actual))return true;return knows(announce(m,psi),'a',f)?true:'lost';})],
+ ['E8','common knowledge (Cφ → Eφ)',n=>trial(n,()=>{const ags=['a','b'];const m=cmModel(ags),f=eAtom();return (!common(m,ags,f)||everyone(m,ags,f))?true:'c-not-e';})],
+ ['EB1','threshold gate monotone; K=belief@1',n=>trial(n,()=>{const m=partitionModel(),f=eAtom();const lo=rnd(0,.5),hi=rnd(.5,1);if(believesAt(m,'a',m.actual,f,hi)&&!believesAt(m,'a',m.actual,f,lo))return 'mono';return (!knows(m,'a',f)||believes(m,'a',f,1))?true:'gate';})],
+ ['EB2','known-unknown ⇒ deliberate (κ)',n=>trial(n,()=>{const m=kuModel();const f=atom('p',w=>w.p);return (knowsItDoesntKnow(m,'a',f)?route(m,'a',f)==='deliberate':true)?true:'route';})],
+ ['EB3','pooled knowledge dominates individual',n=>trial(n,()=>{const ags=['a','b'];const m=cmModel(ags),f=eAtom();return (!knows(m,'a',f)||distributed(m,ags,f))?true:'pool';})]
+];
+function runLaws(){const N=1500,out=$('#out');out.innerHTML='';let pass=0,fail=0;const t0=performance.now();
+ for(const[id,desc,fn] of LAWS){const r=fn(N);r.pass?pass++:fail++;const row=document.createElement('div');row.className='lawrow';
+  row.innerHTML=`<span class="dot ${r.pass?'pass':'fail'}"></span><span class="lid">${id}</span><span>${desc}${r.pass?'':` <span style="color:var(--fail)">— ${r.cex}</span>`}</span><span class="lst">${r.pass?'✓ '+r.at:'✗ @'+r.at}</span>`;out.appendChild(row);}
+ $('#t').textContent=LAWS.length;$('#p').textContent=pass;$('#f').textContent=fail;$('#ms').textContent=(performance.now()-t0).toFixed(1);
+ // factivity cross-check: knowledge (S5) vs belief (KD45)
+ let kT=0,kH=0,bT=0,bF=0;for(let i=0;i<N;i++){const m=partitionModel(),f=eAtom();if(knows(m,'a',f)){kT++;if(holds(f,m.actual))kH++;}}
+ for(let i=0;i<N;i++){const m=beliefModel(),f=eAtom();if(knowsAt(m,'a',m.actual,f)){bT++;if(!holds(f,m.actual))bF++;}}
+ $('#cross').innerHTML=`<b>cross-check — factivity (T)</b><br>under knowledge (S5): <span class="ok">holds</span> (${kT?((kH/kT)*100).toFixed(0):100}% of K-cases true)<br>under belief (KD45): <span class="no">fails</span> (${bT?((bF/bT)*100).toFixed(0):0}% of B-cases believe a falsehood — expected)`;}
+
+/* ===== worked example (live) ===== */
+function runEx(){const ex=$('#ex');ex.innerHTML='';const p=atom('p',w=>w.p),q=atom('q',w=>w.q);
+ const w1={p:true,q:true},w2={p:false,q:true};const before=Model({worlds:[w1,w2],actual:w1,access:{a:()=>[w1,w2]}});
+ const c1=document.createElement('div');c1.className='out2';
+ c1.innerHTML=`<span class="step">1 · a detected gap routes to deliberation</span><br>worlds possible: {p,q} and {¬p,q}<br>knows(p)? <b>${knows(before,'a',p)}</b> · knows(q)? <b>${knows(before,'a',q)}</b><br>knows-it-doesn't-know(p)? <b>${knowsItDoesntKnow(before,'a',p)}</b> &nbsp;(the κ signal)<br>route(p) → <b>${route(before,'a',p)}</b> &nbsp; route(q) → <b>${route(before,'a',q)}</b>`;ex.appendChild(c1);
+ const after=announce(before,p);
+ const c2=document.createElement('div');c2.className='out2';
+ c2.innerHTML=`<span class="step">2 · learning eliminates the ruled-out worlds</span><br>announce(p): the {¬p,q} world drops out<br>knows(p) after? <span class="ok">${knows(after,'a',p)}</span> · route(p) → <b>${route(after,'a',p)}</b><br>monotone — q still known? <span class="ok">${knows(after,'a',q)}</span>`;ex.appendChild(c2);
+ const x1={p:true,q:true},x2={p:true,q:false},x3={p:false,q:true};
+ const m=Model({worlds:[x1,x2,x3],actual:x1,access:{a:(w)=>(w.p?[x1,x2]:[x3]),b:(w)=>(w.q?[x1,x3]:[x2])}});const ags=['a','b'];const pq={t:'and',a:p,b:q};
+ const c3=document.createElement('div');c3.className='out2';
+ c3.innerHTML=`<span class="step">3 · pooled knowledge beats individual</span><br>a knows p (${knows(m,'a',p)}), not q (${knows(m,'a',q)}) · b knows q (${knows(m,'b',q)}), not p (${knows(m,'b',p)})<br>everyone knows (p∧q)? <span class="no">${everyone(m,ags,pq)}</span> — neither alone has both<br>distributed (p∧q)? <span class="ok">${distributed(m,ags,pq)}</span> — together they pin it down`;ex.appendChild(c3);}
+$('#run').addEventListener('click',runLaws);
+$('#runEx').addEventListener('click',runEx);
+runLaws(); runEx();
+</script>
+</body>
+</html>

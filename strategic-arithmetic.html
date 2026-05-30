@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategic Arithmetic · OpenSentience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f2e9;--paper-2:#efe9db;--ink:#1c1813;--ink-soft:#4a4338;--rule:#d8cfba;
+    --accent:#a85a1c;--accent-soft:#c98b4e;--pass:#2f7d51;--warn:#b98a2b;--fail:#b23b34;
+    --code-bg:#262017;--code-ink:#ece3d2;--code-dim:#9a8e76;
+    --serif:"Newsreader",Georgia,serif;--display:"Fraunces",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.65;
+    background-image:radial-gradient(circle at 8% -8%,rgba(168,90,28,.05),transparent 42%);}
+  .bar{position:sticky;top:var(--amp-nav-height,56px);z-index:50;display:flex;align-items:center;gap:1rem;padding:.55rem max(1.2rem,calc(50% - 32rem));
+    background:rgba(246,242,233,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12.5px;}
+  .bar .tag{letter-spacing:.06em;color:var(--ink-soft)} .bar .tag b{color:var(--accent);font-weight:600} .bar .spacer{flex:1}
+  .bar a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent} .bar a:hover{border-color:var(--accent-soft)}
+  .bar a.here{color:var(--accent)}
+  main{max-width:50rem;margin:0 auto;padding:2.8rem 1.2rem 6rem}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 1rem}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,3.1rem);line-height:1.04;letter-spacing:-.015em;margin:0 0 1.1rem}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{font-size:1.16rem;color:var(--ink-soft)}
+  .ladder{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1.6rem 0 0;line-height:1.9;border-left:2px solid var(--rule);padding-left:1rem}
+  .ladder b{color:var(--accent)} .ladder .on{color:var(--ink);font-weight:600} .ladder .done{margin-top:.5rem;color:var(--pass)}
+  h2{font-family:var(--display);font-weight:600;font-size:1.75rem;margin:3rem 0 .2rem;padding-top:1.6rem;border-top:1px solid var(--rule)}
+  h2 .n{color:var(--accent-soft);font-size:1.1rem;font-weight:600;margin-right:.6rem}
+  h3{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:1.8rem 0 .6rem}
+  p{margin:1rem 0} p code,li code,td code{font-family:var(--mono);font-size:.82em;background:var(--paper-2);padding:.05em .35em;border-radius:4px}
+  em.t{font-style:normal;color:var(--accent);font-family:var(--mono);font-size:.85em}
+  .fig{display:flex;gap:1.6rem;align-items:center;flex-wrap:wrap;margin:1.4rem 0;background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.4rem}
+  .fig .leg{flex:1 1 15rem;font-family:var(--mono);font-size:12px;line-height:1.85;color:var(--ink-soft)}
+  .fig .leg b{color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:14.5px}
+  th,td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  td.op{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:1.1rem 1.3rem;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6;border:1px solid #332b1f;margin:1.2rem 0}
+  pre .c{color:var(--code-dim)} pre .k{color:#d99a5b} pre .s{color:#9cc6a0}
+  .panel{background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.3rem 1.4rem;margin:1.2rem 0}
+  .btn{font-family:var(--mono);font-size:13px;letter-spacing:.03em;border:none;cursor:pointer;background:var(--accent);color:#fff;padding:.58rem 1.15rem;border-radius:8px;transition:filter .15s,transform .05s}
+  .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
+  .stats{display:flex;flex-wrap:wrap;gap:1.4rem;font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1rem 0}
+  .stats b{font-family:var(--display);font-style:normal;font-weight:600;font-size:1.3rem;display:block;color:var(--ink)}
+  .stats .ok b{color:var(--pass)} .stats .no b{color:var(--fail)}
+  .lawrow{display:grid;grid-template-columns:1.1rem 3.3rem 1fr auto;align-items:start;gap:.6rem;padding:.32rem 0;border-bottom:1px solid var(--rule);font-size:13.5px}
+  .lawrow:last-child{border:none}
+  .dot{width:.6rem;height:.6rem;border-radius:99px;margin-top:.42rem;background:var(--rule)}
+  .dot.pass{background:var(--pass);box-shadow:0 0 0 3px rgba(47,125,81,.15)} .dot.fail{background:var(--fail);box-shadow:0 0 0 3px rgba(178,59,52,.15)}
+  .lid{font-family:var(--mono);font-size:11.5px;color:var(--accent);padding-top:.18rem} .lst{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);padding-top:.28rem}
+  .cross{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:8px;padding:.8rem 1rem;margin-top:.8rem;line-height:1.8}
+  .cross .ok{color:var(--pass)}
+  .out2{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:.9rem 1.1rem;margin:.7rem 0;line-height:1.85}
+  .out2 .no{color:var(--fail)} .out2 .ok{color:var(--pass)} .out2 b{color:var(--accent)} .out2 .step{color:var(--ink-soft);text-transform:uppercase;font-size:10.5px;letter-spacing:.08em}
+  .refs{font-family:var(--mono);font-size:12px;color:var(--ink-soft);line-height:1.95;margin:1rem 0} .refs em{color:var(--ink)}
+  footer{margin-top:4rem;padding-top:1.6rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.9} footer b{color:var(--accent)}
+  @media(max-width:640px){body{font-size:16.5px} .lawrow{grid-template-columns:1rem 2.8rem 1fr} .lst{display:none}}
+</style>
+</head>
+<body>
+<script type="module" src="/amp-nav.js"></script>
+<amp-nav property="arith_strategic" theme="light"></amp-nav>
+<div class="bar">
+  <span class="tag">OpenSentience · <b>Strategic Arithmetic</b> · v0.1</span>
+  <span class="spacer"></span>
+  <a href="/invariant-arithmetic">invariant</a>  <a href="/deontic-arithmetic">deontic</a>
+  <a href="/temporal-arithmetic">temporal</a>
+  <a href="/reflexive-arithmetic">reflexive</a>
+  <a href="/epistemic-arithmetic">epistemic</a>
+  <a href="#" class="here">strategic</a>
+  <a href="/resource-arithmetic">resource</a>
+</div>
+
+<main>
+  <p class="kicker">The seventh rung · what a group can force</p>
+  <h1>Strategic <em>Arithmetic</em></h1>
+  <p class="lede">Every rung so far is about a single agent. This one is about <em>groups</em>. A coalition <strong>can ensure</strong> an outcome when it has a joint strategy that forces it <em>no matter what the other agents do</em>. That one idea — ability against an adversary — turns a pile of independent agents into something you can reason about as a system: who can guarantee safety, who can reach a goal, and who can't do it without help. It's also the rung that makes obligation honest, because you can only be obligated to ensure what you can actually force.</p>
+
+  <div class="ladder">
+    the modality ladder<br>
+    1 · <b>alethic</b> — necessity / safety &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Invariant · refuses</span><br>
+    2 · <b>axiological</b> — value / preference &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Heuristic · ranks</span><br>
+    3 · <b>deontic</b> — obligation &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Deontic · obliges &amp; escalates</span><br>
+    4 · <b>temporal</b> — liveness over time &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Temporal · shields &amp; sustains</span><br>
+    5 · <b>reflexive</b> — self-revising norms &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Reflexive · revises &amp; entrenches</span><br>
+    6 · <b>epistemic</b> — knowledge &amp; belief &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Epistemic · knows &amp; learns</span><br>
+    7 · <span class="on">strategic — coalitional ability &nbsp;→&nbsp; this page · who can ensure what</span>
+    <div class="done">▸ the full ladder — alethic · axiological · deontic · temporal · reflexive · epistemic · strategic, on the resource economy — 97 property-tested laws.</div>
+  </div>
+
+  <!-- I -->
+  <h2><span class="n">I</span>The algebra</h2>
+  <p>The setting is a <strong>concurrent game structure</strong>: a set of states; a set of agents; for each agent at each state, the moves available to it; and a transition that takes a state plus <em>one move from every agent at once</em> to a successor. Nobody moves alone — every step is the joint product of all the agents' choices, which is what makes it a game rather than a single-agent machine.</p>
+  <p>Everything is built from one operation, the <strong>controllable predecessor</strong>: the states from which a coalition <em>C</em> can force the next state into a target set — <code>∃ moves for C, ∀ moves for the rest, the successor lands in the set</code>. That single quantifier alternation (C chooses, then the adversary chooses, and C must still win) is the whole idea of ability.</p>
+  <div class="fig">
+    <svg width="250" height="160" viewBox="0 0 250 160" xmlns="http://www.w3.org/2000/svg" aria-label="controller-environment game">
+      <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#a85a1c"/></marker></defs>
+      <circle cx="40" cy="80" r="24" fill="#efe9db" stroke="#a85a1c" stroke-width="1.8"/><text x="40" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1c1813">init</text>
+      <circle cx="130" cy="80" r="24" fill="#efe9db" stroke="#a85a1c" stroke-width="1.8"/><text x="130" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1c1813">safe</text>
+      <circle cx="215" cy="38" r="24" fill="#eef3ec" stroke="#2f7d51" stroke-width="1.8"/><text x="215" y="42" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#2f7d51">goal</text>
+      <circle cx="215" cy="125" r="22" fill="#f6f2e9" stroke="#d8cfba" stroke-width="1.5" stroke-dasharray="3 3"/><text x="215" y="129" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#9a8e76">fail</text>
+      <line x1="64" y1="74" x2="106" y2="74" stroke="#a85a1c" stroke-width="1.3" marker-end="url(#ar)"/>
+      <path d="M150,68 Q185,46 191,44" fill="none" stroke="#2f7d51" stroke-width="1.3" marker-end="url(#ar)"/>
+      <path d="M130,104 q0,18 -60,-12" fill="none" stroke="#a85a1c" stroke-width="1" stroke-dasharray="2 2" marker-end="url(#ar)"/>
+      <text x="95" y="64" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#4a4338">advance</text>
+      <text x="178" y="44" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2f7d51">+help</text>
+    </svg>
+    <div class="leg">
+      ctrl ∈ {advance, hold} · env ∈ {help, hinder}<br><br>
+      <b>⟨⟨ctrl⟩⟩□ safe</b> → <span style="color:var(--pass)">yes</span> (hold forever)<br>
+      <b>⟨⟨ctrl⟩⟩◊ goal</b> → <span style="color:var(--fail)">no</span> (env hinders)<br>
+      <b>⟨⟨ctrl,env⟩⟩◊ goal</b> → <span style="color:var(--pass)">yes</span> (advance+help)
+    </div>
+  </div>
+  <p>From the controllable predecessor, the temporal abilities follow as fixpoints — the same machinery the temporal rung uses, now played against an adversary. <strong>Maintenance</strong>, <code>⟨⟨C⟩⟩□φ</code> ("C can keep φ true forever"), is the <em>greatest</em> fixpoint: the largest set of φ-states from which C can always force the next state to stay in the set. <strong>Reachability</strong>, <code>⟨⟨C⟩⟩◊φ</code> ("C can drive the system to φ"), is the <em>least</em> fixpoint: φ-states, plus every state from which C can force its way one step closer, until nothing new is added.</p>
+
+  <!-- II -->
+  <h2><span class="n">II</span>The laws</h2>
+  <p>Eight for coalitional ability, three for the bridges to the rest of the ladder. The highlighted <span style="background:rgba(168,90,28,.09);border-radius:6px;padding:0 .2em">cross-check</span> shows coalition power growing with size — the grand coalition reaches everything a lone agent can, and usually more.</p>
+  <table>
+    <tbody>
+      <tr><td class="op">S1</td><td>unit: <code>[C]⊤</code> holds and <code>[C]⊥</code> never does</td></tr>
+      <tr><td class="op">S2</td><td>coalition monotonicity: <code>C ⊆ C′ ⇒ [C]φ → [C′]φ</code> (more agents, more power)</td></tr>
+      <tr><td class="op">S3</td><td>outcome monotonicity: <code>φ ⊨ ψ ⇒ [C]φ → [C]ψ</code></td></tr>
+      <tr><td class="op">S4</td><td>superadditivity: disjoint <code>C₁,C₂</code> cooperate — <code>[C₁]φ₁ ∧ [C₂]φ₂ → [C₁∪C₂](φ₁∧φ₂)</code></td></tr>
+      <tr><td class="op">S5</td><td>regularity: <code>¬([C]φ ∧ [N∖C]¬φ)</code> — opposite outcomes can't both be forced</td></tr>
+      <tr><td class="op">S6</td><td>maintenance <code>⟨⟨C⟩⟩□φ</code> is a greatest fixpoint (closed, inside φ)</td></tr>
+      <tr><td class="op">S7</td><td>reachability <code>⟨⟨C⟩⟩◊φ</code> is a least fixpoint (contains φ)</td></tr>
+      <tr><td class="op">S8</td><td>determinacy: <code>[Σ]φ</code> ⟺ some successor satisfies φ (the grand coalition fully steers)</td></tr>
+      <tr><td class="op">SB1</td><td>a one-agent game collapses ability to plain <em>temporal</em> reachability</td></tr>
+      <tr><td class="op">SB2</td><td>ought-implies-can: an obligation a coalition can't ensure must <em>escalate</em> (→ deontic)</td></tr>
+      <tr><td class="op">SB3</td><td>coordination needs ability <em>and</em> common knowledge of the plan (→ epistemic)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- III -->
+  <h2><span class="n">III</span>The laws, checked</h2>
+  <p>Each law against random concurrent game structures in your browser — same engine that ships in <code>box-and-box</code>.</p>
+  <div class="panel">
+    <button class="btn" id="run">Run the harness →</button>
+    <div class="stats"><span><b id="t">11</b>laws</span><span class="ok"><b id="p">—</b>passing</span><span class="no"><b id="f">—</b>failing</span><span><b id="ms">—</b>ms</span></div>
+    <div id="out"></div>
+    <div class="cross" id="cross"></div>
+  </div>
+
+  <!-- IV -->
+  <h2><span class="n">IV</span>Type sketch</h2>
+  <pre><span class="c">// a concurrent game: states, agents, moves per agent per state, joint transition</span>
+<span class="k">interface</span> Game {
+  states: State[]; agents: Agent[];
+  moves: (a: Agent, s: State) =&gt; MoveId[];
+  delta: (s: State, joint: Record&lt;Agent,MoveId&gt;) =&gt; State;   <span class="c">// one move from EVERY agent</span>
+}
+
+<span class="k">function</span> effectivity(g: Game, C: Agent[], s: State, φ: Formula): boolean; <span class="c">// [C]◯φ</span>
+<span class="k">function</span> canKeep(g: Game, C: Agent[], φ: Formula, s: State): boolean;     <span class="c">// ⟨⟨C⟩⟩□φ — gfp</span>
+<span class="k">function</span> canEnsure(g: Game, C: Agent[], φ: Formula, s: State): boolean;   <span class="c">// ⟨⟨C⟩⟩◊φ — lfp</span>
+
+<span class="c">// the bridges</span>
+<span class="k">function</span> oblige(g, C, φ, s): <span class="s">"discharge"|"escalate"</span>;            <span class="c">// ought-implies-can</span>
+<span class="k">function</span> executable(g, C, φ, s, commonKnowledge: boolean): boolean; <span class="c">// ability ∧ CK</span></pre>
+
+  <!-- V -->
+  <h2><span class="n">V</span>Worked example</h2>
+  <p>A <strong>controller</strong> and an <strong>environment</strong> share the game above. The controller can keep the system safe on its own, but the goal is only reachable when the environment cooperates — so an obligation on the controller alone to reach the goal cannot be discharged and must escalate to recruit the environment. Runs live.</p>
+  <div class="panel">
+    <button class="btn" id="runEx">Run the example →</button>
+    <div id="ex" style="margin-top:1rem"></div>
+  </div>
+
+  <!-- VI -->
+  <h2><span class="n">VI</span>Standing on</h2>
+  <p>The effectivity operator <code>[C]φ</code> — what a coalition can guarantee against the worst case — is <strong>Pauly</strong>'s coalition logic (2002). Lifting it over time with maintenance and reachability is <strong>Alur, Henzinger &amp; Kupferman</strong>'s Alternating-time Temporal Logic (2002), and the fixpoint computations are the controllable-predecessor algorithms from game-based controller synthesis. The bridges are where it earns its place in the ladder: a one-agent game is just the <em>temporal</em> rung (reachability with no adversary); <em>ought-implies-can</em> sends impossible obligations back up to the <em>deontic</em> rung; and joint execution needs the common knowledge of the <em>epistemic</em> rung. As elsewhere, the logic is established; the contribution is the executable, property-tested synthesis and the connections across the stack.</p>
+  <div class="refs">
+    Pauly, M. (2002). <em>A Modal Logic for Coalitional Power in Games.</em> J. Logic and Computation 12.<br>
+    Alur, Henzinger &amp; Kupferman (2002). <em>Alternating-time Temporal Logic.</em> JACM 49.<br>
+    de Alfaro, Henzinger &amp; Majumdar (2001). <em>Controller synthesis</em> / controllable-predecessor fixpoints.
+  </div>
+
+  <footer>
+    <b>OpenSentience · Strategic Arithmetic</b> · the seventh and final rung of the modality ladder<br>
+    runnable: <code>npm i box-and-box</code> · <code>npx box-and-box strategy</code> · <code>npx box-and-box laws</code><br>
+    the full ladder — alethic · axiological · deontic · temporal · reflexive · epistemic · strategic, on the resource economy — 97 property-tested laws.
+  </footer>
+</main>
+
+<script>
+"use strict";
+/* ===== strategic engine (= strategic.mjs) ===== */
+const atom=(name,pred)=>({t:'atom',name,pred}),not=a=>({t:'not',a}),and=(a,b)=>({t:'and',a,b}),or=(a,b)=>({t:'or',a,b});
+function holds(f,s){switch(f.t){case 'atom':return !!f.pred(s);case 'not':return !holds(f.a,s);case 'and':return holds(f.a,s)&&holds(f.b,s);case 'or':return holds(f.a,s)||holds(f.b,s);default:return false;}}
+const TOP=or(atom('⊤',()=>true),not(atom('⊤',()=>true))),BOT=and(atom('⊥',()=>false),not(atom('⊥',()=>false)));
+const Game=({states,agents,moves,delta})=>({states,agents,moves,delta});
+const others=(m,C)=>m.agents.filter(a=>!C.includes(a));
+function product(m,ags,s){let acc=[{}];for(const a of ags){const ms=m.moves(a,s);const nx=[];for(const p of acc)for(const mv of ms)nx.push({...p,[a]:mv});acc=nx;}return acc;}
+function force1(m,C,s,inSet){const cm=product(m,C,s),om=product(m,others(m,C),s);return cm.some(c=>om.every(o=>inSet(m.delta(s,{...c,...o}))));}
+const effectivity=(m,C,s,f)=>force1(m,C,s,x=>holds(f,x));
+function canMaintain(m,C,f){const phi=s=>holds(f,s);let W=m.states.filter(phi);for(;;){const inW=s=>W.includes(s);const W2=W.filter(q=>force1(m,C,q,inW));if(W2.length===W.length)return W2;W=W2;}}
+function canReach(m,C,f){const phi=s=>holds(f,s);let W=m.states.filter(phi);for(;;){const inW=s=>W.includes(s);const add=m.states.filter(q=>!inW(q)&&force1(m,C,q,inW));if(!add.length)return W;W=W.concat(add);}}
+const canEnsure=(m,C,f,q)=>canReach(m,C,f).includes(q);
+const canKeep=(m,C,f,q)=>canMaintain(m,C,f).includes(q);
+const oblige=(m,C,f,q)=>canEnsure(m,C,f,q)?'discharge':'escalate';
+const executable=(m,C,f,q,ck)=>canEnsure(m,C,f,q)&&!!ck;
+
+/* ===== law harness ===== */
+const $=s=>document.querySelector(s);
+function trial(n,b){for(let i=0;i<n;i++){const r=b();if(r!==true)return{pass:false,cex:r,at:i+1};}return{pass:true,at:n};}
+const SP=atom('p',s=>s.p),SQ=atom('q',s=>s.q);
+const randSF=()=>[SP,SQ,not(SP),and(SP,SQ),or(SP,SQ)][(Math.random()*5)|0];
+function randGame(agents=['1','2']){const n=3+((Math.random()*3)|0);const states=Array.from({length:n},(_,i)=>({name:'s'+i,p:Math.random()<.5,q:Math.random()<.5}));
+ const nm={};for(const a of agents)for(const s of states)nm[a+'@'+s.name]=1+(Math.random()<.5?1:0);
+ const moves=(a,s)=>Array.from({length:nm[a+'@'+s.name]},(_,i)=>i);const tbl=new Map();
+ for(const s of states){let acc=[{}];for(const a of agents){const nx=[];for(const p of acc)for(let mv=0;mv<nm[a+'@'+s.name];mv++)nx.push({...p,[a]:mv});acc=nx;}for(const jm of acc)tbl.set(s.name+'|'+agents.map(a=>jm[a]).join(','),states[(Math.random()*states.length)|0]);}
+ const delta=(s,jm)=>tbl.get(s.name+'|'+agents.map(a=>jm[a]).join(','));return Game({states,agents,moves,delta});}
+const someState=m=>m.states[(Math.random()*m.states.length)|0];
+const reachBFS=(m,f)=>{const phi=s=>holds(f,s);let W=m.states.filter(phi);for(;;){const inW=s=>W.includes(s);const add=m.states.filter(q=>!inW(q)&&m.moves('a',q).some(mv=>inW(m.delta(q,{a:mv}))));if(!add.length)return W;W=W.concat(add);}};
+const LAWS=[
+ ['S1','unit: [C]⊤ and ¬[C]⊥',n=>trial(n,()=>{const m=randGame(),q=someState(m),C=Math.random()<.5?['1']:['1','2'];return (effectivity(m,C,q,TOP)&&!effectivity(m,C,q,BOT))?true:'unit';})],
+ ['S2','coalition monotonicity',n=>trial(n,()=>{const m=randGame(),q=someState(m),f=randSF();return (!effectivity(m,['1'],q,f)||effectivity(m,['1','2'],q,f))?true:'c-mono';})],
+ ['S3','outcome monotonicity',n=>trial(n,()=>{const m=randGame(),q=someState(m),f=randSF(),g=or(f,SQ);return (!effectivity(m,['1'],q,f)||effectivity(m,['1'],q,g))?true:'o-mono';})],
+ ['S4','superadditivity (cooperation)',n=>trial(n,()=>{const m=randGame(),q=someState(m),f1=randSF(),f2=randSF();return (!(effectivity(m,['1'],q,f1)&&effectivity(m,['2'],q,f2))||effectivity(m,['1','2'],q,and(f1,f2)))?true:'superadd';})],
+ ['S5','regularity (no opposite forcing)',n=>trial(n,()=>{const m=randGame(),q=someState(m),f=randSF();return !(effectivity(m,['1'],q,f)&&effectivity(m,['2'],q,not(f)))?true:'reg';})],
+ ['S6','maintenance is a greatest fixpoint',n=>trial(n,()=>{const m=randGame(),f=randSF(),C=['1'];const W=canMaintain(m,C,f);const inW=s=>W.includes(s);const re=m.states.filter(q=>holds(f,q)&&force1(m,C,q,inW));return (W.every(q=>holds(f,q))&&re.length===W.length)?true:'gfp';})],
+ ['S7','reachability is a least fixpoint',n=>trial(n,()=>{const m=randGame(),f=randSF(),C=['1'];const W=canReach(m,C,f);const inW=s=>W.includes(s);const re=m.states.filter(q=>holds(f,q)||force1(m,C,q,inW));return (m.states.filter(s=>holds(f,s)).every(q=>W.includes(q))&&re.length===W.length)?true:'lfp';})],
+ ['S8','grand-coalition determinacy',n=>trial(n,()=>{const m=randGame(),q=someState(m),f=randSF(),G=m.agents;const some=product(m,G,q).some(jm=>holds(f,m.delta(q,jm)));return (effectivity(m,G,q,f)===some)?true:'det';})],
+ ['SB1','single-agent collapse → temporal',n=>trial(n,()=>{const m=randGame(['a']),f=randSF();const W=canReach(m,['a'],f),B=reachBFS(m,f);return (W.length===B.length&&W.every(q=>B.includes(q)))?true:'collapse';})],
+ ['SB2','ought-implies-can',n=>trial(n,()=>{const m=randGame(),q=someState(m),f=randSF(),C=['1'];const can=canEnsure(m,C,f,q);return (oblige(m,C,f,q)===(can?'discharge':'escalate'))?true:'oic';})],
+ ['SB3','coordination needs ability ∧ CK',n=>trial(n,()=>{const m=randGame(),q=someState(m),f=randSF(),C=['1','2'],ck=Math.random()<.5;return (executable(m,C,f,q,ck)===(canEnsure(m,C,f,q)&&ck))?true:'coord';})]
+];
+function runLaws(){const N=900,out=$('#out');out.innerHTML='';let pass=0,fail=0;const t0=performance.now();
+ for(const[id,desc,fn] of LAWS){const r=fn(N);r.pass?pass++:fail++;const row=document.createElement('div');row.className='lawrow';
+  row.innerHTML=`<span class="dot ${r.pass?'pass':'fail'}"></span><span class="lid">${id}</span><span>${desc}${r.pass?'':` <span style="color:var(--fail)">— ${r.cex}</span>`}</span><span class="lst">${r.pass?'✓ '+r.at:'✗ @'+r.at}</span>`;out.appendChild(row);}
+ $('#t').textContent=LAWS.length;$('#p').textContent=pass;$('#f').textContent=fail;$('#ms').textContent=(performance.now()-t0).toFixed(1);
+ let mono=0,gt=0;for(let i=0;i<N;i++){const m=randGame(),f=randSF();const solo=canReach(m,['1'],f),grand=canReach(m,['1','2'],f);if(solo.every(q=>grand.includes(q)))mono++;if(grand.length>solo.length)gt++;}
+ $('#cross').innerHTML=`<b>cross-check — coalition power</b><br>grand coalition reaches a <span class="ok">superset</span> of the solo agent in ${((mono/N)*100).toFixed(0)}% of games<br>strictly larger in ${((gt/N)*100).toFixed(0)}% — more agents, more ability`;}
+
+/* ===== worked example (live) — the controller/environment game ===== */
+function buildGame(){const S={init:{name:'init'},safe:{name:'safe'},goal:{name:'goal'},fail:{name:'fail'}};const states=Object.values(S);const agents=['ctrl','env'];
+ const moves=(a,s)=>(s.name==='goal'||s.name==='fail')?[0]:[0,1];
+ const delta=(s,jm)=>{if(s.name==='goal')return S.goal;if(s.name==='fail')return S.fail;if(jm.ctrl===1)return S.safe;return jm.env===0?S.goal:S.safe;};
+ return {g:Game({states,agents,moves,delta}),S};}
+function runEx(){const ex=$('#ex');ex.innerHTML='';const {g,S}=buildGame();
+ const goal=atom('goal',s=>s.name==='goal'),fail=atom('fail',s=>s.name==='fail'),safe=not(fail);
+ const c1=document.createElement('div');c1.className='out2';
+ c1.innerHTML=`<span class="step">1 · the controller can keep the system safe forever</span><br>⟨⟨ctrl⟩⟩□ safe from init? <span class="ok">${canKeep(g,['ctrl'],safe,S.init)}</span> — holding avoids 'fail' indefinitely`;ex.appendChild(c1);
+ const c2=document.createElement('div');c2.className='out2';
+ c2.innerHTML=`<span class="step">2 · but neither agent can reach the goal alone</span><br>⟨⟨ctrl⟩⟩◊ goal? <span class="no">${canEnsure(g,['ctrl'],goal,S.init)}</span> &nbsp; ⟨⟨env⟩⟩◊ goal? <span class="no">${canEnsure(g,['env'],goal,S.init)}</span> — each can be blocked by the other`;ex.appendChild(c2);
+ const c3=document.createElement('div');c3.className='out2';
+ c3.innerHTML=`<span class="step">3 · only the coalition can force it (superadditivity)</span><br>⟨⟨ctrl,env⟩⟩◊ goal from init? <span class="ok">${canEnsure(g,['ctrl','env'],goal,S.init)}</span> — advance + help`;ex.appendChild(c3);
+ const c4=document.createElement('div');c4.className='out2';
+ c4.innerHTML=`<span class="step">4 · ought-implies-can</span><br>oblige(ctrl, ◊goal) → <b>${oblige(g,['ctrl'],goal,S.init)}</b> — impossible alone, so it escalates<br>oblige(ctrl+env, ◊goal) → <b>${oblige(g,['ctrl','env'],goal,S.init)}</b> — the coalition can take it on`;ex.appendChild(c4);}
+$('#run').addEventListener('click',runLaws);
+$('#runEx').addEventListener('click',runEx);
+runLaws(); runEx();
+</script>
+</body>
+</html>

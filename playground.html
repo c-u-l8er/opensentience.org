@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arith — the substrate, running · OpenSentience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f2e9;--paper-2:#efe9db;--ink:#1c1813;--ink-soft:#4a4338;--rule:#d8cfba;
+    --accent:#a85a1c;--accent-soft:#c98b4e;--pass:#2f7d51;--warn:#b98a2b;--fail:#b23b34;
+    --code-bg:#262017;--code-ink:#ece3d2;--code-dim:#9a8e76;
+    --serif:"Newsreader",Georgia,serif;--display:"Fraunces",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.6;
+    background-image:radial-gradient(circle at 8% -10%,rgba(168,90,28,.05),transparent 42%);}
+  .bar{position:sticky;top:var(--amp-nav-height,56px);z-index:50;display:flex;align-items:center;gap:1rem;padding:.55rem max(1.2rem,calc(50% - 32rem));
+    background:rgba(246,242,233,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12.5px;}
+  .bar .tag{letter-spacing:.06em;color:var(--ink-soft)} .bar .tag b{color:var(--accent);font-weight:600}
+  .bar .spacer{flex:1} .bar label{color:var(--ink-soft)}
+  .bar select{font-family:var(--mono);font-size:12.5px;background:var(--paper-2);color:var(--ink);border:1px solid var(--rule);border-radius:5px;padding:.2rem .5rem;cursor:pointer}
+  .bar a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent} .bar a:hover{border-color:var(--accent-soft)}
+
+  main{max-width:64rem;margin:0 auto;padding:2.6rem 1.2rem 6rem}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 1rem}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,4.5vw,3rem);line-height:1.05;letter-spacing:-.01em;margin:0 0 1rem;max-width:26ch}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{font-size:1.1rem;color:var(--ink-soft);max-width:44rem} .lede code{font-family:var(--mono);font-size:.82em;background:var(--paper-2);padding:.05em .35em;border-radius:4px}
+
+  section{margin:2.6rem 0 0;border-top:1px solid var(--rule);padding-top:2rem}
+  h2{font-family:var(--display);font-weight:600;font-size:1.5rem;margin:0 0 .2rem}
+  .sub{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 1.2rem}
+  p{max-width:44rem} p code{font-family:var(--mono);font-size:.82em;background:var(--paper-2);padding:.04em .34em;border-radius:4px}
+  .btn{font-family:var(--mono);font-size:13px;letter-spacing:.03em;border:none;cursor:pointer;background:var(--accent);color:#fff;padding:.6rem 1.15rem;border-radius:8px;transition:filter .15s,transform .05s}
+  .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
+
+  .panel{background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.3rem 1.4rem;margin:1.2rem 0 0}
+  .stats{display:flex;flex-wrap:wrap;gap:1.5rem;font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:.2rem 0 1rem}
+  .stats b{font-family:var(--display);font-style:normal;font-weight:600;font-size:1.4rem;display:block;color:var(--ink)}
+  .stats .ok b{color:var(--pass)} .stats .no b{color:var(--fail)}
+  .lawrow{display:grid;grid-template-columns:1.2rem 3rem 1fr auto;align-items:start;gap:.6rem;padding:.34rem 0;border-bottom:1px solid var(--rule);font-size:13.5px}
+  .lawrow:last-child{border:none}
+  .dot{width:.6rem;height:.6rem;border-radius:99px;margin-top:.42rem;background:var(--rule)}
+  .dot.pass{background:var(--pass);box-shadow:0 0 0 3px rgba(47,125,81,.15)} .dot.fail{background:var(--fail);box-shadow:0 0 0 3px rgba(178,59,52,.15)}
+  .lid{font-family:var(--mono);font-size:11.5px;color:var(--accent);padding-top:.18rem}
+  .lst{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);padding-top:.28rem;white-space:nowrap}
+  .grp{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin:1.1rem 0 .3rem}
+  .cross{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:1rem;line-height:1.8;border-top:1px dashed var(--rule);padding-top:.8rem}
+
+  .trace{font-family:var(--mono);font-size:12px;line-height:1.5}
+  .step{display:grid;grid-template-columns:13rem 1fr;gap:.6rem;padding:.3rem 0;border-bottom:1px solid var(--rule)}
+  .step .lbl{color:var(--ink-soft)} .step .dg{color:var(--ink);white-space:pre-wrap;word-break:break-word}
+  .refuse{margin:1rem 0 0;border-left:3px solid var(--fail);background:rgba(178,59,52,.07);padding:.8rem 1rem;border-radius:0 8px 8px 0;font-family:var(--mono);font-size:12px}
+  .refuse b{color:var(--fail)}
+  .accept{margin:1rem 0 0;border-left:3px solid var(--pass);background:rgba(47,125,81,.08);padding:.8rem 1rem;border-radius:0 8px 8px 0;font-family:var(--mono);font-size:12px}
+  .accept b{color:var(--pass)}
+
+  .headline{border-radius:12px;padding:1.1rem 1.3rem;margin:0 0 1rem}
+  .headline.ok{background:linear-gradient(180deg,rgba(47,125,81,.10),transparent);border:1.5px solid rgba(47,125,81,.4)}
+  .headline .big{font-family:var(--display);font-size:1.35rem;font-weight:600}
+  .headline .big .nm{color:var(--pass)}
+  .headline .meta{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:.25rem}
+  .floorbit{border-left:3px solid var(--warn);background:rgba(185,138,43,.08);padding:.8rem 1rem;border-radius:0 8px 8px 0;font-size:14px;margin:1rem 0}
+  .floorbit b{color:var(--warn)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.9rem;margin:1rem 0 0}
+  .card{border:1px solid var(--rule);border-radius:10px;padding:.9rem 1rem;background:var(--paper)}
+  .card.chosen{border-color:var(--pass);box-shadow:0 0 0 2px rgba(47,125,81,.16)} .card.vetoed{border-color:var(--fail)}
+  .card .top{display:flex;justify-content:space-between;align-items:baseline}
+  .card .nm{font-family:var(--mono);font-size:12.5px;font-weight:600} .card .sc{font-family:var(--display);font-size:1.25rem;font-weight:600}
+  .card.vetoed .sc{color:var(--fail);text-decoration:line-through;opacity:.65}
+  .badge{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:.12em .5em;border-radius:99px;display:inline-block;margin-top:.45rem}
+  .card.chosen .badge{background:rgba(47,125,81,.16);color:var(--pass)} .card.vetoed .badge{background:rgba(178,59,52,.14);color:var(--fail)}
+  .reasons{margin:.55rem 0 0;padding:0;list-style:none;font-family:var(--mono);font-size:11px;color:var(--fail)} .reasons li::before{content:"✗ ";opacity:.7}
+  .dgline{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);margin-top:.5rem;word-break:break-word}
+
+  footer{max-width:44rem;margin:4rem auto 0;padding-top:1.6rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.9}
+  footer b{color:var(--accent)}
+  @media(max-width:680px){body{font-size:16.5px} .step{grid-template-columns:1fr} .lawrow{grid-template-columns:1.1rem 2.6rem 1fr} .lst{display:none}}
+</style>
+</head>
+<body>
+<script type="module" src="/amp-nav.js"></script>
+<amp-nav property="arith_playground" theme="light"></amp-nav>
+<div class="bar">
+  <span class="tag">Arith · <b>the substrate, running</b></span>
+  <span class="spacer"></span>
+  <label>semiring</label>
+  <select id="semi"><option value="tropical">tropical (max,+)</option><option value="probability">probability (+,×)</option><option value="log">log (lse,+)</option></select>
+  <a href="/invariant-arithmetic">inv</a><a href="https://ampersandboxdesign.com/laws.html">laws</a>
+</div>
+
+<main>
+  <p class="kicker">Run the real algebra · families · twelve operations · the bridge</p>
+  <h1>Not a paraphrase — the <em>actual</em> eight-rung modality ladder, executing.</h1>
+  <p class="lede">A <code>Value</code> is a product of monoids across families; <code>combine</code> merges, <code>chain</code> composes along phases (and refuses a backward step), <code>promote</code>/<code>reconcile</code>/<code>deliberate</code> repair. A <code>Score</code> lives in a semiring. The <strong>bridge</strong> gates the gradient on the floor: a vetoed option becomes <code>0̲</code> and can never be selected. A third rung — <code>norms</code> — adds obligation, permission, and prohibition; <code>govern</code> stacks all three with the precedence <em>alethic ▸ deontic ▸ axiological</em>. A fourth rung lifts the algebra to <em>trajectories</em>: LTL <code>monitor</code>/<code>supervise</code> — safety as a runtime shield, liveness as a horizon obligation. A fifth lets the policy <em>revise itself</em> — <code>revise</code>/<code>entrench</code>, with a constitutional core it can tighten but never weaken. Three more rungs — <em>epistemic</em> (knowledge &amp; graded belief), <em>strategic</em> (coalitional ability), and <em>resource</em> (the economy the ladder runs on) — complete the eight. Everything below runs client-side, importing the same <code>.mjs</code> modules that ship in the package.</p>
+
+  <!-- LAWS -->
+  <section>
+    <h2>1 · The laws hold</h2>
+    <p class="sub">the cross-layer sandbox — all eight rungs &amp; their bridges (all 97 laws): invariant · heuristic · bridge · deontic · temporal · reflexive · epistemic · strategic · resource. The exact suite <code>node test/laws.mjs</code> runs.</p>
+    <p>The proof it's the real algebra and not a story: each law checked against random values. Switch the semiring in the top bar and re-run — idempotence (H6) holds only on the tropical dioid.</p>
+    <div class="panel">
+      <button class="btn" id="runLaws">Run all laws →</button>
+      <div class="stats" style="margin-top:1rem">
+        <span><b id="l-total">97</b>laws</span><span class="ok"><b id="l-pass">—</b>passing</span>
+        <span class="no"><b id="l-fail">—</b>failing</span><span><b id="l-ms">—</b>ms</span>
+      </div>
+      <div id="lawout"></div>
+      <div class="cross" id="cross"></div>
+    </div>
+  </section>
+
+  <!-- RAG -->
+  <section>
+    <h2>2 · Composition catches a contradiction</h2>
+    <p class="sub">the RAG pipeline · multi-family</p>
+    <p>Two sources are combined, an answer chained forward, then reused as its own context — a self-citation loop. No single family catches it; composed, <code>consume</code> refuses and names which families. Then the endomorphisms repair the value.</p>
+    <div class="panel">
+      <button class="btn" id="runRag">Run pipeline →</button>
+      <div id="ragout" class="trace" style="margin-top:1rem"></div>
+    </div>
+  </section>
+
+  <!-- SELECT -->
+  <section>
+    <h2>3 · The bridge: a strong action, vetoed</h2>
+    <p class="sub">floor-then-gradient · OWASP LLM06</p>
+    <p>Three candidate actions, each a full <code>Value</code> plus a heuristic utility. The highest-utility one loops on itself (<code>κ</code>) and has no authority — <code>consume</code> vetoes it, <code>0̲</code> annihilates it, the gradient picks the best feasible action.</p>
+    <div class="panel">
+      <button class="btn" id="runSel">Run selection →</button>
+      <div id="selout" style="margin-top:1rem"></div>
+    </div>
+  </section>
+
+  <footer>
+    <b>OpenSentience · Arith</b> · faithful runtime of the complete eight-rung modality ladder — alethic · axiological · deontic · temporal · reflexive · epistemic · strategic · resource (v0.8)<br>
+    a vetoed option can never be selected, no matter how well it scores — <code>0̲</code> is the value of a veto<br>
+    <code>npm i box-and-box</code> · <code>npx box-and-box laws · rag · select</code>
+  </footer>
+</main>
+
+<script type="module">
+"use strict";
+// The playground imports the REAL kernel modules (a same-origin served copy of
+// AmpersandBoxDesign/box-and-box) — there is no inlined re-implementation here.
+// The law suite is the exact 97-law table that `node test/laws.mjs` runs; the
+// run-block in that file is Node-only (guarded by typeof window), so importing
+// it in the browser yields just SUITES / runSet / setSemiring.
+import { V, combine, chain, consume, deliberate, reconcile, promote, digest } from '/box-and-box/value.mjs';
+import { SEMIRINGS, Score, rollout } from '/box-and-box/score.mjs';
+import { select } from '/box-and-box/bridge.mjs';
+import { SUITES, runSet, setSemiring } from '/box-and-box/test/laws.mjs';
+
+/* ===================== UI ===================== */
+const $=s=>document.querySelector(s);
+function lawGroup(title){const d=document.createElement('div');d.className='grp';d.textContent=title;$('#lawout').appendChild(d);}
+function runLaws(){
+  const semi=$('#semi').value; setSemiring(semi); const N=1500; const out=$('#lawout'); out.innerHTML='';
+  let pass=0,fail=0,total=0; const t0=performance.now();
+  const render=(label,laws)=>{
+    lawGroup(label);
+    const r=runSet(laws,N); pass+=r.pass; fail+=r.fail; total+=laws.length;
+    r.results.forEach(x=>{const row=document.createElement('div');row.className='lawrow';
+      row.innerHTML=`<span class="dot ${x.pass?'pass':'fail'}"></span><span class="lid">${x.id}</span><span>${x.desc}${x.pass?'':` <span style="color:var(--fail);font-family:var(--mono);font-size:11px">— ${x.cex}</span>`}</span><span class="lst">${x.pass?'✓ '+x.at:'✗ @'+x.at}</span>`;
+      out.appendChild(row);});
+  };
+  for(const suite of SUITES){
+    // the playground's heuristic suite uses the SELECTED semiring (the Node default is tropical)
+    if(suite.key==='HEUR'){setSemiring(semi);render(`Heuristic · ${SEMIRINGS[semi].label}`,suite.laws);}
+    else render(suite.label,suite.laws);
+  }
+  const ms=(performance.now()-t0).toFixed(1);
+  $('#l-total').textContent=total;$('#l-pass').textContent=pass;$('#l-fail').textContent=fail;$('#l-ms').textContent=ms;
+  // cross-personality H6 — idempotence holds only on the tropical dioid
+  const h6=SUITES.find(s=>s.key==='HEUR').laws.find(l=>l[0]==='H6')[2];
+  let cross='idempotence (H6) across personalities:  ';
+  for(const nm of ['tropical','probability','log']){setSemiring(nm);const r=h6(800);cross+=`${nm} ${r.pass?'✓':'✗'}   `;}
+  setSemiring(semi);
+  $('#cross').textContent=cross+' — only the dioid is idempotent, which is what gives it a ranking.';
+}
+function runRag(){
+  const out=$('#ragout'); out.innerHTML='';
+  const step=(lbl,v)=>{const d=document.createElement('div');d.className='step';d.innerHTML=`<span class="lbl">${lbl}</span><span class="dg">${digest(v)}</span>`;out.appendChild(d);};
+  const s1=V({pi:'retrieve',beta:.90,sigma:[],authority:['src:authority']});
+  const s2=V({pi:'retrieve',beta:.70,sigma:['conflict:date'],authority:['src:rumor-blog']});
+  step('source 1 (strong)',s1); step('source 2 (weak, conflicting)',s2);
+  const ctx=combine(s1,s2); step('combine → context',ctx);
+  const ans=chain(ctx,V({pi:'act'})); step('chain(ctx, act) → answer',ans);
+  const fu=combine(ans,V({kappa:true})); step('reuse as context → follow-up',fu);
+  const req={beta_min:.85,sigma_empty:true,acyclic:true};
+  const verd=consume(fu,req);
+  const rf=document.createElement('div');rf.className='refuse';
+  rf.innerHTML=`<b>consume(follow-up, {β≥0.85, σ empty, acyclic}) → refused</b><br>`+verd.failures.map(f=>`✗ ${f.family}: ${f.why}`).join('<br>')+`<br><span style="color:var(--ink-soft)">No single family catches it — composed, they do.</span>`;
+  out.appendChild(rf);
+  let fix=deliberate(fu); fix=reconcile(fix,['conflict:date']); fix=promote(fix,{beta:.88});
+  const v2=consume(fix,req);
+  const ac=document.createElement('div');ac.className='accept';
+  ac.innerHTML=`<b>repair: deliberate · reconcile · promote</b><br><span style="color:var(--ink-soft)">${digest(fix)}</span><br>${v2.ok?'✓ accepted after repair — the value is now feasible.':'✗ '+v2.failures.map(f=>f.why).join('; ')}`;
+  out.appendChild(ac);
+}
+function runSel(){
+  const semi=$('#semi').value; const out=$('#selout'); out.innerHTML='';
+  const u=(a,b)=>rollout([Score({u:a}),Score({u:b})],1.0,semi);
+  const options=[
+    {id:'A · read_doc(42)',value:V({pi:'act',beta:.92,kappa:false,authority:['cap:read'],denyDefault:false}),utility:u(6,4)},
+    {id:'B · web_search(...)',value:V({pi:'act',beta:.91,kappa:false,authority:['cap:net'],denyDefault:false}),utility:u(5,3)},
+    {id:'C · cite-self-to-justify-delete',value:V({pi:'act',beta:.97,kappa:true,authority:[],denyDefault:true}),utility:u(9,6)}
+  ];
+  // the real select() returns only ids in ranking/vetoed — recover each Value by id for the digest line
+  const valueOf=id=>{const o=options.find(o=>o.id===id);return o?o.value:undefined;};
+  const req={beta_min:.90,acyclic:true,deny_default:'must_allow'};
+  const cert=select(options,req,semi);
+  let html='';
+  if(cert.decision)html+=`<div class="headline ok"><div class="big">chosen ▸ <span class="nm">${esc(cert.decision)}</span></div><div class="meta">margin ${cert.margin} over runner-up · ${cert.vetoed.length} vetoed · semiring ${SEMIRINGS[semi].label}</div></div>`;
+  if(cert.floorBit)html+=`<div class="floorbit"><b>the floor bit.</b> “${esc(cert.floorBit.id)}” had the highest raw utility (${cert.floorBit.raw}) and would have been selected by score alone — but a hard family vetoed it.</div>`;
+  html+='<div class="cards">';
+  for(const r of cert.ranking)html+=`<div class="card chosen"><div class="top"><span class="nm">${esc(r.id)}</span><span class="sc">${r.score}</span></div><span class="badge">${r.id===cert.decision?'selected':'feasible'}</span><div class="dgline">${digest(valueOf(r.id))}</div></div>`;
+  for(const v of cert.vetoed)html+=`<div class="card vetoed"><div class="top"><span class="nm">${esc(v.id)}</span><span class="sc">${v.rawWouldBe}</span></div><span class="badge">vetoed · 0̲</span><ul class="reasons">${v.failures.map(f=>`<li>${esc(f.family)}: ${esc(f.why)}</li>`).join('')}</ul><div class="dgline">${digest(valueOf(v.id))}</div></div>`;
+  html+='</div>';
+  html+=`<div class="accept" style="border-color:var(--accent-soft);background:rgba(168,90,28,.06)"><span style="color:var(--ink)">${esc(cert.note)}</span></div>`;
+  out.innerHTML=html;
+}
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+$('#runLaws').addEventListener('click',runLaws);
+$('#runRag').addEventListener('click',runRag);
+$('#runSel').addEventListener('click',runSel);
+$('#semi').addEventListener('change',()=>{$('#lawout').innerHTML='';$('#cross').textContent='';['#l-pass','#l-fail','#l-ms'].forEach(s=>$(s).textContent='—');});
+runLaws();
+</script>
+</body>
+</html>

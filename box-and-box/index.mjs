@@ -1,0 +1,12 @@
+// box-and-box — faithful runtime of the modality ladder. Seven rungs, one bridge.
+export * from './value.mjs';     // 1 alethic     — refuses               (L1–L14)
+export * from './score.mjs';     // 2 axiological — ranks                 (H1–H13)
+export * from './bridge.mjs';    //   bridge      — floor-then-gradient   (B1–B3)
+export * from './norm.mjs';      // 3 deontic     — obliges & escalates   (D1–D9)
+export * from './govern.mjs';    //   govern      — alethic ▸ deontic ▸ axiological (DB1–DB3)
+export * as temporal from './temporal.mjs'; // 4 temporal — LTL over trajectories (T1–T8)
+export * from './supervise.mjs'; //   supervise   — safety shield + liveness obligation (TB1–TB3)
+export * from './reflexive.mjs'; // 5 reflexive   — self-revising norms, entrenched core (R1–R8, RB1–RB3)
+export * as epistemic from './epistemic.mjs'; // 6 epistemic — knowledge & graded belief (E1–E8, EB1–EB3)
+export * as strategic from './strategic.mjs'; // 7 strategic — coalitional ability (S1–S8, SB1–SB3)
+export * as resource from './resource.mjs'; // + resource — the economy the ladder runs on (C1–C8, CB1–CB3)

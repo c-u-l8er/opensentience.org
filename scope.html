@@ -837,6 +837,530 @@
                 </p>
             </section>
 
+            <!-- ════════════════════════════ -->
+            <!-- VI. by domain                 -->
+            <!-- ════════════════════════════ -->
+            <section class="panel" id="scope-industries">
+                <style>
+                    /* ── bb-gallery · portable [&] domain showcase (SCOPE blueprint skin) ── */
+                    #scope-industries .bb-gallery {
+                        --bb-accent: var(--proved);
+                        --bb-accent2: var(--fail);
+                        --bb-ink: var(--ink);
+                        --bb-dim: var(--ink-soft);
+                        --bb-mute: var(--ink-faint);
+                        --bb-line: var(--rule);
+                        --bb-codebg: var(--paper-deep);
+                        margin-top: 22px;
+                    }
+                    #scope-industries .bb-tabs {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        margin-bottom: 22px;
+                    }
+                    #scope-industries .bb-tab {
+                        font-family: var(--font-mono);
+                        font-size: 12.5px;
+                        color: var(--bb-dim);
+                        background: transparent;
+                        border: 1px solid var(--bb-line);
+                        border-radius: 999px;
+                        padding: 8px 15px;
+                        cursor: pointer;
+                        transition: 0.18s;
+                    }
+                    #scope-industries .bb-tab:hover {
+                        color: var(--bb-ink);
+                        border-color: var(--bb-accent);
+                    }
+                    #scope-industries .bb-tab.active {
+                        color: var(--paper-deep);
+                        background: var(--bb-accent);
+                        border-color: var(--bb-accent);
+                        box-shadow: 0 0 24px -6px var(--bb-accent);
+                    }
+                    #scope-industries .bb-panel {
+                        display: none;
+                    }
+                    #scope-industries .bb-panel.active {
+                        display: block;
+                        animation: bb-fade 0.3s ease;
+                    }
+                    @keyframes bb-fade {
+                        from {
+                            opacity: 0;
+                            transform: translateY(6px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: none;
+                        }
+                    }
+                    #scope-industries .bb-frame {
+                        color: var(--bb-dim);
+                        max-width: 66ch;
+                        margin-bottom: 18px;
+                    }
+                    #scope-industries .bb-frame b {
+                        color: var(--bb-accent2);
+                        font-weight: 600;
+                    }
+                    #scope-industries .bb-codewrap {
+                        border: 1px solid var(--bb-line);
+                        border-radius: 12px;
+                        overflow: hidden;
+                        background: var(--bb-codebg);
+                    }
+                    #scope-industries .bb-chead {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        padding: 11px 16px;
+                        border-bottom: 1px solid var(--bb-line);
+                        font-family: var(--font-mono);
+                        font-size: 12px;
+                        color: var(--bb-mute);
+                    }
+                    #scope-industries .bb-chead .bb-dot {
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50%;
+                        display: inline-block;
+                    }
+                    #scope-industries .bb-chead .bb-fn {
+                        color: var(--bb-ink);
+                    }
+                    #scope-industries .bb-chead .bb-lang {
+                        margin-left: auto;
+                        color: var(--bb-accent);
+                    }
+                    #scope-industries pre.bb-pre {
+                        margin: 0;
+                        overflow-x: auto;
+                        padding: 20px 20px 24px;
+                        font-family: var(--font-mono);
+                        font-size: 12.5px;
+                        line-height: 1.62;
+                        color: var(--bb-dim);
+                    }
+                    #scope-industries .bb-c {
+                        color: var(--bb-mute);
+                        font-style: italic;
+                    }
+                    #scope-industries .bb-s {
+                        color: var(--shipped);
+                    }
+                    #scope-industries .bb-at {
+                        color: var(--named);
+                    }
+                    #scope-industries .bb-kw {
+                        color: var(--proved);
+                    }
+                    #scope-industries .bb-mod {
+                        color: var(--ink);
+                    }
+                    #scope-industries .bb-attr {
+                        color: var(--fail);
+                    }
+                    #scope-industries .bb-meta {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        margin-top: 16px;
+                    }
+                    #scope-industries .bb-meta span {
+                        font-family: var(--font-mono);
+                        font-size: 11.5px;
+                        color: var(--bb-dim);
+                        border: 1px solid var(--bb-line);
+                        border-radius: 7px;
+                        padding: 6px 10px;
+                    }
+                    #scope-industries .bb-meta span b {
+                        color: var(--bb-accent);
+                        font-weight: 600;
+                    }
+                    #scope-industries .bb-note {
+                        font-family: var(--font-mono);
+                        font-size: 12px;
+                        color: var(--bb-mute);
+                        margin-top: 26px;
+                        padding-top: 16px;
+                        border-top: 1px solid var(--bb-line);
+                        max-width: 78ch;
+                    }
+                    #scope-industries .bb-note em {
+                        color: var(--bb-dim);
+                        font-style: normal;
+                    }
+                </style>
+                <div class="panel-head">
+                    <span class="panel-num">VI.</span>
+                    <h2>Two primitives, every coordinated space</h2>
+                    <span class="tag">by domain</span>
+                </div>
+                <p class="panel-intro">
+                    A <code>Region</code> and a typed <code>SpatialClaim</code> are
+                    the only two things SCOPE adds. Below they wear five domains —
+                    a warehouse grid, a drone corridor, a city geofence, a shared
+                    canvas, an AR anchor. Same two primitives; the
+                    <em>kind</em> and the <em>strength</em> are all that change.
+                </p>
+
+                <div class="bb-gallery">
+                    <div class="bb-tabs" role="tablist">
+                        <button class="bb-tab active">Warehouse robotics</button>
+                        <button class="bb-tab">Drone airspace</button>
+                        <button class="bb-tab">Autonomous fleets</button>
+                        <button class="bb-tab">Multiplayer &amp; sim</button>
+                        <button class="bb-tab">AR / spatial</button>
+                    </div>
+
+                    <div class="bb-panels">
+                        <!-- 1 · WAREHOUSE -->
+                        <div class="bb-panel active">
+                            <p class="bb-frame">
+                                <b>AMR floor coordination.</b> A robot reserves the
+                                cells it's about to cross as a <em>mandatory
+                                territory claim</em> with a fencing token and a
+                                short lease. Overlaps are hard conflicts —
+                                Deliberatic decides; grants persist to Graphonomous
+                                for replay.
+                            </p>
+                            <div class="bb-codewrap">
+                                <div class="bb-chead">
+                                    <span class="bb-dot" style="background:#e8a23d"></span>
+                                    <span class="bb-dot" style="background:#7fc9a0"></span>
+                                    <span class="bb-dot" style="background:#57c7d4"></span>
+                                    &nbsp;<span class="bb-fn">warehouse_floor_space.ex</span>
+                                    <span class="bb-lang">Elixir / SCOPE.Space</span>
+                                </div>
+                                <pre class="bb-pre"><code class="bb-code"></code></pre>
+                            </div>
+                            <div class="bb-meta">
+                                <span><b>region</b> grid</span>
+                                <span><b>claim</b> territory · mandatory</span>
+                                <span><b>conflict</b> → Deliberatic</span>
+                            </div>
+                            <script type="text/plain" class="bb-src">
+defmodule Warehouse.FloorSpace do
+  @moduledoc "Exclusive cell leases for autonomous mobile robots."
+  use SCOPE.Space, id: "warehouse.floor", frame: "map"
+
+  region :grid, id: "aisle_7", cells: {0..40, 0..3}
+
+  # An AMR reserves the cells it is about to traverse.
+  # A territory claim at :mandatory strength is exclusive.
+  def reserve(amr, path) do
+    SCOPE.claim(%Claim{
+      kind: :territory,
+      strength: :mandatory,
+      region: ref("aisle_7"),
+      cells: path,
+      holder: amr.id,
+      fencing_token: amr.epoch,
+      expires_at: in_ms(4_000)
+    })
+  end
+
+  # Overlapping mandatory claims are a hard conflict — route to Deliberatic.
+  def on_conflict(%Claim{strength: :mandatory} = a, b),
+    do: Deliberatic.resolve(a, b, policy: :priority)
+
+  # Granted claims persist as Graphonomous nodes for replay + audit.
+  def on_grant(claim), do: Graphonomous.act(:store_node, claim)
+end
+                            </script>
+                        </div>
+
+                        <!-- 2 · DRONE -->
+                        <div class="bb-panel">
+                            <p class="bb-frame">
+                                <b>UAS airspace deconfliction.</b> A drone files
+                                its corridor as an <em>advisory intent</em> ahead
+                                of time, then upgrades to a <em>mandatory presence
+                                claim</em> with a heartbeat TTL on entry. The
+                                region is a 3-D geo volume, not a flat polygon.
+                            </p>
+                            <div class="bb-codewrap">
+                                <div class="bb-chead">
+                                    <span class="bb-dot" style="background:#e8a23d"></span>
+                                    <span class="bb-dot" style="background:#7fc9a0"></span>
+                                    <span class="bb-dot" style="background:#57c7d4"></span>
+                                    &nbsp;<span class="bb-fn">airspace_corridor.ex</span>
+                                    <span class="bb-lang">Elixir / SCOPE.Space</span>
+                                </div>
+                                <pre class="bb-pre"><code class="bb-code"></code></pre>
+                            </div>
+                            <div class="bb-meta">
+                                <span><b>region</b> geo · 3-D volume</span>
+                                <span><b>claim</b> intent → presence</span>
+                                <span><b>strength</b> advisory → mandatory</span>
+                            </div>
+                            <script type="text/plain" class="bb-src">
+defmodule Airspace.Corridor do
+  @moduledoc "3-D flight corridors: intent broadcast, presence enforced."
+  use SCOPE.Space, id: "airspace.sector_4", frame: "wgs84"
+
+  region :geo, id: "corridor_NE",
+    volume: {:prism, polygon: "ne_lane.geojson", floor_m: 80, ceil_m: 140}
+
+  # File a plan ahead of time — advisory, so others can see and yield.
+  def file_plan(uav, plan) do
+    SCOPE.claim(%Claim{
+      kind: :intent, strength: :advisory,
+      region: ref("corridor_NE"), holder: uav.id, window: plan.eta
+    })
+  end
+
+  # On entry, presence is mandatory and must be refreshed or it expires.
+  def enter(uav) do
+    SCOPE.claim(%Claim{
+      kind: :presence, strength: :mandatory,
+      region: ref("corridor_NE"), holder: uav.id,
+      expires_at: in_ms(1_000), refresh: :heartbeat
+    })
+  end
+
+  def on_conflict(%Claim{kind: :presence} = a, b),
+    do: Deliberatic.resolve(a, b, policy: :separation)
+end
+                            </script>
+                        </div>
+
+                        <!-- 3 · FLEETS -->
+                        <div class="bb-panel">
+                            <p class="bb-frame">
+                                <b>The cross-substrate bridge.</b> An asset
+                                crossing a geofence emits a <em>presence claim</em>
+                                over a <code>geo</code> region — and the same claim
+                                re-binds onto a RuneFort grid tile. A geographic
+                                region and a grid cell become two
+                                <em>kinds</em> of one <code>Region</code>.
+                            </p>
+                            <div class="bb-codewrap">
+                                <div class="bb-chead">
+                                    <span class="bb-dot" style="background:#e8a23d"></span>
+                                    <span class="bb-dot" style="background:#7fc9a0"></span>
+                                    <span class="bb-dot" style="background:#57c7d4"></span>
+                                    &nbsp;<span class="bb-fn">fleet_geofence_presence.ex</span>
+                                    <span class="bb-lang">Elixir / SCOPE.Space</span>
+                                </div>
+                                <pre class="bb-pre"><code class="bb-code"></code></pre>
+                            </div>
+                            <div class="bb-meta">
+                                <span><b>region</b> geo → grid</span>
+                                <span><b>claim</b> presence</span>
+                                <span><b>bridge</b> GeoFleetic ↔ RuneFort</span>
+                            </div>
+                            <script type="text/plain" class="bb-src">
+defmodule Fleet.GeofencePresence do
+  @moduledoc "A geo claim and a grid tile are two kinds of one Region."
+  use SCOPE.Space, id: "fleet.city", frame: "wgs84"
+
+  region :geo, id: "zone_downtown", geojson: "downtown.geojson"
+
+  # Asset crosses a geofence -> advisory presence claim.
+  def on_enter(asset, zone) do
+    SCOPE.claim(%Claim{
+      kind: :presence, strength: :advisory,
+      region: ref(zone), holder: asset.id, ts: now()
+    })
+  end
+
+  # The bridge: re-bind the same claim onto a RuneFort grid tile.
+  # No new primitive — just a different Region.kind for the same claim.
+  def project(%Claim{region: %Region{kind: :geo} = geo} = claim) do
+    SCOPE.rebind(claim, into: Region.kind(geo, :grid), via: "geofleetic<->runefort")
+  end
+end
+                            </script>
+                        </div>
+
+                        <!-- 4 · MULTIPLAYER -->
+                        <div class="bb-panel">
+                            <p class="bb-frame">
+                                <b>Shared canvas for agents.</b> The "multiplayer
+                                whiteboard for LLMs" falls out with <em>no new
+                                primitive</em>: a <code>document</code> region plus
+                                presence and attention claims. Soft claims converge
+                                CRDT-style; only territory escalates to Deliberatic.
+                            </p>
+                            <div class="bb-codewrap">
+                                <div class="bb-chead">
+                                    <span class="bb-dot" style="background:#e8a23d"></span>
+                                    <span class="bb-dot" style="background:#7fc9a0"></span>
+                                    <span class="bb-dot" style="background:#57c7d4"></span>
+                                    &nbsp;<span class="bb-fn">world_awareness.ex</span>
+                                    <span class="bb-lang">Elixir / SCOPE.Space</span>
+                                </div>
+                                <pre class="bb-pre"><code class="bb-code"></code></pre>
+                            </div>
+                            <div class="bb-meta">
+                                <span><b>region</b> document</span>
+                                <span><b>claim</b> attention + presence</span>
+                                <span><b>conflict</b> CRDT converge</span>
+                            </div>
+                            <script type="text/plain" class="bb-src">
+defmodule World.Awareness do
+  @moduledoc "Shared whiteboard for agents: presence + attention, no new primitive."
+  use SCOPE.Space, id: "world.canvas", frame: "document"
+
+  region :document, id: "board_42"
+
+  # Awareness = ephemeral presence + attention claims over a document region.
+  def focus(agent, span) do
+    SCOPE.claim(%Claim{
+      kind: :attention, strength: :advisory,
+      region: ref("board_42"), selector: span,
+      holder: agent.id, expires_at: in_ms(800), refresh: :heartbeat
+    })
+  end
+
+  # Soft claims coexist and converge; only :territory is exclusive.
+  def on_conflict(%Claim{kind: :attention}, _b), do: :coexist
+  def on_conflict(%Claim{kind: :territory} = a, b),
+    do: Deliberatic.resolve(a, b, policy: :first_writer)
+end
+                            </script>
+                        </div>
+
+                        <!-- 5 · AR -->
+                        <div class="bb-panel">
+                            <p class="bb-frame">
+                                <b>Shared AR anchors.</b> Two people looking at the
+                                same table: a <em>gaze is attention</em> (advisory,
+                                250 ms), <em>placing an object is territory</em>
+                                (mandatory). The region is a pose-anchored geo
+                                volume; grants persist to Graphonomous.
+                            </p>
+                            <div class="bb-codewrap">
+                                <div class="bb-chead">
+                                    <span class="bb-dot" style="background:#e8a23d"></span>
+                                    <span class="bb-dot" style="background:#7fc9a0"></span>
+                                    <span class="bb-dot" style="background:#57c7d4"></span>
+                                    &nbsp;<span class="bb-fn">ar_anchor_ownership.ex</span>
+                                    <span class="bb-lang">Elixir / SCOPE.Space</span>
+                                </div>
+                                <pre class="bb-pre"><code class="bb-code"></code></pre>
+                            </div>
+                            <div class="bb-meta">
+                                <span><b>region</b> geo · pose anchor</span>
+                                <span><b>claim</b> attention + territory</span>
+                                <span><b>persist</b> → Graphonomous</span>
+                            </div>
+                            <script type="text/plain" class="bb-src">
+defmodule AR.AnchorOwnership do
+  @moduledoc "Who owns a shared anchor — gaze is attention, placement is territory."
+  use SCOPE.Space, id: "ar.room", frame: "anchor"
+
+  region :geo, id: "anchor_table", pose: {:se3, "table.pose"}, radius_m: 0.5
+
+  # Gaze is advisory attention — many users can look at once.
+  def gaze(user, target) do
+    SCOPE.claim(%Claim{
+      kind: :attention, strength: :advisory,
+      region: ref(target), holder: user.id, expires_at: in_ms(250)
+    })
+  end
+
+  # Placing an object is mandatory territory — exactly one owner.
+  def place(user, obj) do
+    SCOPE.claim(%Claim{
+      kind: :territory, strength: :mandatory,
+      region: ref("anchor_table"), holder: user.id, payload: obj
+    })
+  end
+
+  def on_grant(claim), do: Graphonomous.act(:store_node, claim)
+end
+                            </script>
+                        </div>
+                    </div>
+
+                    <p class="bb-note">
+                        Honest note · these are <em>illustrative reference
+                        hosts</em> — a readable <em>SCOPE.Space</em> DSL sketch,
+                        not a published library (SCOPE is a v0.1 draft). The
+                        conformance surface is the <em>Region</em> +
+                        <em>SpatialClaim</em> schema. v0.1 ships
+                        <em>grid · document_span · graph_subgraph</em>; the
+                        <em>geo</em> and <em>document</em> kinds shown here are the
+                        committed v0.2 extensions.
+                    </p>
+                </div>
+                <script>
+                    (function () {
+                        var TOK =
+                            /(#[^\n]*)|("(?:[^"\\]|\\.)*")|(:[a-zA-Z_]\w*[?!]?)|(@[a-zA-Z_]\w*)|\b(defmodule|defmacro|defstruct|defp|def|do|end|fn|cond|case|if|else|quote|unquote|use|import|alias|when|true|false|nil|receive|after|with|for)\b|\b([A-Z]\w*)\b/g;
+                        function esc(t) {
+                            return t
+                                .replace(/&/g, "&amp;")
+                                .replace(/</g, "&lt;")
+                                .replace(/>/g, "&gt;");
+                        }
+                        function hl(src) {
+                            var out = "",
+                                last = 0,
+                                m;
+                            TOK.lastIndex = 0;
+                            while ((m = TOK.exec(src))) {
+                                out += esc(src.slice(last, m.index));
+                                var cls = m[1]
+                                    ? "c"
+                                    : m[2]
+                                      ? "s"
+                                      : m[3]
+                                        ? "at"
+                                        : m[4]
+                                          ? "attr"
+                                          : m[5]
+                                            ? "kw"
+                                            : "mod";
+                                out +=
+                                    '<span class="bb-' +
+                                    cls +
+                                    '">' +
+                                    esc(m[0]) +
+                                    "</span>";
+                                last = m.index + m[0].length;
+                            }
+                            out += esc(src.slice(last));
+                            return out;
+                        }
+                        document
+                            .querySelectorAll("#scope-industries .bb-panel")
+                            .forEach(function (panel) {
+                                var src = panel.querySelector(".bb-src");
+                                var code = panel.querySelector(".bb-code");
+                                if (src && code)
+                                    code.innerHTML = hl(
+                                        src.textContent.replace(/^\s*\n/, ""),
+                                    );
+                            });
+                        var tabs = document.querySelectorAll(
+                            "#scope-industries .bb-tab",
+                        );
+                        var panels = document.querySelectorAll(
+                            "#scope-industries .bb-panel",
+                        );
+                        tabs.forEach(function (tab, i) {
+                            tab.addEventListener("click", function () {
+                                tabs.forEach(function (t) {
+                                    t.classList.remove("active");
+                                });
+                                panels.forEach(function (p) {
+                                    p.classList.remove("active");
+                                });
+                                tab.classList.add("active");
+                                panels[i].classList.add("active");
+                            });
+                        });
+                    })();
+                </script>
+            </section>
+
             <div class="closing">
                 <h3>Status: v0.1 draft, consumer-gated revision in progress</h3>
                 <p>

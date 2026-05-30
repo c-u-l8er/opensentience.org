@@ -1,0 +1,7 @@
+[
+  { "metric": "LongMemEval", "value": "92.6%", "unit": "500-question QA", "note": "Graphonomous (OS-001), shipped \u00b7 graph-backed memory beats flat RAG", "href": "https://graphonomous.com" },
+  { "metric": "\u03ba invariant", "value": "1,926,351", "unit": "systems proved", "note": "0 counterexamples \u00b7 exhaustive, and it runs in your browser below", "href": "#proof" },
+  { "metric": "box-and-box kernel", "value": "97 laws", "unit": "\u00d7 2,000 trials", "note": "the governance floor, property-tested \u2014 every verdict ships a certificate", "href": "#stack" },
+  { "metric": "PRISM self-benchmark", "value": "0.10 \u2192 0.99", "unit": "4 cycles", "note": "then adversarial testing crashed it to 0.45 and surfaced real bugs we fixed", "href": "https://prism.opensentience.org" },
+  { "metric": "Cross-machine replay", "value": "100%", "unit": "fidelity", "note": "teach a skill on machine A, replay it on machine B (OS-011 Embodiment)", "href": "#protocols" }
+]

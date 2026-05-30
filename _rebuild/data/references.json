@@ -1,0 +1,55 @@
+[
+  {
+    "group": "Cognitive Architectures",
+    "items": [
+      "Newell, A. (1990). <em>Unified Theories of Cognition</em>. Harvard University Press.",
+      "Laird, J.E. (2012). <em>The Soar Cognitive Architecture</em>. MIT Press.",
+      "Anderson, J.R. (2007). <em>How Can the Human Mind Occur in the Physical Universe?</em> Oxford University Press. (ACT-R)",
+      "Sumers et al. (2023). \"Cognitive Architectures for Language Agents (CoALA).\" arXiv:2309.02427."
+    ]
+  },
+  {
+    "group": "Memory & Neuroscience",
+    "items": [
+      "Tulving, E. (1972, 1983). Distinction between episodic and semantic memory.",
+      "Baddeley, A. &amp; Hitch, G. (1974). Working memory model.",
+      "O'Keefe, J. &amp; Nadel, L. (1978). <em>The Hippocampus as a Cognitive Map</em>.",
+      "Burgess et al. (2002). Hippocampal function including temporal and spatial-associative retrievals.",
+      "Behrouz &amp; Mirrokni (Google Research, NeurIPS 2025). \"Nested Learning\" — HOPE architecture for multi-timescale memory.",
+      "Zheng et al. (2025). \"Machine Memory Intelligence: Inspired by Human Memory Mechanisms.\" <em>Engineering</em>, 55(12): 24-35.",
+      "Liu et al. (2025). \"Memory in the Age of AI Agents: A Survey.\" arXiv."
+    ]
+  },
+  {
+    "group": "Agent Protocols & Deliberation",
+    "items": [
+      "Anthropic (2024-2025). Model Context Protocol (MCP). modelcontextprotocol.io.",
+      "Google (2025). Agent-to-Agent Protocol (A2A). github.com/google/A2A.",
+      "Kaesberg et al. (ACL 2025). Multi-agent deliberation protocols outperforming voting approaches.",
+      "Rodriguez-Sanchez et al. (Jan 2026). \"DALIA: Declarative Agentic Layer for Intelligent Agents.\" arXiv:2601.17435.",
+      "IBM / Linux Foundation (2025). Agent Communication Protocol (ACP)."
+    ]
+  },
+  {
+    "group": "Modal Logic, Decision Theory & Measurement",
+    "items": [
+      "Kripke, S.A. (1963). \"Semantical Considerations on Modal Logic.\" <em>Acta Philosophica Fennica</em>, 16: 83-94. (alethic rung)",
+      "von Wright, G.H. (1951). \"Deontic Logic.\" <em>Mind</em>, 60(237): 1-15. (deontic rung)",
+      "Pnueli, A. (1977). \"The Temporal Logic of Programs.\" <em>18th FOCS</em>: 46-57. (temporal rung)",
+      "Hintikka, J. (1962). <em>Knowledge and Belief: An Introduction to the Logic of the Two Notions</em>. Cornell University Press. (epistemic rung)",
+      "von Neumann, J. &amp; Morgenstern, O. (1944). <em>Theory of Games and Economic Behavior</em>. Princeton University Press. (strategic rung)",
+      "Savage, L.J. (1954). <em>The Foundations of Statistics</em>. Wiley. (axiological / value rung)",
+      "Kahneman, D. (2011). <em>Thinking, Fast and Slow</em>. Farrar, Straus and Giroux. (dual-process grounding for κ-routing)",
+      "Rasch, G. (1960). <em>Probabilistic Models for Some Intelligence and Attainment Tests</em>; Lord, F.M. (1980). <em>Applications of Item Response Theory</em>. (PRISM difficulty calibration)"
+    ]
+  },
+  {
+    "group": "Industry & Surveys",
+    "items": [
+      "Gartner (2025). 40% of enterprise apps will embed AI agents by end of 2026.",
+      "ICLR 2026 Workshop. \"MemAgents: Memory for LLM-Based Agentic Systems.\"",
+      "VentureBeat (Jan 2026). \"Continual learning shifts rigor toward memory provenance and retention.\"",
+      "Chen et al. (2025). \"AI Meets Brain: A Unified Survey on Memory Systems.\" arXiv:2512.23343."
+    ]
+  }
+]

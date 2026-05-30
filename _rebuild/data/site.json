@@ -1,0 +1,32 @@
+{
+  "name": "OpenSentience",
+  "tagline": "Open Research into Machine Cognition",
+  "description": "Open research protocols for machine cognition, structured memory, deliberation topology, and agent governance. Published by Ampersand Box Design.",
+  "keywords": "machine cognition, agent memory, knowledge graph topology, κ-routing, deliberation protocol, cognitive architecture, AI agent governance, continual learning, structured memory",
+  "github": "https://github.com/c-u-l8er/opensentience.org",
+  "docs": "https://docs.opensentience.org",
+  "parent": { "name": "Ampersand Box Design", "url": "https://ampersandboxdesign.com" },
+  "kernel": {
+    "name": "box-and-box",
+    "landing": "https://ampersandboxdesign.com",
+    "laws": "https://ampersandboxdesign.com/laws.html"
+  },
+  "nav": [
+    { "label": "Protocols", "href": "#protocols" },
+    { "label": "Proof", "href": "#proof" },
+    { "label": "Docs", "href": "https://docs.opensentience.org" },
+    { "label": "← [&]", "href": "https://ampersandboxdesign.com" }
+  ],
+  "footerLinks": [
+    { "label": "Docs", "href": "https://docs.opensentience.org" },
+    { "label": "box-and-box kernel", "href": "#kernel" },
+    { "label": "Playground", "href": "/playground.html" },
+    { "label": "The 97 laws", "href": "https://ampersandboxdesign.com/laws.html" },
+    { "label": "ampersandboxdesign.com", "href": "https://ampersandboxdesign.com" },
+    { "label": "graphonomous.com", "href": "https://graphonomous.com" },
+    { "label": "deliberatic.com", "href": "https://deliberatic.com" },
+    { "label": "GitHub", "href": "https://github.com/c-u-l8er/AmpersandBoxDesign" },
+    { "label": "[&] Protocol", "href": "https://ampersandboxdesign.com/protocol.html" },
+    { "label": "traaviis.com", "href": "https://traaviis.com" }
+  ]
+}

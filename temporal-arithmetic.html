@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temporal Arithmetic · OpenSentience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f2e9;--paper-2:#efe9db;--ink:#1c1813;--ink-soft:#4a4338;--rule:#d8cfba;
+    --accent:#a85a1c;--accent-soft:#c98b4e;--pass:#2f7d51;--warn:#b98a2b;--fail:#b23b34;
+    --code-bg:#262017;--code-ink:#ece3d2;--code-dim:#9a8e76;
+    --serif:"Newsreader",Georgia,serif;--display:"Fraunces",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.65;
+    background-image:radial-gradient(circle at 8% -8%,rgba(168,90,28,.05),transparent 42%);}
+  .bar{position:sticky;top:var(--amp-nav-height,56px);z-index:50;display:flex;align-items:center;gap:1rem;padding:.55rem max(1.2rem,calc(50% - 32rem));
+    background:rgba(246,242,233,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12.5px;}
+  .bar .tag{letter-spacing:.06em;color:var(--ink-soft)} .bar .tag b{color:var(--accent);font-weight:600} .bar .spacer{flex:1}
+  .bar a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent} .bar a:hover{border-color:var(--accent-soft)}
+  .bar a.here{color:var(--accent)}
+
+  main{max-width:50rem;margin:0 auto;padding:2.8rem 1.2rem 6rem}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 1rem}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,3.1rem);line-height:1.04;letter-spacing:-.015em;margin:0 0 1.1rem}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{font-size:1.16rem;color:var(--ink-soft)}
+  .ladder{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1.6rem 0 0;line-height:1.9;border-left:2px solid var(--rule);padding-left:1rem}
+  .ladder b{color:var(--accent)} .ladder .on{color:var(--ink);font-weight:600}
+
+  h2{font-family:var(--display);font-weight:600;font-size:1.75rem;margin:3rem 0 .2rem;padding-top:1.6rem;border-top:1px solid var(--rule)}
+  h2 .n{color:var(--accent-soft);font-size:1.1rem;font-weight:600;margin-right:.6rem}
+  h3{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:1.8rem 0 .6rem}
+  p{margin:1rem 0} p code,li code,td code{font-family:var(--mono);font-size:.82em;background:var(--paper-2);padding:.05em .35em;border-radius:4px}
+  em.t{font-style:normal;color:var(--accent);font-family:var(--mono);font-size:.85em}
+  .saf{color:var(--accent);font-weight:600} .liv{color:var(--pass);font-weight:600}
+
+  .split{display:flex;gap:1.6rem;flex-wrap:wrap;margin:1.4rem 0;background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.4rem}
+  .split .col{flex:1 1 18rem} .split h4{font-family:var(--mono);font-size:12px;margin:0 0 .5rem}
+  .split .s{color:var(--accent)} .split .l{color:var(--pass)}
+  .split p{font-size:14px;margin:.4rem 0;color:var(--ink-soft)}
+
+  table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:14.5px}
+  th,td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  td.op{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+  td .law{font-family:var(--mono);font-size:11.5px;color:var(--accent)}
+
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:1.1rem 1.3rem;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6;border:1px solid #332b1f;margin:1.2rem 0}
+  pre .c{color:var(--code-dim)} pre .k{color:#d99a5b} pre .s{color:#9cc6a0}
+
+  .panel{background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.3rem 1.4rem;margin:1.2rem 0}
+  .btn{font-family:var(--mono);font-size:13px;letter-spacing:.03em;border:none;cursor:pointer;background:var(--accent);color:#fff;padding:.58rem 1.15rem;border-radius:8px;transition:filter .15s,transform .05s}
+  .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
+  .stats{display:flex;flex-wrap:wrap;gap:1.4rem;font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1rem 0}
+  .stats b{font-family:var(--display);font-style:normal;font-weight:600;font-size:1.3rem;display:block;color:var(--ink)}
+  .stats .ok b{color:var(--pass)} .stats .no b{color:var(--fail)}
+  .lawrow{display:grid;grid-template-columns:1.1rem 3.3rem 1fr auto;align-items:start;gap:.6rem;padding:.32rem 0;border-bottom:1px solid var(--rule);font-size:13.5px}
+  .lawrow:last-child{border:none}
+  .dot{width:.6rem;height:.6rem;border-radius:99px;margin-top:.42rem;background:var(--rule)}
+  .dot.pass{background:var(--pass);box-shadow:0 0 0 3px rgba(47,125,81,.15)} .dot.fail{background:var(--fail);box-shadow:0 0 0 3px rgba(178,59,52,.15)}
+  .lid{font-family:var(--mono);font-size:11.5px;color:var(--accent);padding-top:.18rem} .lst{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);padding-top:.28rem}
+  .hl{background:rgba(168,90,28,.09);border-radius:6px}
+
+  .run{border-left:3px solid var(--rule);padding:.4rem 0 .4rem 1rem;margin:1.1rem 0}
+  .run.ok{border-color:var(--pass)} .run.bad{border-color:var(--fail)}
+  .run .h{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+  .traj{font-family:var(--mono);font-size:12.5px;margin:.4rem 0}
+  .traj .st{display:inline-block;padding:.1rem .5rem;border:1px solid var(--rule);border-radius:6px;margin-right:.3rem;background:var(--paper)}
+  .specrow{font-family:var(--mono);font-size:12px;margin:.35rem 0;line-height:1.7}
+  .specrow .ok{color:var(--pass)} .specrow .no{color:var(--fail)} .specrow .esc{color:var(--warn)}
+  .online{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft)}
+  .online .vio{color:var(--fail);font-weight:600} .online .sat{color:var(--pass);font-weight:600}
+  .note{font-family:var(--mono);font-size:11.5px;color:var(--ink);margin-top:.5rem;display:block}
+  .shield{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:.9rem 1.1rem;margin-top:.8rem}
+  .shield .prune{color:var(--fail)} .shield .allow{color:var(--pass)}
+
+  .refs{font-family:var(--mono);font-size:12px;color:var(--ink-soft);line-height:1.95;margin:1rem 0}
+  .refs em{color:var(--ink)}
+  footer{margin-top:4rem;padding-top:1.6rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.9} footer b{color:var(--accent)}
+  @media(max-width:640px){body{font-size:16.5px} .lawrow{grid-template-columns:1rem 2.8rem 1fr} .lst{display:none}}
+</style>
+</head>
+<body>
+<script type="module" src="/amp-nav.js"></script>
+<amp-nav property="arith_temporal" theme="light"></amp-nav>
+<div class="bar">
+  <span class="tag">OpenSentience · <b>Temporal Arithmetic</b> · v0.1</span>
+  <span class="spacer"></span>
+  <a href="/invariant-arithmetic">invariant</a>  <a href="/deontic-arithmetic">deontic</a>
+  <a href="#" class="here">temporal</a>
+  <a href="/reflexive-arithmetic">reflexive</a>
+  <a href="/epistemic-arithmetic">epistemic</a>
+  <a href="/strategic-arithmetic">strategic</a>
+  <a href="/resource-arithmetic">resource</a>
+</div>
+
+<main>
+  <p class="kicker">The fourth rung · what holds over time</p>
+  <h1>Temporal <em>Arithmetic</em></h1>
+  <p class="lede">The first three rungs judge a single state — is it safe, is it good, is it permitted. But an agent produces a <em>trajectory</em>, and the properties that matter most range over the whole run: <em class="t">nothing bad ever happens</em>, <em class="t">the goal is eventually reached</em>, <em class="t">progress is made infinitely often</em>. This is Linear Temporal Logic, made executable: an algebra of <span class="saf">safety</span> and <span class="liv">liveness</span>, evaluated by <strong>formula progression</strong> — the same step-at-a-time derivative that drives runtime monitoring.</p>
+
+  <div class="ladder">
+    the modality ladder<br>
+    1 · <b>alethic</b> — necessity / safety &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Invariant Arithmetic · refuses</span><br>
+    2 · <b>axiological</b> — value / preference &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Heuristic Arithmetic · ranks</span><br>
+    3 · <b>deontic</b> — obligation / permission &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Deontic Arithmetic · obliges &amp; escalates</span><br>
+    4 · <span class="on">temporal — liveness over trajectories &nbsp;→&nbsp; this page · shields &amp; sustains</span><br>
+    5 · <b>reflexive</b> — self-revising norms &nbsp;<span style="opacity:.6">→ later</span>
+  </div>
+
+  <!-- I -->
+  <h2><span class="n">I</span>The algebra</h2>
+  <p>A <code>Spec</code> is an LTL formula over atomic predicates on states. Four temporal operators, the standard ones, plus the Boolean connectives:</p>
+  <table>
+    <thead><tr><th>operator</th><th>reads</th><th>fixpoint identity (what progression implements)</th></tr></thead>
+    <tbody>
+      <tr><td class="op">X φ &nbsp;<span style="color:var(--ink-soft)">next</span></td><td>φ holds at the next step</td><td><code>progress(Xφ, s) = φ</code></td></tr>
+      <tr><td class="op">G φ &nbsp;<span style="color:var(--ink-soft)">always</span></td><td>φ holds at every step</td><td><code>Gφ ≡ φ ∧ X Gφ</code></td></tr>
+      <tr><td class="op">F φ &nbsp;<span style="color:var(--ink-soft)">eventually</span></td><td>φ holds at some step</td><td><code>Fφ ≡ φ ∨ X Fφ</code></td></tr>
+      <tr><td class="op">φ U ψ &nbsp;<span style="color:var(--ink-soft)">until</span></td><td>φ holds until ψ does</td><td><code>φUψ ≡ ψ ∨ (φ ∧ X(φUψ))</code></td></tr>
+    </tbody>
+  </table>
+  <p>Derived: <code>GF φ</code> (always-eventually — <em>infinitely often</em>), <code>FG φ</code> (eventually-always — <em>stabilizes</em>), and request/response <code>p ⟹ ◇q</code>. The one operation that makes this run online is <strong>progression</strong>:</p>
+  <p style="text-align:center;font-family:var(--mono);font-size:14px;background:var(--paper-2);border:1px solid var(--rule);border-radius:10px;padding:1rem">τ ⊨ φ &nbsp;&nbsp;iff&nbsp;&nbsp; τ¹ ⊨ <span class="saf">progress</span>(φ, τ₀)</p>
+  <p><code>progress(φ, s)</code> rewrites a formula into the residual obligation on the rest of the trajectory after seeing state <code>s</code> — the LTL derivative. Monitoring is just a fold of <code>progress</code> over the states; the residual collapses to <code>⊤</code> (satisfied) or <code>⊥</code> (violated) the moment the outcome is forced. This is the temporal analogue of the invariant layer's <code>chain</code>.</p>
+
+  <h3>Safety and liveness</h3>
+  <p>Every linear-time property is the conjunction of a safety property and a liveness property (Alpern &amp; Schneider). The split is exactly the seam between rungs 1–3 and this one:</p>
+  <div class="split">
+    <div class="col"><h4 class="s">SAFETY — G ¬bad</h4>
+      <p>"nothing bad ever happens." A violation has a <strong>finite witness</strong> — you can point to the step where it breaks. So safety can be enforced as a <strong>runtime shield</strong>: one step of lookahead prunes any action whose successor state would drive the residual to <code>⊥</code>.</p>
+      <p style="color:var(--accent)">extends the alethic floor across time.</p></div>
+    <div class="col"><h4 class="l">LIVENESS — F good</h4>
+      <p>"something good eventually happens." <strong>No finite prefix</strong> can falsify it — there is always still a chance later. It can only fail by running out of horizon. So liveness behaves as a <strong>temporal obligation</strong> with a deadline; unmet, it escalates.</p>
+      <p style="color:var(--pass)">extends the deontic ought across time.</p></div>
+  </div>
+  <p>That second observation is the unification: a one-step deontic obligation and a liveness goal are the same thing at different horizons, and they share the same <strong>contrary-to-duty</strong> escalation when they cannot be met.</p>
+
+  <!-- II -->
+  <h2><span class="n">II</span>The laws</h2>
+  <p>Eight for the temporal algebra, three for the interaction with the bridge. The keystone is <span class="hl">T4</span> — progression agrees with the semantics — which the harness checks by running the monitor against an <em>independent</em> recursive evaluator on random formulas.</p>
+  <table>
+    <tbody>
+      <tr><td class="op">T1</td><td>G and F are idempotent (<code>GGφ ≡ Gφ</code>)</td></tr>
+      <tr><td class="op">T2</td><td>duality: <code>¬Gφ ≡ F¬φ</code>, <code>¬Fφ ≡ G¬φ</code></td></tr>
+      <tr><td class="op">T3</td><td>∧, ∨ over specs are commutative and idempotent (a lattice)</td></tr>
+      <tr class="hl"><td class="op">T4</td><td>progression is faithful: <code>monitor(φ, τ) ≡ evalDirect(φ, τ)</code></td></tr>
+      <tr><td class="op">T5</td><td>safety has a finite witness; liveness never commits to false before the horizon</td></tr>
+      <tr><td class="op">T6</td><td><code>G(φ∧ψ) ≡ Gφ∧Gψ</code>, <code>F(φ∨ψ) ≡ Fφ∨Fψ</code></td></tr>
+      <tr><td class="op">T7</td><td>the until fixpoint: <code>φUψ ≡ ψ ∨ (φ ∧ X(φUψ))</code></td></tr>
+      <tr><td class="op">T8</td><td>on a lasso ⟨stem⟩⟨loop⟩<sup>ω</sup>: <code>GF p</code> ⇔ p somewhere in loop; <code>FG p</code> ⇔ p everywhere in loop</td></tr>
+      <tr><td class="op">TB1</td><td>the safety shield prunes a step whose successor would violate</td></tr>
+      <tr><td class="op">TB2</td><td>an unmet liveness obligation escalates (contrary-to-duty) at the horizon</td></tr>
+      <tr><td class="op">TB3</td><td>a safety violation yields an unsafe verdict with the witness step</td></tr>
+    </tbody>
+  </table>
+
+  <!-- III -->
+  <h2><span class="n">III</span>The laws, checked</h2>
+  <p>Same harness as the other rungs — each law against random inputs, in your browser, on the engine that ships in <code>box-and-box</code>. T4 in particular runs random formulas through both the progression monitor and the reference evaluator and checks they agree.</p>
+  <div class="panel">
+    <button class="btn" id="run">Run the harness →</button>
+    <div class="stats"><span><b id="t">11</b>laws</span><span class="ok"><b id="p">—</b>passing</span><span class="no"><b id="f">—</b>failing</span><span><b id="ms">—</b>ms</span></div>
+    <div id="out"></div>
+  </div>
+
+  <!-- IV -->
+  <h2><span class="n">IV</span>Type sketch</h2>
+  <pre><span class="c">// an LTL spec over predicates on states</span>
+<span class="k">type</span> Spec =
+  | { t:<span class="s">"atom"</span>; pred:(s:State)=>boolean }
+  | { t:<span class="s">"not"|"next"|"always"|"eventually"</span>; a:Spec }
+  | { t:<span class="s">"and"|"or"|"until"</span>; a:Spec; b:Spec };
+
+<span class="c">// the LTL derivative — residual obligation on the suffix</span>
+<span class="k">function</span> progress(f: Spec, s: State): Spec;
+
+<span class="c">// fold progress; verdict collapses to satisfied / violated, else pending</span>
+<span class="k">function</span> monitor(f: Spec, τ: State[]):
+  { verdict:<span class="s">"satisfied"|"violated"</span>; online: Verdict[]; residual: Spec };
+
+<span class="c">// safety → shield (one-step lookahead) · liveness → obligation (escalates at horizon)</span>
+<span class="k">function</span> guard(residual: Spec, next: State): boolean;     <span class="c">// would `next` violate?</span>
+<span class="k">function</span> supervise(τ: State[], specs: TemporalSpec[]): {
+  safe: boolean;
+  escalation: { required:true; specs:{ id; repair; reason }[] } | null;
+};</pre>
+
+  <!-- V -->
+  <h2><span class="n">V</span>Worked example</h2>
+  <p>An agent runs a multi-step task. States carry the invariant Value's fields, so the atoms are predicates over the real substrate: a <span class="saf">safety</span> spec <code>G(β ≥ 0.8)</code> — confidence never drops — and a <span class="liv">liveness</span> spec <code>F(done)</code> — the task eventually completes, with a contrary-to-duty repair <em class="t">escalate-replan</em>. Watch the verdicts, and the shield one step ahead. Runs live.</p>
+  <div class="panel">
+    <button class="btn" id="runEx">Run the supervision →</button>
+    <div id="ex" style="margin-top:1rem"></div>
+  </div>
+
+  <!-- VI -->
+  <h2><span class="n">VI</span>Standing on</h2>
+  <p>Linear Temporal Logic is <strong>Pnueli</strong>'s (1977); the <span class="saf">safety</span>/<span class="liv">liveness</span> decomposition is <strong>Alpern &amp; Schneider</strong>'s (1985); the three-valued online verdict (satisfied / violated / pending) is the <strong>runtime-verification</strong> tradition (Bauer, Leucker &amp; Schallhart, 2011); and <strong>formula progression</strong> — evaluating a temporal formula one state at a time by rewriting it — is <strong>Bacchus &amp; Kabanza</strong>'s (2000). The safety shield is the same <em>shielding</em> idea the invariant bridge uses, lifted from a single action to a trajectory. None of it is new; the contribution is the executable synthesis and the wiring onto the rest of the ladder.</p>
+  <div class="refs">
+    Pnueli, A. (1977). <em>The Temporal Logic of Programs.</em> FOCS.<br>
+    Alpern, B. &amp; Schneider, F. (1985). <em>Defining Liveness.</em> Information Processing Letters 21.<br>
+    Bacchus, F. &amp; Kabanza, F. (2000). <em>Using Temporal Logic to Express Search Control Knowledge.</em> Artificial Intelligence 116.<br>
+    Bauer, A., Leucker, M. &amp; Schallhart, C. (2011). <em>Runtime Verification for LTL and TLTL.</em> ACM TOSEM 20.
+  </div>
+
+  <footer>
+    <b>OpenSentience · Temporal Arithmetic</b> · the fourth rung of the modality ladder<br>
+    runnable: <code>npm i box-and-box</code> · <code>npx box-and-box supervise</code> · <code>npx box-and-box laws</code><br>
+    the full ladder — alethic · axiological · deontic · temporal · reflexive · epistemic · strategic, on the resource economy — 97 property-tested laws.
+  </footer>
+</main>
+
+<script>
+"use strict";
+/* ===== temporal engine (= temporal.mjs + supervise.mjs) ===== */
+const TRUE={t:'true'},FALSE={t:'false'};
+const atom=(name,pred)=>({t:'atom',name,pred});
+const isT=f=>f.t==='true',isF=f=>f.t==='false';
+function eq(a,b){if(a===b)return true;if(!a||!b||a.t!==b.t)return false;switch(a.t){case 'true':case 'false':return true;case 'atom':return a.name===b.name;case 'not':case 'next':case 'always':case 'eventually':return eq(a.a,b.a);case 'and':case 'or':case 'until':return eq(a.a,b.a)&&eq(a.b,b.b);default:return false;}}
+function not(f){if(isT(f))return FALSE;if(isF(f))return TRUE;if(f.t==='not')return f.a;return{t:'not',a:f};}
+function and(a,b){if(isF(a)||isF(b))return FALSE;if(isT(a))return b;if(isT(b))return a;if(eq(a,b))return a;return{t:'and',a,b};}
+function or(a,b){if(isT(a)||isT(b))return TRUE;if(isF(a))return b;if(isF(b))return a;if(eq(a,b))return a;return{t:'or',a,b};}
+const next=a=>({t:'next',a}),always=a=>({t:'always',a}),eventually=a=>({t:'eventually',a}),until=(a,b)=>({t:'until',a,b});
+const gf=a=>always(eventually(a)),fg=a=>eventually(always(a));
+function progress(f,s){switch(f.t){case 'true':return TRUE;case 'false':return FALSE;case 'atom':return f.pred(s)?TRUE:FALSE;case 'not':return not(progress(f.a,s));case 'and':return and(progress(f.a,s),progress(f.b,s));case 'or':return or(progress(f.a,s),progress(f.b,s));case 'next':return f.a;case 'always':return and(progress(f.a,s),always(f.a));case 'eventually':return or(progress(f.a,s),eventually(f.a));case 'until':return or(progress(f.b,s),and(progress(f.a,s),until(f.a,f.b)));default:return f;}}
+function finalize(f){switch(f.t){case 'true':return true;case 'false':return false;case 'atom':return false;case 'not':return !finalize(f.a);case 'and':return finalize(f.a)&&finalize(f.b);case 'or':return finalize(f.a)||finalize(f.b);case 'always':return true;case 'eventually':return false;case 'until':return false;case 'next':return false;default:return false;}}
+function monitor(f,τ){let r=f;const online=[];let decidedAt=null;τ.forEach((s,i)=>{r=progress(r,s);const v=isT(r)?'sat':isF(r)?'vio':'pending';if(decidedAt===null&&v!=='pending')decidedAt=i;online.push(v);});const fin=isT(r)?true:isF(r)?false:finalize(r);return{verdict:fin?'satisfied':'violated',online,residual:r,decidedAt};}
+function evalDirect(f,τ,i=0){if(i>=τ.length){switch(f.t){case 'true':return true;case 'false':return false;case 'atom':return false;case 'not':return !evalDirect(f.a,τ,i);case 'and':return evalDirect(f.a,τ,i)&&evalDirect(f.b,τ,i);case 'or':return evalDirect(f.a,τ,i)||evalDirect(f.b,τ,i);case 'always':return true;case 'eventually':return false;case 'until':return false;case 'next':return false;default:return false;}}switch(f.t){case 'true':return true;case 'false':return false;case 'atom':return !!f.pred(τ[i]);case 'not':return !evalDirect(f.a,τ,i);case 'and':return evalDirect(f.a,τ,i)&&evalDirect(f.b,τ,i);case 'or':return evalDirect(f.a,τ,i)||evalDirect(f.b,τ,i);case 'next':return evalDirect(f.a,τ,i+1);case 'always':return evalDirect(f.a,τ,i)&&evalDirect(always(f.a),τ,i+1);case 'eventually':return evalDirect(f.a,τ,i)||evalDirect(eventually(f.a),τ,i+1);case 'until':return evalDirect(f.b,τ,i)||(evalDirect(f.a,τ,i)&&evalDirect(until(f.a,f.b),τ,i+1));default:return false;}}
+const someState=(st,p)=>st.some(s=>p.pred(s)),everyState=(st,p)=>st.every(s=>p.pred(s));
+function monitorLasso(f,stem,loop){if(f.t==='always'&&f.a.t==='atom')return everyState(stem,f.a)&&everyState(loop,f.a);if(f.t==='eventually'&&f.a.t==='atom')return someState(stem,f.a)||someState(loop,f.a);if(f.t==='always'&&f.a.t==='eventually'&&f.a.a.t==='atom')return someState(loop,f.a.a);if(f.t==='eventually'&&f.a.t==='always'&&f.a.a.t==='atom')return everyState(loop,f.a.a);return evalDirect(f,[...stem,...loop,...loop,...loop]);}
+function show(f){switch(f.t){case 'true':return '⊤';case 'false':return '⊥';case 'atom':return f.name;case 'not':return '¬'+show(f.a);case 'and':return '('+show(f.a)+'∧'+show(f.b)+')';case 'or':return '('+show(f.a)+'∨'+show(f.b)+')';case 'next':return 'X'+show(f.a);case 'always':return 'G'+show(f.a);case 'eventually':return 'F'+show(f.a);case 'until':return '('+show(f.a)+' U '+show(f.b)+')';default:return '?';}}
+const TemporalSpec=({id,formula,kind='safety',ctd=null})=>({id,formula,kind,ctd});
+const firstVio=on=>{const i=on.indexOf('vio');return i<0?null:i;};
+function supervise(τ,specs){const reports=specs.map(spec=>{const m=monitor(spec.formula,τ);const r={id:spec.id,kind:spec.kind,formula:show(spec.formula),verdict:m.verdict,online:m.online,violatedAt:spec.kind==='safety'?firstVio(m.online):null};if(spec.kind==='liveness'&&m.verdict==='violated'){r.escalation=spec.ctd||'escalate-to-human';r.reason=`liveness ${show(spec.formula)} unmet within horizon (${τ.length} steps)`;}return r;});const sv=reports.filter(r=>r.kind==='safety'&&r.verdict==='violated'),lu=reports.filter(r=>r.kind==='liveness'&&r.verdict==='violated');return{reports,safe:sv.length===0,escalation:lu.length?{required:true,specs:lu.map(r=>({id:r.id,repair:r.escalation,reason:r.reason}))}:null};}
+function residualOf(formula,history){return history.reduce((f,s)=>progress(f,s),formula);}
+function guard(residual,next){return progress(residual,next).t==='false';}
+
+/* ===== law harness ===== */
+const $=s=>document.querySelector(s);
+const ATS=[atom('even',s=>s.v%2===0),atom('hi',s=>s.v>=3),atom('pos',s=>s.v>0)];
+const rAtom=()=>ATS[(Math.random()*ATS.length)|0];
+function rForm(d){if(d<=0)return rAtom();switch((Math.random()*8)|0){case 0:return rAtom();case 1:return not(rForm(d-1));case 2:return and(rForm(d-1),rForm(d-1));case 3:return or(rForm(d-1),rForm(d-1));case 4:return next(rForm(d-1));case 5:return always(rForm(d-1));case 6:return eventually(rForm(d-1));default:return until(rForm(d-1),rForm(d-1));}}
+const rTraj=()=>Array.from({length:1+((Math.random()*6)|0)},()=>({v:(Math.random()*5)|0}));
+function trial(n,b){for(let i=0;i<n;i++){const r=b();if(r!==true)return{pass:false,cex:r,at:i+1};}return{pass:true,at:n};}
+const sat=(f,τ)=>monitor(f,τ).verdict==='satisfied';
+const LAWS=[
+ ['T1','G,F idempotent',n=>trial(n,()=>{const a=rForm(2),τ=rTraj();return evalDirect(always(always(a)),τ)===evalDirect(always(a),τ)&&evalDirect(eventually(eventually(a)),τ)===evalDirect(eventually(a),τ)?true:'idem';})],
+ ['T2','duality',n=>trial(n,()=>{const a=rForm(2),τ=rTraj();return evalDirect(not(always(a)),τ)===evalDirect(eventually(not(a)),τ)&&evalDirect(not(eventually(a)),τ)===evalDirect(always(not(a)),τ)?true:'dual';})],
+ ['T3','∧,∨ comm + idem',n=>trial(n,()=>{const a=rForm(2),b=rForm(2),τ=rTraj();return evalDirect(and(a,b),τ)===evalDirect(and(b,a),τ)&&evalDirect(and(a,a),τ)===evalDirect(a,τ)?true:'lat';})],
+ ['T4','progression faithful (monitor ≡ direct)',n=>trial(n,()=>{const a=rForm(2),τ=rTraj();return sat(a,τ)===evalDirect(a,τ,0)?true:'≠';})],
+ ['T5','safety witness / liveness never-early',n=>trial(n,()=>{const p=rAtom(),τ=rTraj();const g=monitor(always(p),τ);if(g.verdict==='violated'&&!g.online.includes('vio'))return 'sNoWitness';const f=monitor(eventually(p),τ);return f.online.includes('vio')?'lEarly':true;})],
+ ['T6','G/∧ and F/∨ distribute',n=>trial(n,()=>{const a=rForm(1),b=rForm(1),τ=rTraj();return evalDirect(always(and(a,b)),τ)===evalDirect(and(always(a),always(b)),τ)&&evalDirect(eventually(or(a,b)),τ)===evalDirect(or(eventually(a),eventually(b)),τ)?true:'dist';})],
+ ['T7','until fixpoint',n=>trial(n,()=>{const a=rForm(1),b=rForm(1),τ=rTraj();return evalDirect(until(a,b),τ)===evalDirect(or(b,and(a,next(until(a,b)))),τ)?true:'fix';})],
+ ['T8','lasso GF/FG + G/F unroll',n=>trial(n,()=>{const p=rAtom(),stem=rTraj(),loop=rTraj();const sl=loop.some(s=>p.pred(s)),el=loop.every(s=>p.pred(s));if(monitorLasso(gf(p),stem,loop)!==sl)return 'GF';if(monitorLasso(fg(p),stem,loop)!==el)return 'FG';const u=[...stem,...loop,...loop,...loop];if(monitorLasso(always(p),stem,loop)!==evalDirect(always(p),u))return 'G';return monitorLasso(eventually(p),stem,loop)===evalDirect(eventually(p),u)?true:'F';})],
+ ['TB1','safety shield prunes',n=>trial(n,()=>{const safe=always(atom('β',s=>s.beta>=.8));const res=residualOf(safe,[{beta:.95},{beta:.9}]);return guard(res,{beta:.5})===true&&guard(res,{beta:.95})===false?true:'sh';})],
+ ['TB2','unmet liveness escalates',n=>trial(n,()=>{const spec=TemporalSpec({id:'g',formula:eventually(atom('done',s=>s.done)),kind:'liveness',ctd:'replan'});const miss=supervise([{done:false},{done:false}],[spec]),hit=supervise([{done:false},{done:true}],[spec]);return miss.escalation&&miss.escalation.specs[0].repair==='replan'&&hit.escalation===null?true:'esc';})],
+ ['TB3','safety violation ⇒ unsafe',n=>trial(n,()=>{const spec=TemporalSpec({id:'n',formula:always(atom('β',s=>s.beta>=.8)),kind:'safety'});const r=supervise([{beta:.9},{beta:.5},{beta:.9}],[spec]);return r.safe===false&&r.reports[0].violatedAt===1?true:'uns';})]
+];
+function runLaws(){const N=1500,out=$('#out');out.innerHTML='';let pass=0,fail=0;const t0=performance.now();
+ for(const[id,desc,fn] of LAWS){const r=fn(N);r.pass?pass++:fail++;const row=document.createElement('div');row.className='lawrow'+(id==='T4'?' hl':'');
+  row.innerHTML=`<span class="dot ${r.pass?'pass':'fail'}"></span><span class="lid">${id}</span><span>${desc}${r.pass?'':` <span style="color:var(--fail)">— ${r.cex}</span>`}</span><span class="lst">${r.pass?'✓ '+r.at:'✗ @'+r.at}</span>`;out.appendChild(row);}
+ $('#t').textContent=LAWS.length;$('#p').textContent=pass;$('#f').textContent=fail;$('#ms').textContent=(performance.now()-t0).toFixed(1);}
+
+/* ===== worked example (live) ===== */
+const betaOK=atom('β≥0.8',s=>s.beta>=.8), done=atom('done',s=>s.done===true);
+const SPECS=[TemporalSpec({id:'confidence-floor',formula:always(betaOK),kind:'safety'}),TemporalSpec({id:'reach-goal',formula:eventually(done),kind:'liveness',ctd:'escalate-replan'})];
+function onlineHtml(on){return on.map(v=>`<span class="${v==='vio'?'vio':v==='sat'?'sat':''}">${v}</span>`).join(' · ');}
+function runCard(title,τ,bad){const r=supervise(τ,SPECS);const div=document.createElement('div');div.className='run '+(r.safe&&!r.escalation?'ok':'bad');
+ let rows='';r.reports.forEach(x=>{const m=x.verdict==='satisfied'?'<span class="ok">✓</span>':'<span class="no">✗</span>';let extra=x.violatedAt!=null?` <span class="no">(witness @ step ${x.violatedAt})</span>`:'';if(x.escalation)extra+=` <span class="esc">→ escalate: ${x.escalation}</span>`;rows+=`<div class="specrow">${m} ${x.kind} · ${x.id} · <b>${x.formula}</b> → ${x.verdict}${extra}<br><span class="online">online: ${onlineHtml(x.online)}</span></div>`;});
+ const note=!r.safe?`UNSAFE — safety violated; the shield would have pruned that transition.`:(r.escalation?`safe, but liveness unmet at the horizon → escalation: ${r.escalation.specs.map(s=>s.repair).join(', ')}.`:`all specs satisfied — safe and live.`);
+ div.innerHTML=`<div class="h">${title}</div><div class="traj">${τ.map(s=>`<span class="st">β${s.beta}${s.done?', done':''}</span>`).join('→ ')}</div>${rows}<span class="note">${note}</span>`;return div;}
+function runEx(){const ex=$('#ex');ex.innerHTML='';
+ ex.appendChild(runCard('1 · a good run (safe, reaches the goal)',[{beta:.95,done:false},{beta:.90,done:false},{beta:.88,done:true}]));
+ ex.appendChild(runCard('2 · a bad run (confidence dips, goal never reached)',[{beta:.90,done:false},{beta:.50,done:false},{beta:.85,done:false}]));
+ const res=residualOf(always(betaOK),[{beta:.95},{beta:.90}]);
+ const sh=document.createElement('div');sh.className='shield';
+ sh.innerHTML=`<b>3 · the safety shield (one-step lookahead)</b><br>after 2 safe steps, residual = <b>${show(res)}</b><br>guard( next = [β0.50] ) → <span class="prune">${guard(res,{beta:.5})} ⇒ PRUNE</span><br>guard( next = [β0.95] ) → <span class="allow">${guard(res,{beta:.95})} ⇒ allow</span>`;
+ ex.appendChild(sh);
+}
+$('#run').addEventListener('click',runLaws);
+$('#runEx').addEventListener('click',runEx);
+runLaws(); runEx();
+</script>
+</body>
+</html>

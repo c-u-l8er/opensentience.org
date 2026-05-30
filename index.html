@@ -18,1025 +18,7 @@
             href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
-        <style>
-            :root {
-                --bg: #09090b;
-                --bg-elevated: #121214;
-                --bg-card: #18181b;
-                --bg-card-hover: #222225;
-                --text: #f4f4f5;
-                --text-secondary: #a1a1aa;
-                --text-dim: #71717a;
-                --accent: #a78bfa;
-                --accent-dim: #8b5cf6;
-                --accent-glow: rgba(167, 139, 250, 0.15);
-                --cyan: #2dd4bf;
-                --blue: #60a5fa;
-                --rose: #fb7185;
-                --amber: #fbbf24;
-                --border: #27272a;
-                --border-accent: #4c1d95;
-                --serif: "Crimson Pro", Georgia, serif;
-                --sans: "DM Sans", system-ui, sans-serif;
-                --mono: "JetBrains Mono", monospace;
-                --max-w: 1100px;
-                --gutter: clamp(1.5rem, 4vw, 3rem);
-            }
-
-            *,
-            *::before,
-            *::after {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
-
-            html {
-                scroll-behavior: smooth;
-                -webkit-font-smoothing: antialiased;
-            }
-
-            body {
-                background: var(--bg);
-                color: var(--text);
-                font-family: var(--serif);
-                font-size: 18px;
-                line-height: 1.7;
-                overflow-x: hidden;
-            }
-
-            /* Grain overlay */
-            body::after {
-                content: "";
-                position: fixed;
-                inset: 0;
-                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-                pointer-events: none;
-                z-index: 9999;
-            }
-
-            ::selection {
-                background: var(--accent);
-                color: var(--bg);
-            }
-
-            a {
-                color: var(--accent);
-                text-decoration: none;
-                transition: color 0.2s;
-            }
-            a:hover {
-                color: var(--text);
-            }
-
-            .container {
-                max-width: var(--max-w);
-                margin: 0 auto;
-                padding: 0 var(--gutter);
-                padding-bottom: 5em;
-                padding-top: 5em;
-            }
-
-            /* ─── NAV ─── */
-            nav {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 100;
-                background: rgba(9, 9, 11, 0.7);
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-                padding: 0 var(--gutter);
-            }
-            nav .nav-inner {
-                max-width: var(--max-w);
-                margin: 0 auto;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                height: 60px;
-            }
-            nav .logo {
-                font-family: var(--sans);
-                font-weight: 700;
-                font-size: 0.95rem;
-                letter-spacing: 0.02em;
-                color: var(--text);
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            nav .logo .mark {
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-                border: 2px solid var(--accent);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 0.7rem;
-                color: var(--accent);
-            }
-            nav .nav-links {
-                display: flex;
-                gap: 1.8rem;
-                list-style: none;
-            }
-            nav .nav-links a {
-                font-family: var(--sans);
-                font-size: 0.8rem;
-                font-weight: 500;
-                color: var(--text-secondary);
-                letter-spacing: 0.03em;
-                text-transform: uppercase;
-            }
-            nav .nav-links a:hover {
-                color: var(--accent);
-            }
-
-            @media (max-width: 700px) {
-                nav .nav-links {
-                    display: none;
-                }
-            }
-
-            /* ─── HERO ─── */
-            .hero {
-                padding: 10rem 0 0em;
-                text-align: center;
-                position: relative;
-            }
-            .hero::before {
-                content: "";
-                position: absolute;
-                top: -10%;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 800px;
-                height: 800px;
-                background: radial-gradient(
-                    circle,
-                    rgba(167, 139, 250, 0.15) 0%,
-                    rgba(96, 165, 250, 0.05) 40%,
-                    transparent 70%
-                );
-                pointer-events: none;
-                z-index: -1;
-            }
-            .hero-badge {
-                display: inline-block;
-                font-family: var(--mono);
-                font-size: 0.7rem;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                color: var(--accent);
-                border: 1px solid var(--border-accent);
-                padding: 0.4rem 1rem;
-                border-radius: 100px;
-                margin-bottom: 2rem;
-                background: var(--accent-glow);
-            }
-            .hero h1 {
-                font-family: var(--serif);
-                font-weight: 400;
-                font-size: clamp(2.8rem, 6vw, 4.5rem);
-                line-height: 1.1;
-                letter-spacing: -0.03em;
-                max-width: 850px;
-                margin: 0 auto 1.5rem;
-                background: linear-gradient(to right, #fff, #a1a1aa);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-            }
-            .hero h1 em {
-                font-style: italic;
-                background: linear-gradient(
-                    to right,
-                    var(--accent),
-                    var(--blue)
-                );
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-            }
-            .hero .subtitle {
-                font-family: var(--sans);
-                font-size: 1.05rem;
-                color: var(--text-secondary);
-                max-width: 600px;
-                margin: 0 auto 2.5rem;
-                line-height: 1.6;
-            }
-            .hero .cta-row {
-                display: flex;
-                gap: 1rem;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            .btn {
-                font-family: var(--sans);
-                font-size: 0.9rem;
-                font-weight: 600;
-                padding: 0.8rem 2rem;
-                border-radius: 8px;
-                border: 1px solid var(--border);
-                background: var(--bg-elevated);
-                color: var(--text);
-                cursor: pointer;
-                transition: all 0.3s ease;
-                text-decoration: none;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            }
-            .btn:hover {
-                background: var(--bg-card-hover);
-                border-color: var(--text-dim);
-                transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                color: var(--text);
-            }
-            .btn-primary {
-                background: var(--accent);
-                color: #000;
-                border-color: var(--accent);
-                box-shadow: 0 4px 15px rgba(167, 139, 250, 0.25);
-            }
-            .btn-primary:hover {
-                background: #babafe;
-                color: #000;
-                border-color: #babafe;
-                box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
-            }
-            .btn-github {
-                background: #f4f4f5;
-                color: #09090b;
-                border-color: #f4f4f5;
-                box-shadow: 0 4px 15px rgba(244, 244, 245, 0.15);
-                gap: 0.5rem;
-            }
-            .btn-github:hover {
-                background: #fff;
-                color: #000;
-                border-color: #fff;
-                box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
-            }
-            .btn-github svg {
-                width: 18px;
-                height: 18px;
-                fill: currentColor;
-            }
-
-            /* ─── SHOWCASE ─── */
-            .showcase {
-                padding: 4rem 0 2rem;
-            }
-            .showcase-label {
-                font-family: var(--mono);
-                font-size: 0.7rem;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-                color: var(--text-secondary);
-                text-align: center;
-                margin-bottom: 2rem;
-            }
-            .showcase-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1.5rem;
-            }
-            @media (max-width: 700px) {
-                .showcase-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
-            .showcase-card {
-                position: relative;
-                border: 1px solid var(--border);
-                border-radius: 12px;
-                padding: 2rem 2rem 1.8rem;
-                background: var(--bg-card);
-                transition: all 0.3s ease;
-                overflow: hidden;
-                text-decoration: none;
-                color: var(--text);
-                display: block;
-            }
-            .showcase-card:hover {
-                border-color: var(--text-dim);
-                background: var(--bg-card-hover);
-                transform: translateY(-4px);
-                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-                color: var(--text);
-            }
-            .showcase-card::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 3px;
-            }
-            .showcase-card--prism::before {
-                background: linear-gradient(
-                    90deg,
-                    #8b5cf6,
-                    #6366f1,
-                    #3b82f6,
-                    #06b6d4,
-                    #10b981,
-                    #eab308,
-                    #f97316,
-                    #ef4444
-                );
-            }
-            .showcase-card--pulse::before {
-                background: linear-gradient(90deg, #00f5d4, #00b4d8, #4cc9f0);
-            }
-            .showcase-card .card-protocol {
-                font-family: var(--mono);
-                font-size: 0.65rem;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                margin-bottom: 0.8rem;
-                display: inline-block;
-                padding: 0.25rem 0.6rem;
-                border-radius: 4px;
-            }
-            .showcase-card--prism .card-protocol {
-                color: #c4b5fd;
-                background: rgba(139, 92, 246, 0.15);
-            }
-            .showcase-card--pulse .card-protocol {
-                color: #00f5d4;
-                background: rgba(0, 245, 212, 0.12);
-            }
-            .showcase-card h3 {
-                font-family: var(--serif);
-                font-weight: 400;
-                font-size: 1.5rem;
-                margin-bottom: 0.6rem;
-                letter-spacing: -0.01em;
-            }
-            .showcase-card p {
-                font-family: var(--sans);
-                font-size: 0.9rem;
-                color: var(--text-secondary);
-                line-height: 1.55;
-                margin-bottom: 1.2rem;
-            }
-            .showcase-card .card-features {
-                display: flex;
-                gap: 1rem;
-                flex-wrap: wrap;
-            }
-            .showcase-card .card-feature {
-                font-family: var(--mono);
-                font-size: 0.68rem;
-                color: var(--text-dim);
-                letter-spacing: 0.04em;
-            }
-            .showcase-card .card-arrow {
-                position: absolute;
-                bottom: 1.8rem;
-                right: 2rem;
-                font-family: var(--sans);
-                font-size: 0.8rem;
-                color: var(--text-dim);
-                transition:
-                    color 0.2s,
-                    transform 0.2s;
-            }
-            .showcase-card:hover .card-arrow {
-                color: var(--accent);
-                transform: translateX(3px);
-            }
-
-            /* ─── SECTIONS ─── */
-            section {
-                padding: 8rem 0;
-                position: relative;
-            }
-            section::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 100vw;
-                height: 1px;
-                background: linear-gradient(
-                    90deg,
-                    transparent,
-                    var(--border) 20%,
-                    var(--border) 80%,
-                    transparent
-                );
-            }
-            .section-label {
-                font-family: var(--mono);
-                font-size: 0.7rem;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                color: var(--accent);
-                margin-bottom: 2rem;
-                display: inline-block;
-                padding: 0.4rem 1rem;
-                border: 1px solid var(--border-accent);
-                border-radius: 100px;
-                background: var(--accent-glow);
-            }
-            section h2 {
-                font-family: var(--serif);
-                font-weight: 300;
-                font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-                line-height: 1.2;
-                margin-bottom: 1.5rem;
-                letter-spacing: -0.01em;
-            }
-            section h2 em {
-                font-style: italic;
-                color: var(--accent);
-            }
-
-            .lead {
-                font-size: 1.1rem;
-                color: var(--text-secondary);
-                max-width: 700px;
-                margin-bottom: 3rem;
-            }
-
-            /* ─── THESIS ─── */
-            .thesis-block {
-                border-left: 3px solid var(--accent-dim);
-                padding: 2.5rem 3rem;
-                background: linear-gradient(
-                    90deg,
-                    var(--accent-glow),
-                    transparent
-                );
-                border-radius: 0 12px 12px 0;
-                margin: 4rem 0;
-                font-size: 1.25rem;
-                font-style: italic;
-                color: var(--text);
-                line-height: 1.8;
-                position: relative;
-            }
-            .thesis-block::before {
-                content: '"';
-                position: absolute;
-                top: -1rem;
-                left: 1rem;
-                font-size: 6rem;
-                color: var(--accent-glow);
-                font-family: var(--serif);
-                line-height: 1;
-                pointer-events: none;
-            }
-            .thesis-block .attribution {
-                display: block;
-                margin-top: 1rem;
-                font-style: normal;
-                font-family: var(--sans);
-                font-size: 0.8rem;
-                color: var(--text-dim);
-            }
-
-            /* ─── PAPERS GRID ─── */
-            .papers-grid {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-                margin-top: 2rem;
-            }
-            .paper-card {
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                border-radius: 12px;
-                padding: 2.5rem;
-                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                position: relative;
-                overflow: hidden;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            }
-            .paper-card:hover {
-                border-color: var(--accent-dim);
-                background: var(--bg-card-hover);
-                transform: translateY(-4px);
-                box-shadow:
-                    0 12px 30px rgba(0, 0, 0, 0.4),
-                    0 0 0 1px var(--accent-glow) inset;
-            }
-            .paper-card::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 3px;
-            }
-            .paper-card[data-primitive="memory"]::before {
-                background: var(--cyan);
-            }
-            .paper-card[data-primitive="reason"]::before {
-                background: var(--blue);
-            }
-            .paper-card[data-primitive="time"]::before {
-                background: var(--rose);
-            }
-            .paper-card[data-primitive="space"]::before {
-                background: var(--amber);
-            }
-            .paper-card[data-primitive="governance"]::before {
-                background: var(--accent);
-            }
-            .paper-card[data-primitive="system"]::before {
-                background: linear-gradient(
-                    90deg,
-                    var(--cyan),
-                    var(--blue),
-                    var(--rose),
-                    var(--amber)
-                );
-            }
-
-            .paper-number {
-                font-family: var(--mono);
-                font-size: 0.65rem;
-                color: var(--text-dim);
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                margin-bottom: 0.75rem;
-            }
-            .paper-card h3 {
-                font-family: var(--serif);
-                font-weight: 600;
-                font-size: 1.3rem;
-                margin-bottom: 0.75rem;
-                line-height: 1.3;
-            }
-            .paper-card .paper-desc {
-                font-size: 0.95rem;
-                color: var(--text-secondary);
-                line-height: 1.6;
-                margin-bottom: 1.25rem;
-            }
-            .paper-tags {
-                display: flex;
-                gap: 0.5rem;
-                flex-wrap: wrap;
-            }
-            .paper-tag {
-                font-family: var(--mono);
-                font-size: 0.65rem;
-                padding: 0.25rem 0.6rem;
-                border-radius: 4px;
-                background: rgba(255, 255, 255, 0.04);
-                color: var(--text-dim);
-                border: 1px solid var(--border);
-            }
-            .paper-tag.status-published {
-                color: var(--cyan);
-                border-color: rgba(74, 245, 198, 0.2);
-            }
-            .paper-tag.status-draft {
-                color: var(--amber);
-                border-color: rgba(255, 196, 107, 0.2);
-            }
-            .paper-tag.status-spec {
-                color: var(--blue);
-                border-color: rgba(123, 140, 255, 0.2);
-            }
-
-            /* ─── ARCHITECTURE DIAGRAM ─── */
-            .arch-stack {
-                margin: 3rem 0;
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-            }
-            .arch-layer {
-                display: grid;
-                grid-template-columns: 180px 1fr;
-                gap: 0;
-                min-height: 60px;
-                align-items: stretch;
-                transition: transform 0.2s ease;
-            }
-            .arch-layer:hover {
-                transform: translateX(4px);
-            }
-            .arch-layer-label {
-                font-family: var(--mono);
-                font-size: 0.7rem;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                padding: 1rem 1.2rem;
-                display: flex;
-                align-items: center;
-                background: var(--bg-elevated);
-                border: 1px solid var(--border);
-                border-right: none;
-                border-radius: 6px 0 0 6px;
-                color: var(--text-dim);
-            }
-            .arch-layer-content {
-                padding: 1rem 1.5rem;
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                border-radius: 0 6px 6px 0;
-                font-family: var(--sans);
-                font-size: 0.85rem;
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                flex-wrap: wrap;
-                color: var(--text-secondary);
-            }
-            .arch-chip {
-                font-family: var(--mono);
-                font-size: 0.72rem;
-                padding: 0.3rem 0.7rem;
-                border-radius: 4px;
-                border: 1px solid var(--border);
-                white-space: nowrap;
-            }
-            .arch-chip.memory {
-                color: var(--cyan);
-                border-color: rgba(74, 245, 198, 0.25);
-            }
-            .arch-chip.reason {
-                color: var(--blue);
-                border-color: rgba(123, 140, 255, 0.25);
-            }
-            .arch-chip.time {
-                color: var(--rose);
-                border-color: rgba(255, 107, 138, 0.25);
-            }
-            .arch-chip.space {
-                color: var(--amber);
-                border-color: rgba(255, 196, 107, 0.25);
-            }
-            .arch-chip.governance {
-                color: var(--accent);
-                border-color: var(--border-accent);
-            }
-
-            @media (max-width: 700px) {
-                .arch-layer {
-                    grid-template-columns: 1fr;
-                }
-                .arch-layer-label {
-                    border-radius: 6px 6px 0 0;
-                    border-right: 1px solid var(--border);
-                    border-bottom: none;
-                }
-                .arch-layer-content {
-                    border-radius: 0 0 6px 6px;
-                }
-            }
-
-            /* ─── KAPPA EXPLAINER ─── */
-            .kappa-visual {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
-                margin: 3rem 0;
-            }
-            @media (max-width: 700px) {
-                .kappa-visual {
-                    grid-template-columns: 1fr;
-                }
-            }
-
-            .kappa-box {
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                border-radius: 12px;
-                padding: 2.5rem;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            }
-            .kappa-box h4 {
-                font-family: var(--mono);
-                font-size: 0.8rem;
-                letter-spacing: 0.05em;
-                margin-bottom: 1rem;
-            }
-            .kappa-box .kappa-val {
-                font-family: var(--mono);
-                font-size: 2.5rem;
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-            }
-            .kappa-box .kappa-label {
-                font-family: var(--sans);
-                font-size: 0.85rem;
-                color: var(--text-secondary);
-            }
-            .kappa-box.dag .kappa-val {
-                color: var(--cyan);
-            }
-            .kappa-box.scc .kappa-val {
-                color: var(--rose);
-            }
-
-            pre {
-                background: var(--bg-elevated);
-                border: 1px solid var(--border);
-                border-radius: 8px;
-                padding: 1.5rem;
-                overflow-x: auto;
-                font-family: var(--mono);
-                font-size: 0.8rem;
-                line-height: 1.6;
-                color: var(--text-secondary);
-                margin: 2rem 0;
-            }
-            code {
-                font-family: var(--mono);
-                font-size: 0.85em;
-                color: var(--accent);
-            }
-
-            /* ─── GOVERNANCE ─── */
-            .governance-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 1.5rem;
-                margin: 2rem 0;
-            }
-            @media (max-width: 800px) {
-                .governance-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
-
-            .gov-card {
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                border-radius: 12px;
-                padding: 2.5rem 2rem;
-                text-align: center;
-                transition: transform 0.3s ease;
-            }
-            .gov-card:hover {
-                transform: translateY(-4px);
-                border-color: rgba(255, 255, 255, 0.1);
-            }
-            .gov-card .gov-icon {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-                opacity: 0.6;
-            }
-            .gov-card h4 {
-                font-family: var(--sans);
-                font-weight: 600;
-                font-size: 0.95rem;
-                margin-bottom: 0.5rem;
-            }
-            .gov-card p {
-                font-size: 0.85rem;
-                color: var(--text-secondary);
-                line-height: 1.5;
-            }
-            .gov-card .gov-mono {
-                font-family: var(--mono);
-                font-size: 0.75rem;
-                color: var(--accent-dim);
-                margin-top: 0.75rem;
-            }
-
-            /* ─── REFERENCES ─── */
-            .ref-list {
-                font-size: 0.85rem;
-                color: var(--text-secondary);
-                line-height: 1.8;
-            }
-            .ref-list li {
-                margin-bottom: 0.5rem;
-                list-style: none;
-                padding-left: 2.5rem;
-                text-indent: -2.5rem;
-            }
-            .ref-list .ref-id {
-                font-family: var(--mono);
-                font-size: 0.7rem;
-                color: var(--text-dim);
-            }
-
-            /* ─── FOOTER ─── */
-            footer {
-                padding: 4rem 0;
-                border-top: 1px solid var(--border);
-                text-align: center;
-            }
-            footer .footer-mark {
-                font-family: var(--sans);
-                font-weight: 700;
-                font-size: 0.85rem;
-                color: var(--text-dim);
-                margin-bottom: 1rem;
-            }
-            footer p {
-                font-family: var(--sans);
-                font-size: 0.8rem;
-                color: var(--text-dim);
-                line-height: 1.6;
-            }
-            footer .footer-links {
-                margin-top: 1.5rem;
-                display: flex;
-                gap: 2rem;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            footer .footer-links a {
-                font-family: var(--sans);
-                font-size: 0.8rem;
-                color: var(--text-dim);
-            }
-            footer .footer-links a:hover {
-                color: var(--accent);
-            }
-
-            /* ─── PROOF VERIFIER ─── */
-            .proof-controls {
-                display: flex;
-                gap: 1rem;
-                align-items: center;
-                flex-wrap: wrap;
-                margin: 2rem 0;
-            }
-            .btn-run {
-                font-family: var(--mono);
-                font-size: 0.85rem;
-                font-weight: 600;
-                padding: 0.9rem 2.2rem;
-                border-radius: 8px;
-                border: 1px solid var(--cyan);
-                background: rgba(45, 212, 191, 0.1);
-                color: var(--cyan);
-                cursor: pointer;
-                transition: all 0.3s ease;
-                box-shadow: 0 2px 10px rgba(45, 212, 191, 0.15);
-            }
-            .btn-run:hover:not(:disabled) {
-                background: rgba(45, 212, 191, 0.2);
-                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.25);
-                transform: translateY(-1px);
-            }
-            .btn-run:disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-            .btn-run.running {
-                border-color: var(--amber);
-                color: var(--amber);
-                background: rgba(251, 191, 36, 0.1);
-                box-shadow: 0 2px 10px rgba(251, 191, 36, 0.15);
-            }
-            .proof-status {
-                font-family: var(--mono);
-                font-size: 0.8rem;
-                color: var(--text-dim);
-            }
-
-            .proof-progress {
-                width: 100%;
-                height: 6px;
-                background: var(--bg-elevated);
-                border-radius: 3px;
-                overflow: hidden;
-                margin: 1rem 0;
-                display: none;
-            }
-            .proof-progress.active {
-                display: block;
-            }
-            .proof-progress-bar {
-                height: 100%;
-                width: 0%;
-                background: linear-gradient(90deg, var(--cyan), var(--blue));
-                border-radius: 3px;
-                transition: width 0.15s ease;
-            }
-
-            .proof-results {
-                margin-top: 2rem;
-                display: none;
-            }
-            .proof-results.visible {
-                display: block;
-            }
-            .proof-table {
-                width: 100%;
-                border-collapse: collapse;
-                font-family: var(--mono);
-                font-size: 0.75rem;
-                margin: 1rem 0;
-            }
-            .proof-table th {
-                text-align: left;
-                padding: 0.6rem 0.8rem;
-                border-bottom: 1px solid var(--border);
-                color: var(--text-dim);
-                font-weight: 500;
-                letter-spacing: 0.05em;
-                text-transform: uppercase;
-                font-size: 0.65rem;
-            }
-            .proof-table td {
-                padding: 0.5rem 0.8rem;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-                color: var(--text-secondary);
-            }
-            .proof-table tr:hover td {
-                background: rgba(255, 255, 255, 0.02);
-            }
-            .proof-table .pass {
-                color: var(--cyan);
-                font-weight: 600;
-            }
-            .proof-table .fail {
-                color: var(--rose);
-                font-weight: 600;
-            }
-            .proof-table .num {
-                text-align: right;
-                font-variant-numeric: tabular-nums;
-            }
-
-            .proof-verdict {
-                margin-top: 1.5rem;
-                padding: 1.5rem 2rem;
-                border-radius: 8px;
-                font-family: var(--mono);
-                font-size: 0.85rem;
-                display: none;
-            }
-            .proof-verdict.visible {
-                display: block;
-            }
-            .proof-verdict.verified {
-                background: rgba(45, 212, 191, 0.08);
-                border: 1px solid rgba(45, 212, 191, 0.2);
-                color: var(--cyan);
-            }
-            .proof-verdict.failed {
-                background: rgba(251, 113, 133, 0.08);
-                border: 1px solid rgba(251, 113, 133, 0.2);
-                color: var(--rose);
-            }
-            .proof-verdict .verdict-title {
-                font-size: 1rem;
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-            }
-
-            .proof-log {
-                font-family: var(--mono);
-                font-size: 0.72rem;
-                color: var(--text-dim);
-                margin-top: 1rem;
-                max-height: 200px;
-                overflow-y: auto;
-                line-height: 1.6;
-                padding: 1rem;
-                background: var(--bg-elevated);
-                border: 1px solid var(--border);
-                border-radius: 6px;
-                display: none;
-            }
-            .proof-log.active {
-                display: block;
-            }
-            .proof-log .log-pass {
-                color: var(--cyan);
-            }
-            .proof-log .log-info {
-                color: var(--text-dim);
-            }
-            .proof-log .log-phase {
-                color: var(--accent);
-                font-weight: 600;
-            }
-
-            /* ─── ANIMATIONS ─── */
-            .reveal {
-                opacity: 0;
-                transform: translateY(24px);
-                transition:
-                    opacity 0.6s ease,
-                    transform 0.6s ease;
-            }
-            .reveal.visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        </style>
+        <link rel="stylesheet" href="/styles/site.css" />
         <script type="module" src="/amp-nav.js"></script>
     </head>
     <body>
@@ -1048,32 +30,88 @@
                     OpenSentience
                 </a>
                 <ul class="nav-links">
-                    <li><a href="#thesis">Thesis</a></li>
                     <li><a href="#protocols">Protocols</a></li>
-                    <li><a href="#kappa">κ Theory</a></li>
-                    <li><a href="#verify">Proof</a></li>
-                    <li><a href="#architecture">Architecture</a></li>
-                    <li><a href="#governance">Governance</a></li>
-                    <li><a href="#get-started">Get Started</a></li>
-                    <li><a href="#references">References</a></li>
+                    <li><a href="#proof">Proof</a></li>
                     <li><a href="https://docs.opensentience.org">Docs</a></li>
                     <li><a href="https://ampersandboxdesign.com">← [&]</a></li>
                 </ul>
             </div>
         </nav>
+        <nav class="spine" aria-label="Section index">
+            <ol>
+                <li>
+                    <a href="#gap" data-spine="gap"
+                        ><span class="spine-num">01</span
+                        ><span class="spine-label">The Gap</span></a
+                    >
+                </li>
+                <li>
+                    <a href="#loop" data-spine="loop"
+                        ><span class="spine-num">02</span
+                        ><span class="spine-label">The Loop</span></a
+                    >
+                </li>
+                <li>
+                    <a href="#protocols" data-spine="protocols"
+                        ><span class="spine-num">03</span
+                        ><span class="spine-label">Protocols</span></a
+                    >
+                </li>
+                <li>
+                    <a href="#proof" data-spine="proof"
+                        ><span class="spine-num">04</span
+                        ><span class="spine-label">Proof</span></a
+                    >
+                </li>
+                <li>
+                    <a href="#stack" data-spine="stack"
+                        ><span class="spine-num">05</span
+                        ><span class="spine-label">The Stack</span></a
+                    >
+                </li>
+                <li>
+                    <a href="#open-questions" data-spine="open-questions"
+                        ><span class="spine-num">06</span
+                        ><span class="spine-label">Open Questions</span></a
+                    >
+                </li>
+                <li>
+                    <a href="#get-involved" data-spine="get-involved"
+                        ><span class="spine-num">07</span
+                        ><span class="spine-label">Get Involved</span></a
+                    >
+                </li>
+                <li>
+                    <a href="#references" data-spine="references"
+                        ><span class="spine-num">08</span
+                        ><span class="spine-label">References</span></a
+                    >
+                </li>
+            </ol>
+        </nav>
 
         <header class="hero container">
             <span class="hero-badge"
-                >10 Published Protocols &mdash; OS-001 through OS-010</span
+                >Open research into machine cognition · an [&amp;] Ampersand Box
+                Design program</span
             >
-            <h1>The science behind<br /><em>machines that learn</em></h1>
+            <h1>
+                Intelligence is not generation.<br /><em
+                    >It is structured accumulation.</em
+                >
+            </h1>
             <p class="subtitle">
-                Ten open protocols for structured memory, topological routing,
-                deliberation, temporal algebra, and self-improving benchmarks.
-                Everything an agent needs to remember, reason, and prove it
-                works.
+                A language model that can't remember yesterday, weigh evidence
+                across sessions, or learn from where it's deployed is a
+                <strong>generator</strong> — not a system. OpenSentience is the
+                open research program defining the protocols that close that
+                gap.
             </p>
             <div class="cta-row">
+                <a href="#protocols" class="btn btn-primary"
+                    >Read the protocols</a
+                >
+                <a href="#proof" class="btn">See the proof</a>
                 <a
                     href="https://github.com/c-u-l8er/opensentience.org"
                     class="btn btn-github"
@@ -1083,119 +121,367 @@
                         /></svg
                     >Star on GitHub</a
                 >
-                <a href="#protocols" class="btn btn-primary"
-                    >Read the Protocols</a
+            </div>
+            <div class="receipts-strip reveal">
+                <span class="receipt-chip"><strong>12</strong> protocols</span>
+                <span class="receipt-chip"
+                    ><strong>OS-001 → OS-012</strong></span
                 >
-                <a href="https://docs.opensentience.org" class="btn"
-                    >Documentation</a
+                <span class="receipt-chip"
+                    >1 shipped · 4 spec-complete · 2 in development · 5
+                    draft</span
                 >
             </div>
         </header>
 
-        <!-- ═══════════════════ SHOWCASE: PRISM + PULSE ═══════════════════ -->
-        <div class="showcase container" style="padding: 5em 0 8em 0">
-            <p class="showcase-label">Two systems. One research program.</p>
-            <div class="showcase-grid">
-                <a
-                    href="https://prism.opensentience.org"
-                    class="showcase-card showcase-card--prism"
-                >
-                    <span class="card-protocol">OS-009</span>
-                    <h3>PRISM</h3>
-                    <p>
-                        The first self-improving benchmark for agent memory.
-                        Nine continual-learning dimensions, git-grounded
-                        scenarios, three-layer judging, and a leaderboard that
-                        evolves as systems do.
-                    </p>
-                    <div class="card-features">
-                        <span class="card-feature">9 CL dimensions</span>
-                        <span class="card-feature">4-phase loop</span>
-                        <span class="card-feature">IRT calibration</span>
-                    </div>
-                    <span class="card-arrow">&rarr;</span>
-                </a>
-                <a
-                    href="https://pulse.opensentience.org"
-                    class="showcase-card showcase-card--pulse"
-                >
-                    <span class="card-protocol">OS-010</span>
-                    <h3>PULSE</h3>
-                    <p>
-                        The temporal algebra for closed-loop systems. Every loop
-                        declares its phases, cadence, substrates, and cross-loop
-                        signals in a single manifest file.
-                    </p>
-                    <div class="card-features">
-                        <span class="card-feature">5 canonical phases</span>
-                        <span class="card-feature">*.pulse.json</span>
-                        <span class="card-feature">CloudEvents v1</span>
-                    </div>
-                    <span class="card-arrow">&rarr;</span>
-                </a>
+        <section id="gap" class="container">
+            <div class="section-label">
+                <span class="sec-num">01</span> The Gap
             </div>
-        </div>
-
-        <!-- ═══════════════════ THESIS ═══════════════════ -->
-        <section id="thesis" class="container">
-            <div class="section-label">Founding Thesis</div>
-            <h2>
-                Intelligence is not generation. It is
-                <em>structured accumulation.</em>
-            </h2>
-
-            <div class="thesis-block reveal">
-                Models generate answers. Systems accumulate intelligence.
-                Durable intelligence requires memory, evidence, time, and
-                interaction with the world. The ampersand represents
-                composition:
-                <code>agent & memory & reasoning & time & space & govern</code>.
-                Intelligence does not come from a model. It emerges from the
-                system those components create.
-                <span class="attribution">— The [&] thesis</span>
-            </div>
-
-            <p
-                class="reveal"
-                style="color: var(--text-secondary); margin-top: 2rem"
-            >
-                OpenSentience is the research arm of
-                <a href="https://ampersandboxdesign.com">Ampersand Box Design</a
-                >. While the [&] portfolio builds production infrastructure for
-                agent cognition, OpenSentience publishes the theoretical
-                foundations, empirical protocols, and open questions that guide
-                that work. Every protocol below is grounded in implemented or
-                in-progress code, not speculation.
+            <h2>A generator answers. A <em>system</em> accumulates.</h2>
+            <p class="lead">
+                The agent ecosystem builds on a frozen model and prays. The
+                limiting factor isn't raw model intelligence — it's memory
+                architecture, deliberation structure, temporal grounding, and
+                governance. Those are infrastructure problems, not parameter
+                problems. Here is the gap, axis by axis.
             </p>
 
-            <p
-                class="reveal"
-                style="color: var(--text-secondary); margin-top: 1rem"
-            >
-                Our position: the limiting factor in AI agent capability is
-                <em>not</em> raw model intelligence. It is memory architecture,
-                deliberation structure, temporal grounding, and governance.
-                These are infrastructure problems, not model problems. They
-                require engineering protocols, not larger parameters.
-            </p>
+            <div class="gap-table reveal">
+                <div class="gap-head">
+                    <div class="gap-axis"></div>
+                    <div class="gap-gen-head">A generator</div>
+                    <div class="gap-sys-head">A cognitive system</div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Memory</div>
+                    <div class="gap-gen">forgets past the context window</div>
+                    <div class="gap-sys">
+                        typed graph — nodes, confidence, provenance<span
+                            class="gap-os"
+                            >OS-001</span
+                        >
+                    </div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Evidence</div>
+                    <div class="gap-gen">every answer equally certain</div>
+                    <div class="gap-sys">
+                        weighs evidence across sessions; decays<span
+                            class="gap-os"
+                            >OS-001</span
+                        >
+                    </div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Reasoning</div>
+                    <div class="gap-gen">one forward pass, always</div>
+                    <div class="gap-sys">
+                        routes on topology; deliberates only when κ&gt;0<span
+                            class="gap-os"
+                            >OS-002 · OS-003</span
+                        >
+                    </div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Time</div>
+                    <div class="gap-gen">stateless; no sense of when</div>
+                    <div class="gap-sys">
+                        has a heartbeat — declares its own cadence<span
+                            class="gap-os"
+                            >OS-010 PULSE</span
+                        >
+                    </div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">World</div>
+                    <div class="gap-gen">text in, text out</div>
+                    <div class="gap-sys">
+                        perceives &amp; acts through a body; learns from
+                        surprise<span class="gap-os">OS-011</span>
+                    </div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Control</div>
+                    <div class="gap-gen">deploy and pray</div>
+                    <div class="gap-sys">
+                        permissions, audit, autonomy; every verdict
+                        certified<span class="gap-os"
+                            >OS-006 · box-and-box</span
+                        >
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- ═══════════════════ PROTOCOLS ═══════════════════ -->
-        <section id="protocols" class="container">
-            <div class="section-label">Published Protocols</div>
-            <h2>Ten protocols. One <em>circulatory system.</em></h2>
+        <section id="loop" class="container">
+            <div class="section-label">
+                <span class="sec-num">02</span> The Cognition Loop
+            </div>
+            <h2>Cognition is a loop, <em>not a prompt.</em></h2>
             <p class="lead">
-                Each protocol addresses a specific gap in the agent cognition
-                stack. Eight cognitive primitives (OS-001 through OS-008) plus
-                two cross-cutting protocols: <strong>PRISM</strong> measures
-                closed-loop systems over time, and <strong>PULSE</strong>
-                declares how those loops cycle and signal each other. Together
-                they form a complete substrate: an agent that knows what it
-                knows, knows what it doesn't know, decides what to do about it,
-                and is benchmarkable end-to-end without ever being asked.
+                Every system in the [&amp;] portfolio runs the same five-phase
+                loop — the canonical PULSE phase kinds, which are exactly the
+                Graphonomous machine architecture. Each phase is a place where a
+                protocol does its work. The loop is wrapped by governance,
+                clocked by PULSE, gauged by PRISM, and bounded by SCOPE.
             </p>
 
-            <div class="papers-grid">
+            <div class="loop-grid">
+                <svg
+                    viewBox="0 0 400 400"
+                    class="loop-ring reveal"
+                    role="img"
+                    aria-label="The five-phase cognition loop: retrieve, route, act, learn, consolidate"
+                >
+                    <circle
+                        cx="200"
+                        cy="200"
+                        r="130"
+                        fill="none"
+                        stroke="var(--accent-dim)"
+                        stroke-width="2"
+                        stroke-dasharray="3 7"
+                        opacity="0.55"
+                    ></circle>
+                    <text
+                        x="200"
+                        y="196"
+                        text-anchor="middle"
+                        class="loop-center-1"
+                    >
+                        ↻ the
+                    </text>
+                    <text
+                        x="200"
+                        y="216"
+                        text-anchor="middle"
+                        class="loop-center-2"
+                    >
+                        cognition loop
+                    </text>
+                    <g class="loop-node">
+                        <circle
+                            cx="200.0"
+                            cy="70.0"
+                            r="26"
+                            fill="var(--cyan)"
+                        ></circle>
+                        <text
+                            x="200.0"
+                            y="76.0"
+                            text-anchor="middle"
+                            class="loop-node-num"
+                        >
+                            1
+                        </text>
+                    </g>
+                    <g class="loop-node">
+                        <circle
+                            cx="323.6"
+                            cy="159.8"
+                            r="26"
+                            fill="var(--blue)"
+                        ></circle>
+                        <text
+                            x="323.6"
+                            y="165.8"
+                            text-anchor="middle"
+                            class="loop-node-num"
+                        >
+                            2
+                        </text>
+                    </g>
+                    <g class="loop-node">
+                        <circle
+                            cx="276.4"
+                            cy="305.2"
+                            r="26"
+                            fill="var(--blue)"
+                        ></circle>
+                        <text
+                            x="276.4"
+                            y="311.2"
+                            text-anchor="middle"
+                            class="loop-node-num"
+                        >
+                            3
+                        </text>
+                    </g>
+                    <g class="loop-node">
+                        <circle
+                            cx="123.6"
+                            cy="305.2"
+                            r="26"
+                            fill="var(--cyan)"
+                        ></circle>
+                        <text
+                            x="123.6"
+                            y="311.2"
+                            text-anchor="middle"
+                            class="loop-node-num"
+                        >
+                            4
+                        </text>
+                    </g>
+                    <g class="loop-node">
+                        <circle
+                            cx="76.4"
+                            cy="159.8"
+                            r="26"
+                            fill="var(--cyan)"
+                        ></circle>
+                        <text
+                            x="76.4"
+                            y="165.8"
+                            text-anchor="middle"
+                            class="loop-node-num"
+                        >
+                            5
+                        </text>
+                    </g>
+                </svg>
+                <ol class="loop-legend">
+                    <li class="reveal">
+                        <span class="loop-badge" style="background: var(--cyan)"
+                            >1</span
+                        >
+                        <div>
+                            <strong>Retrieve</strong>
+                            <span class="loop-gloss"
+                                >pull the relevant subgraph before
+                                reasoning</span
+                            >
+                            <span class="loop-protos"
+                                ><a href="#protocols">OS-001</a></span
+                            >
+                        </div>
+                    </li>
+                    <li class="reveal">
+                        <span class="loop-badge" style="background: var(--blue)"
+                            >2</span
+                        >
+                        <div>
+                            <strong>Route</strong>
+                            <span class="loop-gloss"
+                                >measure topology (κ) — retrieve in one pass, or
+                                deliberate</span
+                            >
+                            <span class="loop-protos"
+                                ><a href="#protocols">OS-002</a> ·
+                                <a href="#protocols">OS-004</a></span
+                            >
+                        </div>
+                    </li>
+                    <li class="reveal">
+                        <span class="loop-badge" style="background: var(--blue)"
+                            >3</span
+                        >
+                        <div>
+                            <strong>Act</strong>
+                            <span class="loop-gloss"
+                                >deliberate along fault lines, then mutate the
+                                graph and the world</span
+                            >
+                            <span class="loop-protos"
+                                ><a href="#protocols">OS-003</a> ·
+                                <a href="#protocols">OS-011</a></span
+                            >
+                        </div>
+                    </li>
+                    <li class="reveal">
+                        <span class="loop-badge" style="background: var(--cyan)"
+                            >4</span
+                        >
+                        <div>
+                            <strong>Learn</strong>
+                            <span class="loop-gloss"
+                                >update confidence from outcomes and
+                                prediction-error surprise</span
+                            >
+                            <span class="loop-protos"
+                                ><a href="#protocols">OS-001</a> ·
+                                <a href="#protocols">OS-011</a></span
+                            >
+                        </div>
+                    </li>
+                    <li class="reveal">
+                        <span class="loop-badge" style="background: var(--cyan)"
+                            >5</span
+                        >
+                        <div>
+                            <strong>Consolidate</strong>
+                            <span class="loop-gloss"
+                                >merge, decay, and crystallize at idle — κ falls
+                                over time</span
+                            >
+                            <span class="loop-protos"
+                                ><a href="#protocols">OS-001</a></span
+                            >
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <p class="ring-intro reveal">
+                Wrapped, clocked, gauged &amp; bounded —
+            </p>
+            <div class="ring-band">
+                <div class="ring-card reveal">
+                    <div class="ring-label">Governed</div>
+                    <p>
+                        every phase runs under permissions, audit, and three
+                        autonomy levels
+                    </p>
+                    <div class="ring-protos">OS-006 · OS-007 · OS-008</div>
+                </div>
+                <div class="ring-card reveal">
+                    <div class="ring-label">PULSE · the clock</div>
+                    <p>
+                        declares the loop's phases, cadence, and cross-loop
+                        signals
+                    </p>
+                    <div class="ring-protos">OS-010</div>
+                </div>
+                <div class="ring-card reveal">
+                    <div class="ring-label">PRISM · the gauge</div>
+                    <p>measures how well the loop performs over time</p>
+                    <div class="ring-protos">OS-009</div>
+                </div>
+                <div class="ring-card reveal">
+                    <div class="ring-label">SCOPE · the bounds</div>
+                    <p>bounds where agents may act over shared space</p>
+                    <div class="ring-protos">OS-012</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="protocols" class="container">
+            <div class="section-label">
+                <span class="sec-num">03</span> The Protocol Map
+            </div>
+            <h2>12 protocols. The <em>shape</em> of a mind.</h2>
+            <p class="lead">
+                Not a list — a structure.
+                <strong>Eight cognitive primitives</strong>
+                (OS-001 → OS-008), each one capability of an intelligent system,
+                grounded in cognitive science. Above them,
+                <strong>four cross-cutting algebras</strong> that measure, time,
+                embody, and bound the whole — the rings around the loop. Range
+                OS-001 → OS-012, every entry honest about its status.
+            </p>
+            <div class="status-legend reveal">
+                <span class="paper-tag status-published">Shipped · 1</span>
+                <span class="paper-tag status-spec">Spec complete · 4</span>
+                <span class="paper-tag status-spec">In development · 2</span>
+                <span class="paper-tag status-draft">Draft · 5</span>
+            </div>
+
+            <h3 class="map-tier">
+                Eight cognitive primitives
+                <span>OS-001 → OS-008 · the capabilities</span>
+            </h3>
+            <div class="papers-grid map-grid">
                 <div class="paper-card reveal" data-primitive="memory">
                     <div class="paper-number">
                         OS-001 · Continual Learning Protocol
@@ -1216,7 +502,7 @@
                     </p>
                     <div class="paper-tags">
                         <span class="paper-tag status-published"
-                            >v0.3.3 · shipped</span
+                            >v0.4.3 · shipped</span
                         >
                         <span class="paper-tag">LongMemEval 92.6%</span>
                         <span class="paper-tag">&memory.graph</span>
@@ -1234,7 +520,7 @@
                         The cyclicity invariant κ (kappa) detects irreducible
                         feedback loops in a knowledge graph. When κ = 0, the
                         subgraph is a DAG — retrieve context in one pass. When κ
-                        > 0, circular dependencies exist — iterate and
+                        &gt; 0, circular dependencies exist — iterate and
                         deliberate before answering. κ determines not just
                         <em>whether</em> to think harder, but
                         <em>how entangled</em> the reasoning is. Proved on
@@ -1259,14 +545,14 @@
                         Boundaries
                     </h3>
                     <p class="paper-desc">
-                        When κ > 0, fault-line edges become prompt boundaries.
-                        The Deliberator decomposes circular knowledge along
-                        those boundaries, runs focused reasoning passes on each
-                        partition, reconciles them, and writes conclusions back
-                        into the graph — reducing κ over time as uncertainty
-                        crystallizes into settled knowledge. Single-agent fast
-                        path; escalates to multi-agent formal argumentation
-                        (Deliberatic) only when convergence fails.
+                        When κ &gt; 0, fault-line edges become prompt
+                        boundaries. The Deliberator decomposes circular
+                        knowledge along those boundaries, runs focused reasoning
+                        passes on each partition, reconciles them, and writes
+                        conclusions back into the graph — reducing κ over time
+                        as uncertainty crystallizes into settled knowledge.
+                        Single-agent fast path; escalates to multi-agent formal
+                        argumentation (Deliberatic) only when convergence fails.
                     </p>
                     <div class="paper-tags">
                         <span class="paper-tag status-spec">spec complete</span>
@@ -1394,10 +680,11 @@
                     <h3>Pipeline Enforcement and Quality Gates</h3>
                     <p class="paper-desc">
                         The enforcement runtime that sits above agents and below
-                        humans. Orchestrates [&] pipelines, enforces governance
-                        contracts, gates execution on epistemic confidence. Five
-                        components: PipelineEnforcer, QualityGate,
-                        ContractValidator, SprintController, ContextManager.
+                        humans. Orchestrates [&amp;] pipelines, enforces
+                        governance contracts, gates execution on epistemic
+                        confidence. Five components: PipelineEnforcer,
+                        QualityGate, ContractValidator, SprintController,
+                        ContextManager.
                     </p>
                     <div class="paper-tags">
                         <span class="paper-tag status-draft">draft</span>
@@ -1408,29 +695,30 @@
                         >
                     </div>
                 </div>
+            </div>
 
+            <h3 class="map-tier">
+                Four cross-cutting algebras
+                <span>OS-009 → OS-012 · the rings</span>
+            </h3>
+            <div class="papers-grid map-grid">
                 <div
-                    class="paper-card reveal"
+                    class="paper-card reveal paper-card--featured"
                     data-primitive="evaluation"
-                    style="
-                        border-color: var(--accent);
-                        box-shadow: 0 0 20px var(--accent-glow);
-                    "
                 >
                     <div class="paper-number" style="color: var(--accent)">
-                        OS-009 &middot; PRISM
+                        OS-009 · PRISM
                     </div>
                     <h3>Protocol for Rating Iterative System Memory</h3>
                     <p class="paper-desc">
                         The first self-improving continual learning benchmark. 9
-                        CL dimensions, 3-layer judging (transcripts &rarr;
-                        dimension judges &rarr; meta-judges), IRT difficulty
-                        calibration, and scenario evolution. Two closed loops
-                        interlocking: PRISM improves the benchmark, Graphonomous
-                        improves the memory. We used it to benchmark ourselves
-                        &mdash; score went from 0.10 to 0.99 in 4 cycles, then
-                        adversarial testing crashed it back to 0.45 and we fixed
-                        real bugs.
+                        CL dimensions, 3-layer judging (transcripts → dimension
+                        judges → meta-judges), IRT difficulty calibration, and
+                        scenario evolution. Two closed loops interlocking: PRISM
+                        improves the benchmark, Graphonomous improves the
+                        memory. We used it to benchmark ourselves — score went
+                        from 0.10 to 0.99 in 4 cycles, then adversarial testing
+                        crashed it back to 0.45 and we fixed real bugs.
                     </p>
                     <div class="paper-tags">
                         <span class="paper-tag status-spec"
@@ -1438,7 +726,7 @@
                         >
                         <span class="paper-tag">&memory + &reason</span>
                         <span class="paper-tag"
-                            >IRT &middot; Rasch (1960), Lord (1980)</span
+                            >IRT · Rasch (1960), Lord (1980)</span
                         >
                         <span class="paper-tag"
                             ><a
@@ -1451,35 +739,29 @@
                 </div>
 
                 <div
-                    class="paper-card reveal"
+                    class="paper-card reveal paper-card--featured"
                     data-primitive="temporal"
-                    style="
-                        border-color: var(--accent);
-                        box-shadow: 0 0 20px var(--accent-glow);
-                    "
                 >
                     <div class="paper-number" style="color: var(--accent)">
-                        OS-010 &middot; PULSE
+                        OS-010 · PULSE
                     </div>
                     <h3>Protocol for Uniform Loop State Exchange</h3>
                     <p class="paper-desc">
-                        The temporal algebra of the [&] stack. Where [&]
+                        The temporal algebra of the [&amp;] stack. Where [&amp;]
                         declares <em>what</em> agents can compose, PULSE
-                        declares <em>how</em> their processes cycle over time
-                        &mdash; phases, cadence, substrates, invariants, and
-                        cross-loop signaling. Five canonical phase kinds, six
-                        cadence types, five canonical tokens, seven invariants.
-                        Any conforming loop becomes automatically
-                        PRISM-evaluable without integration work. The
-                        circulatory system that makes [&] a stack instead of a
-                        pile.
+                        declares <em>how</em> their processes cycle over time —
+                        phases, cadence, substrates, invariants, and cross-loop
+                        signaling. Five canonical phase kinds, six cadence
+                        types, six canonical tokens, seven invariants. Any
+                        conforming loop becomes automatically PRISM-evaluable
+                        without integration work. The circulatory system that
+                        makes [&amp;] a stack instead of a pile.
                     </p>
                     <div class="paper-tags">
                         <span class="paper-tag status-spec">v0.1 draft</span>
                         <span class="paper-tag">&memory + &govern + &time</span>
                         <span class="paper-tag"
-                            >CloudEvents &middot; Statecharts &middot; Petri-net
-                            safety</span
+                            >CloudEvents · Statecharts · Petri-net safety</span
                         >
                         <span class="paper-tag"
                             ><a
@@ -1490,101 +772,265 @@
                         >
                     </div>
                 </div>
+
+                <div
+                    class="paper-card reveal paper-card--featured"
+                    data-primitive="body"
+                >
+                    <div class="paper-number" style="color: var(--accent)">
+                        OS-011 · Embodiment
+                    </div>
+                    <h3>The Sensorimotor Loop for <code>&amp;body.*</code></h3>
+                    <p class="paper-desc">
+                        Closes the perception-action gap. Defines the typed
+                        <code
+                            >perceive → act → affordances → encode_state →
+                            replay</code
+                        >
+                        loop that any <code>&amp;body</code> provider implements
+                        — the agent's instantiation in an environment. Emits a
+                        <strong>SurpriseSignal</strong> (forward-model
+                        prediction error) into PULSE, so embodiment loops can
+                        drive learning in the memory loop. InteractionTrace
+                        schema, five invariants, twelve conformance tests.
+                    </p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-draft">v0.1 draft</span>
+                        <span class="paper-tag">&body.* (new primitive)</span>
+                        <span class="paper-tag">SurpriseSignal → PULSE</span>
+                        <span class="paper-tag"
+                            ><a
+                                href="https://embodiment.opensentience.org"
+                                style="color: inherit"
+                                >embodiment.opensentience.org</a
+                            ></span
+                        >
+                    </div>
+                </div>
+
+                <div
+                    class="paper-card reveal paper-card--featured"
+                    data-primitive="space"
+                >
+                    <div class="paper-number" style="color: var(--accent)">
+                        OS-012 · SCOPE
+                    </div>
+                    <h3>
+                        Spatial Claims and Coordination Protocol for Embodied
+                        Environments
+                    </h3>
+                    <p class="paper-desc">
+                        The spatial algebra of the [&amp;] stack. Where PULSE
+                        governs <em>when</em> loops cycle, SCOPE governs
+                        <em>where</em> agents act — an N-D
+                        <strong>Region</strong> algebra (intersect, union,
+                        contains, overlaps) and a typed
+                        <strong>SpatialClaim</strong> envelope: a first-class
+                        assertion of intent over a region, so multiple agents
+                        can broadcast, detect conflict, and coordinate over
+                        shared space without a central arbiter. Supersedes
+                        OS-015 Viewport Binding; subsumes six ad-hoc
+                        coordination concerns into one algebra.
+                    </p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-draft">v0.1 draft</span>
+                        <span class="paper-tag"
+                            >&space.region + &space.claim</span
+                        >
+                        <span class="paper-tag"
+                            >N-D Region algebra · SpatialClaim envelope</span
+                        >
+                        <span class="paper-tag"
+                            ><a
+                                href="https://scope.opensentience.org"
+                                style="color: inherit"
+                                >scope.opensentience.org</a
+                            ></span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="map-tier">
+                Grounded in cognitive science, <span>not analogy</span>
+            </h3>
+            <div class="ground-grid reveal">
+                <div class="ground-card reveal">
+                    <div class="ground-amp" style="color: var(--cyan)">
+                        &amp;
+                    </div>
+                    <div>
+                        <strong>&amp;memory → hippocampus + neocortex</strong>
+                        <p>
+                            Tulving's episodic/semantic split; multi-store
+                            memory; hippocampal–neocortical replay. Graphonomous
+                            consolidates fast→slow on idle.
+                        </p>
+                    </div>
+                </div>
+                <div class="ground-card reveal">
+                    <div class="ground-amp" style="color: var(--blue)">
+                        &amp;
+                    </div>
+                    <div>
+                        <strong>&amp;reason → prefrontal cortex</strong>
+                        <p>
+                            Kahneman's dual-process theory. κ-routing implements
+                            the System-1/System-2 split mechanically, from graph
+                            topology alone.
+                        </p>
+                    </div>
+                </div>
+                <div class="ground-card reveal">
+                    <div class="ground-amp" style="color: var(--rose)">
+                        &amp;
+                    </div>
+                    <div>
+                        <strong>&amp;time → cerebellum + basal ganglia</strong>
+                        <p>
+                            Temporal-difference learning; sequence timing. PULSE
+                            gives every loop a declared cadence and cross-loop
+                            signals.
+                        </p>
+                    </div>
+                </div>
+                <div class="ground-card reveal">
+                    <div class="ground-amp" style="color: var(--amber)">
+                        &amp;
+                    </div>
+                    <div>
+                        <strong>&amp;space → entorhinal grid cells</strong>
+                        <p>
+                            O'Keefe &amp; Nadel's cognitive-map theory; place
+                            &amp; grid cells. SCOPE is an N-D region algebra for
+                            shared-space coordination.
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- ═══════════════════ KAPPA THEORY ═══════════════════ -->
-        <section id="kappa" class="container">
-            <div class="section-label">OS-002 · Deep Dive</div>
-            <h2>The κ invariant: <em>topology as cognition signal</em></h2>
-
+        <section id="proof" class="container">
+            <div class="section-label">
+                <span class="sec-num">04</span> The Receipts
+            </div>
+            <h2>
+                We don't ask you to trust the thesis.
+                <em>We ship the receipts.</em>
+            </h2>
             <p class="lead">
-                A simple graph-theoretic insight with far-reaching consequences
-                for agent reasoning. The strongly connected component structure
-                of a knowledge graph mechanically determines when retrieval is
-                sufficient and when deliberation is required.
+                Every claim here is checkable. The headline κ proof runs
+                exhaustively, in your browser, with no server and no trust
+                required — and it's only one of the receipts.
             </p>
 
+            <div class="receipts-grid">
+                <a class="receipt-card reveal" href="https://graphonomous.com"
+                    ><div class="receipt-metric">LongMemEval</div>
+                    <div class="receipt-value">
+                        92.6%<span class="receipt-unit">500-question QA</span>
+                    </div>
+                    <p>
+                        Graphonomous (OS-001), shipped · graph-backed memory
+                        beats flat RAG
+                    </p></a
+                >
+                <a class="receipt-card reveal" href="#proof"
+                    ><div class="receipt-metric">κ invariant</div>
+                    <div class="receipt-value">
+                        1,926,351<span class="receipt-unit"
+                            >systems proved</span
+                        >
+                    </div>
+                    <p>
+                        0 counterexamples · exhaustive, and it runs in your
+                        browser below
+                    </p></a
+                >
+                <a class="receipt-card reveal" href="#stack"
+                    ><div class="receipt-metric">box-and-box kernel</div>
+                    <div class="receipt-value">
+                        97 laws<span class="receipt-unit">× 2,000 trials</span>
+                    </div>
+                    <p>
+                        the governance floor, property-tested — every verdict
+                        ships a certificate
+                    </p></a
+                >
+                <a
+                    class="receipt-card reveal"
+                    href="https://prism.opensentience.org"
+                    ><div class="receipt-metric">PRISM self-benchmark</div>
+                    <div class="receipt-value">
+                        0.10 → 0.99<span class="receipt-unit">4 cycles</span>
+                    </div>
+                    <p>
+                        then adversarial testing crashed it to 0.45 and surfaced
+                        real bugs we fixed
+                    </p></a
+                >
+                <a class="receipt-card reveal" href="#protocols"
+                    ><div class="receipt-metric">Cross-machine replay</div>
+                    <div class="receipt-value">
+                        100%<span class="receipt-unit">fidelity</span>
+                    </div>
+                    <p>
+                        teach a skill on machine A, replay it on machine B
+                        (OS-011 Embodiment)
+                    </p></a
+                >
+            </div>
+
+            <h3 class="map-tier" style="margin-top: 4rem">
+                The κ invariant
+                <span>OS-002 · topology as a cognition signal</span>
+            </h3>
             <div class="kappa-visual reveal">
                 <div class="kappa-box dag">
-                    <h4>DAG Region</h4>
+                    <h4>DAG region</h4>
                     <div class="kappa-val">κ = 0</div>
                     <div class="kappa-label">
-                        No circular dependencies. Context retrieval is a
-                        single-pass traversal. Route: <strong>fast</strong>. No
-                        LLM deliberation needed.
+                        No circular dependencies. Context is one traversal.
+                        Route: <strong>fast</strong> — no deliberation needed.
                     </div>
                 </div>
                 <div class="kappa-box scc">
-                    <h4>SCC Region</h4>
-                    <div class="kappa-val">κ > 0</div>
+                    <h4>SCC region</h4>
+                    <div class="kappa-val">κ &gt; 0</div>
                     <div class="kappa-label">
-                        Irreducible feedback loops present. κ measures
-                        entanglement depth. Route: <strong>deliberate</strong>.
-                        Fault lines become prompt decomposition boundaries.
+                        Irreducible feedback loops. κ measures entanglement
+                        depth. Route: <strong>deliberate</strong> — fault lines
+                        become prompt boundaries.
                     </div>
                 </div>
             </div>
-
-            <pre
-                class="reveal"
-            ><span style="color:var(--text-dim)">// The routing decision is trivial once κ is computed:</span>
-function route(topology_result):
-    if topology_result.max_kappa == 0:
-        return "fast"        <span style="color:var(--cyan)">// retrieve in one pass</span>
-    else:
-        return "deliberate"  <span style="color:var(--rose)">// decompose along fault lines</span>
-
-<span style="color:var(--text-dim)">// Deliberation budget scales with κ:</span>
-budget.max_iterations  = min(κ + 1, 4)
-budget.agent_count     = min(κ, 3)
-budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
-
             <p class="reveal" style="color: var(--text-secondary)">
-                The key insight:
-                <strong
-                    >the graph's structure mechanically determines the prompt
-                    structure.</strong
-                >
-                No human prompt engineering. The topology <em>is</em> the
-                reasoning template. For κ = 1, one fault line generates two
-                conditional assumption passes plus reconciliation. For κ = 2,
-                two independent fault lines generate a 2×2 assumption matrix.
-                The Deliberator writes conclusions back as new semantic nodes —
-                the graph learns from its own reasoning. Over time, κ decreases
-                as uncertainty crystallizes into settled knowledge.
-            </p>
-        </section>
-
-        <!-- ═══════════════════ PROOF VERIFIER ═══════════════════ -->
-        <section id="verify" class="container">
-            <div class="section-label">OS-002 · Runnable Proof</div>
-            <h2>Verify the proof <em>yourself</em></h2>
-
-            <p class="lead">
-                The claim that κ > 0 ⟺ cyclic structure is not a marketing
-                assertion — it is a proved invariant, verified exhaustively
-                across 1,926,351 finite systems. The proof code runs right here
-                in your browser. No server, no trust required.
+                The graph's structure mechanically determines the prompt
+                structure — no human prompt engineering. The topology
+                <em>is</em> the reasoning template. The Deliberator writes
+                conclusions back as new nodes, so κ falls as uncertainty
+                crystallizes into settled knowledge.
             </p>
 
+            <h3 class="map-tier" style="margin-top: 3.5rem">
+                Verify it yourself
+                <span>1,926,351 finite systems · 0 counterexamples</span>
+            </h3>
             <p
                 class="reveal"
-                style="color: var(--text-secondary); margin-bottom: 1rem"
+                style="color: var(--text-secondary); margin-bottom: 0.5rem"
             >
-                <strong>Part 1 — Directed Graphs (n=2..5):</strong> For every
-                possible directed graph on 2, 3, 4, and 5 nodes (1,052,740
-                graphs total), verify that κ(G) > 0 ⟺ β₁(G) > 0 ⟺ G has a
+                <strong>Part 1 — Directed graphs (n=2..5):</strong> for all
+                1,052,740 graphs, verify κ(G) &gt; 0 ⟺ β₁(G) &gt; 0 ⟺ G has a
                 nontrivial strongly connected component.
             </p>
             <p
                 class="reveal"
-                style="color: var(--text-secondary); margin-bottom: 2rem"
+                style="color: var(--text-secondary); margin-bottom: 1.5rem"
             >
-                <strong>Part 2 — Finite Dynamical Systems (n=2..7):</strong> For
-                every function f: [n] → [n] (873,611 maps total), verify that
-                κ(TransitionGraph(f)) > 0 ⟺ f has a periodic orbit of period >
-                1.
+                <strong>Part 2 — Finite dynamical systems (n=2..7):</strong> for
+                all 873,611 maps f:[n]→[n], verify κ(TransitionGraph(f)) &gt; 0
+                ⟺ f has a periodic orbit of period &gt; 1.
             </p>
 
             <div class="proof-controls reveal">
@@ -1593,17 +1039,14 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
                     class="btn-run"
                     onclick="startProof()"
                 >
-                    Run Exhaustive Proof
+                    Run exhaustive proof
                 </button>
                 <span id="proof-status" class="proof-status"></span>
             </div>
-
             <div id="proof-progress" class="proof-progress">
                 <div id="proof-progress-bar" class="proof-progress-bar"></div>
             </div>
-
             <div id="proof-log" class="proof-log"></div>
-
             <div id="proof-results" class="proof-results">
                 <h4
                     style="
@@ -1613,7 +1056,7 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
                         margin-bottom: 0.75rem;
                     "
                 >
-                    Part 1: Directed Graphs
+                    Part 1: Directed graphs
                 </h4>
                 <table class="proof-table">
                     <thead>
@@ -1629,7 +1072,6 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
                     </thead>
                     <tbody id="graph-results-body"></tbody>
                 </table>
-
                 <h4
                     style="
                         font-family: var(--sans);
@@ -1639,7 +1081,7 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
                         margin-bottom: 0.75rem;
                     "
                 >
-                    Part 2: Finite Dynamical Systems
+                    Part 2: Finite dynamical systems
                 </h4>
                 <table class="proof-table">
                     <thead>
@@ -1655,25 +1097,23 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
                     <tbody id="dyn-results-body"></tbody>
                 </table>
             </div>
-
             <div id="proof-verdict" class="proof-verdict"></div>
-        </section>
 
-        <!-- ═══════════════════ LIVE VALIDATION ═══════════════════ -->
-        <section id="live-validation" class="container">
-            <div class="section-label">OS-002 &middot; Product Validation</div>
-            <h2>From theorem to <em>shipping product</em></h2>
-
-            <p class="lead">
-                The exhaustive proof above verifies the invariant across
-                1,926,351 mathematical objects. Below is what happens when
-                &kappa; meets a real knowledge graph on a live MCP server.
+            <h3 class="map-tier" style="margin-top: 4rem">
+                From theorem to <span>shipping product</span>
+            </h3>
+            <p
+                class="reveal"
+                style="color: var(--text-secondary); margin-bottom: 1.5rem"
+            >
+                The proof verifies the invariant across 1,926,351 mathematical
+                objects. Here is what happens when κ meets a real knowledge
+                graph on a live MCP server.
             </p>
-
             <div class="kappa-visual reveal">
                 <div class="paper-card" data-primitive="reason">
                     <div class="paper-number">Step 1</div>
-                    <h3>Store a Business Cycle</h3>
+                    <h3>Store a business cycle</h3>
                     <pre
                         style="
                             margin-top: 1rem;
@@ -1688,15 +1128,15 @@ budget.confidence_threshold = min(0.7 + 0.05 × κ, 0.95)</pre>
                         "
                     >
 4 nodes stored:
-  Market Share &rarr; Revenue &rarr; R&amp;D &rarr; Product Quality &rarr; Market Share
+  Market Share → Revenue → R&amp;D → Product Quality → Market Share
 
 All edges: causal type
-MCP tools used: store_node &times; 4, then edge creation</pre
+MCP tools used: store_node × 4, then edge creation</pre
                     >
                 </div>
                 <div class="paper-card" data-primitive="reason">
                     <div class="paper-number">Step 2</div>
-                    <h3>Analyze Topology</h3>
+                    <h3>Analyze topology</h3>
                     <pre
                         style="
                             margin-top: 1rem;
@@ -1712,603 +1152,345 @@ MCP tools used: store_node &times; 4, then edge creation</pre
                     ><span style="color: var(--text-dim);">routing:</span>        <span style="color: var(--blue);">deliberate</span>
 <span style="color: var(--text-dim);">max_kappa:</span>      <span style="color: var(--blue);">1</span>
 <span style="color: var(--text-dim);">scc_count:</span>      <span style="color: var(--blue);">1</span>
-<span style="color: var(--text-dim);">fault_line:</span>     <span style="color: var(--rose);">Product Quality &rarr; Market Share</span>
+<span style="color: var(--text-dim);">fault_line:</span>     <span style="color: var(--rose);">Product Quality → Market Share</span>
 <span style="color: var(--text-dim);">deliberation:</span>   <span style="color: var(--blue);">max_iterations: 2, agents: 1, confidence: 0.75</span></pre>
                 </div>
             </div>
-
             <div
                 class="thesis-block reveal"
                 style="border-left-color: var(--blue)"
             >
-                The system correctly identified one strongly connected component
-                containing all four business nodes, computed
-                &kappa;&nbsp;=&nbsp;1, and identified Product Quality &rarr;
-                Market Share as the fault-line edge &mdash; the single edge
-                whose removal would break the feedback loop. This is the first
-                agent memory system to route inference depth based on proved
-                graph topology.
+                The system identified one strongly connected component over all
+                four nodes, computed κ = 1, and named Product Quality → Market
+                Share as the fault-line edge — the single edge whose removal
+                breaks the loop. This is the first agent memory system to route
+                inference depth on proved graph topology.
                 <span class="attribution"
-                    >&mdash; Phase 0 validation, March 22, 2026</span
+                    >— Phase 0 validation · 13/13 MCP integration checks
+                    passed</span
                 >
             </div>
+        </section>
 
-            <div class="reveal" style="margin-top: 3rem">
-                <h4
-                    style="
-                        font-family: var(--sans);
-                        font-size: 0.9rem;
-                        color: var(--text-dim);
-                        margin-bottom: 0.75rem;
-                    "
+        <section id="stack" class="container">
+            <div class="section-label">
+                <span class="sec-num">05</span> The Stack
+            </div>
+            <h2>Three protocols, <em>one stack.</em></h2>
+            <p class="lead">
+                <strong
+                    >[&amp;] composes agents. PULSE gives them a heartbeat.
+                    PRISM measures their effect.</strong
                 >
-                    Integration Test Results
-                </h4>
-                <table class="proof-table">
-                    <thead>
-                        <tr>
-                            <th>Check</th>
-                            <th>Result</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Server connection</td>
-                            <td class="pass">PASS</td>
-                        </tr>
-                        <tr>
-                            <td>Store 4 business nodes</td>
-                            <td class="pass">PASS</td>
-                        </tr>
-                        <tr>
-                            <td>Create causal edges (cycle)</td>
-                            <td class="pass">PASS</td>
-                        </tr>
-                        <tr>
-                            <td>analyze_topology: routing</td>
-                            <td class="pass">"deliberate" &#10003;</td>
-                        </tr>
-                        <tr>
-                            <td>analyze_topology: max_kappa</td>
-                            <td class="pass">1 &#10003;</td>
-                        </tr>
-                        <tr>
-                            <td>analyze_topology: fault_line</td>
-                            <td class="pass">
-                                Product Quality &rarr; Market Share &#10003;
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>analyze_topology: scc_count</td>
-                            <td class="pass">1 &#10003;</td>
-                        </tr>
-                        <tr>
-                            <td>analyze_topology: approximate</td>
-                            <td class="pass">
-                                false (exact computation) &#10003;
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Deliberation budget computed</td>
-                            <td class="pass">
-                                max_iter=2, agents=1, conf=0.75 &#10003;
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                They're independent — adopt one without the others — and they
+                stack, mirroring how HTTP, HTML and CSS converged in the
+                browser. Underneath them all sits an un-weakenable governance
+                floor.
+            </p>
+
+            <div class="stack-diagram reveal">
+                <div class="stack-layer l-prism reveal">
+                    <div class="stack-name">PRISM · OS-009</div>
+                    <div class="stack-role">diagnostic</div>
+                    <div class="stack-note">
+                        measures how well a loop performs over time
+                    </div>
+                </div>
+                <div class="stack-layer l-pulse reveal">
+                    <div class="stack-name">PULSE · OS-010</div>
+                    <div class="stack-role">temporal</div>
+                    <div class="stack-note">
+                        declares how loops cycle, nest, and signal
+                    </div>
+                </div>
+                <div class="stack-layer l-prim reveal">
+                    <div class="stack-name">OS-001 … OS-008</div>
+                    <div class="stack-role">capability</div>
+                    <div class="stack-note">the eight cognitive primitives</div>
+                </div>
+                <div class="stack-layer l-amp reveal">
+                    <div class="stack-name">[&amp;]</div>
+                    <div class="stack-role">structural</div>
+                    <div class="stack-note">
+                        composes capabilities into agents
+                    </div>
+                </div>
+                <div class="stack-layer l-floor reveal">
+                    <div class="stack-name">box-and-box</div>
+                    <div class="stack-role">governance floor</div>
+                    <div class="stack-note">
+                        decides what is allowed, and what is best
+                    </div>
+                </div>
             </div>
 
+            <h3 class="map-tier" style="margin-top: 3.5rem">
+                The governance floor
+                <span>box-and-box · 97 laws × 2000 trials</span>
+            </h3>
             <p
                 class="reveal"
-                style="
-                    color: var(--text-secondary);
-                    margin-top: 2rem;
-                    font-size: 0.95rem;
-                "
+                style="color: var(--text-secondary); margin-bottom: 1.5rem"
             >
-                Full MCP integration test:
-                <strong style="color: var(--cyan)">13 checks passed</strong>
-                across store, retrieve, query, learn, goals, health,
-                consolidation, and topology. Zero failures.
+                Protocols say what a system <em>can</em> do. box-and-box answers
+                the question underneath them all:
+                <em
+                    >given everything it could do, what is it allowed to do, and
+                    which option is best?</em
+                >
+                An <strong>eight-rung modality ladder</strong>, each rung a
+                small algebra with stated laws, composed by one bridge that runs
+                <code>feasible&nbsp;▸&nbsp;permitted&nbsp;▸&nbsp;best</code>
+                over a safety floor that cannot be weakened. Every verdict ships
+                a certificate.
             </p>
+            <div class="rung-grid">
+                <a href="/invariant-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">
+                        Rungs 1–2 · alethic · axiological
+                    </div>
+                    <strong>Invariant Arithmetic</strong>
+                    <span class="rung-desc"
+                        >what can happen · how to rank it (semirings)</span
+                    >
+                </a>
+                <a href="/deontic-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 3 · deontic</div>
+                    <strong>Deontic Arithmetic</strong>
+                    <span class="rung-desc"
+                        >obligation · permission · prohibition</span
+                    >
+                </a>
+                <a href="/temporal-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 4 · temporal</div>
+                    <strong>Temporal Arithmetic</strong>
+                    <span class="rung-desc"
+                        >LTL ▸ supervise · safe over time</span
+                    >
+                </a>
+                <a href="/reflexive-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 5 · reflexive</div>
+                    <strong>Reflexive Arithmetic</strong>
+                    <span class="rung-desc"
+                        >may the rules change (entrenched ring-0)</span
+                    >
+                </a>
+                <a href="/epistemic-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 6 · epistemic</div>
+                    <strong>Epistemic Arithmetic</strong>
+                    <span class="rung-desc"
+                        >knows ▸ believes · do we know enough</span
+                    >
+                </a>
+                <a href="/strategic-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 7 · strategic</div>
+                    <strong>Strategic Arithmetic</strong>
+                    <span class="rung-desc"
+                        >coalition power · who can ensure it</span
+                    >
+                </a>
+                <a href="/resource-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 8 · resource</div>
+                    <strong>Resource Arithmetic</strong>
+                    <span class="rung-desc"
+                        >affine ledger · can we afford it</span
+                    >
+                </a>
+                <a href="/playground.html" class="rung-cell rung-play">
+                    <div class="rung-modal">▸ bridge · live</div>
+                    <strong>Playground</strong>
+                    <span class="rung-desc"
+                        >interactive law sandbox · 97 of 97 wired</span
+                    >
+                </a>
+            </div>
+            <div class="cta-row" style="margin-top: 2rem">
+                <a href="https://ampersandboxdesign.com" class="btn btn-primary"
+                    >The kernel landing</a
+                >
+                <a href="https://ampersandboxdesign.com/laws.html" class="btn"
+                    >All 97 laws, live</a
+                >
+                <a href="/playground.html" class="btn">Open the playground</a>
+            </div>
         </section>
 
-        <!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
-        <section id="architecture" class="container">
-            <div class="section-label">The Cognitive Loop</div>
-            <h2>How the protocols <em>compose</em></h2>
-
+        <section id="open-questions" class="container">
+            <div class="section-label">
+                <span class="sec-num">06</span> Open Questions
+            </div>
+            <h2>What we don't know <em>yet.</em></h2>
             <p class="lead">
-                Each protocol occupies a layer. Together they form the
-                autonomous cognition loop described in the Attention Engine:
-                sense → understand → think → act → learn → govern → decide what
-                to do next.
+                A research program publishes its unknowns. These are genuine
+                open questions driving the work — the honest edge of the
+                protocols.
             </p>
-
-            <div class="arch-stack reveal">
-                <div class="arch-layer">
-                    <div class="arch-layer-label">Attention</div>
-                    <div class="arch-layer-content">
-                        <span class="arch-chip governance"
-                            >Attention Engine</span
+            <div class="oq-grid">
+                <div class="oq-card reveal">
+                    <div class="oq-num">Q1</div>
+                    <div>
+                        <strong
+                            >Does κ-routing's ROI really invert on cheap
+                            hardware?</strong
                         >
-                        <span style="color: var(--text-dim); font-size: 0.8rem"
-                            >Survey → Triage → Dispatch. Proactive. Decides what
-                            to reason about next.</span
-                        >
+                        <p>
+                            OS-005's hypothesis is that topological routing
+                            matters <em>more</em> on an 8B local model — because
+                            it tells you when to skip expensive inference
+                            entirely. Plausible, but unproven at scale.
+                        </p>
                     </div>
                 </div>
-                <div class="arch-layer">
-                    <div class="arch-layer-label">Governance</div>
-                    <div class="arch-layer-content">
-                        <span class="arch-chip governance"
-                            >Governance Shim</span
+                <div class="oq-card reveal">
+                    <div class="oq-num">Q2</div>
+                    <div>
+                        <strong
+                            >Can a self-evolving benchmark dodge Goodhart's
+                            law?</strong
                         >
-                        <span class="arch-chip governance">Delegatic</span>
-                        <span style="color: var(--text-dim); font-size: 0.8rem"
-                            >Permissions, autonomy levels, audit trail. Policy
-                            boundaries.</span
-                        >
+                        <p>
+                            PRISM rewrites its own scenarios as systems improve.
+                            If the benchmark optimizes against the system it
+                            measures, when does the score stop meaning anything?
+                        </p>
                     </div>
                 </div>
-                <div class="arch-layer">
-                    <div class="arch-layer-label">Deliberation</div>
-                    <div class="arch-layer-content">
-                        <span class="arch-chip reason">κ-Router</span>
-                        <span class="arch-chip reason">Deliberator</span>
-                        <span class="arch-chip reason"
-                            >Deliberatic (escalation)</span
+                <div class="oq-card reveal">
+                    <div class="oq-num">Q3</div>
+                    <div>
+                        <strong
+                            >Does surprise-driven learning beat scheduled
+                            consolidation?</strong
                         >
-                        <span style="color: var(--text-dim); font-size: 0.8rem"
-                            >Topology → routing → focused passes →
-                            crystallization.</span
-                        >
+                        <p>
+                            OS-011 emits a SurpriseSignal (forward-model
+                            prediction error) into the memory loop. Should
+                            learning fire on surprise, on a schedule, or both —
+                            and which actually crystallizes better knowledge?
+                        </p>
                     </div>
                 </div>
-                <div class="arch-layer">
-                    <div class="arch-layer-label">Memory</div>
-                    <div class="arch-layer-content">
-                        <span class="arch-chip memory">Graphonomous</span>
-                        <span class="arch-chip memory">Retriever</span>
-                        <span class="arch-chip memory">Consolidator</span>
-                        <span class="arch-chip memory">Learner</span>
-                        <span style="color: var(--text-dim); font-size: 0.8rem"
-                            >Knowledge graph, embeddings, outcome learning,
-                            consolidation.</span
+                <div class="oq-card reveal">
+                    <div class="oq-num">Q4</div>
+                    <div>
+                        <strong
+                            >Can agents coordinate over space with no central
+                            arbiter?</strong
                         >
+                        <p>
+                            SCOPE lets agents broadcast typed SpatialClaims and
+                            detect conflict pairwise. Does that converge to safe
+                            coordination, or does it need a referee after all?
+                        </p>
                     </div>
                 </div>
-                <div class="arch-layer">
-                    <div class="arch-layer-label">Intelligence</div>
-                    <div class="arch-layer-content">
-                        <span class="arch-chip time">TickTickClock</span>
-                        <span class="arch-chip space">GeoFleetic</span>
-                        <span style="color: var(--text-dim); font-size: 0.8rem"
-                            >Temporal patterns + spatial awareness. The when and
-                            where axes.</span
+                <div class="oq-card reveal">
+                    <div class="oq-num">Q5</div>
+                    <div>
+                        <strong
+                            >What does “understanding” mean for a graph?</strong
                         >
+                        <p>
+                            If a system holds the right relationships at high
+                            confidence and can navigate them to answer, does it
+                            understand the domain? This is the question
+                            OpenSentience exists to explore.
+                        </p>
                     </div>
                 </div>
-                <div class="arch-layer">
-                    <div class="arch-layer-label">Adaptation</div>
-                    <div class="arch-layer-content">
-                        <span class="arch-chip governance">Model Tier</span>
-                        <span class="arch-chip governance">Cost Tracker</span>
-                        <span style="color: var(--text-dim); font-size: 0.8rem"
-                            >Hardware-adaptive budgets. Same topology, different
-                            depth.</span
-                        >
-                    </div>
-                </div>
-            </div>
-
-            <div
-                class="thesis-block reveal"
-                style="border-left-color: var(--blue); margin-top: 3rem"
-            >
-                The four cognitive primitives map to the fundamental axes of
-                cognition:
-                <strong>&memory</strong> → What. <strong>&reason</strong> → How
-                (including meta-reasoning / attention). <strong>&time</strong> →
-                When. <strong>&space</strong> → Where. There is no "why"
-                primitive because "why" is answered by the composition of memory
-                (what happened), reasoning (how it connects), and time (when it
-                happened). Similarly, "what next" is answered by reasoning over
-                memory and time — which is exactly what the Attention Engine
-                does.
-                <span class="attribution"
-                    >— OS-004 §9, Architectural Notes</span
-                >
             </div>
         </section>
 
-        <!-- ═══════════════════ GOVERNANCE ═══════════════════ -->
-        <section id="governance" class="container">
-            <div class="section-label">OS-006 · Governance Shim</div>
-            <h2>Three autonomy levels, <em>not a ladder</em></h2>
-
+        <section id="get-involved" class="container">
+            <div class="section-label">
+                <span class="sec-num">07</span> Get Involved
+            </div>
+            <h2>Three doors <em>in.</em></h2>
             <p class="lead">
-                The governance shim is not a runtime. It's a thin permission and
-                audit layer that wraps around any OTP-based agent system. The
-                autonomy level is a governance decision, not a maturity metric.
-                Some agents should stay at :observe forever.
+                OpenSentience is open research. Whoever you are, there's a way
+                to use it, build on it, or try to break it.
             </p>
-
-            <div class="governance-grid reveal">
-                <div class="gov-card">
-                    <div class="gov-icon">◉</div>
-                    <h4>:observe</h4>
+            <div class="doors-grid">
+                <div class="door-card reveal">
+                    <div class="door-icon" style="color: var(--cyan)">✶</div>
+                    <h3>Researcher</h3>
                     <p>
-                        Show me what you'd do, but don't do it. Safe default.
-                        New deployments, debugging, audit mode.
+                        Read the specs and the cognitive-science grounding
+                        behind every protocol. Twelve numbered specs, full
+                        reference lists, no marketing.
                     </p>
-                    <div class="gov-mono">
-                        read-only · no mutations · no dispatches
+                    <div class="cta-row">
+                        <a href="https://docs.opensentience.org" class="btn"
+                            >Read the docs</a
+                        >
+                        <a href="#references" class="btn">References</a>
                     </div>
                 </div>
-                <div class="gov-card">
-                    <div class="gov-icon">◎</div>
-                    <h4>:advise</h4>
+                <div class="door-card reveal">
+                    <div class="door-icon" style="color: var(--accent)">⚙</div>
+                    <h3>Builder</h3>
                     <p>
-                        Propose actions, I'll approve. Typical production mode.
-                        Human-in-the-loop.
+                        Wire the loop into your own agent. Graphonomous is the
+                        shipped memory engine (npm + MCP); the governance shim
+                        is a hex package that wraps any OTP tree.
                     </p>
-                    <div class="gov-mono">
-                        proposals · approval gate · audit logged
-                    </div>
-                </div>
-                <div class="gov-card">
-                    <div class="gov-icon">●</div>
-                    <h4>:act</h4>
-                    <p>
-                        Do it, but stay within limits. High-trust, strict
-                        budget. Fully autonomous within governance bounds.
-                    </p>
-                    <div class="gov-mono">
-                        budget-capped · time-bounded · policy-enforced
-                    </div>
-                </div>
-            </div>
-
-            <pre
-                class="reveal"
-            ><span style="color:var(--text-dim)">// Permission taxonomy (thin governance, not full runtime)</span>
-permissions: [
-  "filesystem:read:/data/knowledge",
-  "tool:invoke:graphonomous/*",
-  "tool:invoke:ticktickclock/detect",
-  "graph:read:*",
-  "graph:write:agent-owned",
-  "event:subscribe:outcome.*",
-  "event:publish:attention.proposal"
-]
-
-<span style="color:var(--text-dim)">// Autonomy budget (from ampersand.json governance block)</span>
-autonomy: {
-  level: "advise",
-  model_tier: "local_small",
-  budget: { max_actions_per_hour: 5, require_approval_for: ["act", "propose"] }
-}</pre>
-        </section>
-
-        <!-- ═══════════════════ COGNITIVE SCIENCE ═══════════════════ -->
-        <section id="science" class="container">
-            <div class="section-label">Theoretical Foundations</div>
-            <h2>Grounded in cognitive science, <em>not analogy</em></h2>
-
-            <p class="lead">
-                The four primitives are not arbitrary marketing categories. They
-                map directly to established cognitive architecture models and
-                neuroanatomical systems.
-            </p>
-
-            <div class="papers-grid reveal">
-                <div
-                    class="paper-card"
-                    data-primitive="memory"
-                    style="
-                        display: grid;
-                        grid-template-columns: auto 1fr;
-                        gap: 1.5rem;
-                        align-items: start;
-                    "
-                >
-                    <div
-                        style="
-                            font-family: var(--mono);
-                            font-size: 2rem;
-                            color: var(--cyan);
-                            padding-top: 0.3rem;
-                        "
-                    >
-                        &
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1.1rem">
-                            memory → Hippocampus + Neocortex + Basal Ganglia
-                        </h3>
-                        <p class="paper-desc" style="margin-bottom: 0">
-                            Tulving's episodic/semantic distinction (1972).
-                            Atkinson-Shiffrin multi-store model. SOAR's semantic
-                            + episodic memory systems. ACT-R's declarative
-                            memory. Graphonomous implements multi-timescale
-                            consolidation inspired by hippocampal-neocortical
-                            replay.
-                        </p>
-                    </div>
-                </div>
-                <div
-                    class="paper-card"
-                    data-primitive="reason"
-                    style="
-                        display: grid;
-                        grid-template-columns: auto 1fr;
-                        gap: 1.5rem;
-                        align-items: start;
-                    "
-                >
-                    <div
-                        style="
-                            font-family: var(--mono);
-                            font-size: 2rem;
-                            color: var(--blue);
-                            padding-top: 0.3rem;
-                        "
-                    >
-                        &
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1.1rem">
-                            reason → Prefrontal Cortex + Anterior Cingulate
-                        </h3>
-                        <p class="paper-desc" style="margin-bottom: 0">
-                            BDI (Belief-Desire-Intention) model. SOAR's impasse
-                            resolution mechanism. ACT-R's production system.
-                            Kahneman's dual-process theory (fast/slow thinking).
-                            κ-routing implements the fast/slow distinction
-                            mechanically via graph topology.
-                        </p>
-                    </div>
-                </div>
-                <div
-                    class="paper-card"
-                    data-primitive="time"
-                    style="
-                        display: grid;
-                        grid-template-columns: auto 1fr;
-                        gap: 1.5rem;
-                        align-items: start;
-                    "
-                >
-                    <div
-                        style="
-                            font-family: var(--mono);
-                            font-size: 2rem;
-                            color: var(--rose);
-                            padding-top: 0.3rem;
-                        "
-                    >
-                        &
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1.1rem">
-                            time → Cerebellum + Hippocampus + Basal Ganglia
-                        </h3>
-                        <p class="paper-desc" style="margin-bottom: 0">
-                            Temporal difference learning. ACT-R's temporal
-                            constraints on memory retrieval. Baddeley's
-                            phonological loop for temporal sequencing.
-                            TickTickClock implements temporal anomaly detection
-                            via Mamba SSM.
-                        </p>
-                    </div>
-                </div>
-                <div
-                    class="paper-card"
-                    data-primitive="space"
-                    style="
-                        display: grid;
-                        grid-template-columns: auto 1fr;
-                        gap: 1.5rem;
-                        align-items: start;
-                    "
-                >
-                    <div
-                        style="
-                            font-family: var(--mono);
-                            font-size: 2rem;
-                            color: var(--amber);
-                            padding-top: 0.3rem;
-                        "
-                    >
-                        &
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1.1rem">
-                            space → Hippocampus + Parietal Cortex + Entorhinal
-                            Grid Cells
-                        </h3>
-                        <p class="paper-desc" style="margin-bottom: 0">
-                            O'Keefe & Nadel's Cognitive Map Theory (1978). Place
-                            cells (O'Keefe, Nobel 2014) and grid cells (Moser &
-                            Moser). SOAR's Spatial Visual System. GeoFleetic
-                            implements spatial awareness via delta-CRDTs for
-                            distributed state sync.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══════════════════ GET STARTED ═══════════════════ -->
-        <section id="get-started" class="container">
-            <div class="section-label">Prompts</div>
-            <h2>Get started with <em>OpenSentience</em></h2>
-            <p
-                style="
-                    color: var(--text-secondary);
-                    max-width: 680px;
-                    margin-bottom: 2.5rem;
-                "
-            >
-                These prompts work in Claude Code, Codex, or any MCP-capable
-                agent. Copy them to bootstrap the Graphonomous + PRISM dual loop
-                on your own repo.
-            </p>
-
-            <div style="display: grid; gap: 2rem">
-                <div
-                    style="
-                        background: var(--bg-card);
-                        border: 1px solid var(--border);
-                        border-radius: 10px;
-                        padding: 2rem;
-                    "
-                >
-                    <h3
-                        style="
-                            font-family: var(--mono);
-                            font-size: 0.9rem;
-                            color: var(--cyan);
-                            margin-bottom: 1rem;
-                        "
-                    >
-                        Bootstrap Graphonomous Memory
-                    </h3>
                     <pre
                         style="
                             font-family: var(--mono);
-                            font-size: 0.8rem;
+                            font-size: 0.78rem;
                             color: var(--text);
                             line-height: 1.6;
                             white-space: pre-wrap;
+                            background: var(--bg-elevated);
+                            border: 1px solid var(--border);
+                            border-radius: 8px;
+                            padding: 1rem;
+                            margin-top: 1rem;
                         "
                     >
-Start a Graphonomous memory session for this repo.
-1. retrieve(action: "context", query: "session context")
-2. Check active goals: act(action: "manage_goal", goal_operation: "list_goals")
-3. Survey attention: route(action: "attention_survey")
-Then proceed with my task, storing durable knowledge as we go.</pre
+Start a Graphonomous session for this repo.
+1. retrieve(action:"context", query:"session context")
+2. route(action:"attention_survey")
+Then work, storing durable knowledge as we go.</pre
                     >
                 </div>
-
-                <div
-                    style="
-                        background: var(--bg-card);
-                        border: 1px solid var(--border);
-                        border-radius: 10px;
-                        padding: 2rem;
-                    "
-                >
-                    <h3
-                        style="
-                            font-family: var(--mono);
-                            font-size: 0.9rem;
-                            color: var(--accent);
-                            margin-bottom: 1rem;
-                        "
-                    >
-                        Run a PRISM Evaluation Cycle
-                    </h3>
+                <div class="door-card reveal">
+                    <div class="door-icon" style="color: var(--rose)">⌖</div>
+                    <h3>Skeptic</h3>
+                    <p>
+                        Don't trust us — run it. The κ proof is right above. Or
+                        point PRISM at your own repo (BYOR) and benchmark any
+                        memory system, including ours, end to end.
+                    </p>
                     <pre
                         style="
                             font-family: var(--mono);
-                            font-size: 0.8rem;
+                            font-size: 0.78rem;
                             color: var(--text);
                             line-height: 1.6;
                             white-space: pre-wrap;
+                            background: var(--bg-elevated);
+                            border: 1px solid var(--border);
+                            border-radius: 8px;
+                            padding: 1rem;
+                            margin-top: 1rem;
                         "
                     >
-Run a PRISM evaluation cycle against your memory system:
-1. config(action: "register_system", name: "graphonomous", transport: "stdio")
-2. compose(action: "byor_register", repo_url: ".", commit_range: "HEAD~20..HEAD")
-3. compose(action: "byor_discover") &mdash; find CL events in commit history
-4. compose(action: "scenarios") &mdash; generate evaluation scenarios
-5. interact(action: "run") for each scenario
-6. observe(action: "judge_transcript") with L2 dimension scoring
-7. reflect(action: "analyze_gaps") to find weak dimensions
-8. Store results: act(action: "store_node") with cycle outcomes
-Repeat. Each cycle sharpens both the benchmark and the memory.</pre
+config(action:"register_system", name:"graphonomous")
+compose(action:"byor_register", repo_url:".")
+compose(action:"scenarios") → interact(action:"run")
+observe(action:"judge_transcript") → reflect("analyze_gaps")</pre
                     >
-                </div>
-
-                <div
-                    style="
-                        background: var(--bg-card);
-                        border: 1px solid var(--border);
-                        border-radius: 10px;
-                        padding: 2rem;
-                    "
-                >
-                    <h3
-                        style="
-                            font-family: var(--mono);
-                            font-size: 0.9rem;
-                            color: var(--rose);
-                            margin-bottom: 1rem;
-                        "
-                    >
-                        The Self-Improvement Story (Cycles 1&ndash;6)
-                    </h3>
-                    <p
-                        style="
-                            color: var(--text-secondary);
-                            font-size: 0.9rem;
-                            line-height: 1.7;
-                            margin-bottom: 1rem;
-                        "
-                    >
-                        We ran 6 PRISM cycles benchmarking Graphonomous against
-                        itself. Cycle 1 scored 0.10 (cold start). Cycle 2 jumped
-                        to 0.76 after seeding 9 procedural nodes. Cycle 3 hit
-                        0.95 with full 9-dimension coverage. Cycle 4 reached
-                        0.99 with independent judges.
-                    </p>
-                    <p
-                        style="
-                            color: var(--text-secondary);
-                            font-size: 0.9rem;
-                            line-height: 1.7;
-                            margin-bottom: 1rem;
-                        "
-                    >
-                        Then cycle 5 broke it: adversarial nodes with 0.29
-                        confidence outranked correct nodes at 0.80+ because BM25
-                        wasn&rsquo;t confidence-weighted. PRISM caught the
-                        vulnerability. We shipped 3 code fixes. Cycle 6 tested
-                        generalization across business and operations domains
-                        &mdash; vocabulary gaps exposed, more work to do.
-                    </p>
-                    <p
-                        style="
-                            color: var(--text-dim);
-                            font-size: 0.85rem;
-                            font-family: var(--mono);
-                        "
-                    >
-                        That&rsquo;s the dual loop working: the benchmark
-                        improves the system, the system improves the benchmark.
-                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- ═══════════════════ REFERENCES ═══════════════════ -->
         <section id="references" class="container">
-            <div class="section-label">References & Further Reading</div>
-            <h2>Standing on the work of <em>others</em></h2>
-
-            <h4
-                style="
-                    font-family: var(--sans);
-                    font-size: 0.85rem;
-                    margin-top: 2rem;
-                    margin-bottom: 1rem;
-                    color: var(--text-dim);
-                "
-            >
-                Cognitive Architectures
-            </h4>
+            <div class="section-label">
+                <span class="sec-num">08</span> References
+            </div>
+            <h2>Standing on the work of <em>others.</em></h2>
+            <h4 class="ref-group">Cognitive Architectures</h4>
             <ul class="ref-list reveal">
                 <li>
                     <span class="ref-id">[1]</span> Newell, A. (1990).
@@ -2334,28 +1516,18 @@ Repeat. Each cycle sharpens both the benchmark and the memory.</pre
                 </li>
             </ul>
 
-            <h4
-                style="
-                    font-family: var(--sans);
-                    font-size: 0.85rem;
-                    margin-top: 2rem;
-                    margin-bottom: 1rem;
-                    color: var(--text-dim);
-                "
-            >
-                Memory & Neuroscience
-            </h4>
+            <h4 class="ref-group">Memory & Neuroscience</h4>
             <ul class="ref-list reveal">
                 <li>
                     <span class="ref-id">[5]</span> Tulving, E. (1972, 1983).
                     Distinction between episodic and semantic memory.
                 </li>
                 <li>
-                    <span class="ref-id">[6]</span> Baddeley, A. & Hitch, G.
+                    <span class="ref-id">[6]</span> Baddeley, A. &amp; Hitch, G.
                     (1974). Working memory model.
                 </li>
                 <li>
-                    <span class="ref-id">[7]</span> O'Keefe, J. & Nadel, L.
+                    <span class="ref-id">[7]</span> O'Keefe, J. &amp; Nadel, L.
                     (1978). <em>The Hippocampus as a Cognitive Map</em>.
                 </li>
                 <li>
@@ -2364,8 +1536,8 @@ Repeat. Each cycle sharpens both the benchmark and the memory.</pre
                     spatial-associative retrievals.
                 </li>
                 <li>
-                    <span class="ref-id">[9]</span> Behrouz & Mirrokni (Google
-                    Research, NeurIPS 2025). "Nested Learning" — HOPE
+                    <span class="ref-id">[9]</span> Behrouz &amp; Mirrokni
+                    (Google Research, NeurIPS 2025). "Nested Learning" — HOPE
                     architecture for multi-timescale memory.
                 </li>
                 <li>
@@ -2379,17 +1551,7 @@ Repeat. Each cycle sharpens both the benchmark and the memory.</pre
                 </li>
             </ul>
 
-            <h4
-                style="
-                    font-family: var(--sans);
-                    font-size: 0.85rem;
-                    margin-top: 2rem;
-                    margin-bottom: 1rem;
-                    color: var(--text-dim);
-                "
-            >
-                Agent Protocols & Deliberation
-            </h4>
+            <h4 class="ref-group">Agent Protocols & Deliberation</h4>
             <ul class="ref-list reveal">
                 <li>
                     <span class="ref-id">[12]</span> Anthropic (2024-2025).
@@ -2415,116 +1577,98 @@ Repeat. Each cycle sharpens both the benchmark and the memory.</pre
                 </li>
             </ul>
 
-            <h4
-                style="
-                    font-family: var(--sans);
-                    font-size: 0.85rem;
-                    margin-top: 2rem;
-                    margin-bottom: 1rem;
-                    color: var(--text-dim);
-                "
-            >
-                Industry & Surveys
+            <h4 class="ref-group">
+                Modal Logic, Decision Theory & Measurement
             </h4>
             <ul class="ref-list reveal">
                 <li>
-                    <span class="ref-id">[17]</span> Gartner (2025). 40% of
+                    <span class="ref-id">[17]</span> Kripke, S.A. (1963).
+                    "Semantical Considerations on Modal Logic."
+                    <em>Acta Philosophica Fennica</em>, 16: 83-94. (alethic
+                    rung)
+                </li>
+                <li>
+                    <span class="ref-id">[18]</span> von Wright, G.H. (1951).
+                    "Deontic Logic." <em>Mind</em>, 60(237): 1-15. (deontic
+                    rung)
+                </li>
+                <li>
+                    <span class="ref-id">[19]</span> Pnueli, A. (1977). "The
+                    Temporal Logic of Programs." <em>18th FOCS</em>: 46-57.
+                    (temporal rung)
+                </li>
+                <li>
+                    <span class="ref-id">[20]</span> Hintikka, J. (1962).
+                    <em
+                        >Knowledge and Belief: An Introduction to the Logic of
+                        the Two Notions</em
+                    >. Cornell University Press. (epistemic rung)
+                </li>
+                <li>
+                    <span class="ref-id">[21]</span> von Neumann, J. &amp;
+                    Morgenstern, O. (1944).
+                    <em>Theory of Games and Economic Behavior</em>. Princeton
+                    University Press. (strategic rung)
+                </li>
+                <li>
+                    <span class="ref-id">[22]</span> Savage, L.J. (1954).
+                    <em>The Foundations of Statistics</em>. Wiley. (axiological
+                    / value rung)
+                </li>
+                <li>
+                    <span class="ref-id">[23]</span> Kahneman, D. (2011).
+                    <em>Thinking, Fast and Slow</em>. Farrar, Straus and Giroux.
+                    (dual-process grounding for κ-routing)
+                </li>
+                <li>
+                    <span class="ref-id">[24]</span> Rasch, G. (1960).
+                    <em
+                        >Probabilistic Models for Some Intelligence and
+                        Attainment Tests</em
+                    >; Lord, F.M. (1980).
+                    <em>Applications of Item Response Theory</em>. (PRISM
+                    difficulty calibration)
+                </li>
+            </ul>
+
+            <h4 class="ref-group">Industry & Surveys</h4>
+            <ul class="ref-list reveal">
+                <li>
+                    <span class="ref-id">[25]</span> Gartner (2025). 40% of
                     enterprise apps will embed AI agents by end of 2026.
                 </li>
                 <li>
-                    <span class="ref-id">[18]</span> ICLR 2026 Workshop.
+                    <span class="ref-id">[26]</span> ICLR 2026 Workshop.
                     "MemAgents: Memory for LLM-Based Agentic Systems."
                 </li>
                 <li>
-                    <span class="ref-id">[19]</span> VentureBeat (Jan 2026).
+                    <span class="ref-id">[27]</span> VentureBeat (Jan 2026).
                     "Continual learning shifts rigor toward memory provenance
                     and retention."
                 </li>
                 <li>
-                    <span class="ref-id">[20]</span> Chen et al. (2025). "AI
+                    <span class="ref-id">[28]</span> Chen et al. (2025). "AI
                     Meets Brain: A Unified Survey on Memory Systems."
                     arXiv:2512.23343.
                 </li>
             </ul>
         </section>
 
-        <!-- ═══════════════════ OPEN QUESTIONS ═══════════════════ -->
-        <section class="container">
-            <div class="section-label">Open Questions</div>
-            <h2>What we don't know <em>yet</em></h2>
-
-            <div
-                class="thesis-block reveal"
-                style="
-                    border-left-color: var(--rose);
-                    font-style: normal;
-                    font-size: 1rem;
-                "
-            >
-                <p style="margin-bottom: 1rem">
-                    These are genuine open research questions driving our work:
-                </p>
-                <p style="margin-bottom: 0.75rem">
-                    <strong
-                        >1. Does κ-driven deliberation actually improve answer
-                        quality?</strong
-                    >
-                    — The routing is proved; the product effect is not. We need
-                    controlled evaluations comparing raw retrieval, enriched
-                    retrieval, and deliberated retrieval across circular vs.
-                    acyclic knowledge regions.
-                </p>
-                <p style="margin-bottom: 0.75rem">
-                    <strong
-                        >2. What is the minimum model tier for effective
-                        single-pass deliberation?</strong
-                    >
-                    — Our hypothesis is that 8B models can benefit from
-                    topology-enriched context even without multi-pass reasoning.
-                    This needs empirical validation.
-                </p>
-                <p style="margin-bottom: 0.75rem">
-                    <strong
-                        >3. How should confidence decay interact with
-                        crystallized conclusions?</strong
-                    >
-                    — If a deliberated conclusion decays to low confidence,
-                    should it be re-deliberated automatically? What triggers
-                    re-examination?
-                </p>
-                <p style="margin-bottom: 0.75rem">
-                    <strong
-                        >4. Can attention-driven goal generation be safe on
-                        small models?</strong
-                    >
-                    — Autonomous PROPOSE mode risks hallucinated goals on weaker
-                    models. What guardrails prevent goal drift without
-                    eliminating autonomy?
-                </p>
-                <p>
-                    <strong
-                        >5. What does "understanding" mean for a graph-based
-                        system?</strong
-                    >
-                    — If an agent's knowledge graph contains all the right
-                    relationships with high confidence, and it can navigate them
-                    to answer questions, does it "understand" the domain? This
-                    is the question OpenSentience exists to explore.
-                </p>
-            </div>
-        </section>
-
-        <!-- ═══════════════════ FOOTER ═══════════════════ -->
         <footer class="container">
             <div class="footer-mark">OpenSentience</div>
             <p>
-                An open research initiative by
+                The research arm of
                 <a href="https://ampersandboxdesign.com">Ampersand Box Design</a
                 >.<br />
                 Published protocols. Open questions. No hype.
             </p>
             <div class="footer-links">
                 <a href="https://docs.opensentience.org">Docs</a>
+                <a href="#kernel">box-and-box kernel</a>
+                <a href="/playground.html">Playground</a>
+                <a href="https://ampersandboxdesign.com/laws.html"
+                    >The 97 laws</a
+                >
                 <a href="https://ampersandboxdesign.com"
                     >ampersandboxdesign.com</a
                 >
@@ -2544,181 +1688,7 @@ Repeat. Each cycle sharpens both the benchmark and the memory.</pre
             </p>
         </footer>
 
-        <script src="kappa_proof.js"></script>
-        <script>
-            // ─── Proof Verifier UI ───
-            let proofRunning = false;
-
-            function log(html) {
-                const el = document.getElementById("proof-log");
-                el.innerHTML += html + "<br>";
-                el.scrollTop = el.scrollHeight;
-            }
-
-            function formatNum(n) {
-                return n.toLocaleString();
-            }
-
-            async function startProof() {
-                if (proofRunning) return;
-                proofRunning = true;
-
-                const btn = document.getElementById("proof-run-btn");
-                const status = document.getElementById("proof-status");
-                const progress = document.getElementById("proof-progress");
-                const progressBar =
-                    document.getElementById("proof-progress-bar");
-                const logEl = document.getElementById("proof-log");
-                const results = document.getElementById("proof-results");
-                const graphBody = document.getElementById("graph-results-body");
-                const dynBody = document.getElementById("dyn-results-body");
-                const verdict = document.getElementById("proof-verdict");
-
-                btn.disabled = true;
-                btn.classList.add("running");
-                btn.textContent = "Running...";
-                progress.classList.add("active");
-                logEl.classList.add("active");
-                logEl.innerHTML = "";
-                graphBody.innerHTML = "";
-                dynBody.innerHTML = "";
-                results.classList.add("visible");
-                verdict.classList.remove("visible");
-
-                // Total objects for progress: graphs(n=2..5) + dynamics(n=2..7)
-                const graphTotals = [0, 0, 4, 64, 4096, 1048576]; // 2^(n*(n-1))
-                const dynTotals = [0, 0, 4, 27, 256, 3125, 46656, 823543];
-                const totalGraphs = graphTotals
-                    .slice(2, 6)
-                    .reduce((a, b) => a + b, 0);
-                const totalDyn = dynTotals
-                    .slice(2, 8)
-                    .reduce((a, b) => a + b, 0);
-                const grandTotal = totalGraphs + totalDyn;
-                let globalChecked = 0;
-
-                log(
-                    '<span class="log-phase">PART 1: DIRECTED GRAPHS (n=2..5)</span>',
-                );
-                log(
-                    '<span class="log-info">Verifying: κ(G) > 0 ⟺ β₁(G) > 0 ⟺ has nontrivial SCC</span>',
-                );
-
-                const result = await runFullProof((update) => {
-                    if (update.step === "start") {
-                        if (update.phase === "graphs") {
-                            status.textContent = `Graphs n=${update.n}...`;
-                        } else {
-                            status.textContent = `Dynamical systems n=${update.n}...`;
-                        }
-                    } else if (update.step === "progress") {
-                        const phaseOffset =
-                            update.phase === "dynamics" ? totalGraphs : 0;
-                        const prevN =
-                            update.phase === "graphs"
-                                ? graphTotals
-                                      .slice(2, update.n)
-                                      .reduce((a, b) => a + b, 0)
-                                : dynTotals
-                                      .slice(2, update.n)
-                                      .reduce((a, b) => a + b, 0);
-                        globalChecked = phaseOffset + prevN + update.checked;
-                        const pct = (
-                            (globalChecked / grandTotal) *
-                            100
-                        ).toFixed(1);
-                        progressBar.style.width = pct + "%";
-                        status.textContent = `${update.phase === "graphs" ? "Graphs" : "Dynamics"} n=${update.n}: ${formatNum(update.checked)}/${formatNum(update.total)}`;
-                    } else if (update.step === "done") {
-                        const r = update.result;
-                        const statusClass = r.failures === 0 ? "pass" : "fail";
-                        const statusText = r.failures === 0 ? "PASS" : "FAIL";
-
-                        if (update.phase === "graphs") {
-                            const pearson =
-                                r.pearsonR !== null
-                                    ? r.pearsonR.toFixed(4)
-                                    : "N/A";
-                            graphBody.innerHTML += `<tr>
-                                <td>${r.n}</td>
-                                <td class="num">${formatNum(r.numGraphs)}</td>
-                                <td class="num">${formatNum(r.scGraphs)}</td>
-                                <td class="num">${r.failures}</td>
-                                <td class="num">${pearson}</td>
-                                <td class="num">${formatNum(r.elapsed)}ms</td>
-                                <td class="${statusClass}">${statusText}</td>
-                            </tr>`;
-                            log(
-                                `<span class="log-pass">  n=${r.n}: ${formatNum(r.numGraphs)} graphs, ${formatNum(r.scGraphs)} SC, fails=${r.failures}, r(κ,β₁)=${pearson}, ${formatNum(r.elapsed)}ms [${statusText}]</span>`,
-                            );
-
-                            if (r.n === 5) {
-                                log("");
-                                log(
-                                    '<span class="log-phase">PART 2: FINITE DYNAMICAL SYSTEMS (n=2..7)</span>',
-                                );
-                                log(
-                                    '<span class="log-info">Verifying: κ(f) > 0 ⟺ has periodic orbit (period > 1)</span>',
-                                );
-                            }
-                        } else {
-                            dynBody.innerHTML += `<tr>
-                                <td>${r.n}</td>
-                                <td class="num">${formatNum(r.numMaps)}</td>
-                                <td class="num">${formatNum(r.periodicMaps)}</td>
-                                <td class="num">${r.failures}</td>
-                                <td class="num">${formatNum(r.elapsed)}ms</td>
-                                <td class="${statusClass}">${statusText}</td>
-                            </tr>`;
-                            log(
-                                `<span class="log-pass">  n=${r.n}: ${formatNum(r.numMaps)} maps, ${formatNum(r.periodicMaps)} periodic, fails=${r.failures}, ${formatNum(r.elapsed)}ms [${statusText}]</span>`,
-                            );
-                        }
-                    }
-                });
-
-                // Show verdict
-                progressBar.style.width = "100%";
-                verdict.classList.add("visible");
-
-                if (result.totalFailures === 0) {
-                    verdict.className = "proof-verdict visible verified";
-                    verdict.innerHTML = `<div class="verdict-title">VERIFIED</div>
-                        ${formatNum(result.totalObjects)} objects tested, 0 counterexamples. ${formatNum(result.elapsed)}ms total.
-                        <br>κ(G) > 0 ⟺ β₁(G) > 0 ⟺ has nontrivial SCC (all directed graphs n≤5).
-                        <br>κ(f) > 0 ⟺ has periodic orbit of period > 1 (all f:[n]→[n], n≤7).`;
-                    log("");
-                    log(
-                        `<span class="log-pass">VERIFIED: ${formatNum(result.totalObjects)} objects, 0 counterexamples, ${formatNum(result.elapsed)}ms.</span>`,
-                    );
-                } else {
-                    verdict.className = "proof-verdict visible failed";
-                    verdict.innerHTML = `<div class="verdict-title">FAILED</div>
-                        ${result.totalFailures} counterexamples found in ${formatNum(result.totalObjects)} objects.`;
-                }
-
-                btn.disabled = false;
-                btn.classList.remove("running");
-                btn.textContent = "Run Again";
-                status.textContent = "Complete.";
-                proofRunning = false;
-            }
-
-            // Scroll reveal
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add("visible");
-                        }
-                    });
-                },
-                { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
-            );
-
-            document
-                .querySelectorAll(".reveal")
-                .forEach((el) => observer.observe(el));
-        </script>
+        <script src="/kappa_proof.js"></script>
+        <script src="/proof.js"></script>
     </body>
 </html>

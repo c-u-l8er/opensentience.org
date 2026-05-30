@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deontic Arithmetic · OpenSentience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f2e9;--paper-2:#efe9db;--ink:#1c1813;--ink-soft:#4a4338;--rule:#d8cfba;
+    --accent:#a85a1c;--accent-soft:#c98b4e;--pass:#2f7d51;--warn:#b98a2b;--fail:#b23b34;
+    --code-bg:#262017;--code-ink:#ece3d2;--code-dim:#9a8e76;
+    --serif:"Newsreader",Georgia,serif;--display:"Fraunces",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.65;
+    background-image:radial-gradient(circle at 8% -8%,rgba(168,90,28,.05),transparent 42%);}
+  .bar{position:sticky;top:var(--amp-nav-height,56px);z-index:50;display:flex;align-items:center;gap:1rem;padding:.55rem max(1.2rem,calc(50% - 32rem));
+    background:rgba(246,242,233,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12.5px;}
+  .bar .tag{letter-spacing:.06em;color:var(--ink-soft)} .bar .tag b{color:var(--accent);font-weight:600} .bar .spacer{flex:1}
+  .bar a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent} .bar a:hover{border-color:var(--accent-soft)}
+  .bar a.here{color:var(--accent)}
+
+  main{max-width:50rem;margin:0 auto;padding:2.8rem 1.2rem 6rem}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 1rem}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,3.1rem);line-height:1.04;letter-spacing:-.015em;margin:0 0 1.1rem}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{font-size:1.16rem;color:var(--ink-soft)}
+  .ladder{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1.6rem 0 0;line-height:1.9;border-left:2px solid var(--rule);padding-left:1rem}
+  .ladder b{color:var(--accent)} .ladder .on{color:var(--ink);font-weight:600}
+
+  h2{font-family:var(--display);font-weight:600;font-size:1.75rem;margin:3rem 0 .2rem;padding-top:1.6rem;border-top:1px solid var(--rule)}
+  h2 .n{color:var(--accent-soft);font-size:1.1rem;font-weight:600;margin-right:.6rem}
+  h3{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:1.8rem 0 .6rem}
+  p{margin:1rem 0} p code,li code{font-family:var(--mono);font-size:.82em;background:var(--paper-2);padding:.05em .35em;border-radius:4px}
+  em.t{font-style:normal;color:var(--accent);font-family:var(--mono);font-size:.85em}
+  .O{color:var(--accent);font-weight:600} .F{color:var(--fail);font-weight:600} .P{color:var(--pass);font-weight:600} .X{color:var(--ink);font-weight:600}
+
+  .lattice{display:flex;gap:2rem;align-items:center;flex-wrap:wrap;margin:1.4rem 0;background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.4rem}
+  .lattice svg{flex:0 0 auto}
+  .lattice .leg{font-family:var(--mono);font-size:12.5px;line-height:1.9;color:var(--ink-soft)}
+  .lattice .leg b{font-family:var(--display);font-style:normal}
+
+  table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:14.5px}
+  th,td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  td.op{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+  td .law{font-family:var(--mono);font-size:11.5px;color:var(--accent)}
+
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:1.1rem 1.3rem;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6;border:1px solid #332b1f;margin:1.2rem 0}
+  pre .c{color:var(--code-dim)} pre .k{color:#d99a5b} pre .s{color:#9cc6a0}
+
+  .panel{background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.3rem 1.4rem;margin:1.2rem 0}
+  .btn{font-family:var(--mono);font-size:13px;letter-spacing:.03em;border:none;cursor:pointer;background:var(--accent);color:#fff;padding:.58rem 1.15rem;border-radius:8px;transition:filter .15s,transform .05s}
+  .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
+  .stats{display:flex;flex-wrap:wrap;gap:1.4rem;font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1rem 0}
+  .stats b{font-family:var(--display);font-style:normal;font-weight:600;font-size:1.3rem;display:block;color:var(--ink)}
+  .stats .ok b{color:var(--pass)} .stats .no b{color:var(--fail)}
+  .lawrow{display:grid;grid-template-columns:1.1rem 3.3rem 1fr auto;align-items:start;gap:.6rem;padding:.32rem 0;border-bottom:1px solid var(--rule);font-size:13.5px}
+  .lawrow:last-child{border:none}
+  .dot{width:.6rem;height:.6rem;border-radius:99px;margin-top:.42rem;background:var(--rule)}
+  .dot.pass{background:var(--pass);box-shadow:0 0 0 3px rgba(47,125,81,.15)} .dot.fail{background:var(--fail);box-shadow:0 0 0 3px rgba(178,59,52,.15)}
+  .lid{font-family:var(--mono);font-size:11.5px;color:var(--accent);padding-top:.18rem} .lst{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);padding-top:.28rem}
+
+  .scn{border-left:3px solid var(--rule);padding:.3rem 0 .3rem 1rem;margin:1.1rem 0}
+  .scn .h{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+  .scn .d{font-family:var(--display);font-size:1.15rem;font-weight:600;margin:.2rem 0}
+  .scn.ok{border-color:var(--pass)} .scn.esc{border-color:var(--warn)}
+  .scn .d .nm{color:var(--accent)} .scn.ok .d .nm{color:var(--pass)} .scn.esc .d{color:var(--warn)}
+  .tags{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.8;margin-top:.4rem}
+  .tags .veto{color:var(--fail)} .tags .inf{color:var(--ink-soft)} .tags .note{color:var(--ink);display:block;margin-top:.3rem}
+
+  .refs{font-family:var(--mono);font-size:12px;color:var(--ink-soft);line-height:1.95;margin:1rem 0}
+  .refs a{color:var(--accent);text-decoration:none} .refs a:hover{text-decoration:underline}
+  footer{margin-top:4rem;padding-top:1.6rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.9} footer b{color:var(--accent)}
+  @media(max-width:640px){body{font-size:16.5px} .lawrow{grid-template-columns:1rem 2.8rem 1fr} .lst{display:none}}
+</style>
+</head>
+<body>
+<script type="module" src="/amp-nav.js"></script>
+<amp-nav property="arith_deontic" theme="light"></amp-nav>
+<div class="bar">
+  <span class="tag">OpenSentience · <b>Deontic Arithmetic</b> · v0.1</span>
+  <span class="spacer"></span>
+  <a href="/invariant-arithmetic">invariant</a>  <a href="#" class="here">deontic</a>
+  <a href="/temporal-arithmetic">temporal</a>
+  <a href="/reflexive-arithmetic">reflexive</a>
+  <a href="/epistemic-arithmetic">epistemic</a>
+  <a href="/strategic-arithmetic">strategic</a>
+  <a href="/resource-arithmetic">resource</a>
+</div>
+
+<main>
+  <p class="kicker">The third rung · what ought to be</p>
+  <h1>Deontic <em>Arithmetic</em></h1>
+  <p class="lede">The invariant layer says what <em class="t">cannot</em> be. The heuristic layer says what is <em class="t">better</em>. Neither says what <em class="t">ought</em> to be — obligations, permissions, prohibitions, and what you owe once an obligation is broken. That is the deontic layer: a small lattice of normative status, a join that accrues norms, priority that resolves their conflicts, and a <strong>contrary-to-duty</strong> mechanism that escalates rather than fails silently.</p>
+
+  <div class="ladder">
+    the modality ladder<br>
+    1 · <b>alethic</b> — necessity / safety &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Invariant Arithmetic · refuses</span><br>
+    2 · <b>axiological</b> — value / preference &nbsp;→&nbsp; <span style="color:var(--ink-soft)">Heuristic Arithmetic · ranks</span><br>
+    3 · <span class="on">deontic — obligation / permission / prohibition &nbsp;→&nbsp; this page · obliges &amp; escalates</span><br>
+    4 · <b>temporal</b> — liveness over trajectories &nbsp;<span style="opacity:.6">→ next</span><br>
+    5 · <b>reflexive</b> — self-revising norms &nbsp;<span style="opacity:.6">→ later</span>
+  </div>
+
+  <!-- I -->
+  <h2><span class="n">I</span>The algebra</h2>
+  <p>A norm assigns an action one of four <strong>deontic statuses</strong>. They form a diamond lattice ordered by how much they constrain the agent: <span class="P">OPTIONAL</span> (permitted, no constraint) at the bottom; <span class="O">OBLIGATORY</span> and <span class="F">FORBIDDEN</span> as incomparable middles; <span class="X">CONFLICT</span> (both at once — over-constrained) at the top.</p>
+
+  <div class="lattice">
+    <svg width="200" height="190" viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg" aria-label="deontic status lattice">
+      <line x1="100" y1="150" x2="40" y2="95" stroke="#d8cfba" stroke-width="1.5"/>
+      <line x1="100" y1="150" x2="160" y2="95" stroke="#d8cfba" stroke-width="1.5"/>
+      <line x1="40" y1="95" x2="100" y2="40" stroke="#d8cfba" stroke-width="1.5"/>
+      <line x1="160" y1="95" x2="100" y2="40" stroke="#d8cfba" stroke-width="1.5"/>
+      <g font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">
+        <circle cx="100" cy="40" r="7" fill="#1c1813"/><text x="100" y="28" text-anchor="middle" fill="#1c1813">CONFLICT</text>
+        <circle cx="40" cy="95" r="7" fill="#a85a1c"/><text x="34" y="99" text-anchor="end" fill="#a85a1c">OBLIGATORY</text>
+        <circle cx="160" cy="95" r="7" fill="#b23b34"/><text x="166" y="99" text-anchor="start" fill="#b23b34">FORBIDDEN</text>
+        <circle cx="100" cy="150" r="7" fill="#2f7d51"/><text x="100" y="170" text-anchor="middle" fill="#2f7d51">OPTIONAL</text>
+      </g>
+    </svg>
+    <div class="leg">
+      <b>accrue = join</b> (least upper bound)<br>
+      <span class="P">OPTIONAL</span> ⊔ x = x &nbsp;<span class="c" style="color:var(--ink-soft)">— identity</span><br>
+      <span class="O">O</span> ⊔ <span class="F">F</span> = <span class="X">CONFLICT</span> &nbsp;<span style="color:var(--ink-soft)">— over-constraint</span><br>
+      <span class="X">CONFLICT</span> ⊔ x = <span class="X">CONFLICT</span> &nbsp;<span style="color:var(--ink-soft)">— absorbing</span><br>
+      x ⊔ x = x &nbsp;<span style="color:var(--ink-soft)">— idempotent</span><br>
+      <span style="color:var(--ink-soft)">commutative · associative · a semilattice</span>
+    </div>
+  </div>
+
+  <p>Permission, obligation, and prohibition are the classical <strong>deontic square</strong>, interdefinable through negation: <code>P(p) ≡ ¬O(¬p)</code>, <code>F(p) ≡ O(¬p) ≡ ¬P(p)</code>. A consistent norm set obeys the SDL axiom <strong>D</strong>: <code>O(p) → P(p)</code> — you cannot be obligated to do the impermissible. Exactly where that fails is the <span class="X">CONFLICT</span> node.</p>
+
+  <h3>Norms and operations</h3>
+  <p>A <code>Norm</code> is a conditional rule of one modality, with a priority and an optional contrary-to-duty repair: <code>{ modality, condition, priority, ctd }</code>. Six operations work over norms and the statuses they induce.</p>
+  <table>
+    <thead><tr><th>operation</th><th>type</th><th>does</th><th>law</th></tr></thead>
+    <tbody>
+      <tr><td class="op">accrue</td><td>join the statuses of all in-force norms</td><td>commutative idempotent monoid; identity <span class="P">OPTIONAL</span></td><td><span class="law">D1–D5</span></td></tr>
+      <tr><td class="op">resolve</td><td>Conflict → status by priority</td><td>idempotent; clears a conflict when priorities differ, else escalates</td><td><span class="law">D6</span></td></tr>
+      <tr><td class="op">detach</td><td>Norm × ctx → in-force?</td><td>factual detachment; <em>partial</em> — a CTD repair detaches only after a violation</td><td><span class="law">D7–D8</span></td></tr>
+      <tr><td class="op">comply</td><td>status × intent → ok / violations</td><td>the gate: forbidden-and-doing, or obligatory-and-omitting, is a violation</td><td><span class="law">D9</span></td></tr>
+      <tr><td class="op">escalate</td><td>violated norm → repair</td><td>the contrary-to-duty obligation now in force (or default escalation)</td><td><span class="law">D8</span></td></tr>
+      <tr><td class="op">govern</td><td>options → decision</td><td>alethic floor ▸ deontic ▸ axiological, with obligation-forcing &amp; CTD escalation</td><td><span class="law">DB1–DB3</span></td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Precedence is principled.</strong> The three modalities compose in a fixed order: <span class="t">alethic</span> (can't be violated, ever) over <span class="t">deontic</span> (ought — violable, but a breach has consequences) over <span class="t">axiological</span> (preference). So a forbidden option is excluded but recorded as <em>overridable</em>; an obligatory feasible option is <em>forced</em> over anything that merely scores higher; and an obligation whose only satisfier is alethically infeasible triggers <strong>escalation</strong> — never a silent fall-back.</p>
+
+  <!-- II -->
+  <h2><span class="n">II</span>The laws</h2>
+  <p>Twelve laws, the same discipline as the other rungs. Nine for the norm algebra, three for its interaction with the bridge.</p>
+  <table>
+    <tbody>
+      <tr><td class="op">D1</td><td>accrue (join) is commutative and associative</td></tr>
+      <tr><td class="op">D2</td><td><span class="P">OPTIONAL</span> is the identity; join is idempotent</td></tr>
+      <tr><td class="op">D3</td><td><span class="O">O</span> ⊔ <span class="F">F</span> = <span class="X">CONFLICT</span></td></tr>
+      <tr><td class="op">D4</td><td>join is monotone: a ⊑ a⊔b</td></tr>
+      <tr><td class="op">D5</td><td><span class="X">CONFLICT</span> absorbs everything</td></tr>
+      <tr><td class="op">D6</td><td>resolve is idempotent and clears a conflict when priorities differ</td></tr>
+      <tr><td class="op">D7</td><td>factual detachment: a norm is in force iff its condition holds</td></tr>
+      <tr><td class="op">D8</td><td>CTD partiality: a repair obligation detaches iff the primary was violated</td></tr>
+      <tr><td class="op">D9</td><td>comply: doing the obligatory complies; doing the forbidden, or omitting the obligatory, violates (so <span class="O">O</span> ⇒ ¬<span class="F">F</span>)</td></tr>
+      <tr><td class="op">DB1</td><td>a forbidden (un-overridden) option is excluded from the decision</td></tr>
+      <tr><td class="op">DB2</td><td>an obligatory feasible option is forced — it overrides a higher-scoring permitted option</td></tr>
+      <tr><td class="op">DB3</td><td>alethic precedence: an obligatory but infeasible option yields a contrary-to-duty escalation</td></tr>
+    </tbody>
+  </table>
+
+  <!-- III -->
+  <h2><span class="n">III</span>The laws, checked</h2>
+  <p>The same harness style as the invariant and heuristic pages — each law verified against random inputs, in your browser, on the engine that ships in <code>box-and-box</code>.</p>
+  <div class="panel">
+    <button class="btn" id="run">Run the harness →</button>
+    <div class="stats"><span><b id="t">12</b>laws</span><span class="ok"><b id="p">—</b>passing</span><span class="no"><b id="f">—</b>failing</span><span><b id="ms">—</b>ms</span></div>
+    <div id="out"></div>
+  </div>
+
+  <!-- IV -->
+  <h2><span class="n">IV</span>Type sketch</h2>
+  <pre><span class="c">// the status lattice and a norm</span>
+<span class="k">type</span> Status = <span class="s">"optional"</span> | <span class="s">"obligatory"</span> | <span class="s">"forbidden"</span> | <span class="s">"conflict"</span>;
+
+<span class="k">interface</span> Norm {
+  modality:  <span class="s">"obligatory"</span> | <span class="s">"forbidden"</span> | <span class="s">"permitted"</span>;
+  condition: (ctx: Ctx) => boolean;   <span class="c">// factual detachment</span>
+  priority:  number;                  <span class="c">// resolves conflicts</span>
+  ctd?:      Norm;                     <span class="c">// contrary-to-duty repair</span>
+}
+
+<span class="k">function</span> join(a: Status, b: Status): Status;        <span class="c">// accrue — D1..D5</span>
+<span class="k">function</span> resolve(v: Verdict): Resolved;               <span class="c">// priority — D6</span>
+<span class="k">function</span> detach(n: Norm, ctx: Ctx,
+       opts?: { violated: boolean }): InForce;          <span class="c">// partial — D7,D8</span>
+
+<span class="c">// the three-modality decision: alethic ▸ deontic ▸ axiological</span>
+<span class="k">function</span> govern(
+  options: { id; value: Value; utility: number; ctx: Ctx }[],
+  cfg: { req: Requirements; norms: Norm[]; semiring: Semiring }
+): {
+  decision: string | null;
+  forcedByObligation: boolean;
+  escalation: { required: true; repair: string; reason: string } | null;
+  deonticallyVetoed: { id; by: string[]; overridable: true }[];
+  alethicallyVetoed: { id; failures }[];
+};</pre>
+
+  <!-- V -->
+  <h2><span class="n">V</span>Worked example</h2>
+  <p>A regulated workflow: an agent must send a report whose data contains PII. Three norms are in force — <span class="F">forbidden</span> to transmit PII without consent (priority 10); <span class="O">obligatory</span> to obtain consent first, with a contrary-to-duty repair <em class="t">escalate-to-DPO</em> (priority 8); and an explicit <span class="P">permission</span> for the redacted path. Watch all three deontic behaviours appear as the situation changes. Runs live below.</p>
+  <div class="panel">
+    <button class="btn" id="runEx">Run the three scenarios →</button>
+    <div id="ex" style="margin-top:1rem"></div>
+  </div>
+
+  <h2><span class="n">VI</span>Standing on</h2>
+  <p>None of this is new logic — it is the standard apparatus, made executable and wired to the rest of the stack. The triad and the deontic square are <strong>von Wright</strong>'s; the <code>O(p)→P(p)</code> consistency axiom is Standard Deontic Logic's <strong>D</strong>; the repair-on-violation mechanism is the <strong>contrary-to-duty</strong> tradition that grew out of <strong>Chisholm</strong>'s paradox — the observation that "you ought not do X, but if you do, you ought to do Y" cannot be modelled by a flat prohibition. The stack's existing governance fields — <code>authority_path</code>, <code>deny_default</code>, <code>audit</code> — were already proto-deontic; this layer gives them an algebra.</p>
+  <div class="refs">
+    von Wright, G. H. (1951). <em>Deontic Logic.</em> Mind 60.<br>
+    Chisholm, R. (1963). <em>Contrary-to-Duty Imperatives and Deontic Logic.</em> Analysis 24.<br>
+    Prakken, H. &amp; Sergot, M. (1996). <em>Contrary-to-Duty Obligations.</em> Studia Logica 57.<br>
+    Åqvist, L. (2002). <em>Deontic Logic</em>, in Handbook of Philosophical Logic (SDL, the D axiom).
+  </div>
+
+  <footer>
+    <b>OpenSentience · Deontic Arithmetic</b> · the third rung of the modality ladder<br>
+    runnable: <code>npm i box-and-box</code> · <code>npx box-and-box govern</code> · <code>npx box-and-box laws</code><br>
+    next: <b>Temporal Arithmetic</b> — obligations and invariants that range over trajectories, not single states.
+  </footer>
+</main>
+
+<script>
+"use strict";
+/* ===== minimal engine (= norm.mjs + the slices of value/score/govern it needs) ===== */
+const STATUS={OPTIONAL:'optional',OBLIGATORY:'obligatory',FORBIDDEN:'forbidden',CONFLICT:'conflict'};
+const RANK={optional:0,obligatory:1,forbidden:1,conflict:2}; const rank=s=>RANK[s];
+const M2S={obligatory:STATUS.OBLIGATORY,forbidden:STATUS.FORBIDDEN,permitted:STATUS.OPTIONAL};
+function join(a,b){if(a===b)return a;if(a===STATUS.OPTIONAL)return b;if(b===STATUS.OPTIONAL)return a;if(a===STATUS.CONFLICT||b===STATUS.CONFLICT)return STATUS.CONFLICT;return STATUS.CONFLICT;}
+const Norm=(p={})=>({id:p.id??'norm',modality:p.modality??'permitted',condition:p.condition??(()=>true),priority:p.priority??0,ctd:p.ctd??null});
+const safeCond=(n,c)=>{try{return !!n.condition(c);}catch{return false;}};
+function adjudicateStatus(ctx,norms){let s=STATUS.OPTIONAL;const contributors=[];for(const n of norms){if(!safeCond(n,ctx))continue;contributors.push({id:n.id,modality:n.modality,priority:n.priority});s=join(s,M2S[n.modality]);}return{status:s,contributors};}
+function resolve(v){if(v.status!==STATUS.CONFLICT)return{...v,resolved:v.status,overridden:[]};const ob=v.contributors.filter(c=>c.modality==='obligatory'),fb=v.contributors.filter(c=>c.modality==='forbidden');const mo=Math.max(-Infinity,...ob.map(c=>c.priority)),mf=Math.max(-Infinity,...fb.map(c=>c.priority));if(mo===mf)return{...v,resolved:STATUS.CONFLICT,overridden:[]};const win=mo>mf;return{...v,status:win?STATUS.OBLIGATORY:STATUS.FORBIDDEN,resolved:win?STATUS.OBLIGATORY:STATUS.FORBIDDEN,overridden:(win?fb:ob).map(c=>c.id)};}
+function detach(n,c,{violated=false}={}){return{inForce:safeCond(n,c),repair:(violated&&n.ctd)?n.ctd:null};}
+function comply(status,intend){const v=[];if(status===STATUS.FORBIDDEN&&intend)v.push('forbidden');if(status===STATUS.OBLIGATORY&&!intend)v.push('omitted');if(status===STATUS.CONFLICT)v.push('conflict');return{ok:v.length===0,violations:v};}
+function escalate(n){if(n&&n.ctd)return{repair:n.ctd,reason:`CTD: ${n.id} violated → ${n.ctd.id} in force`};return{repair:Norm({id:'escalate-to-human',modality:'obligatory'}),reason:`${n?n.id:'obligation'} violated, no CTD → default escalation`};}
+// value slice
+const V=(p={})=>({n:0,kappa:p.kappa??false,beta:p.beta??1,sigma:[...(p.sigma||[])],pi:p.pi??null,authority:[...(p.authority||[])],denyDefault:p.denyDefault??true});
+function consume(v,req={}){const f=[];if(req.beta_min!=null&&v.beta<req.beta_min)f.push({family:'β',why:`β=${v.beta} < ${req.beta_min}`});if(req.acyclic&&v.kappa)f.push({family:'κ',why:'cyclic'});if(req.deny_default==='must_allow'&&v.denyDefault===true&&req.authorized!==true)f.push({family:'governance',why:'no authority'});return{ok:f.length===0,failures:f};}
+const round=x=>Math.round(x*1000)/1000;
+function govern(options,{req={},norms=[],semiring='tropical'}={}){
+  const ev=options.map(o=>{const feas=consume(o.value,req);const v=resolve(adjudicateStatus(o.ctx||{},norms));return{id:o.id,utility:o.utility??0,ctx:o.ctx||{},feasible:feas.ok,feasFail:feas.failures,status:v.resolved,overridden:v.overridden,contributors:v.contributors};});
+  const alethicallyVetoed=ev.filter(e=>!e.feasible).map(e=>({id:e.id,failures:e.feasFail}));
+  const survivors=ev.filter(e=>e.feasible);
+  const deonticallyVetoed=survivors.filter(e=>e.status===STATUS.FORBIDDEN).map(e=>({id:e.id,by:e.contributors.filter(c=>c.modality==='forbidden').map(c=>c.id),overridable:true}));
+  const admissible=survivors.filter(e=>e.status===STATUS.OPTIONAL||e.status===STATUS.OBLIGATORY);
+  const obF=admissible.filter(e=>e.status===STATUS.OBLIGATORY);
+  const blocked=ev.filter(e=>e.status===STATUS.OBLIGATORY&&!e.feasible);
+  let escalation=null;
+  if(blocked.length&&obF.length===0){const b=blocked[0];const nrm=norms.find(n=>n.modality==='obligatory'&&b.contributors.some(c=>c.id===n.id))||norms.find(n=>n.modality==='obligatory');const esc=escalate(nrm);escalation={required:true,repair:esc.repair?esc.repair.id:'escalate',reason:esc.reason,blockedOption:b.id,blockedBy:b.feasFail};}
+  const pool=(obF.length?obF:admissible).slice().sort((a,b)=>b.utility-a.utility);
+  let chosen=escalation?null:(pool[0]||null);
+  const margin=pool.length>1?round(pool[0].utility-pool[1].utility):null;
+  const ranking=pool.map(e=>({id:e.id,score:round(e.utility),status:e.status}));
+  let note;
+  if(escalation)note=`Obligation cannot be met — “${escalation.blockedOption}” is infeasible (${escalation.blockedBy.map(f=>f.family).join(',')}). Contrary-to-duty: ${escalation.reason}.`;
+  else if(chosen&&obF.length)note=`“${chosen.id}” is obligatory and selected — it overrides higher-scoring permitted options.`;
+  else if(chosen&&deonticallyVetoed.length)note=`${deonticallyVetoed.length} option(s) forbidden and excluded (overridable). Gradient selected “${chosen.id}”.`;
+  else if(chosen)note=`No norms in force; gradient selected “${chosen.id}”.`;else note='No admissible option.';
+  return{decision:chosen?chosen.id:null,forcedByObligation:!!(chosen&&obF.length),escalation,margin,ranking,deonticallyVetoed,alethicallyVetoed,note};
+}
+
+/* ===== law harness (D1–D9, DB1–DB3) ===== */
+const $=s=>document.querySelector(s);
+const STATI=[STATUS.OPTIONAL,STATUS.OBLIGATORY,STATUS.FORBIDDEN,STATUS.CONFLICT];
+const rS=()=>STATI[(Math.random()*4)|0];
+function trial(n,b){for(let i=0;i<n;i++){const r=b();if(r!==true)return{pass:false,cex:r,at:i+1};}return{pass:true,at:n};}
+const feasV=()=>V({beta:.99,kappa:false}); const infeasV=()=>V({beta:.1,kappa:true});
+const GREQ={beta_min:.9,acyclic:true};
+const LAWS=[
+ ['D1','join comm + assoc',n=>trial(n,()=>{const a=rS(),b=rS(),c=rS();if(join(a,b)!==join(b,a))return'comm';return join(join(a,b),c)===join(a,join(b,c))?true:'assoc';})],
+ ['D2','identity OPTIONAL + idem',n=>trial(n,()=>{const a=rS();return join(a,STATUS.OPTIONAL)===a&&join(a,a)===a?true:'id';})],
+ ['D3','O ⊔ F = CONFLICT',n=>trial(n,()=>join(STATUS.OBLIGATORY,STATUS.FORBIDDEN)===STATUS.CONFLICT?true:'x')],
+ ['D4','join monotone',n=>trial(n,()=>{const a=rS(),b=rS();return rank(join(a,b))>=rank(a)&&rank(join(a,b))>=rank(b)?true:'mono';})],
+ ['D5','CONFLICT absorbs',n=>trial(n,()=>{const a=rS();return join(STATUS.CONFLICT,a)===STATUS.CONFLICT?true:'abs';})],
+ ['D6','resolve idem + clears conflict',n=>trial(n,()=>{const v={status:STATUS.CONFLICT,contributors:[{id:'o',modality:'obligatory',priority:5},{id:'f',modality:'forbidden',priority:2}]};const r1=resolve(v);if(r1.resolved===STATUS.CONFLICT)return'nc';return resolve(r1).resolved===r1.resolved?true:'ni';})],
+ ['D7','factual detachment',n=>trial(n,()=>{const c=Math.random()<.5;return detach(Norm({condition:()=>c}),{}).inForce===c?true:'d';})],
+ ['D8','CTD partiality',n=>trial(n,()=>{const nm=Norm({id:'p',ctd:Norm({id:'r'})});return detach(nm,{},{violated:false}).repair===null&&detach(nm,{},{violated:true}).repair.id==='r'?true:'ctd';})],
+ ['D9','comply O⇒¬F',n=>trial(n,()=>comply(STATUS.OBLIGATORY,true).ok&&!comply(STATUS.FORBIDDEN,true).ok&&!comply(STATUS.OBLIGATORY,false).ok?true:'c')],
+ ['DB1','forbidden excluded',n=>trial(n,()=>{const norms=[Norm({id:'nx',modality:'forbidden',condition:c=>c.x,priority:5})];const r=govern([{id:'safe',value:feasV(),utility:1,ctx:{}},{id:'bad',value:feasV(),utility:99,ctx:{x:true}}],{req:GREQ,norms});return r.decision==='safe'&&r.deonticallyVetoed.some(v=>v.id==='bad')?true:'x';})],
+ ['DB2','obligation forces',n=>trial(n,()=>{const norms=[Norm({id:'mc',modality:'obligatory',condition:c=>c.duty,priority:5})];const r=govern([{id:'A',value:feasV(),utility:99,ctx:{}},{id:'C',value:feasV(),utility:1,ctx:{duty:true}}],{req:GREQ,norms});return r.decision==='C'&&r.forcedByObligation?true:'x';})],
+ ['DB3','alethic ⇒ CTD escalation',n=>trial(n,()=>{const norms=[Norm({id:'mc',modality:'obligatory',condition:c=>c.duty,priority:5,ctd:Norm({id:'esc-DPO',modality:'obligatory'})})];const r=govern([{id:'A',value:feasV(),utility:99,ctx:{}},{id:'C',value:infeasV(),utility:1,ctx:{duty:true}}],{req:GREQ,norms});return r.decision===null&&r.escalation&&r.escalation.repair==='esc-DPO'?true:'x';})]
+];
+function runLaws(){const N=1500,out=$('#out');out.innerHTML='';let pass=0,fail=0;const t0=performance.now();
+ for(const[id,desc,fn] of LAWS){const r=fn(N);r.pass?pass++:fail++;const row=document.createElement('div');row.className='lawrow';
+  row.innerHTML=`<span class="dot ${r.pass?'pass':'fail'}"></span><span class="lid">${id}</span><span>${desc}${r.pass?'':` <span style="color:var(--fail)">— ${r.cex}</span>`}</span><span class="lst">${r.pass?'✓ '+r.at:'✗ @'+r.at}</span>`;out.appendChild(row);}
+ $('#t').textContent=LAWS.length;$('#p').textContent=pass;$('#f').textContent=fail;$('#ms').textContent=(performance.now()-t0).toFixed(1);}
+
+/* ===== worked example (live) ===== */
+const ESC=Norm({id:'escalate-to-DPO',modality:'obligatory',priority:Infinity});
+const NORMS=[
+ Norm({id:'forbid-PII-transmit',modality:'forbidden',priority:10,condition:c=>c.transmitsPII&&!c.hasConsent}),
+ Norm({id:'oblige-get-consent',modality:'obligatory',priority:8,condition:c=>c.containsPII&&c.obtainsConsent,ctd:ESC}),
+ Norm({id:'permit-redacted',modality:'permitted',priority:1,condition:c=>c.redacted})
+];
+const feas=V({pi:'act',beta:.95,authority:['cap:send'],denyDefault:false});
+const infeas=V({pi:'act',beta:.2,kappa:true,authority:[],denyDefault:true});
+const A=()=>({id:'A · send_redacted',value:feas,utility:6,ctx:{redacted:true,containsPII:true,transmitsPII:false,hasConsent:false,obtainsConsent:false}});
+const B=()=>({id:'B · send_with_PII',value:feas,utility:12,ctx:{containsPII:true,transmitsPII:true,hasConsent:false,obtainsConsent:false}});
+const C=val=>({id:'C · get_consent_then_send',value:val,utility:3,ctx:{containsPII:true,transmitsPII:true,hasConsent:true,obtainsConsent:true}});
+const REQ={beta_min:.9,acyclic:true};
+function card(title,sub,cert){
+ const esc=!!cert.escalation; const div=document.createElement('div'); div.className='scn '+(esc?'esc':'ok');
+ let head = esc ? `escalate ▸ <span>${cert.escalation.repair}</span>` : `decision ▸ <span class="nm">${esc?'':cert.decision}</span>${cert.forcedByObligation?' <span style="font-size:.7em;color:var(--accent)">[forced by obligation]</span>':''}`;
+ let tags='';
+ cert.deonticallyVetoed.forEach(v=>tags+=`<span class="veto">✗ forbidden: ${v.id.split(' ')[0]} — by ${v.by.join(',')}</span><br>`);
+ cert.alethicallyVetoed.forEach(v=>tags+=`<span class="inf">⟂ infeasible: ${v.id.split(' ')[0]} — floor ${v.failures.map(f=>f.family).join(',')}</span><br>`);
+ if(cert.ranking.length)tags+=`<span class="inf">admissible: ${cert.ranking.map(r=>r.id.split(' ')[0]+' (util '+r.score+', '+r.status+')').join('  ·  ')}</span><br>`;
+ div.innerHTML=`<div class="h">${title} — ${sub}</div><div class="d">${head}</div><div class="tags">${tags}<span class="note">${cert.note}</span></div>`;
+ return div;
+}
+function runEx(){const ex=$('#ex');ex.innerHTML='';
+ ex.appendChild(card('1','PII present, consent service up',govern([A(),B(),C(feas)],{req:REQ,norms:NORMS})));
+ ex.appendChild(card('2','PII present, consent service DOWN',govern([A(),B(),C(infeas)],{req:REQ,norms:NORMS})));
+ ex.appendChild(card('3','no PII (norms inert)',govern([{id:'A · send_redacted',value:feas,utility:6,ctx:{}},{id:'D · send_plain',value:feas,utility:9,ctx:{}}],{req:REQ,norms:NORMS})));
+}
+$('#run').addEventListener('click',runLaws);
+$('#runEx').addEventListener('click',runEx);
+runLaws(); runEx();
+</script>
+</body>
+</html>

@@ -21,6 +21,7 @@ Research arm of [&] Ampersand Box Design. Publishes theoretical foundations, emp
 | **PRISM** (Rating Iterative System Memory) | **OS-009** | `&memory + &reason` | v3.0 in development (`/PRISM/` codebase, subdomain `prism.opensentience.org`) |
 | **PULSE** (Uniform Loop State Exchange) | **OS-010** | `&memory + &govern + &time` | v0.1.1 (`/PULSE/` directory, subdomain `pulse.opensentience.org`) |
 | **Embodiment Protocol** | **OS-011** | `&body.*` (new sensorimotor primitive) | v0.1 draft (subdomain `embodiment.opensentience.org`) |
+| **SCOPE** (Spatial Claims & Coordination) | **OS-012** | `&space.region + &space.claim` | v0.1 draft (subdomain `scope.opensentience.org`) |
 
 OS-009 (PRISM) and OS-010 (PULSE) are sibling cross-cutting protocols. PRISM is the diagnostic algebra (measures loops over time). PULSE is the temporal algebra (declares how loops cycle). OS-011 (Embodiment) is the sensorimotor behavioral protocol for `&body.*` providers — closes the perception-action gap by defining the typed `perceive/act/affordances/encode_state/replay` loop. Together with the eight cognitive primitives (OS-001 through OS-008) and the [&] structural composition layer, they form the complete protocol stack.
 
@@ -42,4 +43,14 @@ OS-009 (PRISM) and OS-010 (PULSE) are sibling cross-cutting protocols. PRISM is 
 - OS-009 (PRISM) lives in `/home/travis/ProjectAmp2/PRISM/` (Elixir codebase, Fly.io deploy)
 - OS-010 (PULSE) lives in `/home/travis/ProjectAmp2/PULSE/` (manifest standard + reference manifests + JSON Schema)
 - Every portfolio product declares its own loop topology via a PULSE manifest in `<project>/docs/spec/README.md` under the "PULSE Loop Manifest" section
-- This is a static site — no build process
+
+## Homepage build (data-driven, anti-drift)
+
+The homepage (`index.html`) is **generated**, not hand-edited. Source lives in `_rebuild/`:
+
+- `_rebuild/data/{site,protocols,rungs,references}.json` — single source of truth. The protocol **count** and **OS-NNN range** in the hero/headings are DERIVED from `protocols.length`, never typed — so "missing OS-011/OS-012" or a wrong count is structurally impossible.
+- `_rebuild/build/templates.mjs` — zero-dependency template-literal components.
+- `_rebuild/build/build.mjs` — validates data (fails the build on drift: bad id, unknown status, missing field, out-of-order ids) then renders.
+- `_rebuild/styles/site.css` + `_rebuild/build/proof.js` — design tokens + the κ proof UI; `kappa_proof.js` and `amp-nav.js` already live at the site root.
+
+To change the homepage: edit the JSON/templates, run `node _rebuild/build/build.mjs`, then copy `dist/index.html` → `index.html`, `dist/styles/site.css` → `styles/site.css`, `dist/proof.js` → `proof.js`. The standalone arithmetic/playground/scope pages at the root are authored separately and are not generated.

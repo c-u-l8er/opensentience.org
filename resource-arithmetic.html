@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resource Arithmetic · OpenSentience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f2e9;--paper-2:#efe9db;--ink:#1c1813;--ink-soft:#4a4338;--rule:#d8cfba;
+    --accent:#a85a1c;--accent-soft:#c98b4e;--pass:#2f7d51;--warn:#b98a2b;--fail:#b23b34;
+    --code-bg:#262017;--code-ink:#ece3d2;--code-dim:#9a8e76;
+    --serif:"Newsreader",Georgia,serif;--display:"Fraunces",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.65;
+    background-image:radial-gradient(circle at 8% -8%,rgba(168,90,28,.05),transparent 42%);}
+  .bar{position:sticky;top:var(--amp-nav-height,56px);z-index:50;display:flex;align-items:center;gap:1rem;padding:.55rem max(1.2rem,calc(50% - 32rem));
+    background:rgba(246,242,233,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12.5px;overflow-x:auto;}
+  .bar .tag{letter-spacing:.06em;color:var(--ink-soft);white-space:nowrap} .bar .tag b{color:var(--accent);font-weight:600} .bar .spacer{flex:1}
+  .bar a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent;white-space:nowrap} .bar a:hover{border-color:var(--accent-soft)}
+  .bar a.here{color:var(--accent)}
+  main{max-width:50rem;margin:0 auto;padding:2.8rem 1.2rem 6rem}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:0 0 1rem}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,3.1rem);line-height:1.04;letter-spacing:-.015em;margin:0 0 1.1rem}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{font-size:1.16rem;color:var(--ink-soft)}
+  .ladder{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1.6rem 0 0;line-height:1.9;border-left:2px solid var(--rule);padding-left:1rem}
+  .ladder b{color:var(--accent)} .ladder .on{color:var(--ink);font-weight:600} .ladder .sub{margin-top:.5rem;color:var(--ink-soft)}
+  h2{font-family:var(--display);font-weight:600;font-size:1.75rem;margin:3rem 0 .2rem;padding-top:1.6rem;border-top:1px solid var(--rule)}
+  h2 .n{color:var(--accent-soft);font-size:1.1rem;font-weight:600;margin-right:.6rem}
+  h3{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:1.8rem 0 .6rem}
+  p{margin:1rem 0} p code,li code,td code{font-family:var(--mono);font-size:.82em;background:var(--paper-2);padding:.05em .35em;border-radius:4px}
+  em.t{font-style:normal;color:var(--accent);font-family:var(--mono);font-size:.85em}
+  .split{display:flex;gap:1.6rem;flex-wrap:wrap;margin:1.4rem 0;background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.4rem}
+  .split .col{flex:1 1 18rem} .split h4{font-family:var(--mono);font-size:12px;margin:0 0 .5rem}
+  .split .k{color:var(--accent)} .split .b{color:var(--warn)} .split p{font-size:14px;margin:.4rem 0;color:var(--ink-soft)}
+  table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:14.5px}
+  th,td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  td.op{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:1.1rem 1.3rem;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6;border:1px solid #332b1f;margin:1.2rem 0}
+  pre .c{color:var(--code-dim)} pre .k{color:#d99a5b} pre .s{color:#9cc6a0}
+  .panel{background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:1.3rem 1.4rem;margin:1.2rem 0}
+  .btn{font-family:var(--mono);font-size:13px;letter-spacing:.03em;border:none;cursor:pointer;background:var(--accent);color:#fff;padding:.58rem 1.15rem;border-radius:8px;transition:filter .15s,transform .05s}
+  .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
+  .stats{display:flex;flex-wrap:wrap;gap:1.4rem;font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:1rem 0}
+  .stats b{font-family:var(--display);font-style:normal;font-weight:600;font-size:1.3rem;display:block;color:var(--ink)}
+  .stats .ok b{color:var(--pass)} .stats .no b{color:var(--fail)}
+  .lawrow{display:grid;grid-template-columns:1.1rem 3.3rem 1fr auto;align-items:start;gap:.6rem;padding:.32rem 0;border-bottom:1px solid var(--rule);font-size:13.5px}
+  .lawrow:last-child{border:none}
+  .dot{width:.6rem;height:.6rem;border-radius:99px;margin-top:.42rem;background:var(--rule)}
+  .dot.pass{background:var(--pass);box-shadow:0 0 0 3px rgba(47,125,81,.15)} .dot.fail{background:var(--fail);box-shadow:0 0 0 3px rgba(178,59,52,.15)}
+  .lid{font-family:var(--mono);font-size:11.5px;color:var(--accent);padding-top:.18rem} .lst{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);padding-top:.28rem}
+  .cross{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:8px;padding:.8rem 1rem;margin-top:.8rem;line-height:1.8}
+  .cross .ok{color:var(--pass)} .cross .no{color:var(--fail)}
+  .out2{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:.9rem 1.1rem;margin:.7rem 0;line-height:1.85}
+  .out2 .no{color:var(--fail)} .out2 .ok{color:var(--pass)} .out2 b{color:var(--accent)} .out2 .step{color:var(--ink-soft);text-transform:uppercase;font-size:10.5px;letter-spacing:.08em}
+  .refs{font-family:var(--mono);font-size:12px;color:var(--ink-soft);line-height:1.95;margin:1rem 0} .refs em{color:var(--ink)}
+  footer{margin-top:4rem;padding-top:1.6rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.9} footer b{color:var(--accent)}
+  @media(max-width:640px){body{font-size:16.5px} .lawrow{grid-template-columns:1rem 2.8rem 1fr} .lst{display:none}}
+</style>
+</head>
+<body>
+<script type="module" src="/amp-nav.js"></script>
+<amp-nav property="arith_resource" theme="light"></amp-nav>
+<div class="bar">
+  <span class="tag">OpenSentience · <b>Resource Arithmetic</b> · v0.1</span>
+  <span class="spacer"></span>
+  <a href="/invariant-arithmetic">invariant</a>  <a href="/deontic-arithmetic">deontic</a>
+  <a href="/temporal-arithmetic">temporal</a>
+  <a href="/reflexive-arithmetic">reflexive</a>
+  <a href="/epistemic-arithmetic">epistemic</a>
+  <a href="/strategic-arithmetic">strategic</a>
+  <a href="#" class="here">resource</a>
+</div>
+
+<main>
+  <p class="kicker">The economy beneath the ladder · what you can afford</p>
+  <h1>Resource <em>Arithmetic</em></h1>
+  <p class="lede">The seven modalities say what is possible, preferable, permitted, durable, revisable, known, and forceable. None of them say what any of it <em>costs</em>. This is the economy the ladder runs on: a ledger where value is never created from nothing, where some things are spent and others reused, and — the part that ties it all together — where a <em>repair</em> like deliberating or escalating is only worth invoking if its value beats its price. It is also where continual learning lives, because finite model capacity is just another conserved resource, and forgetting is the tradeoff you pay to reclaim it.</p>
+
+  <div class="ladder">
+    the modality ladder<br>
+    1 · <b>alethic</b> &nbsp; 2 · <b>axiological</b> &nbsp; 3 · <b>deontic</b> &nbsp; 4 · <b>temporal</b><br>
+    5 · <b>reflexive</b> &nbsp; 6 · <b>epistemic</b> &nbsp; 7 · <b>strategic</b><br>
+    <div class="sub">▸ <span class="on">resource — the economy that prices the modalities and their repairs</span></div>
+  </div>
+
+  <!-- I -->
+  <h2><span class="n">I</span>The algebra</h2>
+  <p>A <strong>ledger</strong> records, for each account, how much of each resource it holds. The only primitive is a <strong>transfer</strong> that moves an amount between two accounts, and it can never move more than an account holds (the affine floor — no overdraft). There is no "mint": spending is a transfer to a <em class="t">sink</em>, refilling is a transfer from a <em class="t">treasury</em>. Because everything is a transfer in a closed system, the grand total of every resource is <strong>conserved</strong> by construction — value is never created from nothing. That is your "currency invariant," and it is the same conservation the σ-lattice and CRDTs rely on: independent transactions on disjoint accounts commute.</p>
+
+  <h3>Linear vs reusable — the of-course modality</h3>
+  <p>Not everything depletes. Linear logic draws the line exactly where this rung needs it: ordinary resources are used <em>once</em> (no duplication, no silent discard), but a resource marked with the <code>!</code> "of-course" modality may be copied freely. That single distinction is the bridge to continual learning.</p>
+  <div class="split">
+    <div class="col"><h4 class="k">DEPLETABLE — linear</h4>
+      <p>Tokens, compute, money, time. Using one consumes it; spending the same unit twice depletes twice. <code>use</code> is <em>not</em> idempotent — the balance falls.</p></div>
+    <div class="col"><h4 class="b">REUSABLE — <code>!</code> of-course</h4>
+      <p>Consolidated knowledge, a tool license, a cached result. Using it does not deplete it; you may reuse it freely. <code>use</code> <em>is</em> idempotent — the balance holds.</p></div>
+  </div>
+  <p>Continual learning falls straight out of this. <strong>Capacity</strong> is a conserved resource: learning a task moves capacity from <em class="t">free</em> to <em class="t">committed</em> (plasticity spent on stability), and consolidation mints reusable <code>!</code> knowledge that costs nothing to reuse. <strong>Forgetting</strong> moves capacity back to free — but it must release the knowledge with it. You cannot keep the knowledge and reclaim its capacity, and that impossibility <em>is</em> the stability–plasticity dilemma, stated as a conservation law.</p>
+
+  <h3>Pricing the repair — Type II rationality</h3>
+  <p>Every rung has a repair: reconcile, contrary-to-duty, escalate, deliberate. None of them are free. The resource rung makes the decision to invoke one explicit — a repair is worth invoking only when its expected value exceeds its cost <em>and</em> you can afford it. The epistemic rung detects a known-unknown; this rung decides whether closing it is rational. That is exactly what bounded-rationality theory calls maximizing utility net of the cost of deliberating.</p>
+
+  <!-- II -->
+  <h2><span class="n">II</span>The laws</h2>
+  <p>Eight for the economy, three for the bridges. The highlighted <span style="background:rgba(168,90,28,.09);border-radius:6px;padding:0 .2em">cross-check</span> is the linear-vs-reusable split: spending depletes, but using a <code>!</code> resource does not.</p>
+  <table>
+    <tbody>
+      <tr><td class="op">C1</td><td>conservation: the total of a resource is invariant under transfer</td></tr>
+      <tr><td class="op">C2</td><td>no overdraft — you can't move what you don't have; balances stay ≥ 0</td></tr>
+      <tr><td class="op">C3</td><td>independent transactions on disjoint accounts commute (CRDT)</td></tr>
+      <tr><td class="op">C4</td><td>linearity: spending depletes — <code>use</code> is not idempotent on a depletable resource</td></tr>
+      <tr><td class="op">C5</td><td>reusability: using a <code>!</code> resource does not deplete it — <code>use</code> is idempotent</td></tr>
+      <tr><td class="op">C6</td><td>flow monotonicity: without accrual, available balance only decreases</td></tr>
+      <tr><td class="op">C7</td><td>capacity conservation: free + committed capacity is invariant (stability + plasticity)</td></tr>
+      <tr><td class="op">C8</td><td>no free reclaim: forgetting releases the knowledge it held — the stability–plasticity tradeoff</td></tr>
+      <tr><td class="op">CB1</td><td>exhaustion ⇒ infeasible: an unaffordable action carries <code>0̲</code> (→ alethic)</td></tr>
+      <tr><td class="op">CB2</td><td>cost composes additively along a pipeline — the same semiring (→ axiological)</td></tr>
+      <tr><td class="op">CB3</td><td>a repair is invoked only if value ≥ cost and affordable (→ epistemic / strategic)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- III -->
+  <h2><span class="n">III</span>The laws, checked</h2>
+  <p>Each law against random ledgers in your browser — same engine that ships in <code>box-and-box</code>.</p>
+  <div class="panel">
+    <button class="btn" id="run">Run the harness →</button>
+    <div class="stats"><span><b id="t">11</b>laws</span><span class="ok"><b id="p">—</b>passing</span><span class="no"><b id="f">—</b>failing</span><span><b id="ms">—</b>ms</span></div>
+    <div id="out"></div>
+    <div class="cross" id="cross"></div>
+  </div>
+
+  <!-- IV -->
+  <h2><span class="n">IV</span>Type sketch</h2>
+  <pre><span class="c">// a closed ledger: accounts → resources → amounts, plus a kind per resource</span>
+<span class="k">interface</span> Ledger { bal: Record&lt;Account, Record&lt;Resource, number&gt;&gt;; kind: Record&lt;Resource, <span class="s">"depletable"|"reusable"|"capacity"</span>&gt;; }
+
+<span class="k">function</span> transfer(L, res, from, to, amt): Ledger | INFEASIBLE; <span class="c">// the only primitive; conserves Σ</span>
+<span class="k">const</span> spend  = (L,a,res,amt) =&gt; transfer(L,res,a,SINK,amt);     <span class="c">// consume → sink</span>
+<span class="k">const</span> refill = (L,a,res,amt) =&gt; transfer(L,res,TREASURY,a,amt); <span class="c">// accrue ← treasury</span>
+<span class="k">function</span> feasible(L, a, cost): boolean;                        <span class="c">// the alethic gate; else 0̲</span>
+<span class="k">function</span> use(L, a, res): { ok, L };                            <span class="c">// depletes — unless res is `!` reusable</span>
+
+<span class="c">// continual learning</span>
+<span class="k">const</span> allocate    = (L,task,amt) =&gt; ...; <span class="c">// free → committed (plasticity → stability)</span>
+<span class="k">const</span> consolidate = (L,task) =&gt; ...;     <span class="c">// mint reusable `!` knowledge</span>
+<span class="k">const</span> forget      = (L,task) =&gt; ...;     <span class="c">// reclaim capacity — and release the knowledge</span>
+
+<span class="c">// price the repair (Type II)</span>
+<span class="k">function</span> repair(L, a, {resource, value, cost}): { decision: <span class="s">"invoke"|"skip"|"cannot-afford"</span>, L };</pre>
+
+  <!-- V -->
+  <h2><span class="n">V</span>Worked example</h2>
+  <p>An affordability gate; a Type-II decision over three unknowns (one worth resolving, one not, one unaffordable); and continual learning as conserved capacity — learn two tasks, reuse the knowledge for free, then forget one to reclaim its capacity. Runs live.</p>
+  <div class="panel">
+    <button class="btn" id="runEx">Run the example →</button>
+    <div id="ex" style="margin-top:1rem"></div>
+  </div>
+
+  <!-- VI -->
+  <h2><span class="n">VI</span>Standing on</h2>
+  <p>Resources as things used exactly once — no duplication, no discard — is <strong>Girard</strong>'s linear logic (1987), with the <code>!</code> "of-course" modality marking what may be freely copied. Treating the cost of <em>deciding</em> as part of the decision is <strong>I. J. Good</strong>'s "Type II" rationality and <strong>Russell &amp; Wefald</strong>'s metareasoning (1989). The multi-agent companion this rung points at — bidding, prices, allocation — is <strong>market-based control</strong> (Clearwater 1996; Wellman's market-oriented programming), which belongs next to the strategic rung rather than here. And the continual-learning reading — capacity as a finite resource split between stability and plasticity — is the central dilemma of lifelong learning, here recast as a conservation law. The logic is established; the contribution is the executable synthesis, and the move of pricing the ladder's own repairs.</p>
+  <div class="refs">
+    Girard, J.-Y. (1987). <em>Linear Logic.</em> Theoretical Computer Science 50.<br>
+    Good, I. J. (1971). <em>Twenty-Seven Principles of Rationality.</em> (Type II rationality.)<br>
+    Russell, S. &amp; Wefald, E. (1989). <em>Principles of Metareasoning.</em> KR&amp;R.<br>
+    Clearwater, S. (ed.) (1996). <em>Market-Based Control: A Paradigm for Distributed Resource Allocation.</em>
+  </div>
+
+  <footer>
+    <b>OpenSentience · Resource Arithmetic</b> · the economy the modality ladder runs on<br>
+    runnable: <code>npm i box-and-box</code> · <code>npx box-and-box economy</code> · <code>npx box-and-box laws</code><br>
+    seven modalities, one economy, one bridge — 97 property-tested laws.
+  </footer>
+</main>
+
+<script>
+"use strict";
+/* ===== resource engine (= resource.mjs) ===== */
+const SINK='#sink',TREASURY='#treasury',FREE='free';
+const clone=L=>({bal:Object.fromEntries(Object.entries(L.bal).map(([a,r])=>[a,{...r}])),kind:{...L.kind}});
+const Ledger=({bal={},kind={}}={})=>({bal,kind});
+const balance=(L,a,res)=>(L.bal[a]&&L.bal[a][res])||0;
+const total=(L,res)=>Object.values(L.bal).reduce((s,r)=>s+(r[res]||0),0);
+const INFEASIBLE=Symbol('infeasible');
+function transfer(L,res,from,to,amt){if(amt<0||balance(L,from,res)<amt)return INFEASIBLE;const M=clone(L);M.bal[from]=M.bal[from]||{};M.bal[to]=M.bal[to]||{};M.bal[from][res]=(M.bal[from][res]||0)-amt;M.bal[to][res]=(M.bal[to][res]||0)+amt;return M;}
+const spend=(L,a,res,amt)=>transfer(L,res,a,SINK,amt);
+const refill=(L,a,res,amt)=>transfer(L,res,TREASURY,a,amt);
+const affords=(L,a,cost)=>Object.entries(cost).every(([res,amt])=>balance(L,a,res)>=amt);
+const feasible=(L,a,cost)=>affords(L,a,cost);
+function use(L,a,res){if(balance(L,a,res)<1)return{ok:false,L};if(L.kind[res]==='reusable')return{ok:true,L};return{ok:true,L:spend(L,a,res,1)};}
+const allocate=(L,task,amt)=>transfer(L,'capacity',FREE,'task:'+task,amt);
+function consolidate(L,task,mind='mind'){const M=clone(L);M.kind['know:'+task]='reusable';M.bal[mind]=M.bal[mind]||{};M.bal[mind]['know:'+task]=1;return M;}
+function forget(L,task,mind='mind'){const amt=balance(L,'task:'+task,'capacity');let M=transfer(L,'capacity','task:'+task,FREE,amt);if(M===INFEASIBLE)M=clone(L);if(M.bal[mind])M.bal[mind]['know:'+task]=0;return M;}
+const worthwhile=(value,cost)=>value>=cost;
+function repair(L,a,{resource='tokens',value,cost}){if(!affords(L,a,{[resource]:cost}))return{decision:'cannot-afford',L};if(!worthwhile(value,cost))return{decision:'skip',L};return{decision:'invoke',L:spend(L,a,resource,cost)};}
+
+/* ===== law harness ===== */
+const $=s=>document.querySelector(s);
+function trial(n,b){for(let i=0;i<n;i++){const r=b();if(r!==true)return{pass:false,cex:r,at:i+1};}return{pass:true,at:n};}
+const ri=n=>Math.floor(Math.random()*n);
+function randLedger(){const L=Ledger({kind:{tokens:'depletable',money:'depletable',capacity:'capacity',skill:'reusable'}});for(const a of ['a','b','c','d'])L.bal[a]={tokens:ri(10),money:ri(10),skill:Math.random()<.5?1:0};L.bal[TREASURY]={tokens:50,money:50};L.bal[SINK]={};L.bal[FREE]={capacity:10+ri(10)};return L;}
+const avail=(L,res)=>['a','b','c','d'].reduce((s,a)=>s+balance(L,a,res),0);
+const LAWS=[
+ ['C1','conservation under transfer',n=>trial(n,()=>{const L=randLedger(),res=Math.random()<.5?'tokens':'money';const ac=['a','b','c','d',TREASURY,SINK];const f=ac[ri(ac.length)],t=ac[ri(ac.length)];const b=total(L,res);const M=transfer(L,res,f,t,ri(6));return((M===INFEASIBLE?b:total(M,res))===b)?true:'not-conserved';})],
+ ['C2','no overdraft; balances ≥ 0',n=>trial(n,()=>{const L=randLedger();const f=['a','b','c','d'][ri(4)];const o=transfer(L,'tokens',f,'a',balance(L,f,'tokens')+1+ri(3));if(o!==INFEASIBLE)return 'overdraft';const ok=transfer(L,'tokens',f,'b',Math.min(balance(L,f,'tokens'),ri(4)));return(ok===INFEASIBLE||Object.values(ok.bal).every(r=>Object.values(r).every(v=>v>=0)))?true:'negative';})],
+ ['C3','independent transactions commute',n=>trial(n,()=>{const L=randLedger(),res='tokens';const a1=Math.min(balance(L,'a',res),ri(4)),a2=Math.min(balance(L,'c',res),ri(4));const m12=transfer(transfer(L,res,'a','b',a1),res,'c','d',a2);const m21=transfer(transfer(L,res,'c','d',a2),res,'a','b',a1);return ['a','b','c','d'].every(x=>balance(m12,x,res)===balance(m21,x,res))?true:'noncommutative';})],
+ ['C4','linearity — spending depletes',n=>trial(n,()=>{const L=randLedger();const a=['a','b','c','d'][ri(4)];const s=balance(L,a,'tokens');if(s<2)return true;const m=spend(spend(L,a,'tokens',1),a,'tokens',1);return(balance(m,a,'tokens')===s-2)?true:'not-linear';})],
+ ['C5','reusability — using `!` does not deplete',n=>trial(n,()=>{const L=randLedger();const a=['a','b','c','d'][ri(4)];if(balance(L,a,'skill')<1)return true;const u1=use(L,a,'skill');const u2=use(u1.L,a,'skill');return(u1.ok&&u2.ok&&balance(u2.L,a,'skill')===balance(L,a,'skill'))?true:'depleted';})],
+ ['C6','flow monotonicity',n=>trial(n,()=>{let L=randLedger();let prev=avail(L,'tokens');for(let i=0;i<4;i++){const a=['a','b','c','d'][ri(4)];const m=spend(L,a,'tokens',Math.min(balance(L,a,'tokens'),ri(3)));if(m===INFEASIBLE)continue;const now=avail(m,'tokens');if(now>prev)return 'increased';prev=now;L=m;}return true;})],
+ ['C7','capacity conservation',n=>trial(n,()=>{let L=randLedger();const start=total(L,'capacity');for(let i=0;i<3;i++){const t='T'+ri(3);L=Math.random()<.6?(allocate(L,t,Math.min(balance(L,FREE,'capacity'),ri(4)))||L):forget(L,t);if(L===INFEASIBLE)return 'broke';}return(total(L,'capacity')===start)?true:'leaked';})],
+ ['C8','no free reclaim — forgetting releases knowledge',n=>trial(n,()=>{let L=randLedger();const amt=Math.min(balance(L,FREE,'capacity'),1+ri(4));L=allocate(L,'T',amt);L=consolidate(L,'T');const before=balance(L,'mind','know:T');const M=forget(L,'T');return(before===1&&balance(M,'mind','know:T')===0&&balance(M,FREE,'capacity')>=amt)?true:'kept-both';})],
+ ['CB1','exhaustion ⇒ infeasible (0̲)',n=>trial(n,()=>{const L=randLedger();const a=['a','b','c','d'][ri(4)];const c=ri(12);return(feasible(L,a,{tokens:c})===(balance(L,a,'tokens')>=c))?true:'gate';})],
+ ['CB2','cost composes additively (semiring)',n=>trial(n,()=>{const L=randLedger();const a=['a','b','c','d'][ri(4)];const c1=ri(3),c2=ri(3),c3=ri(3);if(balance(L,a,'tokens')<c1+c2+c3)return true;const seq=spend(spend(spend(L,a,'tokens',c1),a,'tokens',c2),a,'tokens',c3);const lump=spend(L,a,'tokens',c1+c2+c3);return(balance(seq,a,'tokens')===balance(lump,a,'tokens'))?true:'not-additive';})],
+ ['CB3','Type-II repair pricing',n=>trial(n,()=>{const L=randLedger();const a=['a','b','c','d'][ri(4)];const value=ri(8),cost=ri(8);const r=repair(L,a,{resource:'tokens',value,cost});const exp=!affords(L,a,{tokens:cost})?'cannot-afford':(value>=cost?'invoke':'skip');if(r.decision!==exp)return 'wrong';if(r.decision==='invoke'&&balance(r.L,a,'tokens')!==balance(L,a,'tokens')-cost)return 'no-charge';return true;})]
+];
+function runLaws(){const N=1500,out=$('#out');out.innerHTML='';let pass=0,fail=0;const t0=performance.now();
+ for(const[id,desc,fn] of LAWS){const r=fn(N);r.pass?pass++:fail++;const row=document.createElement('div');row.className='lawrow';
+  row.innerHTML='<span class="dot '+(r.pass?'pass':'fail')+'"></span><span class="lid">'+id+'</span><span>'+desc+(r.pass?'':' <span style="color:var(--fail)">— '+r.cex+'</span>')+'</span><span class="lst">'+(r.pass?'✓ '+r.at:'✗ @'+r.at)+'</span>';out.appendChild(row);}
+ $('#t').textContent=LAWS.length;$('#p').textContent=pass;$('#f').textContent=fail;$('#ms').textContent=(performance.now()-t0).toFixed(1);
+ const L=Ledger({kind:{tokens:'depletable',skill:'reusable'},bal:{a:{tokens:3,skill:1}}});let dep=L,reu=L;for(let i=0;i<3;i++){dep=use(dep,'a','tokens').L;reu=use(reu,'a','skill').L;}
+ $('#cross').innerHTML='<b>cross-check — linear vs reusable</b><br>use ×3 on depletable <b>tokens</b>: 3 → <span class="no">'+balance(dep,'a','tokens')+'</span> (consumed)<br>use ×3 on reusable <b>skill</b>: 1 → <span class="ok">'+balance(reu,'a','skill')+'</span> (intact — the of-course modality)';}
+
+/* ===== worked example (live) ===== */
+function runEx(){const ex=$('#ex');ex.innerHTML='';
+ const wallet=Ledger({kind:{tokens:'depletable'},bal:{agent:{tokens:5}}});
+ const c1=document.createElement('div');c1.className='out2';
+ c1.innerHTML='<span class="step">1 · the affordability gate</span><br>budget = 5 tokens<br>3-token call → feasible? <span class="ok">'+feasible(wallet,'agent',{tokens:3})+'</span> &nbsp; 8-token call → feasible? <span class="no">'+feasible(wallet,'agent',{tokens:8})+'</span> (carries 0̲)';ex.appendChild(c1);
+ const purse=Ledger({kind:{tokens:'depletable'},bal:{agent:{tokens:5}}});
+ const rows=[['high-value unknown',6,2],['low-value unknown',1,4],['unaffordable',9,8]].map(([lab,v,c])=>{const r=repair(purse,'agent',{resource:'tokens',value:v,cost:c});return lab+' (value '+v+', cost '+c+') → <b>'+r.decision+'</b>';}).join('<br>');
+ const c2=document.createElement('div');c2.className='out2';
+ c2.innerHTML='<span class="step">2 · price the repair (Type II)</span><br>'+rows+'<br><span style="color:var(--ink-soft)">epistemic detects the gap; resource decides if closing it is rational</span>';ex.appendChild(c2);
+ let L=Ledger({kind:{capacity:'capacity'},bal:{free:{capacity:10}}});
+ L=allocate(L,'vision',4);L=consolidate(L,'vision');L=allocate(L,'audio',3);L=consolidate(L,'audio');
+ const reused=use(use(L,'mind','know:vision').L,'mind','know:vision').ok;
+ const before=balance(L,'mind','know:vision');const L2=forget(L,'vision');
+ const c3=document.createElement('div');c3.className='out2';
+ c3.innerHTML='<span class="step">3 · continual learning as conserved capacity</span><br>learn vision(4)+audio(3): free = <b>'+balance(L,'free','capacity')+'</b>, total = <b>'+total(L,'capacity')+'</b> (conserved)<br>reuse vision knowledge twice — still there? <span class="ok">'+reused+'</span> (free)<br>forget vision: free = <b>'+balance(L2,'free','capacity')+'</b>, knowledge kept? <span class="no">'+(balance(L2,'mind','know:vision')===before)+'</span> — the stability/plasticity tradeoff';ex.appendChild(c3);}
+$('#run').addEventListener('click',runLaws);
+$('#runEx').addEventListener('click',runEx);
+runLaws(); runEx();
+</script>
+</body>
+</html>

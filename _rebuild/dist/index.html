@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>OpenSentience — Open Research into Machine Cognition</title>
+        <meta name="description" content="Open research protocols for machine cognition, structured memory, deliberation topology, and agent governance. Published by Ampersand Box Design." />
+        <meta name="keywords" content="machine cognition, agent memory, knowledge graph topology, κ-routing, deliberation protocol, cognitive architecture, AI agent governance, continual learning, structured memory" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/styles/site.css" />
+        <script type="module" src="/amp-nav.js"></script>
+    </head>
+    <body>
+        <amp-nav property="opensentience"></amp-nav>
+        <nav>
+            <div class="nav-inner">
+                <a href="/" class="logo">
+                    <span class="mark">OS</span>
+                    OpenSentience
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#protocols">Protocols</a></li>
+                    <li><a href="#proof">Proof</a></li>
+                    <li><a href="https://docs.opensentience.org">Docs</a></li>
+                    <li><a href="https://ampersandboxdesign.com">← [&]</a></li>
+                </ul>
+            </div>
+        </nav>
+        <nav class="spine" aria-label="Section index">
+            <ol>
+                <li><a href="#gap" data-spine="gap"><span class="spine-num">01</span><span class="spine-label">The Gap</span></a></li>
+                <li><a href="#loop" data-spine="loop"><span class="spine-num">02</span><span class="spine-label">The Loop</span></a></li>
+                <li><a href="#protocols" data-spine="protocols"><span class="spine-num">03</span><span class="spine-label">Protocols</span></a></li>
+                <li><a href="#proof" data-spine="proof"><span class="spine-num">04</span><span class="spine-label">Proof</span></a></li>
+                <li><a href="#stack" data-spine="stack"><span class="spine-num">05</span><span class="spine-label">The Stack</span></a></li>
+                <li><a href="#open-questions" data-spine="open-questions"><span class="spine-num">06</span><span class="spine-label">Open Questions</span></a></li>
+                <li><a href="#get-involved" data-spine="get-involved"><span class="spine-num">07</span><span class="spine-label">Get Involved</span></a></li>
+                <li><a href="#references" data-spine="references"><span class="spine-num">08</span><span class="spine-label">References</span></a></li>
+            </ol>
+        </nav>
+
+        <header class="hero container">
+            <span class="hero-badge">Open research into machine cognition · an [&amp;] Ampersand Box Design program</span>
+            <h1>Intelligence is not generation.<br /><em>It is structured accumulation.</em></h1>
+            <p class="subtitle">
+                A language model that can't remember yesterday, weigh evidence
+                across sessions, or learn from where it's deployed is a
+                <strong>generator</strong> — not a system. OpenSentience is the
+                open research program defining the protocols that close that gap.
+            </p>
+            <div class="cta-row">
+                <a href="#protocols" class="btn btn-primary">Read the protocols</a>
+                <a href="#proof" class="btn">See the proof</a>
+                <a href="https://github.com/c-u-l8er/opensentience.org" class="btn btn-github"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Star on GitHub</a>
+            </div>
+            <div class="receipts-strip reveal">
+                <span class="receipt-chip"><strong>12</strong> protocols</span>
+                <span class="receipt-chip"><strong>OS-001 → OS-012</strong></span>
+                <span class="receipt-chip">1 shipped · 4 spec-complete · 2 in development · 5 draft</span>
+            </div>
+        </header>
+
+        <section id="gap" class="container">
+            <div class="section-label"><span class="sec-num">01</span> The Gap</div>
+            <h2>A generator answers. A <em>system</em> accumulates.</h2>
+            <p class="lead">
+                The agent ecosystem builds on a frozen model and prays. The
+                limiting factor isn't raw model intelligence — it's memory
+                architecture, deliberation structure, temporal grounding, and
+                governance. Those are infrastructure problems, not parameter
+                problems. Here is the gap, axis by axis.
+            </p>
+
+            <div class="gap-table reveal">
+                <div class="gap-head">
+                    <div class="gap-axis"></div>
+                    <div class="gap-gen-head">A generator</div>
+                    <div class="gap-sys-head">A cognitive system</div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Memory</div>
+                    <div class="gap-gen">forgets past the context window</div>
+                    <div class="gap-sys">typed graph — nodes, confidence, provenance<span class="gap-os">OS-001</span></div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Evidence</div>
+                    <div class="gap-gen">every answer equally certain</div>
+                    <div class="gap-sys">weighs evidence across sessions; decays<span class="gap-os">OS-001</span></div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Reasoning</div>
+                    <div class="gap-gen">one forward pass, always</div>
+                    <div class="gap-sys">routes on topology; deliberates only when κ&gt;0<span class="gap-os">OS-002 · OS-003</span></div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Time</div>
+                    <div class="gap-gen">stateless; no sense of when</div>
+                    <div class="gap-sys">has a heartbeat — declares its own cadence<span class="gap-os">OS-010 PULSE</span></div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">World</div>
+                    <div class="gap-gen">text in, text out</div>
+                    <div class="gap-sys">perceives &amp; acts through a body; learns from surprise<span class="gap-os">OS-011</span></div>
+                </div>
+                <div class="gap-row reveal">
+                    <div class="gap-axis">Control</div>
+                    <div class="gap-gen">deploy and pray</div>
+                    <div class="gap-sys">permissions, audit, autonomy; every verdict certified<span class="gap-os">OS-006 · box-and-box</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="loop" class="container">
+            <div class="section-label"><span class="sec-num">02</span> The Cognition Loop</div>
+            <h2>Cognition is a loop, <em>not a prompt.</em></h2>
+            <p class="lead">
+                Every system in the [&amp;] portfolio runs the same five-phase
+                loop — the canonical PULSE phase kinds, which are exactly the
+                Graphonomous machine architecture. Each phase is a place where
+                a protocol does its work. The loop is wrapped by governance,
+                clocked by PULSE, gauged by PRISM, and bounded by SCOPE.
+            </p>
+
+            <div class="loop-grid">
+                <svg viewBox="0 0 400 400" class="loop-ring reveal" role="img" aria-label="The five-phase cognition loop: retrieve, route, act, learn, consolidate">
+                    <circle cx="200" cy="200" r="130" fill="none" stroke="var(--accent-dim)" stroke-width="2" stroke-dasharray="3 7" opacity="0.55"></circle>
+                    <text x="200" y="196" text-anchor="middle" class="loop-center-1">↻ the</text>
+                    <text x="200" y="216" text-anchor="middle" class="loop-center-2">cognition loop</text>
+                    <g class="loop-node"><circle cx="200.0" cy="70.0" r="26" fill="var(--cyan)"></circle><text x="200.0" y="76.0" text-anchor="middle" class="loop-node-num">1</text></g>
+                <g class="loop-node"><circle cx="323.6" cy="159.8" r="26" fill="var(--blue)"></circle><text x="323.6" y="165.8" text-anchor="middle" class="loop-node-num">2</text></g>
+                <g class="loop-node"><circle cx="276.4" cy="305.2" r="26" fill="var(--blue)"></circle><text x="276.4" y="311.2" text-anchor="middle" class="loop-node-num">3</text></g>
+                <g class="loop-node"><circle cx="123.6" cy="305.2" r="26" fill="var(--cyan)"></circle><text x="123.6" y="311.2" text-anchor="middle" class="loop-node-num">4</text></g>
+                <g class="loop-node"><circle cx="76.4" cy="159.8" r="26" fill="var(--cyan)"></circle><text x="76.4" y="165.8" text-anchor="middle" class="loop-node-num">5</text></g>
+                </svg>
+                <ol class="loop-legend">
+                    <li class="reveal"><span class="loop-badge" style="background:var(--cyan)">1</span>
+                    <div><strong>Retrieve</strong> <span class="loop-gloss">pull the relevant subgraph before reasoning</span>
+                    <span class="loop-protos"><a href="#protocols">OS-001</a></span></div></li>
+                <li class="reveal"><span class="loop-badge" style="background:var(--blue)">2</span>
+                    <div><strong>Route</strong> <span class="loop-gloss">measure topology (κ) — retrieve in one pass, or deliberate</span>
+                    <span class="loop-protos"><a href="#protocols">OS-002</a> · <a href="#protocols">OS-004</a></span></div></li>
+                <li class="reveal"><span class="loop-badge" style="background:var(--blue)">3</span>
+                    <div><strong>Act</strong> <span class="loop-gloss">deliberate along fault lines, then mutate the graph and the world</span>
+                    <span class="loop-protos"><a href="#protocols">OS-003</a> · <a href="#protocols">OS-011</a></span></div></li>
+                <li class="reveal"><span class="loop-badge" style="background:var(--cyan)">4</span>
+                    <div><strong>Learn</strong> <span class="loop-gloss">update confidence from outcomes and prediction-error surprise</span>
+                    <span class="loop-protos"><a href="#protocols">OS-001</a> · <a href="#protocols">OS-011</a></span></div></li>
+                <li class="reveal"><span class="loop-badge" style="background:var(--cyan)">5</span>
+                    <div><strong>Consolidate</strong> <span class="loop-gloss">merge, decay, and crystallize at idle — κ falls over time</span>
+                    <span class="loop-protos"><a href="#protocols">OS-001</a></span></div></li>
+                </ol>
+            </div>
+
+            <p class="ring-intro reveal">Wrapped, clocked, gauged &amp; bounded —</p>
+            <div class="ring-band">
+                <div class="ring-card reveal"><div class="ring-label">Governed</div><p>every phase runs under permissions, audit, and three autonomy levels</p><div class="ring-protos">OS-006 · OS-007 · OS-008</div></div>
+                <div class="ring-card reveal"><div class="ring-label">PULSE · the clock</div><p>declares the loop's phases, cadence, and cross-loop signals</p><div class="ring-protos">OS-010</div></div>
+                <div class="ring-card reveal"><div class="ring-label">PRISM · the gauge</div><p>measures how well the loop performs over time</p><div class="ring-protos">OS-009</div></div>
+                <div class="ring-card reveal"><div class="ring-label">SCOPE · the bounds</div><p>bounds where agents may act over shared space</p><div class="ring-protos">OS-012</div></div>
+            </div>
+        </section>
+
+        <section id="protocols" class="container">
+            <div class="section-label"><span class="sec-num">03</span> The Protocol Map</div>
+            <h2>12 protocols. The <em>shape</em> of a mind.</h2>
+            <p class="lead">
+                Not a list — a structure. <strong>Eight cognitive primitives</strong>
+                (OS-001 → OS-008), each one capability of an
+                intelligent system, grounded in cognitive science. Above them,
+                <strong>four cross-cutting algebras</strong> that measure, time,
+                embody, and bound the whole — the rings around the loop. Range
+                OS-001 → OS-012, every entry honest about its status.
+            </p>
+            <div class="status-legend reveal">
+                <span class="paper-tag status-published">Shipped · 1</span>
+                <span class="paper-tag status-spec">Spec complete · 4</span>
+                <span class="paper-tag status-spec">In development · 2</span>
+                <span class="paper-tag status-draft">Draft · 5</span>
+            </div>
+
+            <h3 class="map-tier">Eight cognitive primitives <span>OS-001 → OS-008 · the capabilities</span></h3>
+            <div class="papers-grid map-grid">
+                <div class="paper-card reveal" data-primitive="memory">
+                    <div class="paper-number">OS-001 · Continual Learning Protocol</div>
+                    <h3>Graphonomous: Knowledge Graphs for Continual Agent Learning</h3>
+                    <p class="paper-desc">A graph-backed memory engine where agents store episodic, semantic, and procedural knowledge as typed nodes with confidence scores and provenance chains. Multi-timescale consolidation inspired by hippocampal replay — fast memory promotes to slow memory, weak connections decay, strong patterns crystallize. Outcome-driven learning updates confidence across causal chains, not just individual nodes.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-published">v0.3.3 · shipped</span>
+                        <span class="paper-tag">LongMemEval 92.6%</span>
+                        <span class="paper-tag">&memory.graph</span>
+                        <span class="paper-tag">SQLite + embeddings</span>
+                        <span class="paper-tag">MCP server</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="reason">
+                    <div class="paper-number">OS-002 · Topological Routing Protocol</div>
+                    <h3>κ-Routing: When to Retrieve, When to Deliberate</h3>
+                    <p class="paper-desc">The cyclicity invariant κ (kappa) detects irreducible feedback loops in a knowledge graph. When κ = 0, the subgraph is a DAG — retrieve context in one pass. When κ &gt; 0, circular dependencies exist — iterate and deliberate before answering. κ determines not just <em>whether</em> to think harder, but <em>how entangled</em> the reasoning is. Proved on 1,926,351 finite systems with zero counterexamples. Fault-line edges (minimum cuts within SCCs) become the mechanical decomposition boundaries for deliberation.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">spec complete</span>
+                        <span class="paper-tag">&reason.deliberate</span>
+                        <span class="paper-tag">Tarjan SCC</span>
+                        <span class="paper-tag">bipartition enumeration</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="reason">
+                    <div class="paper-number">OS-003 · Deliberation Orchestrator Protocol</div>
+                    <h3>Topology-Driven Deliberation: Fault Lines as Prompt Boundaries</h3>
+                    <p class="paper-desc">When κ &gt; 0, fault-line edges become prompt boundaries. The Deliberator decomposes circular knowledge along those boundaries, runs focused reasoning passes on each partition, reconciles them, and writes conclusions back into the graph — reducing κ over time as uncertainty crystallizes into settled knowledge. Single-agent fast path; escalates to multi-agent formal argumentation (Deliberatic) only when convergence fails.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">spec complete</span>
+                        <span class="paper-tag">&reason.deliberate</span>
+                        <span class="paper-tag">graph crystallization</span>
+                        <span class="paper-tag">escalation path</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="system">
+                    <div class="paper-number">OS-004 · Attention Engine Protocol</div>
+                    <h3>Proactive Attention: Self-Directed Cognition Without Queries</h3>
+                    <p class="paper-desc">The missing ignition in a reactive system. The Attention Engine is a periodic loop that examines the knowledge graph's topology, coverage gaps, and active goals to decide what the system should reason about, learn about, or act on next — without waiting for a query. Three modes: Explore (what don't I know?), Plan (what should I do?), and Focus (where should I spend compute?). Not a 5th cognitive primitive — attention is meta-reasoning over the existing four.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">spec complete</span>
+                        <span class="paper-tag">survey → triage → dispatch</span>
+                        <span class="paper-tag">heartbeat + event triggers</span>
+                        <span class="paper-tag">autonomous goal generation</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="system">
+                    <div class="paper-number">OS-005 · Model Tier Adaptation Protocol</div>
+                    <h3>Hardware-Adaptive Cognition: Same Topology, Different Depth</h3>
+                    <p class="paper-desc">κ routing becomes <em>more</em> valuable on constrained hardware — it tells the system when to skip expensive inference entirely. Three tiers (local 8B, local 70B+, cloud frontier) with qualitatively different strategies: single-pass enrichment vs. multi-pass deliberation, demand-triggered vs. heartbeat attention, aggressive crystallization vs. fresh inference. The κ paradox: ROI of topological routing is highest when inference is most expensive.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">spec complete</span>
+                        <span class="paper-tag">local_small · local_large · cloud_frontier</span>
+                        <span class="paper-tag">cost tracking</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="governance">
+                    <div class="paper-number">OS-006 · Agent Governance Shim Protocol</div>
+                    <h3>Thin Governance: Permissions, Audit, and Lifecycle for Any Runtime</h3>
+                    <p class="paper-desc">A lightweight governance layer — not a full runtime — that wraps around any OTP-based agent system (Jido, Alloy, or raw GenServer). Provides the permission taxonomy (filesystem, network, tool invocation, graph access), audit trail, agent lifecycle states (installed → enabled → running), and three autonomy levels (observe, advise, act). Designed as a hex package dependency, not a daemon.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-draft">in development</span>
+                        <span class="paper-tag">permissions model</span>
+                        <span class="paper-tag">audit trail</span>
+                        <span class="paper-tag">autonomy levels</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="governance">
+                    <div class="paper-number">OS-007 · Adversarial Robustness Protocol</div>
+                    <h3>Pattern Recognition and Threat Defense</h3>
+                    <p class="paper-desc">Defines how agent systems detect and defend against adversarial inputs, compromised agents, and knowledge poisoning. Five threat categories: prompt injection, knowledge poisoning (BadRAG/TrojanRAG), agent impersonation, privilege escalation, and denial of service.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-draft">draft</span>
+                        <span class="paper-tag">&govern.identity</span>
+                        <span class="paper-tag">Immune system — self/non-self discrimination</span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal" data-primitive="governance">
+                    <div class="paper-number">OS-008 · Agent Harness Protocol</div>
+                    <h3>Pipeline Enforcement and Quality Gates</h3>
+                    <p class="paper-desc">The enforcement runtime that sits above agents and below humans. Orchestrates [&amp;] pipelines, enforces governance contracts, gates execution on epistemic confidence. Five components: PipelineEnforcer, QualityGate, ContractValidator, SprintController, ContextManager.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-draft">draft</span>
+                        <span class="paper-tag">&govern.harness</span>
+                        <span class="paper-tag">Supervisory attentional system — Norman &amp; Shallice (1986)</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="map-tier">Four cross-cutting algebras <span>OS-009 → OS-012 · the rings</span></h3>
+            <div class="papers-grid map-grid">
+                <div class="paper-card reveal paper-card--featured" data-primitive="evaluation">
+                    <div class="paper-number" style="color: var(--accent)">OS-009 · PRISM</div>
+                    <h3>Protocol for Rating Iterative System Memory</h3>
+                    <p class="paper-desc">The first self-improving continual learning benchmark. 9 CL dimensions, 3-layer judging (transcripts → dimension judges → meta-judges), IRT difficulty calibration, and scenario evolution. Two closed loops interlocking: PRISM improves the benchmark, Graphonomous improves the memory. We used it to benchmark ourselves — score went from 0.10 to 0.99 in 4 cycles, then adversarial testing crashed it back to 0.45 and we fixed real bugs.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">in development</span>
+                        <span class="paper-tag">&memory + &reason</span>
+                        <span class="paper-tag">IRT · Rasch (1960), Lord (1980)</span>
+                        <span class="paper-tag"><a href="https://prism.opensentience.org" style="color: inherit">prism.opensentience.org</a></span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal paper-card--featured" data-primitive="temporal">
+                    <div class="paper-number" style="color: var(--accent)">OS-010 · PULSE</div>
+                    <h3>Protocol for Uniform Loop State Exchange</h3>
+                    <p class="paper-desc">The temporal algebra of the [&amp;] stack. Where [&amp;] declares <em>what</em> agents can compose, PULSE declares <em>how</em> their processes cycle over time — phases, cadence, substrates, invariants, and cross-loop signaling. Five canonical phase kinds, six cadence types, six canonical tokens, seven invariants. Any conforming loop becomes automatically PRISM-evaluable without integration work. The circulatory system that makes [&amp;] a stack instead of a pile.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-spec">v0.1 draft</span>
+                        <span class="paper-tag">&memory + &govern + &time</span>
+                        <span class="paper-tag">CloudEvents · Statecharts · Petri-net safety</span>
+                        <span class="paper-tag"><a href="https://pulse.opensentience.org" style="color: inherit">pulse.opensentience.org</a></span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal paper-card--featured" data-primitive="body">
+                    <div class="paper-number" style="color: var(--accent)">OS-011 · Embodiment</div>
+                    <h3>The Sensorimotor Loop for <code>&amp;body.*</code></h3>
+                    <p class="paper-desc">Closes the perception-action gap. Defines the typed <code>perceive → act → affordances → encode_state → replay</code> loop that any <code>&amp;body</code> provider implements — the agent's instantiation in an environment. Emits a <strong>SurpriseSignal</strong> (forward-model prediction error) into PULSE, so embodiment loops can drive learning in the memory loop. InteractionTrace schema, five invariants, twelve conformance tests.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-draft">v0.1 draft</span>
+                        <span class="paper-tag">&body.* (new primitive)</span>
+                        <span class="paper-tag">SurpriseSignal → PULSE</span>
+                        <span class="paper-tag"><a href="https://embodiment.opensentience.org" style="color: inherit">embodiment.opensentience.org</a></span>
+                    </div>
+                </div>
+
+                <div class="paper-card reveal paper-card--featured" data-primitive="space">
+                    <div class="paper-number" style="color: var(--accent)">OS-012 · SCOPE</div>
+                    <h3>Spatial Claims and Coordination Protocol for Embodied Environments</h3>
+                    <p class="paper-desc">The spatial algebra of the [&amp;] stack. Where PULSE governs <em>when</em> loops cycle, SCOPE governs <em>where</em> agents act — an N-D <strong>Region</strong> algebra (intersect, union, contains, overlaps) and a typed <strong>SpatialClaim</strong> envelope: a first-class assertion of intent over a region, so multiple agents can broadcast, detect conflict, and coordinate over shared space without a central arbiter. Supersedes OS-015 Viewport Binding; subsumes six ad-hoc coordination concerns into one algebra.</p>
+                    <div class="paper-tags">
+                        <span class="paper-tag status-draft">v0.1 draft</span>
+                        <span class="paper-tag">&space.region + &space.claim</span>
+                        <span class="paper-tag">N-D Region algebra · SpatialClaim envelope</span>
+                        <span class="paper-tag"><a href="https://scope.opensentience.org" style="color: inherit">scope.opensentience.org</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="map-tier">Grounded in cognitive science, <span>not analogy</span></h3>
+            <div class="ground-grid reveal">
+                <div class="ground-card reveal"><div class="ground-amp" style="color:var(--cyan)">&amp;</div><div><strong>&amp;memory → hippocampus + neocortex</strong><p>Tulving's episodic/semantic split; multi-store memory; hippocampal–neocortical replay. Graphonomous consolidates fast→slow on idle.</p></div></div>
+                <div class="ground-card reveal"><div class="ground-amp" style="color:var(--blue)">&amp;</div><div><strong>&amp;reason → prefrontal cortex</strong><p>Kahneman's dual-process theory. κ-routing implements the System-1/System-2 split mechanically, from graph topology alone.</p></div></div>
+                <div class="ground-card reveal"><div class="ground-amp" style="color:var(--rose)">&amp;</div><div><strong>&amp;time → cerebellum + basal ganglia</strong><p>Temporal-difference learning; sequence timing. PULSE gives every loop a declared cadence and cross-loop signals.</p></div></div>
+                <div class="ground-card reveal"><div class="ground-amp" style="color:var(--amber)">&amp;</div><div><strong>&amp;space → entorhinal grid cells</strong><p>O'Keefe &amp; Nadel's cognitive-map theory; place &amp; grid cells. SCOPE is an N-D region algebra for shared-space coordination.</p></div></div>
+            </div>
+        </section>
+
+        <section id="proof" class="container">
+            <div class="section-label"><span class="sec-num">04</span> The Receipts</div>
+            <h2>We don't ask you to trust the thesis. <em>We ship the receipts.</em></h2>
+            <p class="lead">
+                Every claim here is checkable. The headline κ proof runs
+                exhaustively, in your browser, with no server and no trust
+                required — and it's only one of the receipts.
+            </p>
+
+            <div class="receipts-grid">
+                <a class="receipt-card reveal" href="https://graphonomous.com"><div class="receipt-metric">LongMemEval</div><div class="receipt-value">92.6%<span class="receipt-unit">500-question QA</span></div><p>Graphonomous (OS-001), shipped · graph-backed memory beats flat RAG</p></a>
+                <a class="receipt-card reveal" href="#proof"><div class="receipt-metric">κ invariant</div><div class="receipt-value">1,926,351<span class="receipt-unit">systems proved</span></div><p>0 counterexamples · exhaustive, and it runs in your browser below</p></a>
+                <a class="receipt-card reveal" href="#stack"><div class="receipt-metric">box-and-box kernel</div><div class="receipt-value">97 laws<span class="receipt-unit">× 2,000 trials</span></div><p>the governance floor, property-tested — every verdict ships a certificate</p></a>
+                <a class="receipt-card reveal" href="https://prism.opensentience.org"><div class="receipt-metric">PRISM self-benchmark</div><div class="receipt-value">0.10 → 0.99<span class="receipt-unit">4 cycles</span></div><p>then adversarial testing crashed it to 0.45 and surfaced real bugs we fixed</p></a>
+                <a class="receipt-card reveal" href="#protocols"><div class="receipt-metric">Cross-machine replay</div><div class="receipt-value">100%<span class="receipt-unit">fidelity</span></div><p>teach a skill on machine A, replay it on machine B (OS-011 Embodiment)</p></a>
+            </div>
+
+            <h3 class="map-tier" style="margin-top:4rem">The κ invariant <span>OS-002 · topology as a cognition signal</span></h3>
+            <div class="kappa-visual reveal">
+                <div class="kappa-box dag">
+                    <h4>DAG region</h4>
+                    <div class="kappa-val">κ = 0</div>
+                    <div class="kappa-label">No circular dependencies. Context is one traversal. Route: <strong>fast</strong> — no deliberation needed.</div>
+                </div>
+                <div class="kappa-box scc">
+                    <h4>SCC region</h4>
+                    <div class="kappa-val">κ &gt; 0</div>
+                    <div class="kappa-label">Irreducible feedback loops. κ measures entanglement depth. Route: <strong>deliberate</strong> — fault lines become prompt boundaries.</div>
+                </div>
+            </div>
+            <p class="reveal" style="color: var(--text-secondary)">
+                The graph's structure mechanically determines the prompt
+                structure — no human prompt engineering. The topology
+                <em>is</em> the reasoning template. The Deliberator writes
+                conclusions back as new nodes, so κ falls as uncertainty
+                crystallizes into settled knowledge.
+            </p>
+
+            <h3 class="map-tier" style="margin-top:3.5rem">Verify it yourself <span>1,926,351 finite systems · 0 counterexamples</span></h3>
+            <p class="reveal" style="color: var(--text-secondary); margin-bottom: 0.5rem">
+                <strong>Part 1 — Directed graphs (n=2..5):</strong> for all
+                1,052,740 graphs, verify κ(G) &gt; 0 ⟺ β₁(G) &gt; 0 ⟺ G has a
+                nontrivial strongly connected component.
+            </p>
+            <p class="reveal" style="color: var(--text-secondary); margin-bottom: 1.5rem">
+                <strong>Part 2 — Finite dynamical systems (n=2..7):</strong> for
+                all 873,611 maps f:[n]→[n], verify κ(TransitionGraph(f)) &gt; 0 ⟺
+                f has a periodic orbit of period &gt; 1.
+            </p>
+
+            <div class="proof-controls reveal">
+                <button id="proof-run-btn" class="btn-run" onclick="startProof()">Run exhaustive proof</button>
+                <span id="proof-status" class="proof-status"></span>
+            </div>
+            <div id="proof-progress" class="proof-progress"><div id="proof-progress-bar" class="proof-progress-bar"></div></div>
+            <div id="proof-log" class="proof-log"></div>
+            <div id="proof-results" class="proof-results">
+                <h4 style="font-family: var(--sans); font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0.75rem;">Part 1: Directed graphs</h4>
+                <table class="proof-table">
+                    <thead><tr><th>n</th><th class="num">Graphs</th><th class="num">With SCCs</th><th class="num">Failures</th><th class="num">r(κ, β₁)</th><th class="num">Time</th><th>Status</th></tr></thead>
+                    <tbody id="graph-results-body"></tbody>
+                </table>
+                <h4 style="font-family: var(--sans); font-size: 0.9rem; color: var(--text-dim); margin-top: 2rem; margin-bottom: 0.75rem;">Part 2: Finite dynamical systems</h4>
+                <table class="proof-table">
+                    <thead><tr><th>n</th><th class="num">Maps</th><th class="num">Periodic</th><th class="num">Failures</th><th class="num">Time</th><th>Status</th></tr></thead>
+                    <tbody id="dyn-results-body"></tbody>
+                </table>
+            </div>
+            <div id="proof-verdict" class="proof-verdict"></div>
+
+            <h3 class="map-tier" style="margin-top:4rem">From theorem to <span>shipping product</span></h3>
+            <p class="reveal" style="color: var(--text-secondary); margin-bottom: 1.5rem">
+                The proof verifies the invariant across 1,926,351 mathematical
+                objects. Here is what happens when κ meets a real knowledge graph
+                on a live MCP server.
+            </p>
+            <div class="kappa-visual reveal">
+                <div class="paper-card" data-primitive="reason">
+                    <div class="paper-number">Step 1</div>
+                    <h3>Store a business cycle</h3>
+                    <pre style="margin-top: 1rem; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: var(--mono); font-size: 0.8rem; line-height: 1.7; color: var(--text-secondary);">4 nodes stored:
+  Market Share → Revenue → R&amp;D → Product Quality → Market Share
+
+All edges: causal type
+MCP tools used: store_node × 4, then edge creation</pre>
+                </div>
+                <div class="paper-card" data-primitive="reason">
+                    <div class="paper-number">Step 2</div>
+                    <h3>Analyze topology</h3>
+                    <pre style="margin-top: 1rem; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: var(--mono); font-size: 0.8rem; line-height: 1.7; color: var(--text-secondary);"><span style="color: var(--text-dim);">routing:</span>        <span style="color: var(--blue);">deliberate</span>
+<span style="color: var(--text-dim);">max_kappa:</span>      <span style="color: var(--blue);">1</span>
+<span style="color: var(--text-dim);">scc_count:</span>      <span style="color: var(--blue);">1</span>
+<span style="color: var(--text-dim);">fault_line:</span>     <span style="color: var(--rose);">Product Quality → Market Share</span>
+<span style="color: var(--text-dim);">deliberation:</span>   <span style="color: var(--blue);">max_iterations: 2, agents: 1, confidence: 0.75</span></pre>
+                </div>
+            </div>
+            <div class="thesis-block reveal" style="border-left-color: var(--blue)">
+                The system identified one strongly connected component over all
+                four nodes, computed κ = 1, and named Product Quality → Market
+                Share as the fault-line edge — the single edge whose removal
+                breaks the loop. This is the first agent memory system to route
+                inference depth on proved graph topology.
+                <span class="attribution">— Phase 0 validation · 13/13 MCP integration checks passed</span>
+            </div>
+        </section>
+
+        <section id="stack" class="container">
+            <div class="section-label"><span class="sec-num">05</span> The Stack</div>
+            <h2>Three protocols, <em>one stack.</em></h2>
+            <p class="lead">
+                <strong>[&amp;] composes agents. PULSE gives them a heartbeat.
+                PRISM measures their effect.</strong> They're independent — adopt
+                one without the others — and they stack, mirroring how HTTP, HTML
+                and CSS converged in the browser. Underneath them all sits an
+                un-weakenable governance floor.
+            </p>
+
+            <div class="stack-diagram reveal">
+                <div class="stack-layer l-prism reveal"><div class="stack-name">PRISM · OS-009</div><div class="stack-role">diagnostic</div><div class="stack-note">measures how well a loop performs over time</div></div>
+                <div class="stack-layer l-pulse reveal"><div class="stack-name">PULSE · OS-010</div><div class="stack-role">temporal</div><div class="stack-note">declares how loops cycle, nest, and signal</div></div>
+                <div class="stack-layer l-prim reveal"><div class="stack-name">OS-001 … OS-008</div><div class="stack-role">capability</div><div class="stack-note">the eight cognitive primitives</div></div>
+                <div class="stack-layer l-amp reveal"><div class="stack-name">[&amp;]</div><div class="stack-role">structural</div><div class="stack-note">composes capabilities into agents</div></div>
+                <div class="stack-layer l-floor reveal"><div class="stack-name">box-and-box</div><div class="stack-role">governance floor</div><div class="stack-note">decides what is allowed, and what is best</div></div>
+            </div>
+
+            <h3 class="map-tier" style="margin-top:3.5rem">The governance floor <span>box-and-box · 97 laws × 2000 trials</span></h3>
+            <p class="reveal" style="color: var(--text-secondary); margin-bottom: 1.5rem">
+                Protocols say what a system <em>can</em> do. box-and-box answers
+                the question underneath them all: <em>given everything it could
+                do, what is it allowed to do, and which option is best?</em> An
+                <strong>eight-rung modality ladder</strong>, each rung a small
+                algebra with stated laws, composed by one bridge that runs
+                <code>feasible&nbsp;▸&nbsp;permitted&nbsp;▸&nbsp;best</code> over a
+                safety floor that cannot be weakened. Every verdict ships a
+                certificate.
+            </p>
+            <div class="rung-grid">
+                <a href="/invariant-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rungs 1–2 · alethic · axiological</div>
+                    <strong>Invariant Arithmetic</strong>
+                    <span class="rung-desc">what can happen · how to rank it (semirings)</span>
+                </a>
+                <a href="/deontic-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 3 · deontic</div>
+                    <strong>Deontic Arithmetic</strong>
+                    <span class="rung-desc">obligation · permission · prohibition</span>
+                </a>
+                <a href="/temporal-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 4 · temporal</div>
+                    <strong>Temporal Arithmetic</strong>
+                    <span class="rung-desc">LTL ▸ supervise · safe over time</span>
+                </a>
+                <a href="/reflexive-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 5 · reflexive</div>
+                    <strong>Reflexive Arithmetic</strong>
+                    <span class="rung-desc">may the rules change (entrenched ring-0)</span>
+                </a>
+                <a href="/epistemic-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 6 · epistemic</div>
+                    <strong>Epistemic Arithmetic</strong>
+                    <span class="rung-desc">knows ▸ believes · do we know enough</span>
+                </a>
+                <a href="/strategic-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 7 · strategic</div>
+                    <strong>Strategic Arithmetic</strong>
+                    <span class="rung-desc">coalition power · who can ensure it</span>
+                </a>
+                <a href="/resource-arithmetic.html" class="rung-cell">
+                    <div class="rung-modal">Rung 8 · resource</div>
+                    <strong>Resource Arithmetic</strong>
+                    <span class="rung-desc">affine ledger · can we afford it</span>
+                </a>
+                <a href="/playground.html" class="rung-cell rung-play">
+                    <div class="rung-modal">▸ bridge · live</div>
+                    <strong>Playground</strong>
+                    <span class="rung-desc">interactive law sandbox · 97 of 97 wired</span>
+                </a>
+            </div>
+            <div class="cta-row" style="margin-top:2rem">
+                <a href="https://ampersandboxdesign.com" class="btn btn-primary">The kernel landing</a>
+                <a href="https://ampersandboxdesign.com/laws.html" class="btn">All 97 laws, live</a>
+                <a href="/playground.html" class="btn">Open the playground</a>
+            </div>
+        </section>
+
+        <section id="open-questions" class="container">
+            <div class="section-label"><span class="sec-num">06</span> Open Questions</div>
+            <h2>What we don't know <em>yet.</em></h2>
+            <p class="lead">
+                A research program publishes its unknowns. These are genuine open
+                questions driving the work — the honest edge of the protocols.
+            </p>
+            <div class="oq-grid">
+                <div class="oq-card reveal"><div class="oq-num">Q1</div><div><strong>Does κ-routing's ROI really invert on cheap hardware?</strong><p>OS-005's hypothesis is that topological routing matters <em>more</em> on an 8B local model — because it tells you when to skip expensive inference entirely. Plausible, but unproven at scale.</p></div></div>
+                <div class="oq-card reveal"><div class="oq-num">Q2</div><div><strong>Can a self-evolving benchmark dodge Goodhart's law?</strong><p>PRISM rewrites its own scenarios as systems improve. If the benchmark optimizes against the system it measures, when does the score stop meaning anything?</p></div></div>
+                <div class="oq-card reveal"><div class="oq-num">Q3</div><div><strong>Does surprise-driven learning beat scheduled consolidation?</strong><p>OS-011 emits a SurpriseSignal (forward-model prediction error) into the memory loop. Should learning fire on surprise, on a schedule, or both — and which actually crystallizes better knowledge?</p></div></div>
+                <div class="oq-card reveal"><div class="oq-num">Q4</div><div><strong>Can agents coordinate over space with no central arbiter?</strong><p>SCOPE lets agents broadcast typed SpatialClaims and detect conflict pairwise. Does that converge to safe coordination, or does it need a referee after all?</p></div></div>
+                <div class="oq-card reveal"><div class="oq-num">Q5</div><div><strong>What does “understanding” mean for a graph?</strong><p>If a system holds the right relationships at high confidence and can navigate them to answer, does it understand the domain? This is the question OpenSentience exists to explore.</p></div></div>
+            </div>
+        </section>
+
+        <section id="get-involved" class="container">
+            <div class="section-label"><span class="sec-num">07</span> Get Involved</div>
+            <h2>Three doors <em>in.</em></h2>
+            <p class="lead">
+                OpenSentience is open research. Whoever you are, there's a way to
+                use it, build on it, or try to break it.
+            </p>
+            <div class="doors-grid">
+                <div class="door-card reveal">
+                    <div class="door-icon" style="color:var(--cyan)">✶</div>
+                    <h3>Researcher</h3>
+                    <p>Read the specs and the cognitive-science grounding behind every protocol. Twelve numbered specs, full reference lists, no marketing.</p>
+                    <div class="cta-row">
+                        <a href="https://docs.opensentience.org" class="btn">Read the docs</a>
+                        <a href="#references" class="btn">References</a>
+                    </div>
+                </div>
+                <div class="door-card reveal">
+                    <div class="door-icon" style="color:var(--accent)">⚙</div>
+                    <h3>Builder</h3>
+                    <p>Wire the loop into your own agent. Graphonomous is the shipped memory engine (npm + MCP); the governance shim is a hex package that wraps any OTP tree.</p>
+                    <pre style="font-family: var(--mono); font-size: 0.78rem; color: var(--text); line-height: 1.6; white-space: pre-wrap; background: var(--bg-elevated); border:1px solid var(--border); border-radius:8px; padding:1rem; margin-top:1rem;">Start a Graphonomous session for this repo.
+1. retrieve(action:"context", query:"session context")
+2. route(action:"attention_survey")
+Then work, storing durable knowledge as we go.</pre>
+                </div>
+                <div class="door-card reveal">
+                    <div class="door-icon" style="color:var(--rose)">⌖</div>
+                    <h3>Skeptic</h3>
+                    <p>Don't trust us — run it. The κ proof is right above. Or point PRISM at your own repo (BYOR) and benchmark any memory system, including ours, end to end.</p>
+                    <pre style="font-family: var(--mono); font-size: 0.78rem; color: var(--text); line-height: 1.6; white-space: pre-wrap; background: var(--bg-elevated); border:1px solid var(--border); border-radius:8px; padding:1rem; margin-top:1rem;">config(action:"register_system", name:"graphonomous")
+compose(action:"byor_register", repo_url:".")
+compose(action:"scenarios") → interact(action:"run")
+observe(action:"judge_transcript") → reflect("analyze_gaps")</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="references" class="container">
+            <div class="section-label"><span class="sec-num">08</span> References</div>
+            <h2>Standing on the work of <em>others.</em></h2>
+            <h4 class="ref-group">Cognitive Architectures</h4>
+            <ul class="ref-list reveal">
+                <li><span class="ref-id">[1]</span> Newell, A. (1990). <em>Unified Theories of Cognition</em>. Harvard University Press.</li>
+                <li><span class="ref-id">[2]</span> Laird, J.E. (2012). <em>The Soar Cognitive Architecture</em>. MIT Press.</li>
+                <li><span class="ref-id">[3]</span> Anderson, J.R. (2007). <em>How Can the Human Mind Occur in the Physical Universe?</em> Oxford University Press. (ACT-R)</li>
+                <li><span class="ref-id">[4]</span> Sumers et al. (2023). "Cognitive Architectures for Language Agents (CoALA)." arXiv:2309.02427.</li>
+            </ul>
+
+            <h4 class="ref-group">Memory & Neuroscience</h4>
+            <ul class="ref-list reveal">
+                <li><span class="ref-id">[5]</span> Tulving, E. (1972, 1983). Distinction between episodic and semantic memory.</li>
+                <li><span class="ref-id">[6]</span> Baddeley, A. &amp; Hitch, G. (1974). Working memory model.</li>
+                <li><span class="ref-id">[7]</span> O'Keefe, J. &amp; Nadel, L. (1978). <em>The Hippocampus as a Cognitive Map</em>.</li>
+                <li><span class="ref-id">[8]</span> Burgess et al. (2002). Hippocampal function including temporal and spatial-associative retrievals.</li>
+                <li><span class="ref-id">[9]</span> Behrouz &amp; Mirrokni (Google Research, NeurIPS 2025). "Nested Learning" — HOPE architecture for multi-timescale memory.</li>
+                <li><span class="ref-id">[10]</span> Zheng et al. (2025). "Machine Memory Intelligence: Inspired by Human Memory Mechanisms." <em>Engineering</em>, 55(12): 24-35.</li>
+                <li><span class="ref-id">[11]</span> Liu et al. (2025). "Memory in the Age of AI Agents: A Survey." arXiv.</li>
+            </ul>
+
+            <h4 class="ref-group">Agent Protocols & Deliberation</h4>
+            <ul class="ref-list reveal">
+                <li><span class="ref-id">[12]</span> Anthropic (2024-2025). Model Context Protocol (MCP). modelcontextprotocol.io.</li>
+                <li><span class="ref-id">[13]</span> Google (2025). Agent-to-Agent Protocol (A2A). github.com/google/A2A.</li>
+                <li><span class="ref-id">[14]</span> Kaesberg et al. (ACL 2025). Multi-agent deliberation protocols outperforming voting approaches.</li>
+                <li><span class="ref-id">[15]</span> Rodriguez-Sanchez et al. (Jan 2026). "DALIA: Declarative Agentic Layer for Intelligent Agents." arXiv:2601.17435.</li>
+                <li><span class="ref-id">[16]</span> IBM / Linux Foundation (2025). Agent Communication Protocol (ACP).</li>
+            </ul>
+
+            <h4 class="ref-group">Modal Logic, Decision Theory & Measurement</h4>
+            <ul class="ref-list reveal">
+                <li><span class="ref-id">[17]</span> Kripke, S.A. (1963). "Semantical Considerations on Modal Logic." <em>Acta Philosophica Fennica</em>, 16: 83-94. (alethic rung)</li>
+                <li><span class="ref-id">[18]</span> von Wright, G.H. (1951). "Deontic Logic." <em>Mind</em>, 60(237): 1-15. (deontic rung)</li>
+                <li><span class="ref-id">[19]</span> Pnueli, A. (1977). "The Temporal Logic of Programs." <em>18th FOCS</em>: 46-57. (temporal rung)</li>
+                <li><span class="ref-id">[20]</span> Hintikka, J. (1962). <em>Knowledge and Belief: An Introduction to the Logic of the Two Notions</em>. Cornell University Press. (epistemic rung)</li>
+                <li><span class="ref-id">[21]</span> von Neumann, J. &amp; Morgenstern, O. (1944). <em>Theory of Games and Economic Behavior</em>. Princeton University Press. (strategic rung)</li>
+                <li><span class="ref-id">[22]</span> Savage, L.J. (1954). <em>The Foundations of Statistics</em>. Wiley. (axiological / value rung)</li>
+                <li><span class="ref-id">[23]</span> Kahneman, D. (2011). <em>Thinking, Fast and Slow</em>. Farrar, Straus and Giroux. (dual-process grounding for κ-routing)</li>
+                <li><span class="ref-id">[24]</span> Rasch, G. (1960). <em>Probabilistic Models for Some Intelligence and Attainment Tests</em>; Lord, F.M. (1980). <em>Applications of Item Response Theory</em>. (PRISM difficulty calibration)</li>
+            </ul>
+
+            <h4 class="ref-group">Industry & Surveys</h4>
+            <ul class="ref-list reveal">
+                <li><span class="ref-id">[25]</span> Gartner (2025). 40% of enterprise apps will embed AI agents by end of 2026.</li>
+                <li><span class="ref-id">[26]</span> ICLR 2026 Workshop. "MemAgents: Memory for LLM-Based Agentic Systems."</li>
+                <li><span class="ref-id">[27]</span> VentureBeat (Jan 2026). "Continual learning shifts rigor toward memory provenance and retention."</li>
+                <li><span class="ref-id">[28]</span> Chen et al. (2025). "AI Meets Brain: A Unified Survey on Memory Systems." arXiv:2512.23343.</li>
+            </ul>
+        </section>
+
+        <footer class="container">
+            <div class="footer-mark">OpenSentience</div>
+            <p>
+                The research arm of
+                <a href="https://ampersandboxdesign.com">Ampersand Box Design</a>.<br />
+                Published protocols. Open questions. No hype.
+            </p>
+            <div class="footer-links">
+                <a href="https://docs.opensentience.org">Docs</a>
+                <a href="#kernel">box-and-box kernel</a>
+                <a href="/playground.html">Playground</a>
+                <a href="https://ampersandboxdesign.com/laws.html">The 97 laws</a>
+                <a href="https://ampersandboxdesign.com">ampersandboxdesign.com</a>
+                <a href="https://graphonomous.com">graphonomous.com</a>
+                <a href="https://deliberatic.com">deliberatic.com</a>
+                <a href="https://github.com/c-u-l8er/AmpersandBoxDesign">GitHub</a>
+                <a href="https://ampersandboxdesign.com/protocol.html">[&] Protocol</a>
+                <a href="https://traaviis.com">traaviis.com</a>
+            </div>
+            <p style="margin-top: 2rem; font-size: 0.7rem">
+                © 2026 Ampersand Box Design. Research published under Apache 2.0 where possible.
+            </p>
+        </footer>
+
+        <script src="/kappa_proof.js"></script>
+        <script src="/proof.js"></script>
+    </body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "lawCount": 97,
+  "trials": 2000,
+  "bridge": "feasible ▸ permitted ▸ best",
+  "rungs": [
+    { "n": "1–2", "key": "invariant", "name": "Invariant Arithmetic", "modal": "alethic · axiological", "desc": "what can happen · how to rank it (semirings)", "page": "/invariant-arithmetic.html" },
+    { "n": "3", "key": "deontic", "name": "Deontic Arithmetic", "modal": "deontic", "desc": "obligation · permission · prohibition", "page": "/deontic-arithmetic.html" },
+    { "n": "4", "key": "temporal", "name": "Temporal Arithmetic", "modal": "temporal", "desc": "LTL ▸ supervise · safe over time", "page": "/temporal-arithmetic.html" },
+    { "n": "5", "key": "reflexive", "name": "Reflexive Arithmetic", "modal": "reflexive", "desc": "may the rules change (entrenched ring-0)", "page": "/reflexive-arithmetic.html" },
+    { "n": "6", "key": "epistemic", "name": "Epistemic Arithmetic", "modal": "epistemic", "desc": "knows ▸ believes · do we know enough", "page": "/epistemic-arithmetic.html" },
+    { "n": "7", "key": "strategic", "name": "Strategic Arithmetic", "modal": "strategic", "desc": "coalition power · who can ensure it", "page": "/strategic-arithmetic.html" },
+    { "n": "8", "key": "resource", "name": "Resource Arithmetic", "modal": "resource", "desc": "affine ledger · can we afford it", "page": "/resource-arithmetic.html" }
+  ],
+  "playground": { "page": "/playground.html", "lawsWired": 97 }
+}

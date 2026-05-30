@@ -1,0 +1,337 @@
+[
+  {
+    "id": "OS-001",
+    "name": "Continual Learning",
+    "primitive": "&memory.graph",
+    "status": "shipped",
+    "version": "v0.3.3",
+    "subdomain": "graphonomous.com",
+    "group": "cognitive",
+    "dataPrimitive": "memory",
+    "tagline": "Graph-backed memory: typed nodes, confidence, provenance, multi-timescale consolidation.",
+    "paperNumber": "OS-001 · Continual Learning Protocol",
+    "paperTitle": "Graphonomous: Knowledge Graphs for Continual Agent Learning",
+    "paperDesc": "A graph-backed memory engine where agents store episodic, semantic, and procedural knowledge as typed nodes with confidence scores and provenance chains. Multi-timescale consolidation inspired by hippocampal replay — fast memory promotes to slow memory, weak connections decay, strong patterns crystallize. Outcome-driven learning updates confidence across causal chains, not just individual nodes.",
+    "tags": [
+      {
+        "t": "v0.3.3 · shipped",
+        "cls": "status-published"
+      },
+      {
+        "t": "LongMemEval 92.6%"
+      },
+      {
+        "t": "&memory.graph"
+      },
+      {
+        "t": "SQLite + embeddings"
+      },
+      {
+        "t": "MCP server"
+      }
+    ]
+  },
+  {
+    "id": "OS-002",
+    "name": "Topological Routing (κ)",
+    "primitive": "&reason.deliberate",
+    "status": "spec-complete",
+    "group": "cognitive",
+    "dataPrimitive": "reason",
+    "tagline": "The cyclicity invariant κ decides when to retrieve vs deliberate. Proved on 1,926,351 systems.",
+    "paperNumber": "OS-002 · Topological Routing Protocol",
+    "paperTitle": "κ-Routing: When to Retrieve, When to Deliberate",
+    "paperDesc": "The cyclicity invariant κ (kappa) detects irreducible feedback loops in a knowledge graph. When κ = 0, the subgraph is a DAG — retrieve context in one pass. When κ &gt; 0, circular dependencies exist — iterate and deliberate before answering. κ determines not just <em>whether</em> to think harder, but <em>how entangled</em> the reasoning is. Proved on 1,926,351 finite systems with zero counterexamples. Fault-line edges (minimum cuts within SCCs) become the mechanical decomposition boundaries for deliberation.",
+    "tags": [
+      {
+        "t": "spec complete",
+        "cls": "status-spec"
+      },
+      {
+        "t": "&reason.deliberate"
+      },
+      {
+        "t": "Tarjan SCC"
+      },
+      {
+        "t": "bipartition enumeration"
+      }
+    ]
+  },
+  {
+    "id": "OS-003",
+    "name": "Deliberation Orchestrator",
+    "primitive": "&reason.deliberate",
+    "status": "spec-complete",
+    "group": "cognitive",
+    "dataPrimitive": "reason",
+    "tagline": "Fault-line edges become prompt boundaries; reconcile and write conclusions back, reducing κ over time.",
+    "paperNumber": "OS-003 · Deliberation Orchestrator Protocol",
+    "paperTitle": "Topology-Driven Deliberation: Fault Lines as Prompt Boundaries",
+    "paperDesc": "When κ &gt; 0, fault-line edges become prompt boundaries. The Deliberator decomposes circular knowledge along those boundaries, runs focused reasoning passes on each partition, reconciles them, and writes conclusions back into the graph — reducing κ over time as uncertainty crystallizes into settled knowledge. Single-agent fast path; escalates to multi-agent formal argumentation (Deliberatic) only when convergence fails.",
+    "tags": [
+      {
+        "t": "spec complete",
+        "cls": "status-spec"
+      },
+      {
+        "t": "&reason.deliberate"
+      },
+      {
+        "t": "graph crystallization"
+      },
+      {
+        "t": "escalation path"
+      }
+    ]
+  },
+  {
+    "id": "OS-004",
+    "name": "Attention Engine",
+    "primitive": "meta-reasoning",
+    "status": "spec-complete",
+    "group": "cognitive",
+    "dataPrimitive": "system",
+    "tagline": "Self-directed cognition without queries: survey → triage → dispatch over the knowledge graph.",
+    "paperNumber": "OS-004 · Attention Engine Protocol",
+    "paperTitle": "Proactive Attention: Self-Directed Cognition Without Queries",
+    "paperDesc": "The missing ignition in a reactive system. The Attention Engine is a periodic loop that examines the knowledge graph's topology, coverage gaps, and active goals to decide what the system should reason about, learn about, or act on next — without waiting for a query. Three modes: Explore (what don't I know?), Plan (what should I do?), and Focus (where should I spend compute?). Not a 5th cognitive primitive — attention is meta-reasoning over the existing four.",
+    "tags": [
+      {
+        "t": "spec complete",
+        "cls": "status-spec"
+      },
+      {
+        "t": "survey → triage → dispatch"
+      },
+      {
+        "t": "heartbeat + event triggers"
+      },
+      {
+        "t": "autonomous goal generation"
+      }
+    ]
+  },
+  {
+    "id": "OS-005",
+    "name": "Model Tier Adaptation",
+    "primitive": "system",
+    "status": "spec-complete",
+    "group": "cognitive",
+    "dataPrimitive": "system",
+    "tagline": "Same topology, different depth: local 8B → local 70B → cloud frontier. The κ ROI paradox.",
+    "paperNumber": "OS-005 · Model Tier Adaptation Protocol",
+    "paperTitle": "Hardware-Adaptive Cognition: Same Topology, Different Depth",
+    "paperDesc": "κ routing becomes <em>more</em> valuable on constrained hardware — it tells the system when to skip expensive inference entirely. Three tiers (local 8B, local 70B+, cloud frontier) with qualitatively different strategies: single-pass enrichment vs. multi-pass deliberation, demand-triggered vs. heartbeat attention, aggressive crystallization vs. fresh inference. The κ paradox: ROI of topological routing is highest when inference is most expensive.",
+    "tags": [
+      {
+        "t": "spec complete",
+        "cls": "status-spec"
+      },
+      {
+        "t": "local_small · local_large · cloud_frontier"
+      },
+      {
+        "t": "cost tracking"
+      }
+    ]
+  },
+  {
+    "id": "OS-006",
+    "name": "Agent Governance Shim",
+    "primitive": "&govern",
+    "status": "in-development",
+    "group": "cognitive",
+    "dataPrimitive": "governance",
+    "tagline": "Thin governance: permissions, audit, lifecycle, three autonomy levels. A hex package, not a daemon.",
+    "paperNumber": "OS-006 · Agent Governance Shim Protocol",
+    "paperTitle": "Thin Governance: Permissions, Audit, and Lifecycle for Any Runtime",
+    "paperDesc": "A lightweight governance layer — not a full runtime — that wraps around any OTP-based agent system (Jido, Alloy, or raw GenServer). Provides the permission taxonomy (filesystem, network, tool invocation, graph access), audit trail, agent lifecycle states (installed → enabled → running), and three autonomy levels (observe, advise, act). Designed as a hex package dependency, not a daemon.",
+    "tags": [
+      {
+        "t": "in development",
+        "cls": "status-draft"
+      },
+      {
+        "t": "permissions model"
+      },
+      {
+        "t": "audit trail"
+      },
+      {
+        "t": "autonomy levels"
+      }
+    ]
+  },
+  {
+    "id": "OS-007",
+    "name": "Adversarial Robustness",
+    "primitive": "&govern.identity",
+    "status": "draft",
+    "group": "cognitive",
+    "dataPrimitive": "governance",
+    "tagline": "Self/non-self discrimination against injection, poisoning, impersonation, escalation, denial of service.",
+    "paperNumber": "OS-007 · Adversarial Robustness Protocol",
+    "paperTitle": "Pattern Recognition and Threat Defense",
+    "paperDesc": "Defines how agent systems detect and defend against adversarial inputs, compromised agents, and knowledge poisoning. Five threat categories: prompt injection, knowledge poisoning (BadRAG/TrojanRAG), agent impersonation, privilege escalation, and denial of service.",
+    "tags": [
+      {
+        "t": "draft",
+        "cls": "status-draft"
+      },
+      {
+        "t": "&govern.identity"
+      },
+      {
+        "t": "Immune system — self/non-self discrimination"
+      }
+    ]
+  },
+  {
+    "id": "OS-008",
+    "name": "Agent Harness",
+    "primitive": "&govern.harness",
+    "status": "draft",
+    "group": "cognitive",
+    "dataPrimitive": "governance",
+    "tagline": "Pipeline enforcement and quality gates: the runtime above agents and below humans.",
+    "paperNumber": "OS-008 · Agent Harness Protocol",
+    "paperTitle": "Pipeline Enforcement and Quality Gates",
+    "paperDesc": "The enforcement runtime that sits above agents and below humans. Orchestrates [&amp;] pipelines, enforces governance contracts, gates execution on epistemic confidence. Five components: PipelineEnforcer, QualityGate, ContractValidator, SprintController, ContextManager.",
+    "tags": [
+      {
+        "t": "draft",
+        "cls": "status-draft"
+      },
+      {
+        "t": "&govern.harness"
+      },
+      {
+        "t": "Supervisory attentional system — Norman &amp; Shallice (1986)"
+      }
+    ]
+  },
+  {
+    "id": "OS-009",
+    "name": "PRISM",
+    "primitive": "&memory + &reason",
+    "status": "in-development",
+    "subdomain": "prism.opensentience.org",
+    "featured": true,
+    "group": "cross-cutting",
+    "dataPrimitive": "evaluation",
+    "tagline": "The first self-improving CL benchmark. 9 dimensions, 3-layer judging, IRT calibration, scenario evolution.",
+    "paperNumber": "OS-009 · PRISM",
+    "paperTitle": "Protocol for Rating Iterative System Memory",
+    "paperDesc": "The first self-improving continual learning benchmark. 9 CL dimensions, 3-layer judging (transcripts → dimension judges → meta-judges), IRT difficulty calibration, and scenario evolution. Two closed loops interlocking: PRISM improves the benchmark, Graphonomous improves the memory. We used it to benchmark ourselves — score went from 0.10 to 0.99 in 4 cycles, then adversarial testing crashed it back to 0.45 and we fixed real bugs.",
+    "tags": [
+      {
+        "t": "in development",
+        "cls": "status-spec"
+      },
+      {
+        "t": "&memory + &reason"
+      },
+      {
+        "t": "IRT · Rasch (1960), Lord (1980)"
+      },
+      {
+        "t": "prism.opensentience.org",
+        "href": "https://prism.opensentience.org"
+      }
+    ]
+  },
+  {
+    "id": "OS-010",
+    "name": "PULSE",
+    "primitive": "&memory + &govern + &time",
+    "status": "draft",
+    "version": "v0.1.1",
+    "subdomain": "pulse.opensentience.org",
+    "featured": true,
+    "group": "cross-cutting",
+    "dataPrimitive": "temporal",
+    "tagline": "The temporal algebra of the stack. 5 phase kinds, 6 cadence types, 6 tokens, 7 invariants.",
+    "paperNumber": "OS-010 · PULSE",
+    "paperTitle": "Protocol for Uniform Loop State Exchange",
+    "paperDesc": "The temporal algebra of the [&amp;] stack. Where [&amp;] declares <em>what</em> agents can compose, PULSE declares <em>how</em> their processes cycle over time — phases, cadence, substrates, invariants, and cross-loop signaling. Five canonical phase kinds, six cadence types, six canonical tokens, seven invariants. Any conforming loop becomes automatically PRISM-evaluable without integration work. The circulatory system that makes [&amp;] a stack instead of a pile.",
+    "tags": [
+      {
+        "t": "v0.1 draft",
+        "cls": "status-spec"
+      },
+      {
+        "t": "&memory + &govern + &time"
+      },
+      {
+        "t": "CloudEvents · Statecharts · Petri-net safety"
+      },
+      {
+        "t": "pulse.opensentience.org",
+        "href": "https://pulse.opensentience.org"
+      }
+    ]
+  },
+  {
+    "id": "OS-011",
+    "name": "Embodiment",
+    "primitive": "&body.*",
+    "status": "draft",
+    "version": "v0.1",
+    "subdomain": "embodiment.opensentience.org",
+    "featured": true,
+    "group": "cross-cutting",
+    "dataPrimitive": "body",
+    "tagline": "The sensorimotor loop: perceive → act → affordances → encode_state → replay. Emits SurpriseSignal into PULSE.",
+    "paperNumber": "OS-011 · Embodiment",
+    "paperTitle": "The Sensorimotor Loop for <code>&amp;body.*</code>",
+    "paperDesc": "Closes the perception-action gap. Defines the typed <code>perceive → act → affordances → encode_state → replay</code> loop that any <code>&amp;body</code> provider implements — the agent's instantiation in an environment. Emits a <strong>SurpriseSignal</strong> (forward-model prediction error) into PULSE, so embodiment loops can drive learning in the memory loop. InteractionTrace schema, five invariants, twelve conformance tests.",
+    "tags": [
+      {
+        "t": "v0.1 draft",
+        "cls": "status-draft"
+      },
+      {
+        "t": "&body.* (new primitive)"
+      },
+      {
+        "t": "SurpriseSignal → PULSE"
+      },
+      {
+        "t": "embodiment.opensentience.org",
+        "href": "https://embodiment.opensentience.org"
+      }
+    ]
+  },
+  {
+    "id": "OS-012",
+    "name": "SCOPE",
+    "primitive": "&space.region + &space.claim",
+    "status": "draft",
+    "version": "v0.1",
+    "subdomain": "scope.opensentience.org",
+    "featured": true,
+    "group": "cross-cutting",
+    "dataPrimitive": "space",
+    "tagline": "Spatial algebra for multi-agent coordination: N-D Region algebra + typed SpatialClaim envelope.",
+    "paperNumber": "OS-012 · SCOPE",
+    "paperTitle": "Spatial Claims and Coordination Protocol for Embodied Environments",
+    "paperDesc": "The spatial algebra of the [&amp;] stack. Where PULSE governs <em>when</em> loops cycle, SCOPE governs <em>where</em> agents act — an N-D <strong>Region</strong> algebra (intersect, union, contains, overlaps) and a typed <strong>SpatialClaim</strong> envelope: a first-class assertion of intent over a region, so multiple agents can broadcast, detect conflict, and coordinate over shared space without a central arbiter. Supersedes OS-015 Viewport Binding; subsumes six ad-hoc coordination concerns into one algebra.",
+    "tags": [
+      {
+        "t": "v0.1 draft",
+        "cls": "status-draft"
+      },
+      {
+        "t": "&space.region + &space.claim"
+      },
+      {
+        "t": "N-D Region algebra · SpatialClaim envelope"
+      },
+      {
+        "t": "scope.opensentience.org",
+        "href": "https://scope.opensentience.org"
+      }
+    ]
+  }
+]

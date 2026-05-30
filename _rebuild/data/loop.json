@@ -1,0 +1,15 @@
+{
+  "phases": [
+    { "key": "retrieve", "verb": "Retrieve", "gloss": "pull the relevant subgraph before reasoning", "primitive": "memory", "protocols": ["OS-001"] },
+    { "key": "route", "verb": "Route", "gloss": "measure topology (\u03ba) \u2014 retrieve in one pass, or deliberate", "primitive": "reason", "protocols": ["OS-002", "OS-004"] },
+    { "key": "act", "verb": "Act", "gloss": "deliberate along fault lines, then mutate the graph and the world", "primitive": "reason", "protocols": ["OS-003", "OS-011"] },
+    { "key": "learn", "verb": "Learn", "gloss": "update confidence from outcomes and prediction-error surprise", "primitive": "memory", "protocols": ["OS-001", "OS-011"] },
+    { "key": "consolidate", "verb": "Consolidate", "gloss": "merge, decay, and crystallize at idle \u2014 \u03ba falls over time", "primitive": "memory", "protocols": ["OS-001"] }
+  ],
+  "rings": [
+    { "key": "govern", "label": "Governed", "note": "every phase runs under permissions, audit, and three autonomy levels", "protocols": ["OS-006", "OS-007", "OS-008"] },
+    { "key": "clock", "label": "PULSE \u00b7 the clock", "note": "declares the loop's phases, cadence, and cross-loop signals", "protocols": ["OS-010"] },
+    { "key": "gauge", "label": "PRISM \u00b7 the gauge", "note": "measures how well the loop performs over time", "protocols": ["OS-009"] },
+    { "key": "space", "label": "SCOPE \u00b7 the bounds", "note": "bounds where agents may act over shared space", "protocols": ["OS-012"] }
+  ]
+}
