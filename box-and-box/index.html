@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>box-and-box — the reference implementation, read it in full</title>
+        <meta
+            name="description"
+            content="The complete MIT-licensed reference implementation of the box-and-box governance kernel: eight modal rungs, one bridge, 97 property-tested laws. Read the real source in the browser, see the alethic floor ported to five languages."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --paper: #f4ede0;
+                --paper-deep: #ebe3d2;
+                --paper-soft: #f8f2e6;
+                --ink: #1a1814;
+                --ink-soft: #4a4538;
+                --ink-faint: #8a8472;
+                --rule: #c9bfa8;
+                --rule-soft: #ddd4bc;
+                --accent: #b8451f;
+                --accent-bg: #e9c8b4;
+                --green: #4a5d3a;
+                --green-bg: #c7d1b8;
+                --code-bg: #1f1c17;
+                --code-ink: #e8e0cf;
+                --code-cmt: #9b9075;
+                --code-ln: #6a6353;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                margin: 0;
+                background: var(--paper);
+                color: var(--ink);
+                font:
+                    400 17px/1.65 "Inter",
+                    system-ui,
+                    sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            .wrap {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 4rem 1.5rem 6rem;
+            }
+
+            h1,
+            h2,
+            h3 {
+                font-family: "Cormorant Garamond", Georgia, serif;
+                font-weight: 600;
+                color: var(--ink);
+                line-height: 1.15;
+            }
+
+            h1 {
+                font-size: clamp(2.4rem, 5vw + 1rem, 3.8rem);
+                margin: 0 0 0.4rem;
+                letter-spacing: -0.01em;
+            }
+
+            .lede {
+                font-size: 1.3rem;
+                color: var(--ink-soft);
+                max-width: 44ch;
+                margin: 0 0 2rem;
+            }
+
+            .lede code {
+                color: var(--accent);
+            }
+
+            .eyebrow {
+                font:
+                    600 0.78rem/1 "JetBrains Mono",
+                    monospace;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin: 0 0 1.2rem;
+            }
+
+            h2 {
+                font-size: clamp(1.7rem, 3vw + 0.5rem, 2.4rem);
+                margin: 3.5rem 0 0.3rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid var(--rule);
+            }
+
+            h2 .sub {
+                display: block;
+                font:
+                    500 0.8rem/1.4 "JetBrains Mono",
+                    monospace;
+                letter-spacing: 0.04em;
+                text-transform: none;
+                color: var(--ink-faint);
+                margin-top: 0.5rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+                margin: 2rem 0 0.4rem;
+            }
+
+            p {
+                margin: 0 0 1rem;
+            }
+
+            a {
+                color: var(--accent);
+                text-decoration-thickness: 1px;
+                text-underline-offset: 2px;
+            }
+
+            code {
+                font:
+                    500 0.92em/1.5 "JetBrains Mono",
+                    monospace;
+            }
+
+            /* ---- command / install block ---- */
+            .cmd {
+                background: var(--code-bg);
+                color: var(--code-ink);
+                border-radius: 8px;
+                padding: 1.1rem 1.3rem;
+                font:
+                    500 0.9rem/1.9 "JetBrains Mono",
+                    monospace;
+                overflow-x: auto;
+                margin: 1.2rem 0 2rem;
+            }
+            .cmd .c {
+                color: var(--code-cmt);
+            }
+            .cmd .p {
+                color: #d98c5f;
+            }
+
+            /* ---- rung table ---- */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 1.5rem 0 2rem;
+                font-size: 0.95rem;
+            }
+            th,
+            td {
+                text-align: left;
+                padding: 0.55rem 0.7rem;
+                border-bottom: 1px solid var(--rule-soft);
+                vertical-align: top;
+            }
+            th {
+                font:
+                    600 0.72rem/1 "JetBrains Mono",
+                    monospace;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+            }
+            td .rung {
+                display: inline-block;
+                min-width: 1.4rem;
+                font-family: "JetBrains Mono", monospace;
+                font-weight: 700;
+                color: var(--accent);
+            }
+            td code {
+                color: var(--ink);
+            }
+            td .laws {
+                font:
+                    400 0.82rem/1.4 "JetBrains Mono",
+                    monospace;
+                color: var(--ink-faint);
+            }
+
+            /* ---- source browser ---- */
+            .src {
+                border: 1px solid var(--rule);
+                border-radius: 8px;
+                margin: 0.9rem 0;
+                background: var(--paper-soft);
+                overflow: hidden;
+            }
+            .src > summary {
+                cursor: pointer;
+                list-style: none;
+                padding: 0.85rem 1.1rem;
+                display: flex;
+                align-items: baseline;
+                gap: 0.8rem;
+                flex-wrap: wrap;
+            }
+            .src > summary::-webkit-details-marker {
+                display: none;
+            }
+            .src > summary::before {
+                content: "▸";
+                color: var(--accent);
+                font-size: 0.8rem;
+                transition: transform 0.15s ease;
+            }
+            .src[open] > summary::before {
+                transform: rotate(90deg);
+            }
+            .src summary .file {
+                font:
+                    600 0.95rem/1 "JetBrains Mono",
+                    monospace;
+                color: var(--ink);
+            }
+            .src summary .rung-tag {
+                font:
+                    600 0.7rem/1 "JetBrains Mono",
+                    monospace;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--accent);
+                background: var(--accent-bg);
+                padding: 0.25rem 0.5rem;
+                border-radius: 999px;
+            }
+            .src summary .desc {
+                color: var(--ink-faint);
+                font-size: 0.88rem;
+                flex: 1;
+            }
+            .src summary .raw {
+                font:
+                    500 0.8rem/1 "JetBrains Mono",
+                    monospace;
+            }
+            pre {
+                margin: 0;
+                background: var(--code-bg);
+                color: var(--code-ink);
+                padding: 1rem 0;
+                overflow-x: auto;
+                font:
+                    400 13px/1.6 "JetBrains Mono",
+                    monospace;
+                tab-size: 2;
+            }
+            pre code {
+                font: inherit;
+            }
+            pre .ln {
+                display: inline-block;
+                width: 3.2em;
+                padding-right: 1em;
+                margin-right: 0.4em;
+                text-align: right;
+                color: var(--code-ln);
+                border-right: 1px solid #34302820;
+                user-select: none;
+            }
+            pre .cmt {
+                color: var(--code-cmt);
+                font-style: italic;
+            }
+            pre .loading,
+            pre .err {
+                display: block;
+                padding: 0 1.2rem;
+                color: var(--code-cmt);
+            }
+            pre .err {
+                color: #d98c5f;
+            }
+
+            /* ---- rosetta ---- */
+            .note {
+                background: var(--paper-deep);
+                border-left: 3px solid var(--accent);
+                padding: 0.9rem 1.2rem;
+                border-radius: 0 6px 6px 0;
+                font-size: 0.95rem;
+                color: var(--ink-soft);
+                margin: 1.2rem 0 1.8rem;
+            }
+            .tabs {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.4rem;
+                margin: 1.5rem 0 0;
+            }
+            .tab {
+                font:
+                    600 0.85rem/1 "JetBrains Mono",
+                    monospace;
+                padding: 0.5rem 0.9rem;
+                border: 1px solid var(--rule);
+                border-bottom: none;
+                border-radius: 6px 6px 0 0;
+                background: var(--paper-deep);
+                color: var(--ink-soft);
+                cursor: pointer;
+            }
+            .tab[aria-selected="true"] {
+                background: var(--code-bg);
+                color: var(--code-ink);
+                border-color: var(--code-bg);
+            }
+            .tab .canon {
+                color: var(--green);
+                font-size: 0.65rem;
+            }
+            .tab[aria-selected="true"] .canon {
+                color: var(--green-bg);
+            }
+            .panel {
+                display: none;
+            }
+            .panel[data-active="true"] {
+                display: block;
+            }
+            .panel pre {
+                border-radius: 0 6px 6px 6px;
+            }
+            .panel .cap {
+                font-size: 0.85rem;
+                color: var(--ink-faint);
+                margin: 0.5rem 0 0;
+            }
+
+            footer {
+                margin-top: 4rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid var(--rule);
+                font-size: 0.9rem;
+                color: var(--ink-faint);
+                display: flex;
+                gap: 1.4rem;
+                flex-wrap: wrap;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <p class="eyebrow">Reference implementation · MIT</p>
+            <h1>box-and-box</h1>
+            <p class="lede">
+                The complete governance kernel — eight modal rungs, one bridge
+                (<code>feasible ▸ permitted ▸ best</code>), and
+                <strong>97 property-tested laws</strong>. Pure arithmetic: no
+                LLM, no network, no I/O. Read every line below, then take it to
+                your own language.
+            </p>
+
+            <div class="cmd">
+                <span class="c"># the published package — read it, run it, port it</span><br />
+                <span class="p">npm</span> install -g box-and-box<br />
+                <span class="p">box-and-box</span> laws
+                <span class="c">&nbsp;&nbsp;# the 97-law conformance harness (2000 trials/law)</span><br />
+                <span class="p">box-and-box</span> govern decision.json
+                <span class="c"># a real verdict → certificate JSON</span>
+            </div>
+
+            <!-- ============ THE MODULES ============ -->
+            <h2>
+                The kernel, by rung
+                <span class="sub"
+                    >eight rungs + one bridge · click any file to read the real
+                    served source</span
+                >
+            </h2>
+            <p>
+                Each rung is a small, self-contained module. The
+                <strong>spec is the suite</strong>: pass
+                <code>test/laws.mjs</code> in your own language and your
+                verdicts are identical to everyone else's. The source below is
+                fetched live from this directory — what you read is exactly what
+                ships.
+            </p>
+
+            <div id="modules"></div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rung</th>
+                        <th>File</th>
+                        <th>What it is</th>
+                        <th>Laws</th>
+                    </tr>
+                </thead>
+                <tbody id="rung-table"></tbody>
+            </table>
+
+            <!-- ============ ROSETTA ============ -->
+            <h2>
+                The kernel in your language
+                <span class="sub"
+                    >the alethic floor (<code>consume</code>) — the
+                    un-weakenable safety gate — in five languages</span
+                >
+            </h2>
+            <p>
+                The arithmetic is deliberately language-agnostic. Here is the
+                heart of rung 1 — <code>consume(value, requirements)</code>, the
+                boolean gate that every higher rung sits on top of — written
+                five ways.
+            </p>
+            <p class="note">
+                <strong>JavaScript is the conformance reference.</strong> A port
+                is <em>certified</em> by passing <code>test/laws.mjs</code> (all
+                97 laws, 2000 trials each) — not by looking right. The four
+                non-JS snippets are faithful, idiomatic
+                <em>translations</em> of the canonical source to show the shape
+                travels; they are illustrative until their language runs the law
+                suite. (The bundled Elixir host,
+                <code>aios/box_and_box_aios.ex</code>, follows the same rule — it
+                delegates to the verified JS CLI for real verdicts.)
+            </p>
+
+            <div class="tabs" id="rosetta-tabs" role="tablist"></div>
+            <div id="rosetta-panels"></div>
+
+            <footer>
+                <a href="https://ampersandboxdesign.com">box-and-box kernel</a>
+                <a href="https://ampersandboxdesign.com/laws.html">The 97 laws</a>
+                <a href="/playground.html">Interactive playground</a>
+                <a href="./README.md">README</a>
+                <a href="https://www.npmjs.com/package/box-and-box">npm</a>
+            </footer>
+        </div>
+
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav property="box_and_box" theme="light"></amp-nav>
+
+        <script>
+            // ---- module manifest: rung order 1..8 + core/cli/tests/host -------
+            const MODULES = [
+                { f: "value.mjs", rung: "1", lang: "js", tag: "alethic", desc: "feasibility — the consume floor", laws: "L1–L14" },
+                { f: "norm.mjs", rung: "2", lang: "js", tag: "deontic", desc: "permissions, CTD obligations", laws: "D1–D9" },
+                { f: "govern.mjs", rung: "2", lang: "js", tag: "deontic", desc: "the full verdict surface", laws: "DB1–DB3" },
+                { f: "score.mjs", rung: "3", lang: "js", tag: "axiological", desc: "semiring ranking of options", laws: "H1–H13" },
+                { f: "bridge.mjs", rung: "3", lang: "js", tag: "bridge", desc: "feasible ▸ permitted ▸ best", laws: "B1–B3" },
+                { f: "temporal.mjs", rung: "4", lang: "js", tag: "temporal", desc: "LTL safety/liveness over trajectories", laws: "T1–T8" },
+                { f: "supervise.mjs", rung: "4", lang: "js", tag: "temporal", desc: "monitor a running trajectory", laws: "TB1–TB3" },
+                { f: "resource.mjs", rung: "5", lang: "js", tag: "resource", desc: "the closed affine economy", laws: "C1–C8 · CB1–CB3" },
+                { f: "epistemic.mjs", rung: "6", lang: "js", tag: "epistemic", desc: "knowledge (S5) vs belief", laws: "E1–E8 · EB1–EB3" },
+                { f: "strategic.mjs", rung: "7", lang: "js", tag: "strategic", desc: "coalitional ability, ought-implies-can", laws: "S1–S8 · SB1–SB3" },
+                { f: "reflexive.mjs", rung: "8", lang: "js", tag: "reflexive", desc: "self-amending norms, entrenched core", laws: "R1–R8 · RB1–RB3" },
+                { f: "index.mjs", rung: "·", lang: "js", tag: "core", desc: "the package entry — re-exports every rung", laws: "—" },
+                { f: "bin/govern.mjs", rung: "·", lang: "js", tag: "cli", desc: "JSON in → certificate out (CI exit codes)", laws: "—" },
+                { f: "bin/arith.mjs", rung: "·", lang: "js", tag: "cli", desc: "the kernel CLI router", laws: "—" },
+                { f: "test/laws.mjs", rung: "·", lang: "js", tag: "spec", desc: "the conformance suite — the spec is the suite", laws: "97 laws" },
+                { f: "aios/box_and_box_aios.ex", rung: "·", lang: "ex", tag: "host", desc: "Elixir reference host (delegates to the JS CLI)", laws: "—" },
+            ];
+
+            const esc = (s) =>
+                s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            // line numbers + dim line-comments (// for JS, # for Elixir). Safe:
+            // escape first, then wrap trailing line-comments only.
+            function highlight(src, lang) {
+                const cmt = lang === "ex" ? /(#.*)$/ : /(\/\/.*)$/;
+                return esc(src)
+                    .split("\n")
+                    .map((ln, i) => {
+                        const body = ln.replace(cmt, '<span class="cmt">$1</span>');
+                        return `<span class="ln">${i + 1}</span>${body}`;
+                    })
+                    .join("\n");
+            }
+
+            const modulesEl = document.getElementById("modules");
+            const tableEl = document.getElementById("rung-table");
+
+            for (const m of MODULES) {
+                // rung table row
+                const tr = document.createElement("tr");
+                tr.innerHTML =
+                    `<td><span class="rung">${m.rung}</span></td>` +
+                    `<td><code>${m.f}</code></td>` +
+                    `<td>${m.desc}</td>` +
+                    `<td class="laws">${m.laws}</td>`;
+                tableEl.appendChild(tr);
+
+                // collapsible source viewer
+                const d = document.createElement("details");
+                d.className = "src";
+                d.innerHTML =
+                    `<summary>` +
+                    `<span class="file">${m.f}</span>` +
+                    `<span class="rung-tag">${m.tag}</span>` +
+                    `<span class="desc">${m.desc}</span>` +
+                    `<a class="raw" href="./${m.f}" target="_blank" rel="noopener">raw ↗</a>` +
+                    `</summary>` +
+                    `<pre><code class="loading">loading ./${m.f} …</code></pre>`;
+                modulesEl.appendChild(d);
+
+                const codeEl = d.querySelector("code");
+                let loaded = false;
+                d.addEventListener("toggle", async () => {
+                    if (!d.open || loaded) return;
+                    loaded = true;
+                    try {
+                        const res = await fetch("./" + m.f);
+                        if (!res.ok) throw new Error("HTTP " + res.status);
+                        const txt = await res.text();
+                        codeEl.className = "";
+                        codeEl.innerHTML = highlight(txt, m.lang);
+                    } catch (e) {
+                        loaded = false;
+                        codeEl.className = "err";
+                        codeEl.textContent =
+                            "could not load ./" + m.f + " (" + e.message +
+                            "). Open the raw file, or browse the package on npm.";
+                    }
+                });
+            }
+
+            // ---- ROSETTA: consume() in five languages ------------------------
+            const ROSETTA = [
+                {
+                    id: "js",
+                    label: "JavaScript",
+                    canon: true,
+                    lang: "js",
+                    cap: "Canonical source — extracted verbatim from value.mjs.",
+                    code: `// consume : Value × Requirements → {ok, failures, value}
+// the correctness gate (a predicate, not an operation on Value).
+export function consume(v, req = {}) {
+  const failures = [];
+  if (req.beta_min != null && v.beta < req.beta_min)
+    failures.push({ family: 'β', why: \`β=\${round(v.beta)} < β_min=\${req.beta_min}\` });
+  if (req.sigma_empty && v.sigma.length > 0)
+    failures.push({ family: 'σ', why: \`unresolved conflicts {\${v.sigma.join(', ')}}\` });
+  if (req.acyclic && v.kappa)
+    failures.push({ family: 'κ', why: 'cyclic — self-reference detected' });
+  if (req.phase && v.pi !== req.phase)
+    failures.push({ family: 'π', why: \`phase \${v.pi} ≠ required \${req.phase}\` });
+  if (req.forward_from && v.pi != null && phaseIdx(v.pi) < phaseIdx(req.forward_from))
+    failures.push({ family: 'π', why: \`phase \${v.pi} precedes \${req.forward_from}\` });
+  if (req.deny_default === 'must_allow' && v.denyDefault === true && req.authorized !== true)
+    failures.push({ family: 'governance', why: 'deny_default with empty authority_path' });
+  return { ok: failures.length === 0, failures, value: v };
+}`,
+                },
+                {
+                    id: "py",
+                    label: "Python",
+                    lang: "py",
+                    cap: "Illustrative port. Certify by porting test/laws.mjs.",
+                    code: `# consume(value, requirements) -> {ok, failures, value}
+# the alethic floor: a predicate, not an operation on Value.
+PHASES = ["retrieve", "route", "act", "learn", "consolidate"]
+phase_idx = lambda p: PHASES.index(p) if p in PHASES else -1
+
+def consume(v, req=None):
+    req = req or {}
+    fails = []
+    if req.get("beta_min") is not None and v["beta"] < req["beta_min"]:
+        fails.append(("β", f"β={v['beta']:.3f} < β_min={req['beta_min']}"))
+    if req.get("sigma_empty") and v["sigma"]:
+        fails.append(("σ", f"unresolved conflicts {{{', '.join(v['sigma'])}}}"))
+    if req.get("acyclic") and v["kappa"]:
+        fails.append(("κ", "cyclic — self-reference detected"))
+    if req.get("phase") and v["pi"] != req["phase"]:
+        fails.append(("π", f"phase {v['pi']} ≠ required {req['phase']}"))
+    if req.get("forward_from") and v["pi"] is not None \\
+            and phase_idx(v["pi"]) < phase_idx(req["forward_from"]):
+        fails.append(("π", f"phase {v['pi']} precedes {req['forward_from']}"))
+    if req.get("deny_default") == "must_allow" \\
+            and v["denyDefault"] and req.get("authorized") is not True:
+        fails.append(("governance", "deny_default with empty authority_path"))
+    return {"ok": not fails, "failures": fails, "value": v}`,
+                },
+                {
+                    id: "ex",
+                    label: "Elixir",
+                    lang: "ex",
+                    cap: "Illustrative port. Certify by porting test/laws.mjs.",
+                    code: `# consume(value, requirements) -> %{ok:, failures:, value:}
+# the alethic floor: a predicate over a Value map.
+@phases ~w(retrieve route act learn consolidate)
+defp phase_idx(p), do: Enum.find_index(@phases, &(&1 == p)) || -1
+
+def consume(v, req \\\\ %{}) do
+  fails =
+    []
+    |> gate(req[:beta_min] && v.beta < req[:beta_min],
+            {"β", "β=#{v.beta} < β_min=#{req[:beta_min]}"})
+    |> gate(req[:sigma_empty] && v.sigma != [],
+            {"σ", "unresolved conflicts {#{Enum.join(v.sigma, ", ")}}"})
+    |> gate(req[:acyclic] && v.kappa,
+            {"κ", "cyclic — self-reference detected"})
+    |> gate(req[:phase] && v.pi != req[:phase],
+            {"π", "phase #{v.pi} ≠ required #{req[:phase]}"})
+    |> gate(req[:forward_from] && v.pi != nil &&
+              phase_idx(v.pi) < phase_idx(req[:forward_from]),
+            {"π", "phase #{v.pi} precedes #{req[:forward_from]}"})
+  %{ok: fails == [], failures: Enum.reverse(fails), value: v}
+end
+
+defp gate(acc, true, failure), do: [failure | acc]
+defp gate(acc, _falsey, _failure), do: acc`,
+                },
+                {
+                    id: "rs",
+                    label: "Rust",
+                    lang: "rs",
+                    cap: "Illustrative port. Certify by porting test/laws.mjs.",
+                    code: `// consume(&Value, &Req) -> the alethic floor.
+// ok == failures.is_empty().
+pub const PHASES: [&str; 5] = ["retrieve", "route", "act", "learn", "consolidate"];
+fn phase_idx(p: &str) -> i32 {
+    PHASES.iter().position(|&x| x == p).map_or(-1, |i| i as i32)
+}
+
+pub fn consume(v: &Value, req: &Req) -> Vec<(char, String)> {
+    let mut f = Vec::new();
+    if let Some(b) = req.beta_min {
+        if v.beta < b { f.push(('β', format!("β={:.3} < β_min={}", v.beta, b))); }
+    }
+    if req.sigma_empty && !v.sigma.is_empty() {
+        f.push(('σ', format!("unresolved conflicts {{{}}}", v.sigma.join(", "))));
+    }
+    if req.acyclic && v.kappa {
+        f.push(('κ', "cyclic — self-reference detected".into()));
+    }
+    if let Some(p) = &req.phase {
+        if v.pi.as_deref() != Some(p) {
+            f.push(('π', format!("phase {:?} ≠ required {}", v.pi, p)));
+        }
+        if let Some(cur) = &v.pi {
+            if phase_idx(cur) < phase_idx(p) {
+                f.push(('π', format!("phase {} precedes {}", cur, p)));
+            }
+        }
+    }
+    f
+}`,
+                },
+                {
+                    id: "go",
+                    label: "Go",
+                    lang: "go",
+                    cap: "Illustrative port. Certify by porting test/laws.mjs.",
+                    code: `// Consume is the alethic floor; ok == len(failures) == 0.
+var Phases = []string{"retrieve", "route", "act", "learn", "consolidate"}
+
+func phaseIdx(p string) int {
+    for i, x := range Phases {
+        if x == p {
+            return i
+        }
+    }
+    return -1
+}
+
+func Consume(v Value, req Req) (ok bool, failures [][2]string) {
+    add := func(fam, why string) { failures = append(failures, [2]string{fam, why}) }
+    if req.BetaMin != nil && v.Beta < *req.BetaMin {
+        add("β", fmt.Sprintf("β=%.3f < β_min=%g", v.Beta, *req.BetaMin))
+    }
+    if req.SigmaEmpty && len(v.Sigma) > 0 {
+        add("σ", fmt.Sprintf("unresolved conflicts {%s}", strings.Join(v.Sigma, ", ")))
+    }
+    if req.Acyclic && v.Kappa {
+        add("κ", "cyclic — self-reference detected")
+    }
+    if req.Phase != "" && v.Pi != req.Phase {
+        add("π", fmt.Sprintf("phase %s ≠ required %s", v.Pi, req.Phase))
+    }
+    return len(failures) == 0, failures
+}`,
+                },
+            ];
+
+            const tabsEl = document.getElementById("rosetta-tabs");
+            const panelsEl = document.getElementById("rosetta-panels");
+
+            ROSETTA.forEach((r, i) => {
+                const tab = document.createElement("button");
+                tab.className = "tab";
+                tab.setAttribute("role", "tab");
+                tab.setAttribute("aria-selected", i === 0 ? "true" : "false");
+                tab.dataset.target = r.id;
+                tab.innerHTML =
+                    r.label + (r.canon ? ' <span class="canon">canonical</span>' : "");
+                tabsEl.appendChild(tab);
+
+                const panel = document.createElement("div");
+                panel.className = "panel";
+                panel.id = "panel-" + r.id;
+                panel.dataset.active = i === 0 ? "true" : "false";
+                panel.innerHTML =
+                    `<pre><code>${highlight(r.code, r.lang)}</code></pre>` +
+                    `<p class="cap">${r.cap}</p>`;
+                panelsEl.appendChild(panel);
+            });
+
+            tabsEl.addEventListener("click", (e) => {
+                const tab = e.target.closest(".tab");
+                if (!tab) return;
+                for (const t of tabsEl.children)
+                    t.setAttribute(
+                        "aria-selected",
+                        t === tab ? "true" : "false",
+                    );
+                for (const p of panelsEl.children)
+                    p.dataset.active =
+                        p.id === "panel-" + tab.dataset.target ? "true" : "false";
+            });
+        </script>
+    </body>
+</html>
