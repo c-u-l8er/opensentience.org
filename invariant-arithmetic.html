@@ -72,6 +72,44 @@
                 padding: 56px 36px 120px;
             }
 
+            /* Sub-header arithmetic nav */
+            .bar {
+                position: sticky;
+                top: var(--amp-nav-height, 56px);
+                z-index: 50;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.55rem max(1.2rem, calc(50% - 540px));
+                background: rgba(244, 237, 224, 0.88);
+                backdrop-filter: blur(8px);
+                border-bottom: 1px solid var(--rule);
+                font-family: var(--font-mono);
+                font-size: 12.5px;
+            }
+            .bar .tag {
+                letter-spacing: 0.06em;
+                color: var(--ink-soft);
+            }
+            .bar .tag b {
+                color: var(--proved);
+                font-weight: 600;
+            }
+            .bar .spacer {
+                flex: 1;
+            }
+            .bar a {
+                color: var(--ink-soft);
+                text-decoration: none;
+                border-bottom: 1px solid transparent;
+            }
+            .bar a:hover {
+                border-color: var(--rule);
+            }
+            .bar a.here {
+                color: var(--proved);
+            }
+
             /* Masthead */
             header.mast {
                 border-bottom: 1px solid var(--ink);
@@ -578,6 +616,16 @@
     <body>
         <script type="module" src="/amp-nav.js"></script>
         <amp-nav property="invariant_arithmetic" theme="light"></amp-nav>
+        <div class="bar">
+            <span class="tag">OpenSentience · <b>Invariant Arithmetic</b> · v0.3</span>
+            <span class="spacer"></span>
+            <a href="#" class="here">invariant</a>  <a href="/deontic-arithmetic">deontic</a>
+            <a href="/temporal-arithmetic">temporal</a>
+            <a href="/reflexive-arithmetic">reflexive</a>
+            <a href="/epistemic-arithmetic">epistemic</a>
+            <a href="/strategic-arithmetic">strategic</a>
+            <a href="/resource-arithmetic">resource</a>
+        </div>
         <div class="wrap">
             <header class="mast">
                 <div class="eyebrow">
