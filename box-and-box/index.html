@@ -3,35 +3,37 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>box-and-box — the reference implementation, read it in full</title>
+        <title>box-and-box — reference implementation, read every line in five languages</title>
         <meta
             name="description"
-            content="The complete MIT-licensed reference implementation of the box-and-box governance kernel: eight modal rungs, one bridge, 97 property-tested laws. Read the real source in the browser, see the alethic floor ported to five languages."
+            content="The complete MIT-licensed reference implementation of the box-and-box governance kernel: eight modal rungs, one bridge, 97 property-tested laws. Read the real served source in a code-editor browser — JavaScript (canonical) plus working Python, Elixir, Rust and Go ports that each pass the identical 97-law suite."
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
         <style>
             :root {
-                --paper: #f4ede0;
-                --paper-deep: #ebe3d2;
-                --paper-soft: #f8f2e6;
-                --ink: #1a1814;
-                --ink-soft: #4a4538;
-                --ink-faint: #8a8472;
-                --rule: #c9bfa8;
-                --rule-soft: #ddd4bc;
-                --accent: #b8451f;
-                --accent-bg: #e9c8b4;
-                --green: #4a5d3a;
-                --green-bg: #c7d1b8;
-                --code-bg: #1f1c17;
-                --code-ink: #e8e0cf;
-                --code-cmt: #9b9075;
-                --code-ln: #6a6353;
+                --bg: #0d1117;
+                --panel: #161b22;
+                --panel-2: #1c2128;
+                --border: #30363d;
+                --border-soft: #21262d;
+                --text: #e6edf3;
+                --text-soft: #adbac7;
+                --text-faint: #768390;
+                --accent: #58a6ff;
+                --accent-soft: #1f6feb;
+                --green: #3fb950;
+                --green-bg: #2ea04326;
+                --amber: #e3b341;
+                --purple: #d2a8ff;
+                --red: #ff7b72;
+                --cyan: #76e3ea;
+                --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+                --sans: "Inter", system-ui, sans-serif;
             }
 
             * {
@@ -44,395 +46,494 @@
 
             body {
                 margin: 0;
-                background: var(--paper);
-                color: var(--ink);
-                font:
-                    400 17px/1.65 "Inter",
-                    system-ui,
-                    sans-serif;
+                background: var(--bg);
+                color: var(--text);
+                font: 400 16px/1.6 var(--sans);
                 -webkit-font-smoothing: antialiased;
             }
 
             .wrap {
-                max-width: 960px;
+                max-width: 1080px;
                 margin: 0 auto;
-                padding: 4rem 1.5rem 6rem;
+                padding: 3.5rem 1.5rem 6rem;
             }
 
-            h1,
-            h2,
-            h3 {
-                font-family: "Cormorant Garamond", Georgia, serif;
-                font-weight: 600;
-                color: var(--ink);
-                line-height: 1.15;
+            /* ---------- masthead ---------- */
+            .eyebrow {
+                font: 600 0.74rem/1 var(--mono);
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin: 0 0 1.1rem;
+                display: flex;
+                gap: 0.6rem;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            .eyebrow .dot {
+                color: var(--text-faint);
             }
 
             h1 {
-                font-size: clamp(2.4rem, 5vw + 1rem, 3.8rem);
-                margin: 0 0 0.4rem;
-                letter-spacing: -0.01em;
+                font: 700 clamp(2.6rem, 6vw, 4rem)/1 var(--mono);
+                margin: 0 0 0.7rem;
+                letter-spacing: -0.02em;
+                color: var(--text);
+            }
+            h1 .amp {
+                color: var(--accent);
             }
 
             .lede {
-                font-size: 1.3rem;
-                color: var(--ink-soft);
-                max-width: 44ch;
+                font-size: 1.2rem;
+                line-height: 1.55;
+                color: var(--text-soft);
+                max-width: 62ch;
                 margin: 0 0 2rem;
             }
-
+            .lede strong {
+                color: var(--text);
+                font-weight: 600;
+            }
             .lede code {
-                color: var(--accent);
+                font-family: var(--mono);
+                color: var(--cyan);
+                font-size: 0.92em;
             }
 
-            .eyebrow {
-                font:
-                    600 0.78rem/1 "JetBrains Mono",
-                    monospace;
-                letter-spacing: 0.22em;
+            /* ---------- install block ---------- */
+            .install {
+                background: var(--panel);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 1.1rem 1.3rem;
+                font: 500 0.88rem/1.95 var(--mono);
+                overflow-x: auto;
+                margin: 0 0 2.5rem;
+            }
+            .install .c {
+                color: var(--text-faint);
+            }
+            .install .p {
+                color: var(--green);
+            }
+            .install .arg {
+                color: var(--purple);
+            }
+
+            /* ---------- conformance strip ---------- */
+            .section-label {
+                font: 600 0.74rem/1 var(--mono);
+                letter-spacing: 0.14em;
                 text-transform: uppercase;
-                color: var(--accent);
-                margin: 0 0 1.2rem;
-            }
-
-            h2 {
-                font-size: clamp(1.7rem, 3vw + 0.5rem, 2.4rem);
-                margin: 3.5rem 0 0.3rem;
-                padding-top: 1.5rem;
-                border-top: 1px solid var(--rule);
-            }
-
-            h2 .sub {
-                display: block;
-                font:
-                    500 0.8rem/1.4 "JetBrains Mono",
-                    monospace;
-                letter-spacing: 0.04em;
-                text-transform: none;
-                color: var(--ink-faint);
-                margin-top: 0.5rem;
-            }
-
-            h3 {
-                font-size: 1.5rem;
-                margin: 2rem 0 0.4rem;
-            }
-
-            p {
+                color: var(--text-faint);
                 margin: 0 0 1rem;
             }
-
-            a {
-                color: var(--accent);
-                text-decoration-thickness: 1px;
-                text-underline-offset: 2px;
+            #chips {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+                gap: 0.7rem;
+                margin: 0 0 3rem;
             }
-
-            code {
-                font:
-                    500 0.92em/1.5 "JetBrains Mono",
-                    monospace;
-            }
-
-            /* ---- command / install block ---- */
-            .cmd {
-                background: var(--code-bg);
-                color: var(--code-ink);
-                border-radius: 8px;
-                padding: 1.1rem 1.3rem;
-                font:
-                    500 0.9rem/1.9 "JetBrains Mono",
-                    monospace;
-                overflow-x: auto;
-                margin: 1.2rem 0 2rem;
-            }
-            .cmd .c {
-                color: var(--code-cmt);
-            }
-            .cmd .p {
-                color: #d98c5f;
-            }
-
-            /* ---- rung table ---- */
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 1.5rem 0 2rem;
-                font-size: 0.95rem;
-            }
-            th,
-            td {
-                text-align: left;
-                padding: 0.55rem 0.7rem;
-                border-bottom: 1px solid var(--rule-soft);
-                vertical-align: top;
-            }
-            th {
-                font:
-                    600 0.72rem/1 "JetBrains Mono",
-                    monospace;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-                color: var(--ink-faint);
-            }
-            td .rung {
-                display: inline-block;
-                min-width: 1.4rem;
-                font-family: "JetBrains Mono", monospace;
-                font-weight: 700;
-                color: var(--accent);
-            }
-            td code {
-                color: var(--ink);
-            }
-            td .laws {
-                font:
-                    400 0.82rem/1.4 "JetBrains Mono",
-                    monospace;
-                color: var(--ink-faint);
-            }
-
-            /* ---- source browser ---- */
-            .src {
-                border: 1px solid var(--rule);
-                border-radius: 8px;
-                margin: 0.9rem 0;
-                background: var(--paper-soft);
-                overflow: hidden;
-            }
-            .src > summary {
-                cursor: pointer;
-                list-style: none;
-                padding: 0.85rem 1.1rem;
+            .chip {
+                background: var(--panel);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 0.85rem 1rem;
                 display: flex;
-                align-items: baseline;
-                gap: 0.8rem;
+                flex-direction: column;
+                gap: 0.35rem;
+            }
+            .chip__top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.5rem;
+            }
+            .chip__name {
+                font: 600 0.95rem/1 var(--mono);
+                color: var(--text);
+            }
+            .chip__name .canon {
+                color: var(--text-faint);
+                font-size: 0.66rem;
+                font-weight: 500;
+                letter-spacing: 0.04em;
+            }
+            .chip__badge {
+                font: 700 0.72rem/1 var(--mono);
+                color: var(--green);
+                background: var(--green-bg);
+                border: 1px solid #2ea04344;
+                padding: 0.28rem 0.5rem;
+                border-radius: 999px;
+                white-space: nowrap;
+            }
+            .chip__run {
+                font: 500 0.74rem/1.3 var(--mono);
+                color: var(--text-faint);
+            }
+            .chip__run::before {
+                content: "$ ";
+                color: var(--accent);
+            }
+
+            /* ---------- editor ---------- */
+            .editor {
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                overflow: hidden;
+                background: var(--panel);
+                box-shadow: 0 8px 40px #00000040;
+            }
+            .editor__head {
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                padding: 0.7rem 1rem;
+                background: var(--panel-2);
+                border-bottom: 1px solid var(--border);
                 flex-wrap: wrap;
             }
-            .src > summary::-webkit-details-marker {
-                display: none;
+            .lights {
+                display: flex;
+                gap: 0.45rem;
             }
-            .src > summary::before {
-                content: "▸";
-                color: var(--accent);
-                font-size: 0.8rem;
-                transition: transform 0.15s ease;
+            .lights i {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                display: block;
             }
-            .src[open] > summary::before {
-                transform: rotate(90deg);
+            .lights i:nth-child(1) {
+                background: #ff5f56;
             }
-            .src summary .file {
-                font:
-                    600 0.95rem/1 "JetBrains Mono",
-                    monospace;
-                color: var(--ink);
+            .lights i:nth-child(2) {
+                background: #ffbd2e;
             }
-            .src summary .rung-tag {
-                font:
-                    600 0.7rem/1 "JetBrains Mono",
-                    monospace;
-                letter-spacing: 0.08em;
+            .lights i:nth-child(3) {
+                background: #27c93f;
+            }
+            #langtabs {
+                display: flex;
+                gap: 0.3rem;
+                flex-wrap: wrap;
+            }
+            .langtab {
+                font: 600 0.82rem/1 var(--mono);
+                padding: 0.5rem 0.85rem;
+                border-radius: 7px;
+                border: 1px solid transparent;
+                background: transparent;
+                color: var(--text-faint);
+                cursor: pointer;
+                transition:
+                    background 0.12s ease,
+                    color 0.12s ease;
+            }
+            .langtab:hover {
+                color: var(--text-soft);
+                background: #ffffff0a;
+            }
+            .langtab[aria-selected="true"] {
+                color: var(--text);
+                background: var(--bg);
+                border-color: var(--border);
+            }
+            .langtab .sub {
+                font-size: 0.62rem;
+                color: var(--text-faint);
+                margin-left: 0.35rem;
+                font-weight: 500;
+            }
+
+            .editor__body {
+                display: grid;
+                grid-template-columns: 248px 1fr;
+                min-height: 560px;
+            }
+            #sidebar {
+                background: var(--panel);
+                border-right: 1px solid var(--border);
+                padding: 0.6rem 0;
+                overflow-y: auto;
+                max-height: 78vh;
+            }
+            .tree-group {
+                font: 600 0.66rem/1 var(--mono);
+                letter-spacing: 0.1em;
                 text-transform: uppercase;
+                color: var(--text-faint);
+                padding: 0.8rem 1rem 0.4rem;
+            }
+            .tree-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.4rem 1rem 0.4rem 1.1rem;
+                cursor: pointer;
+                border-left: 2px solid transparent;
+                font: 500 0.82rem/1.3 var(--mono);
+                color: var(--text-soft);
+            }
+            .tree-item:hover {
+                background: #ffffff08;
+            }
+            .tree-item[aria-current="true"] {
+                background: #1f6feb1a;
+                border-left-color: var(--accent);
+                color: var(--text);
+            }
+            .tree-item .ti-icon {
                 color: var(--accent);
-                background: var(--accent-bg);
-                padding: 0.25rem 0.5rem;
-                border-radius: 999px;
+                flex-shrink: 0;
             }
-            .src summary .desc {
-                color: var(--ink-faint);
-                font-size: 0.88rem;
+            .tree-item .ti-laws {
+                margin-left: auto;
+                font-size: 0.66rem;
+                color: var(--text-faint);
+            }
+            .tree-item .ti-name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .pane {
+                display: flex;
+                flex-direction: column;
+                background: var(--bg);
+                min-width: 0;
+            }
+            .pane__bar {
+                position: sticky;
+                top: 0;
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                padding: 0.6rem 1rem;
+                background: var(--bg);
+                border-bottom: 1px solid var(--border-soft);
+                flex-wrap: wrap;
+            }
+            .pane__path {
+                font: 500 0.8rem/1 var(--mono);
+                color: var(--text-soft);
+            }
+            .pane__path .role {
+                color: var(--text-faint);
+                margin-left: 0.5rem;
+            }
+            .pane__stat {
+                margin-left: auto;
+                font: 500 0.72rem/1 var(--mono);
+                color: var(--text-faint);
+            }
+            .pane__raw {
+                font: 500 0.74rem/1 var(--mono);
+                color: var(--accent);
+                text-decoration: none;
+            }
+            .pane__raw:hover {
+                text-decoration: underline;
+            }
+            #pane-body {
+                overflow: auto;
+                max-height: 78vh;
                 flex: 1;
-            }
-            .src summary .raw {
-                font:
-                    500 0.8rem/1 "JetBrains Mono",
-                    monospace;
             }
             pre {
                 margin: 0;
-                background: var(--code-bg);
-                color: var(--code-ink);
-                padding: 1rem 0;
-                overflow-x: auto;
-                font:
-                    400 13px/1.6 "JetBrains Mono",
-                    monospace;
+                padding: 0.8rem 0 1.4rem;
+                font: 400 12.5px/1.62 var(--mono);
                 tab-size: 2;
             }
-            pre code {
-                font: inherit;
+            .row {
+                display: flex;
             }
-            pre .ln {
-                display: inline-block;
-                width: 3.2em;
+            .gut {
+                width: 3.4em;
+                flex-shrink: 0;
                 padding-right: 1em;
-                margin-right: 0.4em;
                 text-align: right;
-                color: var(--code-ln);
-                border-right: 1px solid #34302820;
+                color: #484f58;
                 user-select: none;
             }
-            pre .cmt {
-                color: var(--code-cmt);
+            .ln {
+                white-space: pre;
+                padding-right: 1.2rem;
+            }
+            .row:hover {
+                background: #ffffff06;
+            }
+            .tk-cmt {
+                color: #768390;
                 font-style: italic;
             }
-            pre .loading,
-            pre .err {
-                display: block;
-                padding: 0 1.2rem;
-                color: var(--code-cmt);
+            .tk-str {
+                color: #a5d6ff;
             }
-            pre .err {
-                color: #d98c5f;
+            .tk-num {
+                color: #79c0ff;
+            }
+            .tk-kw {
+                color: #ff7b72;
+            }
+            .loading,
+            .err {
+                display: block;
+                padding: 1.2rem 1.4rem;
+                font: 500 0.85rem/1.5 var(--mono);
+                color: var(--text-faint);
+            }
+            .err {
+                color: var(--red);
+            }
+            .err a {
+                color: var(--accent);
             }
 
-            /* ---- rosetta ---- */
-            .note {
-                background: var(--paper-deep);
-                border-left: 3px solid var(--accent);
-                padding: 0.9rem 1.2rem;
-                border-radius: 0 6px 6px 0;
-                font-size: 0.95rem;
-                color: var(--ink-soft);
-                margin: 1.2rem 0 1.8rem;
+            /* ---------- prose + footer ---------- */
+            .prose {
+                max-width: 68ch;
+                margin: 3rem 0 0;
+                color: var(--text-soft);
             }
-            .tabs {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.4rem;
-                margin: 1.5rem 0 0;
+            .prose h2 {
+                font: 600 1.4rem/1.2 var(--sans);
+                color: var(--text);
+                margin: 2.5rem 0 0.6rem;
             }
-            .tab {
-                font:
-                    600 0.85rem/1 "JetBrains Mono",
-                    monospace;
-                padding: 0.5rem 0.9rem;
-                border: 1px solid var(--rule);
-                border-bottom: none;
-                border-radius: 6px 6px 0 0;
-                background: var(--paper-deep);
-                color: var(--ink-soft);
-                cursor: pointer;
+            .prose code {
+                font-family: var(--mono);
+                font-size: 0.88em;
+                color: var(--cyan);
+                background: var(--panel);
+                padding: 0.1rem 0.35rem;
+                border-radius: 5px;
             }
-            .tab[aria-selected="true"] {
-                background: var(--code-bg);
-                color: var(--code-ink);
-                border-color: var(--code-bg);
+            .prose strong {
+                color: var(--text);
             }
-            .tab .canon {
-                color: var(--green);
-                font-size: 0.65rem;
-            }
-            .tab[aria-selected="true"] .canon {
-                color: var(--green-bg);
-            }
-            .panel {
-                display: none;
-            }
-            .panel[data-active="true"] {
-                display: block;
-            }
-            .panel pre {
-                border-radius: 0 6px 6px 6px;
-            }
-            .panel .cap {
-                font-size: 0.85rem;
-                color: var(--ink-faint);
-                margin: 0.5rem 0 0;
+            .prose a {
+                color: var(--accent);
             }
 
             footer {
-                margin-top: 4rem;
+                margin-top: 3.5rem;
                 padding-top: 1.5rem;
-                border-top: 1px solid var(--rule);
-                font-size: 0.9rem;
-                color: var(--ink-faint);
+                border-top: 1px solid var(--border);
+                font: 500 0.86rem/1.5 var(--mono);
+                color: var(--text-faint);
                 display: flex;
                 gap: 1.4rem;
                 flex-wrap: wrap;
+            }
+            footer a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            footer a:hover {
+                text-decoration: underline;
+            }
+
+            @media (max-width: 720px) {
+                .editor__body {
+                    grid-template-columns: 1fr;
+                }
+                #sidebar {
+                    border-right: none;
+                    border-bottom: 1px solid var(--border);
+                    max-height: 220px;
+                }
             }
         </style>
     </head>
     <body>
         <div class="wrap">
-            <p class="eyebrow">Reference implementation · MIT</p>
-            <h1>box-and-box</h1>
+            <p class="eyebrow">
+                <span>Reference implementation</span>
+                <span class="dot">·</span><span>MIT</span>
+                <span class="dot">·</span><span>8 rungs</span>
+                <span class="dot">·</span><span>97 laws</span>
+            </p>
+            <h1><span class="amp">box</span>-and-<span class="amp">box</span></h1>
             <p class="lede">
                 The complete governance kernel — eight modal rungs, one bridge
                 (<code>feasible ▸ permitted ▸ best</code>), and
-                <strong>97 property-tested laws</strong>. Pure arithmetic: no
-                LLM, no network, no I/O. Read every line below, then take it to
-                your own language.
+                <strong>97 property-tested laws</strong> (2000 trials each). Pure
+                arithmetic: no LLM, no network, no I/O. Read every line below in
+                <strong>five languages</strong> — and every one passes the same
+                97-law suite. <em>The algebra, not the syntax, carries the
+                guarantee.</em>
             </p>
 
-            <div class="cmd">
+            <div class="install">
                 <span class="c"># the published package — read it, run it, port it</span><br />
                 <span class="p">npm</span> install -g box-and-box<br />
-                <span class="p">box-and-box</span> laws
-                <span class="c">&nbsp;&nbsp;# the 97-law conformance harness (2000 trials/law)</span><br />
-                <span class="p">box-and-box</span> govern decision.json
+                <span class="p">box-and-box</span> <span class="arg">laws</span>
+                <span class="c">&nbsp;&nbsp;# the 97-law conformance harness</span><br />
+                <span class="p">box-and-box</span> <span class="arg">govern</span> decision.json
                 <span class="c"># a real verdict → certificate JSON</span>
             </div>
 
-            <!-- ============ THE MODULES ============ -->
-            <h2>
-                The kernel, by rung
-                <span class="sub"
-                    >eight rungs + one bridge · click any file to read the real
-                    served source</span
-                >
-            </h2>
-            <p>
-                Each rung is a small, self-contained module. The
-                <strong>spec is the suite</strong>: pass
-                <code>test/laws.mjs</code> in your own language and your
-                verdicts are identical to everyone else's. The source below is
-                fetched live from this directory — what you read is exactly what
-                ships.
-            </p>
+            <!-- ============ CONFORMANCE STRIP ============ -->
+            <p class="section-label">Conformance — every language, the same 97 laws</p>
+            <div id="chips"></div>
 
-            <div id="modules"></div>
+            <!-- ============ THE SOURCE BROWSER ============ -->
+            <p class="section-label">Source browser — read the real served code</p>
+            <div class="editor">
+                <div class="editor__head">
+                    <span class="lights"><i></i><i></i><i></i></span>
+                    <div id="langtabs" role="tablist" aria-label="Language"></div>
+                </div>
+                <div class="editor__body">
+                    <nav id="sidebar" aria-label="Files"></nav>
+                    <div class="pane">
+                        <div class="pane__bar">
+                            <span class="pane__path" id="pane-path">value.mjs</span>
+                            <span class="pane__stat" id="pane-stat"></span>
+                            <a
+                                class="pane__raw"
+                                id="pane-raw"
+                                href="#"
+                                target="_blank"
+                                rel="noopener"
+                                >raw ↗</a
+                            >
+                        </div>
+                        <div id="pane-body">
+                            <pre><code class="loading">loading…</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rung</th>
-                        <th>File</th>
-                        <th>What it is</th>
-                        <th>Laws</th>
-                    </tr>
-                </thead>
-                <tbody id="rung-table"></tbody>
-            </table>
-
-            <!-- ============ ROSETTA ============ -->
-            <h2>
-                The kernel in your language
-                <span class="sub"
-                    >the alethic floor (<code>consume</code>) — the
-                    un-weakenable safety gate — in five languages</span
-                >
-            </h2>
-            <p>
-                The arithmetic is deliberately language-agnostic. Here is the
-                heart of rung 1 — <code>consume(value, requirements)</code>, the
-                boolean gate that every higher rung sits on top of — written
-                five ways.
-            </p>
-            <p class="note">
-                <strong>JavaScript is the conformance reference.</strong> A port
-                is <em>certified</em> by passing <code>test/laws.mjs</code> (all
-                97 laws, 2000 trials each) — not by looking right. The four
-                non-JS snippets are faithful, idiomatic
-                <em>translations</em> of the canonical source to show the shape
-                travels; they are illustrative until their language runs the law
-                suite. (The bundled Elixir host,
-                <code>aios/box_and_box_aios.ex</code>, follows the same rule — it
-                delegates to the verified JS CLI for real verdicts.)
-            </p>
-
-            <div class="tabs" id="rosetta-tabs" role="tablist"></div>
-            <div id="rosetta-panels"></div>
+            <div class="prose">
+                <h2>The spec is the suite</h2>
+                <p>
+                    Each rung is a small, self-contained module — a single
+                    algebraic structure: a product of monoids (alethic), a diamond
+                    status lattice (deontic), tropical / probability / log
+                    semirings (axiological), LTL formula progression (temporal),
+                    AGM revision with entrenchment (reflexive), S5 / KD45 modal
+                    logic (epistemic), ATL controllable-predecessor fixpoints
+                    (strategic), and a linear-logic double-entry ledger
+                    (resource).
+                </p>
+                <p>
+                    A port is <strong>faithful</strong> exactly when it satisfies
+                    the same equations under the same randomized trials. Run
+                    <code>node test/laws.mjs</code> — or <code>python3 laws.py</code>,
+                    <code>mix run run_laws.exs</code>, <code>cargo run --release</code>,
+                    <code>go run .</code> — and you get the identical
+                    <strong>97 / 97</strong>. JavaScript is the conformance
+                    reference; the Python, Elixir, Rust and Go ports were each
+                    checked against it. No external dependencies — every port runs
+                    offline on its language's standard library alone.
+                </p>
+            </div>
 
             <footer>
                 <a href="https://ampersandboxdesign.com">box-and-box kernel</a>
@@ -447,282 +548,320 @@
         <amp-nav property="box_and_box" theme="light"></amp-nav>
 
         <script>
-            // ---- module manifest: rung order 1..8 + core/cli/tests/host -------
-            const MODULES = [
-                { f: "value.mjs", rung: "1", lang: "js", tag: "alethic", desc: "feasibility — the consume floor", laws: "L1–L14" },
-                { f: "norm.mjs", rung: "2", lang: "js", tag: "deontic", desc: "permissions, CTD obligations", laws: "D1–D9" },
-                { f: "govern.mjs", rung: "2", lang: "js", tag: "deontic", desc: "the full verdict surface", laws: "DB1–DB3" },
-                { f: "score.mjs", rung: "3", lang: "js", tag: "axiological", desc: "semiring ranking of options", laws: "H1–H13" },
-                { f: "bridge.mjs", rung: "3", lang: "js", tag: "bridge", desc: "feasible ▸ permitted ▸ best", laws: "B1–B3" },
-                { f: "temporal.mjs", rung: "4", lang: "js", tag: "temporal", desc: "LTL safety/liveness over trajectories", laws: "T1–T8" },
-                { f: "supervise.mjs", rung: "4", lang: "js", tag: "temporal", desc: "monitor a running trajectory", laws: "TB1–TB3" },
-                { f: "resource.mjs", rung: "5", lang: "js", tag: "resource", desc: "the closed affine economy", laws: "C1–C8 · CB1–CB3" },
-                { f: "epistemic.mjs", rung: "6", lang: "js", tag: "epistemic", desc: "knowledge (S5) vs belief", laws: "E1–E8 · EB1–EB3" },
-                { f: "strategic.mjs", rung: "7", lang: "js", tag: "strategic", desc: "coalitional ability, ought-implies-can", laws: "S1–S8 · SB1–SB3" },
-                { f: "reflexive.mjs", rung: "8", lang: "js", tag: "reflexive", desc: "self-amending norms, entrenched core", laws: "R1–R8 · RB1–RB3" },
-                { f: "index.mjs", rung: "·", lang: "js", tag: "core", desc: "the package entry — re-exports every rung", laws: "—" },
-                { f: "bin/govern.mjs", rung: "·", lang: "js", tag: "cli", desc: "JSON in → certificate out (CI exit codes)", laws: "—" },
-                { f: "bin/arith.mjs", rung: "·", lang: "js", tag: "cli", desc: "the kernel CLI router", laws: "—" },
-                { f: "test/laws.mjs", rung: "·", lang: "js", tag: "spec", desc: "the conformance suite — the spec is the suite", laws: "97 laws" },
-                { f: "aios/box_and_box_aios.ex", rung: "·", lang: "ex", tag: "host", desc: "Elixir reference host (delegates to the JS CLI)", laws: "—" },
+            // ---- the 11 rung modules, in ladder order ------------------------
+            const RUNGS = [
+                { m: "value", rung: "ALETHIC", role: "feasibility · the consume floor", laws: "L1–L14" },
+                { m: "norm", rung: "DEONTIC", role: "permission lattice · CTD repair", laws: "D1–D9" },
+                { m: "govern", rung: "DEONTIC", role: "the three-modality verdict", laws: "DB1–DB3" },
+                { m: "score", rung: "AXIOLOGICAL", role: "semiring ranking of options", laws: "H1–H13" },
+                { m: "bridge", rung: "BRIDGE", role: "feasible ▸ permitted ▸ best", laws: "B1–B3" },
+                { m: "temporal", rung: "TEMPORAL", role: "LTL formula progression", laws: "T1–T8" },
+                { m: "supervise", rung: "TEMPORAL", role: "trajectory safety shield", laws: "TB1–TB3" },
+                { m: "resource", rung: "RESOURCE", role: "linear-logic ledger", laws: "C1–C8" },
+                { m: "epistemic", rung: "EPISTEMIC", role: "S5 / KD45 knowledge & belief", laws: "E1–E8" },
+                { m: "strategic", rung: "STRATEGIC", role: "ATL coalition ability", laws: "S1–S8" },
+                { m: "reflexive", rung: "REFLEXIVE", role: "AGM self-revision · entrenchment", laws: "R1–R8" },
             ];
 
-            const esc = (s) =>
-                s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-            // line numbers + dim line-comments (// for JS, # for Elixir). Safe:
-            // escape first, then wrap trailing line-comments only.
-            function highlight(src, lang) {
-                const cmt = lang === "ex" ? /(#.*)$/ : /(\/\/.*)$/;
-                return esc(src)
-                    .split("\n")
-                    .map((ln, i) => {
-                        const body = ln.replace(cmt, '<span class="cmt">$1</span>');
-                        return `<span class="ln">${i + 1}</span>${body}`;
-                    })
-                    .join("\n");
-            }
-
-            const modulesEl = document.getElementById("modules");
-            const tableEl = document.getElementById("rung-table");
-
-            for (const m of MODULES) {
-                // rung table row
-                const tr = document.createElement("tr");
-                tr.innerHTML =
-                    `<td><span class="rung">${m.rung}</span></td>` +
-                    `<td><code>${m.f}</code></td>` +
-                    `<td>${m.desc}</td>` +
-                    `<td class="laws">${m.laws}</td>`;
-                tableEl.appendChild(tr);
-
-                // collapsible source viewer
-                const d = document.createElement("details");
-                d.className = "src";
-                d.innerHTML =
-                    `<summary>` +
-                    `<span class="file">${m.f}</span>` +
-                    `<span class="rung-tag">${m.tag}</span>` +
-                    `<span class="desc">${m.desc}</span>` +
-                    `<a class="raw" href="./${m.f}" target="_blank" rel="noopener">raw ↗</a>` +
-                    `</summary>` +
-                    `<pre><code class="loading">loading ./${m.f} …</code></pre>`;
-                modulesEl.appendChild(d);
-
-                const codeEl = d.querySelector("code");
-                let loaded = false;
-                d.addEventListener("toggle", async () => {
-                    if (!d.open || loaded) return;
-                    loaded = true;
-                    try {
-                        const res = await fetch("./" + m.f);
-                        if (!res.ok) throw new Error("HTTP " + res.status);
-                        const txt = await res.text();
-                        codeEl.className = "";
-                        codeEl.innerHTML = highlight(txt, m.lang);
-                    } catch (e) {
-                        loaded = false;
-                        codeEl.className = "err";
-                        codeEl.textContent =
-                            "could not load ./" + m.f + " (" + e.message +
-                            "). Open the raw file, or browse the package on npm.";
-                    }
-                });
-            }
-
-            // ---- ROSETTA: consume() in five languages ------------------------
-            const ROSETTA = [
+            // ---- the five languages, each a real running port ----------------
+            const LANGS = [
                 {
-                    id: "js",
+                    key: "js",
                     label: "JavaScript",
-                    canon: true,
-                    lang: "js",
-                    cap: "Canonical source — extracted verbatim from value.mjs.",
-                    code: `// consume : Value × Requirements → {ok, failures, value}
-// the correctness gate (a predicate, not an operation on Value).
-export function consume(v, req = {}) {
-  const failures = [];
-  if (req.beta_min != null && v.beta < req.beta_min)
-    failures.push({ family: 'β', why: \`β=\${round(v.beta)} < β_min=\${req.beta_min}\` });
-  if (req.sigma_empty && v.sigma.length > 0)
-    failures.push({ family: 'σ', why: \`unresolved conflicts {\${v.sigma.join(', ')}}\` });
-  if (req.acyclic && v.kappa)
-    failures.push({ family: 'κ', why: 'cyclic — self-reference detected' });
-  if (req.phase && v.pi !== req.phase)
-    failures.push({ family: 'π', why: \`phase \${v.pi} ≠ required \${req.phase}\` });
-  if (req.forward_from && v.pi != null && phaseIdx(v.pi) < phaseIdx(req.forward_from))
-    failures.push({ family: 'π', why: \`phase \${v.pi} precedes \${req.forward_from}\` });
-  if (req.deny_default === 'must_allow' && v.denyDefault === true && req.authorized !== true)
-    failures.push({ family: 'governance', why: 'deny_default with empty authority_path' });
-  return { ok: failures.length === 0, failures, value: v };
-}`,
+                    sub: "canonical",
+                    comment: "//",
+                    base: "./",
+                    run: "node test/laws.mjs",
+                    path: (m) => m + ".mjs",
+                    testPath: "test/laws.mjs",
+                    testName: "laws.mjs",
                 },
                 {
-                    id: "py",
+                    key: "python",
                     label: "Python",
-                    lang: "py",
-                    cap: "Illustrative port. Certify by porting test/laws.mjs.",
-                    code: `# consume(value, requirements) -> {ok, failures, value}
-# the alethic floor: a predicate, not an operation on Value.
-PHASES = ["retrieve", "route", "act", "learn", "consolidate"]
-phase_idx = lambda p: PHASES.index(p) if p in PHASES else -1
-
-def consume(v, req=None):
-    req = req or {}
-    fails = []
-    if req.get("beta_min") is not None and v["beta"] < req["beta_min"]:
-        fails.append(("β", f"β={v['beta']:.3f} < β_min={req['beta_min']}"))
-    if req.get("sigma_empty") and v["sigma"]:
-        fails.append(("σ", f"unresolved conflicts {{{', '.join(v['sigma'])}}}"))
-    if req.get("acyclic") and v["kappa"]:
-        fails.append(("κ", "cyclic — self-reference detected"))
-    if req.get("phase") and v["pi"] != req["phase"]:
-        fails.append(("π", f"phase {v['pi']} ≠ required {req['phase']}"))
-    if req.get("forward_from") and v["pi"] is not None \\
-            and phase_idx(v["pi"]) < phase_idx(req["forward_from"]):
-        fails.append(("π", f"phase {v['pi']} precedes {req['forward_from']}"))
-    if req.get("deny_default") == "must_allow" \\
-            and v["denyDefault"] and req.get("authorized") is not True:
-        fails.append(("governance", "deny_default with empty authority_path"))
-    return {"ok": not fails, "failures": fails, "value": v}`,
+                    sub: "port",
+                    comment: "#",
+                    base: "./ports/python/",
+                    run: "python3 laws.py",
+                    path: (m) => m + ".py",
+                    testPath: "laws.py",
+                    testName: "laws.py",
                 },
                 {
-                    id: "ex",
+                    key: "elixir",
                     label: "Elixir",
-                    lang: "ex",
-                    cap: "Illustrative port. Certify by porting test/laws.mjs.",
-                    code: `# consume(value, requirements) -> %{ok:, failures:, value:}
-# the alethic floor: a predicate over a Value map.
-@phases ~w(retrieve route act learn consolidate)
-defp phase_idx(p), do: Enum.find_index(@phases, &(&1 == p)) || -1
-
-def consume(v, req \\\\ %{}) do
-  fails =
-    []
-    |> gate(req[:beta_min] && v.beta < req[:beta_min],
-            {"β", "β=#{v.beta} < β_min=#{req[:beta_min]}"})
-    |> gate(req[:sigma_empty] && v.sigma != [],
-            {"σ", "unresolved conflicts {#{Enum.join(v.sigma, ", ")}}"})
-    |> gate(req[:acyclic] && v.kappa,
-            {"κ", "cyclic — self-reference detected"})
-    |> gate(req[:phase] && v.pi != req[:phase],
-            {"π", "phase #{v.pi} ≠ required #{req[:phase]}"})
-    |> gate(req[:forward_from] && v.pi != nil &&
-              phase_idx(v.pi) < phase_idx(req[:forward_from]),
-            {"π", "phase #{v.pi} precedes #{req[:forward_from]}"})
-  %{ok: fails == [], failures: Enum.reverse(fails), value: v}
-end
-
-defp gate(acc, true, failure), do: [failure | acc]
-defp gate(acc, _falsey, _failure), do: acc`,
+                    sub: "port",
+                    comment: "#",
+                    base: "./ports/elixir/",
+                    run: "mix run run_laws.exs",
+                    path: (m) => "lib/box_and_box/" + m + ".ex",
+                    testPath: "lib/box_and_box/laws.ex",
+                    testName: "laws.ex",
                 },
                 {
-                    id: "rs",
+                    key: "rust",
                     label: "Rust",
-                    lang: "rs",
-                    cap: "Illustrative port. Certify by porting test/laws.mjs.",
-                    code: `// consume(&Value, &Req) -> the alethic floor.
-// ok == failures.is_empty().
-pub const PHASES: [&str; 5] = ["retrieve", "route", "act", "learn", "consolidate"];
-fn phase_idx(p: &str) -> i32 {
-    PHASES.iter().position(|&x| x == p).map_or(-1, |i| i as i32)
-}
-
-pub fn consume(v: &Value, req: &Req) -> Vec<(char, String)> {
-    let mut f = Vec::new();
-    if let Some(b) = req.beta_min {
-        if v.beta < b { f.push(('β', format!("β={:.3} < β_min={}", v.beta, b))); }
-    }
-    if req.sigma_empty && !v.sigma.is_empty() {
-        f.push(('σ', format!("unresolved conflicts {{{}}}", v.sigma.join(", "))));
-    }
-    if req.acyclic && v.kappa {
-        f.push(('κ', "cyclic — self-reference detected".into()));
-    }
-    if let Some(p) = &req.phase {
-        if v.pi.as_deref() != Some(p) {
-            f.push(('π', format!("phase {:?} ≠ required {}", v.pi, p)));
-        }
-        if let Some(cur) = &v.pi {
-            if phase_idx(cur) < phase_idx(p) {
-                f.push(('π', format!("phase {} precedes {}", cur, p)));
-            }
-        }
-    }
-    f
-}`,
+                    sub: "port",
+                    comment: "//",
+                    base: "./ports/rust/",
+                    run: "cargo run --release",
+                    path: (m) => "src/" + m + ".rs",
+                    testPath: "src/main.rs",
+                    testName: "main.rs",
                 },
                 {
-                    id: "go",
+                    key: "go",
                     label: "Go",
-                    lang: "go",
-                    cap: "Illustrative port. Certify by porting test/laws.mjs.",
-                    code: `// Consume is the alethic floor; ok == len(failures) == 0.
-var Phases = []string{"retrieve", "route", "act", "learn", "consolidate"}
-
-func phaseIdx(p string) int {
-    for i, x := range Phases {
-        if x == p {
-            return i
-        }
-    }
-    return -1
-}
-
-func Consume(v Value, req Req) (ok bool, failures [][2]string) {
-    add := func(fam, why string) { failures = append(failures, [2]string{fam, why}) }
-    if req.BetaMin != nil && v.Beta < *req.BetaMin {
-        add("β", fmt.Sprintf("β=%.3f < β_min=%g", v.Beta, *req.BetaMin))
-    }
-    if req.SigmaEmpty && len(v.Sigma) > 0 {
-        add("σ", fmt.Sprintf("unresolved conflicts {%s}", strings.Join(v.Sigma, ", ")))
-    }
-    if req.Acyclic && v.Kappa {
-        add("κ", "cyclic — self-reference detected")
-    }
-    if req.Phase != "" && v.Pi != req.Phase {
-        add("π", fmt.Sprintf("phase %s ≠ required %s", v.Pi, req.Phase))
-    }
-    return len(failures) == 0, failures
-}`,
+                    sub: "port",
+                    comment: "//",
+                    base: "./ports/go/",
+                    run: "go run .",
+                    path: (m) => m + ".go",
+                    testPath: "laws.go",
+                    testName: "laws.go",
                 },
             ];
 
-            const tabsEl = document.getElementById("rosetta-tabs");
-            const panelsEl = document.getElementById("rosetta-panels");
+            // ---- minimal multi-language syntax highlighter -------------------
+            const KEYWORDS = (
+                "export import from default function const let var return if else for while " +
+                "of in new class extends typeof null true false undefined this async await " +
+                "def lambda None True False elif pass raise yield with as not and or is " +
+                "global nonlocal try except finally import from class self " +
+                "defmodule defp def do end fn when case cond nil rescue use alias require " +
+                "pub fn let mut struct enum impl trait match self Some None Ok Err use mod " +
+                "where ref move as dyn unsafe loop continue break crate super " +
+                "func package type interface map range go chan defer select var const struct " +
+                "switch case fallthrough goto"
+            ).split(/\s+/);
+            const KW_SET = new Set(KEYWORDS);
 
-            ROSETTA.forEach((r, i) => {
-                const tab = document.createElement("button");
-                tab.className = "tab";
-                tab.setAttribute("role", "tab");
-                tab.setAttribute("aria-selected", i === 0 ? "true" : "false");
-                tab.dataset.target = r.id;
-                tab.innerHTML =
-                    r.label + (r.canon ? ' <span class="canon">canonical</span>' : "");
-                tabsEl.appendChild(tab);
+            function escapeHtml(s) {
+                return s
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            }
 
-                const panel = document.createElement("div");
-                panel.className = "panel";
-                panel.id = "panel-" + r.id;
-                panel.dataset.active = i === 0 ? "true" : "false";
-                panel.innerHTML =
-                    `<pre><code>${highlight(r.code, r.lang)}</code></pre>` +
-                    `<p class="cap">${r.cap}</p>`;
-                panelsEl.appendChild(panel);
-            });
+            // tokenize a single line: comment first, then strings, numbers, keywords
+            function highlightLine(line, commentTok) {
+                // find comment start that is not inside a string
+                let inStr = null;
+                let codePart = line;
+                let cmtPart = "";
+                for (let i = 0; i < line.length; i++) {
+                    const ch = line[i];
+                    if (inStr) {
+                        if (ch === inStr && line[i - 1] !== "\\") inStr = null;
+                        continue;
+                    }
+                    if (ch === '"' || ch === "'" || ch === "`") {
+                        inStr = ch;
+                        continue;
+                    }
+                    if (commentTok === "//" && ch === "/" && line[i + 1] === "/") {
+                        codePart = line.slice(0, i);
+                        cmtPart = line.slice(i);
+                        break;
+                    }
+                    if (commentTok === "#" && ch === "#") {
+                        codePart = line.slice(0, i);
+                        cmtPart = line.slice(i);
+                        break;
+                    }
+                }
 
-            tabsEl.addEventListener("click", (e) => {
-                const tab = e.target.closest(".tab");
-                if (!tab) return;
-                for (const t of tabsEl.children)
-                    t.setAttribute(
+                // tokenize codePart: split on strings, then numbers/keywords
+                let out = "";
+                const re = /(`(?:[^`\\]|\\.)*`?|"(?:[^"\\]|\\.)*"?|'(?:[^'\\]|\\.)*'?)|([A-Za-z_]\w*)|(\b\d[\d_.]*\b)|([^A-Za-z0-9_"'`]+)/g;
+                let m;
+                while ((m = re.exec(codePart)) !== null) {
+                    if (m[1] != null) {
+                        out += '<span class="tk-str">' + escapeHtml(m[1]) + "</span>";
+                    } else if (m[2] != null) {
+                        out += KW_SET.has(m[2])
+                            ? '<span class="tk-kw">' + m[2] + "</span>"
+                            : escapeHtml(m[2]);
+                    } else if (m[3] != null) {
+                        out += '<span class="tk-num">' + escapeHtml(m[3]) + "</span>";
+                    } else {
+                        out += escapeHtml(m[4]);
+                    }
+                }
+                if (cmtPart) out += '<span class="tk-cmt">' + escapeHtml(cmtPart) + "</span>";
+                return out;
+            }
+
+            function render(src, commentTok) {
+                const lines = src.replace(/\n$/, "").split("\n");
+                let html = "<pre>";
+                for (let i = 0; i < lines.length; i++) {
+                    html +=
+                        '<div class="row"><span class="gut">' +
+                        (i + 1) +
+                        '</span><span class="ln">' +
+                        (lines[i] === "" ? " " : highlightLine(lines[i], commentTok)) +
+                        "</span></div>";
+                }
+                return html + "</pre>";
+            }
+
+            // ---- state + DOM -------------------------------------------------
+            const state = { langKey: "js", moduleKey: "value", isTest: false };
+            const chipsEl = document.getElementById("chips");
+            const langtabsEl = document.getElementById("langtabs");
+            const sidebarEl = document.getElementById("sidebar");
+            const paneBody = document.getElementById("pane-body");
+            const panePath = document.getElementById("pane-path");
+            const paneStat = document.getElementById("pane-stat");
+            const paneRaw = document.getElementById("pane-raw");
+
+            const langOf = (k) => LANGS.find((l) => l.key === k);
+
+            function buildChips() {
+                chipsEl.innerHTML = "";
+                for (const l of LANGS) {
+                    const c = document.createElement("div");
+                    c.className = "chip";
+                    c.innerHTML =
+                        '<div class="chip__top">' +
+                        '<span class="chip__name">' +
+                        l.label +
+                        (l.sub === "canonical"
+                            ? ' <span class="canon">canonical</span>'
+                            : "") +
+                        "</span>" +
+                        '<span class="chip__badge">97 / 97 ✓</span>' +
+                        "</div>" +
+                        '<span class="chip__run">' +
+                        l.run +
+                        "</span>";
+                    chipsEl.appendChild(c);
+                }
+            }
+
+            function buildLangTabs() {
+                langtabsEl.innerHTML = "";
+                for (const l of LANGS) {
+                    const b = document.createElement("button");
+                    b.className = "langtab";
+                    b.setAttribute("role", "tab");
+                    b.setAttribute(
                         "aria-selected",
-                        t === tab ? "true" : "false",
+                        l.key === state.langKey ? "true" : "false",
                     );
-                for (const p of panelsEl.children)
-                    p.dataset.active =
-                        p.id === "panel-" + tab.dataset.target ? "true" : "false";
-            });
+                    b.innerHTML =
+                        l.label + '<span class="sub">' + l.sub + "</span>";
+                    b.addEventListener("click", () => {
+                        state.langKey = l.key;
+                        buildLangTabs();
+                        buildSidebar();
+                        loadFile();
+                    });
+                    langtabsEl.appendChild(b);
+                }
+            }
+
+            function buildSidebar() {
+                const l = langOf(state.langKey);
+                sidebarEl.innerHTML = "";
+
+                const g1 = document.createElement("div");
+                g1.className = "tree-group";
+                g1.textContent = "the eight rungs";
+                sidebarEl.appendChild(g1);
+
+                for (const r of RUNGS) {
+                    const it = document.createElement("div");
+                    it.className = "tree-item";
+                    it.setAttribute("role", "button");
+                    it.setAttribute(
+                        "aria-current",
+                        !state.isTest && r.m === state.moduleKey
+                            ? "true"
+                            : "false",
+                    );
+                    it.title = r.rung + " — " + r.role;
+                    it.innerHTML =
+                        '<span class="ti-icon">›</span>' +
+                        '<span class="ti-name">' +
+                        l.path(r.m).split("/").pop() +
+                        "</span>" +
+                        '<span class="ti-laws">' +
+                        r.laws +
+                        "</span>";
+                    it.addEventListener("click", () => {
+                        state.moduleKey = r.m;
+                        state.isTest = false;
+                        buildSidebar();
+                        loadFile();
+                    });
+                    sidebarEl.appendChild(it);
+                }
+
+                const g2 = document.createElement("div");
+                g2.className = "tree-group";
+                g2.textContent = "conformance suite";
+                sidebarEl.appendChild(g2);
+
+                const t = document.createElement("div");
+                t.className = "tree-item";
+                t.setAttribute("role", "button");
+                t.setAttribute("aria-current", state.isTest ? "true" : "false");
+                t.title = "the 97-law property suite";
+                t.innerHTML =
+                    '<span class="ti-icon">✓</span>' +
+                    '<span class="ti-name">' +
+                    l.testName +
+                    "</span>" +
+                    '<span class="ti-laws">97</span>';
+                t.addEventListener("click", () => {
+                    state.isTest = true;
+                    buildSidebar();
+                    loadFile();
+                });
+                sidebarEl.appendChild(t);
+            }
+
+            async function loadFile() {
+                const l = langOf(state.langKey);
+                const rel = state.isTest ? l.testPath : l.path(state.moduleKey);
+                const url = l.base + rel;
+                const role = state.isTest
+                    ? "the 97-law conformance suite"
+                    : (RUNGS.find((r) => r.m === state.moduleKey) || {}).role || "";
+
+                panePath.innerHTML =
+                    rel + '<span class="role">' + role + "</span>";
+                paneRaw.href = url;
+                paneStat.textContent = "";
+                paneBody.innerHTML =
+                    '<code class="loading">loading ' + url + " …</code>";
+
+                try {
+                    const res = await fetch(url, { cache: "no-cache" });
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    const txt = await res.text();
+                    const lineCount = txt.replace(/\n$/, "").split("\n").length;
+                    paneStat.textContent = lineCount + " lines";
+                    paneBody.innerHTML = render(txt, l.comment);
+                    paneBody.scrollTop = 0;
+                } catch (e) {
+                    paneBody.innerHTML =
+                        '<span class="err">could not load ' +
+                        url +
+                        " (" +
+                        e.message +
+                        '). <a href="' +
+                        url +
+                        '" target="_blank" rel="noopener">open raw ↗</a></span>';
+                }
+            }
+
+            buildChips();
+            buildLangTabs();
+            buildSidebar();
+            loadFile();
         </script>
     </body>
 </html>

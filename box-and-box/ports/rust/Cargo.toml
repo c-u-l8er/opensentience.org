@@ -1,0 +1,15 @@
+[package]
+name = "box_and_box"
+version = "0.1.0"
+edition = "2021"
+description = "Rust port of the box-and-box governance kernel; passes the same 97-law conformance suite as the JavaScript reference."
+
+# ZERO external dependencies — std only, builds offline.
+[dependencies]
+
+[[bin]]
+name = "laws"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 3
