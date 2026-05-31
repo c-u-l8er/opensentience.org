@@ -1,0 +1,8 @@
+# build artifacts — ports are source-only
+elixir/_build/
+elixir/deps/
+python/__pycache__/
+**/__pycache__/
+rust/target/
+rust/Cargo.lock
+go/box-and-box
