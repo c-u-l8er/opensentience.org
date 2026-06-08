@@ -1,7 +1,7 @@
 package main
 
-// laws.go — the 97-law property suite (port of test/laws.mjs). 2000 trials/law.
-// JavaScript is the conformance reference; this port passes the same 97 laws.
+// laws.go — the 103-law property suite (port of test/laws.mjs). 2000 trials/law.
+// JavaScript is the conformance reference; this port passes the same 103 laws.
 
 import (
 	"math"

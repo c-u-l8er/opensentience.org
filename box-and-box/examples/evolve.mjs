@@ -6,6 +6,8 @@ import { govern } from '../govern.mjs';
 import { always, atom } from '../temporal.mjs';
 import { TemporalSpec, supervise } from '../supervise.mjs';
 import { Policy, enact, repeal, amend, entrench, revise, stabilize, digest } from '../reflexive.mjs';
+import { Ledger, SINK, balance } from '../resource.mjs';
+import { evolve, chain, verify } from '../evolution.mjs';
 
 // a starting constitution: forbid leaking secrets (entrenched) + a temporal safety floor (entrenched)
 let P = Policy({
@@ -43,5 +45,36 @@ import('../value.mjs').then(({ V }) => {
   console.log('\n  the entrenched safety floor still holds over trajectories:');
   console.log(`     supervise([β0.9, β0.5]) → safe: ${sup.safe}` + (sup.safe ? '' : `, violated at step ${sup.reports[0].violatedAt}`));
   console.log('\n  The system rewrote itself five times. It could add duties and tighten the floor,');
-  console.log('  but every attempt to relax the constitution was refused.\n');
+  console.log('  but every attempt to relax the constitution was refused.');
+
+  // ── the EVOLUTION surface: reflexive ALONE asks "may it change?"; evolve also asks
+  //    "did it measurably improve, and is the change worth its price?" — and certifies the answer.
+  console.log('\n  ─'.repeat(36));
+  console.log('  The evolution surface — measured · priced · certified (joins reflexive ▸ score ▸ resource):\n');
+  let L = Ledger({ kind: { budget: 'depletable' }, bal: { self: { budget: 5 }, [SINK]: {} } });
+  const certs = [];
+  const tryEvolve = (label, am, ev) => {
+    const r = evolve(P, am, { ...ev, ledger: L, account: 'self', resource: 'budget' });
+    certs.push(r.certificate); if (r.decision === 'accept') { P = r.policy; L = r.ledger; }
+    const v = r.certificate.verified;
+    console.log(`  ${r.decision === 'accept' ? '✓ accept  ' : r.decision === 'escalate' ? '⤴ escalate' : '✗ reject  '} · ${label}`);
+    console.log(`              ${r.reason}  ·  Δ=${r.certificate.observed}${v == null ? '' : `  ·  prediction ${v ? 'verified' : 'BROKEN'}`}  ·  cert ${r.record.id}`);
+  };
+  // a worthwhile, non-regressing amendment with a self-declared prediction, priced at 2 budget
+  tryEvolve('enact oblige-log-decisions (predict +3, costs 2)',
+    { ...enact(Norm({ id: 'oblige-log', modality: 'obligatory', priority: 3, target: 'log', condition: (c) => c.acts }), { time: 6 }), predict: 3 },
+    { before: [5, 5], after: [8, 5], price: 2 });
+  // a change that REGRESSES a guard — refused regardless of price/ability (the L-E6 crux)
+  tryEvolve('enact a change that drops guard #2 (regression)',
+    enact(Norm({ id: 'risky', modality: 'obligatory', priority: 2, target: 'risk', condition: (c) => c.acts }), { time: 7 }),
+    { before: [5, 5], after: [9, 2], price: 1 });
+  // trying to weaken the entrenched floor — refused even with stellar improvement evidence
+  tryEvolve('amend forbid-leak → permitted (weaken the floor)',
+    amend('forbid-leak', Norm({ id: 'forbid-leak', modality: 'permitted' }), { time: 8 }),
+    { before: [5, 5], after: [99, 99], price: 0 });
+
+  const log = chain(certs);                       // every verdict committed to a provenance chain
+  const ok = verify(log);
+  console.log(`\n  provenance chain: ${log.length} certificates, head ${ok.head} — replay integrity ${ok.ok ? 'OK' : 'BROKEN'}`);
+  console.log(`  budget remaining: ${balance(L, 'self', 'budget')} (only the worthwhile, admissible, non-regressing change was paid for)\n`);
 });

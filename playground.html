@@ -100,12 +100,12 @@
   <!-- LAWS -->
   <section>
     <h2>1 · The laws hold</h2>
-    <p class="sub">the cross-layer sandbox — all eight rungs &amp; their bridges (all 97 laws): invariant · heuristic · bridge · deontic · temporal · reflexive · epistemic · strategic · resource. The exact suite <code>node test/laws.mjs</code> runs.</p>
+    <p class="sub">the cross-layer sandbox — all eight rungs &amp; their bridges (the 103-law core suite): invariant · heuristic · bridge · deontic · temporal · reflexive · epistemic · strategic · resource. The exact suite <code>node test/laws.mjs</code> runs in-browser below. The package ships <b>116 laws total</b> — the remaining 13 are the compose/CC2 laws (<code>&amp;</code> combine · <code>|&gt;</code> pipeline · <code>⊗</code> cross), run separately via <code>node test/compose-laws.mjs</code>.</p>
     <p>The proof it's the real algebra and not a story: each law checked against random values. Switch the semiring in the top bar and re-run — idempotence (H6) holds only on the tropical dioid.</p>
     <div class="panel">
       <button class="btn" id="runLaws">Run all laws →</button>
       <div class="stats" style="margin-top:1rem">
-        <span><b id="l-total">97</b>laws</span><span class="ok"><b id="l-pass">—</b>passing</span>
+        <span><b id="l-total">103</b>laws</span><span class="ok"><b id="l-pass">—</b>passing</span>
         <span class="no"><b id="l-fail">—</b>failing</span><span><b id="l-ms">—</b>ms</span>
       </div>
       <div id="lawout"></div>
@@ -146,7 +146,7 @@
 "use strict";
 // The playground imports the REAL kernel modules (a same-origin served copy of
 // AmpersandBoxDesign/box-and-box) — there is no inlined re-implementation here.
-// The law suite is the exact 97-law table that `node test/laws.mjs` runs; the
+// The law suite is the exact 103-law table that `node test/laws.mjs` runs; the
 // run-block in that file is Node-only (guarded by typeof window), so importing
 // it in the browser yields just SUITES / runSet / setSemiring.
 import { V, combine, chain, consume, deliberate, reconcile, promote, digest } from '/box-and-box/value.mjs';

@@ -1,5 +1,5 @@
 {
-  "lawCount": 97,
+  "lawCount": 103,
   "trials": 2000,
   "bridge": "feasible ▸ permitted ▸ best",
   "rungs": [
@@ -11,5 +11,5 @@
     { "n": "7", "key": "strategic", "name": "Strategic Arithmetic", "modal": "strategic", "desc": "coalition power · who can ensure it", "page": "/strategic-arithmetic.html" },
     { "n": "8", "key": "resource", "name": "Resource Arithmetic", "modal": "resource", "desc": "affine ledger · can we afford it", "page": "/resource-arithmetic.html" }
   ],
-  "playground": { "page": "/playground.html", "lawsWired": 97 }
+  "playground": { "page": "/playground.html", "lawsWired": 103 }
 }

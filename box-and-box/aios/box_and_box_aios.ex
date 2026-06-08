@@ -7,7 +7,7 @@
 #   1. BoxAndBox.Kernel + the Demo — an ILLUSTRATIVE inline mini-verdict that shows the
 #      kernel-as-host *shape*. It is a teaching artifact and is NOT itself conformant.
 #   2. BoxAndBox.Conformant — the REAL path: it shells out to the conformance-tested JS
-#      engine (`bin/govern.mjs`, the 97-law substrate that lives beside this file) and
+#      engine (`bin/govern.mjs`, the 103-law substrate that lives beside this file) and
 #      returns its certificate. Same arithmetic, same verdict, in any host language.
 #
 # So if you want a verdict you can trust, call BoxAndBox.Conformant.govern/1 (it requires
@@ -28,7 +28,7 @@
 # whose entrenched floor (ring 0) can never be weakened. Every verdict ships a certificate.
 #
 # This file is the reference *host*. The conformance-tested verdict engine is `box-and-box`
-# (the npm / edge package — 97 property-tested laws); this Elixir kernel speaks the same
+# (the npm / edge package — 103 property-tested laws); this Elixir kernel speaks the same
 # arithmetic, so a verdict here and a verdict there are identical. Agents may be any model:
 # Claude, GPT, Gemini, a local 7B. To the kernel they are all just processes making syscalls.
 
@@ -72,7 +72,7 @@ end
 defmodule BoxAndBox.Conformant do
   @moduledoc """
   The REAL, conformance-tested verdict — by delegating to the box-and-box JS CLI (the
-  97-law engine). This is how a host in ANY language stays conformant: don't re-derive
+  103-law engine). This is how a host in ANY language stays conformant: don't re-derive
   the arithmetic, call the verified engine and read the certificate. Dependency-free —
   it shells out via `System.cmd/3` and reports a verdict tag from the CLI's exit code.
   """

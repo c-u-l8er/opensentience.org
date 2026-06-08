@@ -1,8 +1,9 @@
-// main.rs — the 97-law property-test harness (faithful port of test/laws.mjs).
-// Run: cargo run --release    (2000 trials/law; exits 0 iff all 97 pass)
+// main.rs — the 103-law property-test harness (faithful port of test/laws.mjs).
+// Run: cargo run --release    (2000 trials/law; exits 0 iff all 103 pass)
 
 use box_and_box::rng::{chance, idx, random, ri, rnd, to_fixed};
-use box_and_box::{bridge, epistemic as ep, govern, norm, reflexive, resource as res, score, strategic as st, supervise, temporal as t, value};
+use box_and_box::{bridge, epistemic as ep, evolution, govern, norm, reflexive, resource as res, score, strategic as st, supervise, temporal as t, value};
+use std::collections::BTreeMap;
 use std::rc::Rc;
 
 use norm::{Modality, Norm, Status};
@@ -1044,6 +1045,108 @@ fn resb_laws() -> Vec<(&'static str, &'static str, LawFn)> {
     ]
 }
 
+// ---------------- EVOLUTION laws (the measured/priced/certified self-revision bridge) ----------------
+fn evo_laws() -> Vec<(&'static str, &'static str, LawFn)> {
+    use evolution::{chain, digest, evolve, record, verify, Evidence, Json, GENESIS};
+    vec![
+        ("EV1", "digest is canonical (key-order independent)", Box::new(|n| trial(n, || {
+            let x = ri(5) as i64;
+            let (p, q) = (ri(2) as i64, ri(2) as i64);
+            let y = Json::Arr(vec![Json::Int(ri(3) as i64), Json::Int(ri(3) as i64)]);
+            let mut za = BTreeMap::new(); za.insert("p".to_string(), Json::Int(p)); za.insert("q".to_string(), Json::Int(q));
+            let mut a = BTreeMap::new();
+            a.insert("x".to_string(), Json::Int(x));
+            a.insert("y".to_string(), y.clone());
+            a.insert("z".to_string(), Json::Obj(za));
+            // same content, shuffled keys (BTreeMap normalises order, so canon collapses them)
+            let mut zb = BTreeMap::new(); zb.insert("q".to_string(), Json::Int(q)); zb.insert("p".to_string(), Json::Int(p));
+            let mut b = BTreeMap::new();
+            b.insert("z".to_string(), Json::Obj(zb));
+            b.insert("y".to_string(), y);
+            b.insert("x".to_string(), Json::Int(x));
+            if digest(&Json::Obj(a)) == digest(&Json::Obj(b)) { Ok(()) } else { Err("order-sensitive".into()) }
+        }))),
+        ("EV2", "provenance chain verifies; tampering breaks it", Box::new(|n| trial(n, || {
+            let cnt = 1 + ri(4);
+            let payloads: Vec<Json> = (0..cnt).map(|_| {
+                let mut m = BTreeMap::new(); m.insert("k".to_string(), Json::Int(ri(1_000_000) as i64)); Json::Obj(m)
+            }).collect();
+            let ch = chain(&payloads, GENESIS);
+            if !verify(&ch, GENESIS).ok { return Err("genuine-chain-rejected".into()); }
+            let i = ri(ch.len());
+            let mut tampered = ch.clone();
+            if let Json::Obj(ref mut m) = tampered[i].payload {
+                if let Some(Json::Int(k)) = m.get("k") { let nk = *k + 1; m.insert("k".to_string(), Json::Int(nk)); }
+            }
+            if verify(&tampered, GENESIS).ok { Err("tamper-undetected".into()) } else { Ok(()) }
+        }))),
+        ("EV3", "evolve refuses to weaken the entrenched floor", Box::new(|n| trial(n, || {
+            let p = reflexive::entrench(&reflexive::Policy::with_norms(vec![nm("floor", Modality::Forbidden, 10.0, Some("t"))]), "floor");
+            let weaken = reflexive::amend("floor", reflexive::Item::Norm(nm("floor", Modality::Permitted, 0.0, None)));
+            let r = evolve(&p, &weaken, Evidence::new(vec![1.0], vec![2.0])); // even WITH improvement evidence
+            let pa = r.certificate.get("policyAfter").and_then(|j| j.as_str());
+            let pb = r.certificate.get("policyBefore").and_then(|j| j.as_str());
+            if r.decision == "reject" && pa == pb { Ok(()) } else { Err("weakened-floor".into()) }
+        }))),
+        ("EV4", "a regressing change is never accepted (L-E6)", Box::new(|n| trial(n, || {
+            let p = reflexive::Policy::with_norms(vec![nm("a", Modality::Obligatory, 1.0, Some("t1"))]);
+            let am = reflexive::enact(reflexive::Item::Norm(nm("b", Modality::Obligatory, 1.0, Some("t2"))));
+            let before = vec![to_fixed(rnd(0.0, 5.0), 2), to_fixed(rnd(0.0, 5.0), 2)];
+            let mut after = before.clone();
+            let i = ri(2); after[i] -= 0.1 + rnd(0.0, 3.0); // force a regression on one guard
+            if evolve(&p, &am, Evidence::new(before, after)).decision != "accept" { Ok(()) } else { Err("accepted-regression".into()) }
+        }))),
+        ("EV5", "priced accept ⇒ affordable ∧ worthwhile ∧ charged (Type-II)", Box::new(|n| trial(n, || {
+            let p = reflexive::Policy::new();
+            let am = reflexive::enact(reflexive::Item::Norm(nm("x", Modality::Obligatory, 1.0, Some("tt"))));
+            let bal = ri(12) as i64;
+            let mut l = res::Ledger::new();
+            l.kind.insert("tokens".to_string(), "depletable".to_string());
+            l.bal.entry("self".to_string()).or_default().insert("tokens".to_string(), bal);
+            l.bal.entry(res::SINK.to_string()).or_default();
+            let gain = to_fixed(rnd(0.0, 6.0), 2);
+            let price = ri(8) as i64;
+            let mut ev = Evidence::new(vec![0.0], vec![gain]);
+            ev.price = Some(price); ev.ledger = Some(l); ev.account = "self".to_string(); ev.resource = "tokens".to_string();
+            let r = evolve(&p, &am, ev);
+            let affordable = bal >= price; let worth = gain >= price as f64;
+            if r.decision == "accept" {
+                if !(affordable && worth) { return Err("accepted-when-not-justified".into()); }
+                let lg = r.ledger.as_ref().ok_or_else(|| "no-ledger".to_string())?;
+                if res::balance(lg, "self", "tokens") != bal - price { return Err("wrong-charge".into()); }
+            } else if affordable && worth {
+                return Err("rejected-when-justified".into());
+            }
+            Ok(())
+        }))),
+        ("EV6", "certificate is sound (accept ⇒ revised; reject ⇒ unchanged)", Box::new(|n| trial(n, || {
+            let mut p = reflexive::Policy::with_norms(vec![nm("core", Modality::Forbidden, 5.0, Some("c"))]);
+            if chance(0.5) { p = reflexive::entrench(&p, "core"); }
+            let nid = format!("n{}", ri(9));
+            let tg = format!("tg{}", ri(3));
+            let m = [Modality::Obligatory, Modality::Forbidden, Modality::Permitted][ri(3)];
+            let moves = vec![
+                reflexive::enact(reflexive::Item::Norm(nm(&nid, m, ri(8) as f64, Some(&tg)))),
+                reflexive::amend("core", reflexive::Item::Norm(nm("core", Modality::Permitted, 0.0, None))),
+                reflexive::repeal("core"),
+            ];
+            let am = moves[ri(moves.len())].clone();
+            let r = evolve(&p, &am, Evidence::new(vec![1.0, 1.0], vec![1.0 + rnd(0.0, 2.0), 1.0 + rnd(0.0, 2.0)])); // non-regressing
+            let cert = &r.certificate;
+            let decision = cert.get("decision").and_then(|j| j.as_str()).unwrap_or("");
+            if decision == "accept" {
+                let expect = reflexive::revise(&p, &am);
+                if !expect.accepted { return Err("accepted-but-revise-rejects".into()); }
+                let pk = reflexive::policy_key(&expect.policy);
+                if cert.get("policyAfter").and_then(|j| j.as_str()) != Some(pk.as_str()) { return Err("policy-mismatch".into()); }
+            } else if cert.get("policyAfter").and_then(|j| j.as_str()) != cert.get("policyBefore").and_then(|j| j.as_str()) {
+                return Err("rejected-but-policy-changed".into());
+            }
+            if r.record.id == record(cert, &r.record.prev).id { Ok(()) } else { Err("nondeterministic-record".into()) }
+        }))),
+    ]
+}
+
 // ---------------- harness ----------------
 struct Suite {
     label: &'static str,
@@ -1069,6 +1172,7 @@ fn main() {
         Suite { label: "Strategic bridge (SB1–SB3)", semiring: None, laws: sb_laws() },
         Suite { label: "Resource (C1–C8)", semiring: None, laws: reso_laws() },
         Suite { label: "Resource bridge (CB1–CB3)", semiring: None, laws: resb_laws() },
+        Suite { label: "Evolution (EV1–EV6)", semiring: None, laws: evo_laws() },
     ];
 
     let line = "─".repeat(48);

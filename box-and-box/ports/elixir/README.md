@@ -4,12 +4,12 @@ An idiomatic Elixir port of the **box-and-box governance kernel** — the seven-
 arithmetic ladder (invariant, heuristic, deontic, temporal, reflexive, epistemic,
 strategic) plus the resource economy and the bridges that compose them.
 
-This is a genuine working implementation, not stubs: it ships the full **97-law
-property-test suite** (the same one the JavaScript reference runs) and passes all 97.
+This is a genuine working implementation, not stubs: it ships the full **103-law
+property-test suite** (the same one the JavaScript reference runs) and passes all 103.
 
 > **JavaScript is the conformance reference.** The canonical source lives in
 > `../../*.mjs` and `../../test/laws.mjs`. This port mirrors that semantics exactly
-> and passes the same 97 laws at 2000 trials/law.
+> and passes the same 103 laws at 2000 trials/law.
 
 ## What's here
 
@@ -26,9 +26,10 @@ property-test suite** (the same one the JavaScript reference runs) and passes al
 | `BoxAndBox.Epistemic` | `epistemic.mjs` — S5/KD45 modal logic | E1–E8, EB1–EB3 |
 | `BoxAndBox.Strategic` | `strategic.mjs` — ATL/coalition logic | S1–S8, SB1–SB3 |
 | `BoxAndBox.Resource` | `resource.mjs` — linear-logic ledger | C1–C8, CB1–CB3 |
-| `BoxAndBox.Laws` | `test/laws.mjs` — the 97-law suite + runner | all 15 suites |
+| `BoxAndBox.Evolution` | `evolution.mjs` — measured/priced/certified self-revision bridge | EV1–EV6 |
+| `BoxAndBox.Laws` | `test/laws.mjs` — the 103-law suite + runner | all 16 suites |
 
-97 laws total across 15 suites.
+103 laws total across 16 suites.
 
 ## Run it
 
@@ -38,7 +39,7 @@ From this directory (`ports/elixir/`):
 mix run run_laws.exs
 ```
 
-This prints per-suite pass counts and a grand total, and exits `0` iff all 97 laws
+This prints per-suite pass counts and a grand total, and exits `0` iff all 103 laws
 pass (non-zero otherwise). Each law runs 2000 random trials, matching the JS
 `trial(n, body)` harness. No external Hex dependencies — only what ships with
 Elixir/OTP. Tested on Erlang/OTP 28 + Elixir 1.19.

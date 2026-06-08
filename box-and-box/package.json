@@ -1,7 +1,7 @@
 {
   "name": "box-and-box",
-  "version": "0.8.0",
-  "description": "box-and-box \u2014 faithful runtime of the seven-rung modality ladder plus the resource economy beneath it: alethic, axiological, deontic, temporal, reflexive, epistemic, strategic, and resource (linear/reusable accounting with conservation, capacity-as-continual-learning, and Type-II pricing of the ladder's repair operators). One bridge composes them. 97 laws property-tested.",
+  "version": "0.9.0",
+  "description": "box-and-box \u2014 faithful runtime of the seven-rung modality ladder plus the resource economy beneath it: alethic, axiological, deontic, temporal, reflexive, epistemic, strategic, and resource (linear/reusable accounting with conservation, capacity-as-continual-learning, and Type-II pricing of the ladder's repair operators). One bridge composes them; an evolution surface measures, prices, and certifies its own revisions on a provenance chain. 103 laws property-tested.",
   "type": "module",
   "main": "index.mjs",
   "exports": {
@@ -16,7 +16,8 @@
     "./reflexive": "./reflexive.mjs",
     "./epistemic": "./epistemic.mjs",
     "./strategic": "./strategic.mjs",
-    "./resource": "./resource.mjs"
+    "./resource": "./resource.mjs",
+    "./evolution": "./evolution.mjs"
   },
   "bin": {
     "box-and-box": "bin/arith.mjs",
@@ -35,14 +36,17 @@
     "epistemic.mjs",
     "strategic.mjs",
     "resource.mjs",
+    "evolution.mjs",
     "bin/",
     "examples/",
     "test/",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "test": "node test/laws.mjs",
     "laws": "node test/laws.mjs",
+    "prepublishOnly": "node test/laws.mjs",
     "rag": "node examples/rag.mjs",
     "select": "node examples/select.mjs",
     "govern": "node examples/govern.mjs",
@@ -93,7 +97,16 @@
     "token-economics"
   ],
   "license": "MIT",
-  "homepage": "https://opensentience.org",
+  "author": "Travis Burandt",
+  "homepage": "https://opensentience.org/box-and-box/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c-u-l8er/ProjectAmp2.git",
+    "directory": "AmpersandBoxDesign/box-and-box"
+  },
+  "bugs": {
+    "url": "https://github.com/c-u-l8er/ProjectAmp2/issues"
+  },
   "engines": {
     "node": ">=18"
   }

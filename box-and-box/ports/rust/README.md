@@ -8,7 +8,7 @@ that wire them together).
 This is a genuinely working implementation, not stubs: it ports every module and the
 full property-test suite, and it passes the same conformance laws as the reference.
 
-> **JavaScript is the conformance reference; this port passes the same 97 laws.**
+> **JavaScript is the conformance reference; this port passes the same 103 laws.**
 > The canonical source lives in the parent directory (`value.mjs`, `norm.mjs`, … and
 > `test/laws.mjs`). The Rust here mirrors that semantics exactly (first-non-null merge,
 > free-monoid `Vec` concat, fixpoint loops, ledger conservation, `f64::NEG_INFINITY` for
@@ -21,7 +21,7 @@ cd ports/rust
 cargo run --release
 ```
 
-It prints a per-suite pass count, a grand total, and **exits 0 iff all 97 laws pass**
+It prints a per-suite pass count, a grand total, and **exits 0 iff all 103 laws pass**
 (non-zero otherwise). Each law is checked with **2000 random trials**, matching the JS
 harness.
 
@@ -31,7 +31,7 @@ The crate uses **only the Rust standard library** — no `rand`, no anything. A 
 xorshift64\* PRNG (`src/rng.rs`), seeded from the system clock, plays the role of
 `Math.random()` in the JS suite. So `cargo run --release` works fully offline.
 
-## The 97 laws (15 suites)
+## The 103 laws (16 suites)
 
 | Suite | Laws | Module |
 |---|---|---|
@@ -50,8 +50,9 @@ xorshift64\* PRNG (`src/rng.rs`), seeded from the system clock, plays the role o
 | Strategic bridge     | SB1–SB3 | `strategic.rs` |
 | Resource             | C1–C8   | `resource.rs` |
 | Resource bridge      | CB1–CB3 | `resource.rs` |
+| Evolution            | EV1–EV6 | `evolution.rs` |
 
-Total: **97 laws**.
+Total: **103 laws**.
 
 ## Layout
 
@@ -73,7 +74,8 @@ ports/rust/
     ├── epistemic.rs   # S5 / KD45 modal logic
     ├── strategic.rs   # ATL / coalition logic
     ├── resource.rs    # linear-logic ledger
-    └── main.rs        # the 97-law property-test harness (bin: `laws`)
+    ├── evolution.rs   # measured/priced/certified self-revision bridge (reflexive×axiological×resource)
+    └── main.rs        # the 103-law property-test harness (bin: `laws`)
 ```
 
 ## Notes on fidelity

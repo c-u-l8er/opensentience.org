@@ -6,7 +6,7 @@
         <title>box-and-box — reference implementation, read every line in five languages</title>
         <meta
             name="description"
-            content="The complete MIT-licensed reference implementation of the box-and-box governance kernel: eight modal rungs, one bridge, 97 property-tested laws. Read the real served source in a code-editor browser — JavaScript (canonical) plus working Python, Elixir, Rust and Go ports that each pass the identical 97-law suite."
+            content="The complete MIT-licensed reference implementation of the box-and-box governance kernel: eight modal rungs, one bridge, 103 property-tested laws. Read the real served source in a code-editor browser — JavaScript (canonical) plus working Python, Elixir, Rust and Go ports that each pass the identical 103-law suite."
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -455,16 +455,16 @@
                 <span>Reference implementation</span>
                 <span class="dot">·</span><span>MIT</span>
                 <span class="dot">·</span><span>8 rungs</span>
-                <span class="dot">·</span><span>97 laws</span>
+                <span class="dot">·</span><span>103 laws</span>
             </p>
             <h1><span class="amp">box</span>-and-<span class="amp">box</span></h1>
             <p class="lede">
                 The complete governance kernel — eight modal rungs, one bridge
                 (<code>feasible ▸ permitted ▸ best</code>), and
-                <strong>97 property-tested laws</strong> (2000 trials each). Pure
+                <strong>103 property-tested laws</strong> (2000 trials each). Pure
                 arithmetic: no LLM, no network, no I/O. Read every line below in
                 <strong>five languages</strong> — and every one passes the same
-                97-law suite. <em>The algebra, not the syntax, carries the
+                103-law suite. <em>The algebra, not the syntax, carries the
                 guarantee.</em>
             </p>
 
@@ -472,13 +472,13 @@
                 <span class="c"># the published package — read it, run it, port it</span><br />
                 <span class="p">npm</span> install -g box-and-box<br />
                 <span class="p">box-and-box</span> <span class="arg">laws</span>
-                <span class="c">&nbsp;&nbsp;# the 97-law conformance harness</span><br />
+                <span class="c">&nbsp;&nbsp;# the 103-law conformance harness</span><br />
                 <span class="p">box-and-box</span> <span class="arg">govern</span> decision.json
                 <span class="c"># a real verdict → certificate JSON</span>
             </div>
 
             <!-- ============ CONFORMANCE STRIP ============ -->
-            <p class="section-label">Conformance — every language, the same 97 laws</p>
+            <p class="section-label">Conformance — every language, the same 103 laws</p>
             <div id="chips"></div>
 
             <!-- ============ THE SOURCE BROWSER ============ -->
@@ -528,7 +528,7 @@
                     <code>node test/laws.mjs</code> — or <code>python3 laws.py</code>,
                     <code>mix run run_laws.exs</code>, <code>cargo run --release</code>,
                     <code>go run .</code> — and you get the identical
-                    <strong>97 / 97</strong>. JavaScript is the conformance
+                    <strong>103 / 103</strong>. JavaScript is the conformance
                     reference; the Python, Elixir, Rust and Go ports were each
                     checked against it. No external dependencies — every port runs
                     offline on its language's standard library alone.
@@ -537,7 +537,7 @@
 
             <footer>
                 <a href="https://ampersandboxdesign.com">box-and-box kernel</a>
-                <a href="https://ampersandboxdesign.com/laws.html">The 97 laws</a>
+                <a href="https://ampersandboxdesign.com/laws.html">The 103 laws</a>
                 <a href="/playground.html">Interactive playground</a>
                 <a href="./README.md">README</a>
                 <a href="https://www.npmjs.com/package/box-and-box">npm</a>
@@ -548,7 +548,7 @@
         <amp-nav property="box_and_box"></amp-nav>
 
         <script>
-            // ---- the 11 rung modules, in ladder order ------------------------
+            // ---- the 12 kernel modules, in ladder order ----------------------
             const RUNGS = [
                 { m: "value", rung: "ALETHIC", role: "feasibility · the consume floor", laws: "L1–L14" },
                 { m: "norm", rung: "DEONTIC", role: "permission lattice · CTD repair", laws: "D1–D9" },
@@ -561,6 +561,7 @@
                 { m: "epistemic", rung: "EPISTEMIC", role: "S5 / KD45 knowledge & belief", laws: "E1–E8" },
                 { m: "strategic", rung: "STRATEGIC", role: "ATL coalition ability", laws: "S1–S8" },
                 { m: "reflexive", rung: "REFLEXIVE", role: "AGM self-revision · entrenchment", laws: "R1–R8" },
+                { m: "evolution", rung: "EVOLUTION", role: "measured/priced/certified self-revision bridge", laws: "EV1–EV6" },
             ];
 
             // ---- the five languages, each a real running port ----------------
@@ -731,7 +732,7 @@
                             ? ' <span class="canon">canonical</span>'
                             : "") +
                         "</span>" +
-                        '<span class="chip__badge">97 / 97 ✓</span>' +
+                        '<span class="chip__badge">103 / 103 ✓</span>' +
                         "</div>" +
                         '<span class="chip__run">' +
                         l.run +
@@ -768,7 +769,7 @@
 
                 const g1 = document.createElement("div");
                 g1.className = "tree-group";
-                g1.textContent = "the eight rungs";
+                g1.textContent = "the kernel modules";
                 sidebarEl.appendChild(g1);
 
                 for (const r of RUNGS) {
@@ -808,13 +809,13 @@
                 t.className = "tree-item";
                 t.setAttribute("role", "button");
                 t.setAttribute("aria-current", state.isTest ? "true" : "false");
-                t.title = "the 97-law property suite";
+                t.title = "the 103-law property suite";
                 t.innerHTML =
                     '<span class="ti-icon">✓</span>' +
                     '<span class="ti-name">' +
                     l.testName +
                     "</span>" +
-                    '<span class="ti-laws">97</span>';
+                    '<span class="ti-laws">103</span>';
                 t.addEventListener("click", () => {
                     state.isTest = true;
                     buildSidebar();
@@ -828,7 +829,7 @@
                 const rel = state.isTest ? l.testPath : l.path(state.moduleKey);
                 const url = l.base + rel;
                 const role = state.isTest
-                    ? "the 97-law conformance suite"
+                    ? "the 103-law conformance suite"
                     : (RUNGS.find((r) => r.m === state.moduleKey) || {}).role || "";
 
                 panePath.innerHTML =

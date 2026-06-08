@@ -10,3 +10,4 @@ export * from './reflexive.mjs'; // 5 reflexive   — self-revising norms, entre
 export * as epistemic from './epistemic.mjs'; // 6 epistemic — knowledge & graded belief (E1–E8, EB1–EB3)
 export * as strategic from './strategic.mjs'; // 7 strategic — coalitional ability (S1–S8, SB1–SB3)
 export * as resource from './resource.mjs'; // + resource — the economy the ladder runs on (C1–C8, CB1–CB3)
+export * as evolution from './evolution.mjs'; // + evolution — measured, priced, certified policy change on a provenance chain (EV1–EV6)

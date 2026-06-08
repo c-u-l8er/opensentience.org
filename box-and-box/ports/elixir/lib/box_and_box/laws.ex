@@ -1,16 +1,16 @@
 defmodule BoxAndBox.Laws do
   @moduledoc """
-  The 97-law property-test suite — faithful port of test/laws.mjs.
+  The 103-law property-test suite — faithful port of test/laws.mjs.
 
   Mirrors the JS `trial(n, body)` random loop (default 2000 trials/law) across all
-  15 suites: L1–14, H1–13, B1–3, D1–9, DB1–3, T1–8, TB1–3, R1–8, RB1–3, E1–8,
-  EB1–3, S1–8, SB1–3, C1–8, CB1–3. JavaScript is the conformance reference.
+  16 suites: L1–14, H1–13, B1–3, D1–9, DB1–3, T1–8, TB1–3, R1–8, RB1–3, E1–8,
+  EB1–3, S1–8, SB1–3, C1–8, CB1–3, EV1–6. JavaScript is the conformance reference.
 
   Run: `mix run run_laws.exs`  (or `elixir run_laws.exs` after `mix compile`).
   """
 
   alias BoxAndBox.{Value, Score, Bridge, Norm, Govern, Temporal, Supervise, Reflexive,
-                   Epistemic, Strategic, Resource}
+                   Epistemic, Strategic, Resource, Evolution}
 
   # the heuristic suite swaps semirings; held in the process dictionary like JS `let S`
   defp s, do: Process.get(:laws_semiring, Score.semiring("tropical"))
@@ -1334,6 +1334,122 @@ defmodule BoxAndBox.Laws do
     ]
   end
 
+  # ---------------- EVOLUTION (EV1–EV6) ----------------
+  def evo do
+    [
+      {"EV1", "digest is canonical (key-order independent)",
+       fn n ->
+         trial(n, fn ->
+           a = %{x: ri(5), y: [ri(3), ri(3)], z: %{p: ri(2), q: ri(2)}}
+           b = %{z: %{q: a.z.q, p: a.z.p}, y: a.y, x: a.x}
+           if Evolution.digest(a) == Evolution.digest(b), do: true, else: "order-sensitive"
+         end)
+       end},
+      {"EV2", "provenance chain verifies; tampering breaks it",
+       fn n ->
+         trial(n, fn ->
+           payloads = for _ <- 1..(1 + ri(4)), do: %{k: ri(1_000_000)}
+           ch = Evolution.chain(payloads)
+
+           if not Evolution.verify(ch).ok do
+             "genuine-chain-rejected"
+           else
+             i = ri(length(ch))
+
+             tampered =
+               ch
+               |> Enum.with_index()
+               |> Enum.map(fn {r, j} -> if j == i, do: %{r | payload: %{k: r.payload.k + 1}}, else: r end)
+
+             if Evolution.verify(tampered).ok, do: "tamper-undetected", else: true
+           end
+         end)
+       end},
+      {"EV3", "evolve refuses to weaken the entrenched floor",
+       fn n ->
+         trial(n, fn ->
+           p = Reflexive.entrench(Reflexive.policy(%{norms: [nm("floor", "forbidden", 10, "t")]}), "floor")
+           weaken = Reflexive.amend("floor", nm("floor", "permitted"), %{time: 1})
+           r = Evolution.evolve(p, weaken, %{before: [1], after: [2]})
+
+           if r.decision == "reject" and r.certificate["policyAfter"] == r.certificate["policyBefore"],
+             do: true,
+             else: "weakened-floor"
+         end)
+       end},
+      {"EV4", "a regressing change is never accepted (L-E6)",
+       fn n ->
+         trial(n, fn ->
+           p = Reflexive.policy(%{norms: [nm("a", "obligatory", 1, "t1")]})
+           am = Reflexive.enact(nm("b", "obligatory", 1, "t2"), %{time: 1})
+           before = [tofixed(rnd(0, 5), 2), tofixed(rnd(0, 5), 2)]
+           i = ri(2)
+           after_ = List.update_at(before, i, fn v -> v - (0.1 + rnd(0, 3)) end)
+           if Evolution.evolve(p, am, %{before: before, after: after_}).decision != "accept", do: true, else: "accepted-regression"
+         end)
+       end},
+      {"EV5", "priced accept ⇒ affordable ∧ worthwhile ∧ charged (Type-II)",
+       fn n ->
+         trial(n, fn ->
+           p = Reflexive.policy(%{})
+           am = Reflexive.enact(nm("x", "obligatory", 1, "tt"), %{time: 1})
+           bal = ri(12)
+           l = Resource.ledger(%{kind: %{"tokens" => "depletable"}, bal: %{"self" => %{"tokens" => bal}, Resource.sink() => %{}}})
+           gain = tofixed(rnd(0, 6), 2)
+           price = ri(8)
+           r = Evolution.evolve(p, am, %{before: [0], after: [gain], price: price, ledger: l, account: "self", resource: "tokens"})
+           affordable = bal >= price
+           worth = gain >= price
+
+           cond do
+             r.decision == "accept" and not (affordable and worth) -> "accepted-when-not-justified"
+             r.decision == "accept" and Resource.balance(r.ledger, "self", "tokens") != bal - price -> "wrong-charge"
+             r.decision != "accept" and affordable and worth -> "rejected-when-justified"
+             true -> true
+           end
+         end)
+       end},
+      {"EV6", "certificate is sound (accept ⇒ revised; reject ⇒ unchanged)",
+       fn n ->
+         trial(n, fn ->
+           p0 = Reflexive.policy(%{norms: [nm("core", "forbidden", 5, "c")]})
+           p = if :rand.uniform() < 0.5, do: Reflexive.entrench(p0, "core"), else: p0
+
+           moves = [
+             Reflexive.enact(nm("n" <> Integer.to_string(ri(9)), Enum.at(["obligatory", "forbidden", "permitted"], ri(3)), ri(8), "tg" <> Integer.to_string(ri(3))), %{time: 1}),
+             Reflexive.amend("core", nm("core", "permitted"), %{time: 1}),
+             Reflexive.repeal("core", %{time: 1})
+           ]
+
+           am = Enum.at(moves, ri(length(moves)))
+           r = Evolution.evolve(p, am, %{before: [1, 1], after: [1 + rnd(0, 2), 1 + rnd(0, 2)]})
+           c = r.certificate
+
+           cond do
+             c["decision"] == "accept" ->
+               expect = Reflexive.revise(p, am)
+
+               cond do
+                 not expect.accepted -> "accepted-but-revise-rejects"
+                 c["policyAfter"] != Reflexive.policy_key(expect.policy) -> "policy-mismatch"
+                 r.record.id != Evolution.record(c, r.record.prev).id -> "nondeterministic-record"
+                 true -> true
+               end
+
+             c["policyAfter"] != c["policyBefore"] ->
+               "rejected-but-policy-changed"
+
+             r.record.id != Evolution.record(c, r.record.prev).id ->
+               "nondeterministic-record"
+
+             true ->
+               true
+           end
+         end)
+       end}
+    ]
+  end
+
   # ---------------- harness ----------------
   def run_set(laws, n) do
     {pass, fail, results} =
@@ -1362,7 +1478,8 @@ defmodule BoxAndBox.Laws do
       %{key: "STR", label: "Strategic (S1–S8)", laws: str()},
       %{key: "SB", label: "Strategic bridge (SB1–SB3)", laws: sb()},
       %{key: "RESO", label: "Resource (C1–C8)", laws: reso()},
-      %{key: "RESB", label: "Resource bridge (CB1–CB3)", laws: resb()}
+      %{key: "RESB", label: "Resource bridge (CB1–CB3)", laws: resb()},
+      %{key: "EVO", label: "Evolution (EV1–EV6)", laws: evo()}
     ]
   end
 

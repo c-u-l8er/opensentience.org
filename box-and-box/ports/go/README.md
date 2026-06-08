@@ -5,8 +5,8 @@ of invariant / deontic / heuristic / temporal / reflexive / epistemic / strategi
 resource arithmetic that underpins the [&] ecosystem's governance reasoning.
 
 This is a genuinely working implementation, not stubs: it ports every module of the
-JavaScript reference (`../../*.mjs`) and the full **97-law property-test suite**
-(`../../test/laws.mjs`), and passes all 97 laws at 2000 trials/law.
+JavaScript reference (`../../*.mjs`) and the full **103-law property-test suite**
+(`../../test/laws.mjs`), and passes all 103 laws at 2000 trials/law.
 
 ## What it is
 
@@ -25,7 +25,8 @@ Twelve algebraic layers, each a module:
 | `epistemic.go` | `epistemic.mjs`| S5/KD45 modal logic (knows/believes/announce/common/distributed/route) — laws **E1–E8, EB1–EB3** |
 | `strategic.go` | `strategic.mjs`| ATL/coalition logic (effectivity/canMaintain/canReach/canUntil/oblige/executable) — laws **S1–S8, SB1–SB3** |
 | `resource.go`  | `resource.mjs` | linear-logic ledger (transfer/spend/refill/use/allocate/consolidate/forget/repair) — laws **C1–C8, CB1–CB3** |
-| `laws.go`, `laws2.go`, `laws3.go` | `test/laws.mjs` | the 97-law property suite + runner |
+| `evolution.go` | `evolution.mjs`| measured/priced/certified self-revision bridge (canon/hash/digest/record/chain/verify/regresses/delta/evolve) — laws **EV1–EV6** |
+| `laws.go`, `laws2.go`, `laws3.go`, `laws4.go` | `test/laws.mjs` | the 103-law property suite + runner |
 
 ## Run
 
@@ -34,16 +35,16 @@ cd ports/go
 go run .
 ```
 
-Prints per-suite pass counts and a grand total, then exits **0 iff all 97 laws pass**
+Prints per-suite pass counts and a grand total, then exits **0 iff all 103 laws pass**
 (exit 1 otherwise). Tested with Go 1.25; standard library only (`math`, `math/rand`,
-`fmt`, `sort`, `os`, `strings`, `strconv`) — no external modules, builds offline.
+`fmt`, `sort`, `os`, `strings`, `strconv`, `encoding/json`) — no external modules, builds offline.
 
 Each property is checked across **2000 random trials/law**, mirroring the JS harness.
 `math/rand` is auto-seeded, so every run exercises fresh randomness.
 
 ## Conformance
 
-**JavaScript is the conformance reference; this port passes the same 97 laws.**
+**JavaScript is the conformance reference; this port passes the same 103 laws.**
 
 The Go semantics mirror the JS exactly: first-non-null merges, free-monoid slice
 concatenation, partial phase-graded `chain`, fixpoint loops (ATL μ/ν calculus, policy

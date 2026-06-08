@@ -811,6 +811,7 @@ var SUITES = []Suite{
 	{"SB", "Strategic bridge (SB1–SB3)", SB, ""},
 	{"RESO", "Resource (C1–C8)", RESO, ""},
 	{"RESB", "Resource bridge (CB1–CB3)", RESB, ""},
+	{"EVO", "Evolution (EV1–EV6)", EVO_L, ""},
 }
 
 func runSet(laws []Law, N int) (pass, fail int, results []trialResult, ids, descs []string) {

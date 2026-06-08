@@ -12,6 +12,7 @@ import { Policy, enact, repeal, amend, admissible, arbitrate, revise, entrench, 
 import * as EP from '../epistemic.mjs';
 import * as ST from '../strategic.mjs';
 import * as RES from '../resource.mjs';
+import * as EVO from '../evolution.mjs';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const approx = (a, b, t = 1e-7) => a === b || (isFinite(a) && isFinite(b) && Math.abs(a - b) <= t * (1 + Math.abs(a) + Math.abs(b)));
@@ -487,6 +488,63 @@ const RESB = [
     if (r.decision !== exp) return 'wrong-decision'; if (r.decision === 'invoke' && RES.balance(r.L, a, 'tokens') !== RES.balance(L, a, 'tokens') - cost) return 'no-charge'; return true; })]
 ];
 
+// ---------------- EVOLUTION LAWS (the measured/priced/certified self-revision bridge) ----------------
+const EVO_L = [
+  ['EV1', 'digest is canonical (key-order independent)', (n) => trial(n, () => {
+    const a = { x: ri(5), y: [ri(3), ri(3)], z: { p: ri(2), q: ri(2) } };
+    const b = { z: { q: a.z.q, p: a.z.p }, y: a.y.slice(), x: a.x }; // same content, shuffled keys
+    return EVO.digest(a) === EVO.digest(b) ? true : 'order-sensitive'; })],
+  ['EV2', 'provenance chain verifies; tampering breaks it', (n) => trial(n, () => {
+    const payloads = Array.from({ length: 1 + ri(4) }, () => ({ k: ri(1e6) }));
+    const ch = EVO.chain(payloads);
+    if (!EVO.verify(ch).ok) return 'genuine-chain-rejected';
+    const i = ri(ch.length);
+    const tampered = ch.map((r, j) => j === i ? { ...r, payload: { k: r.payload.k + 1 } } : r);
+    return EVO.verify(tampered).ok ? 'tamper-undetected' : true; })],
+  ['EV3', 'evolve refuses to weaken the entrenched floor', (n) => trial(n, () => {
+    let P = Policy({ norms: [Norm({ id: 'floor', modality: 'forbidden', priority: 10, target: 't' })] });
+    P = entrench(P, 'floor');
+    const weaken = { op: 'amend', id: 'floor', item: Norm({ id: 'floor', modality: 'permitted' }), time: 1 };
+    const r = EVO.evolve(P, weaken, { before: [1], after: [2] }); // even WITH improvement evidence
+    return (r.decision === 'reject' && r.certificate.policyAfter === r.certificate.policyBefore) ? true : 'weakened-floor'; })],
+  ['EV4', 'a regressing change is never accepted (L-E6)', (n) => trial(n, () => {
+    const P = Policy({ norms: [Norm({ id: 'a', modality: 'obligatory', priority: 1, target: 't1' })] });
+    const am = { op: 'enact', item: Norm({ id: 'b', modality: 'obligatory', priority: 1, target: 't2' }), time: 1 };
+    const before = [+rnd(0, 5).toFixed(2), +rnd(0, 5).toFixed(2)];
+    const after = before.slice(); after[ri(2)] -= (0.1 + rnd(0, 3)); // force a regression on one guard
+    return EVO.evolve(P, am, { before, after }).decision !== 'accept' ? true : 'accepted-regression'; })],
+  ['EV5', 'priced accept ⇒ affordable ∧ worthwhile ∧ charged (Type-II)', (n) => trial(n, () => {
+    const P = Policy();
+    const am = { op: 'enact', item: Norm({ id: 'x', modality: 'obligatory', priority: 1, target: 'tt' }), time: 1 };
+    const bal = ri(12);
+    const L = RES.Ledger({ kind: { tokens: 'depletable' }, bal: { self: { tokens: bal }, [RES.SINK]: {} } });
+    const gain = +rnd(0, 6).toFixed(2), price = ri(8);
+    const r = EVO.evolve(P, am, { before: [0], after: [gain], price, ledger: L, account: 'self', resource: 'tokens' });
+    const affordable = bal >= price, worth = gain >= price;
+    if (r.decision === 'accept') {
+      if (!(affordable && worth)) return 'accepted-when-not-justified';
+      if (RES.balance(r.ledger, 'self', 'tokens') !== bal - price) return 'wrong-charge';
+    } else if (affordable && worth) return 'rejected-when-justified';
+    return true; })],
+  ['EV6', 'certificate is sound: accept ⇒ policy actually revised; reject ⇒ policy unchanged', (n) => trial(n, () => {
+    let P = Policy({ norms: [Norm({ id: 'core', modality: 'forbidden', priority: 5, target: 'c' })] });
+    if (Math.random() < 0.5) P = entrench(P, 'core');
+    const moves = [
+      { op: 'enact', item: Norm({ id: 'n' + ri(9), modality: ['obligatory', 'forbidden', 'permitted'][ri(3)], priority: ri(8), target: 'tg' + ri(3) }), time: 1 },
+      { op: 'amend', id: 'core', item: Norm({ id: 'core', modality: 'permitted' }), time: 1 },
+      { op: 'repeal', id: 'core', time: 1 }
+    ];
+    const am = moves[ri(moves.length)];
+    const r = EVO.evolve(P, am, { before: [1, 1], after: [1 + rnd(0, 2), 1 + rnd(0, 2)] }); // non-regressing
+    const c = r.certificate;
+    if (c.decision === 'accept') {
+      const expect = revise(P, am);
+      if (!expect.accepted) return 'accepted-but-revise-rejects';
+      if (c.policyAfter !== policyKey(expect.policy)) return 'policy-mismatch';
+    } else if (c.policyAfter !== c.policyBefore) return 'rejected-but-policy-changed';
+    return r.record.id === EVO.record(c, r.record.prev).id ? true : 'nondeterministic-record'; })]
+];
+
 // ---------------- exported harness (dual-mode: Node CLI + browser playground) ----------------
 // Set the semiring used by the heuristic (HEUR) suite. The playground's top-bar
 // selector calls this before re-running so H6 idempotence only holds on the dioid.
@@ -504,7 +562,7 @@ export function runSet(laws, N) {
   return { pass, fail, results };
 }
 
-// The 97 stated laws, grouped. `semiring` (when present) is applied before the suite runs.
+// The 103 stated laws, grouped. `semiring` (when present) is applied before the suite runs.
 export const SUITES = [
   { key: 'INV',  label: 'Invariant (L1–L14)',               laws: INV },
   { key: 'HEUR', label: 'Heuristic (H1–H13) · tropical dioid', laws: HEUR, semiring: 'tropical' },
@@ -520,7 +578,8 @@ export const SUITES = [
   { key: 'STR',  label: 'Strategic (S1–S8)',                 laws: STR },
   { key: 'SB',   label: 'Strategic bridge (SB1–SB3)',        laws: SB },
   { key: 'RESO', label: 'Resource (C1–C8)',                  laws: RESO },
-  { key: 'RESB', label: 'Resource bridge (CB1–CB3)',         laws: RESB }
+  { key: 'RESB', label: 'Resource bridge (CB1–CB3)',         laws: RESB },
+  { key: 'EVO',  label: 'Evolution (EV1–EV6)',               laws: EVO_L }
 ];
 
 // ---------------- run (Node CLI only; skipped when imported into a browser) ----------------

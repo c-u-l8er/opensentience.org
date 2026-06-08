@@ -36,6 +36,7 @@
 //   true | omitted            → always in force
 //   { "field": f, "eq": v }   → ctx[f] === v
 //   { "field": f, "ne": v }   → ctx[f] !== v
+//   { "field": f, "gt": v }   → ctx[f] >  v   (also gte / lt / lte)
 //   { "field": f, "in": [..] }→ ctx[f] ∈ list
 //   { "truthy": f }           → !!ctx[f]
 //   { "all": [ .. ] }         → conjunction
@@ -61,6 +62,10 @@ function compileCondition(c) {
     const f = c.field;
     if ('eq' in c) return (ctx) => ctx[f] === c.eq;
     if ('ne' in c) return (ctx) => ctx[f] !== c.ne;
+    if ('gt' in c) return (ctx) => ctx[f] > c.gt;
+    if ('gte' in c) return (ctx) => ctx[f] >= c.gte;
+    if ('lt' in c) return (ctx) => ctx[f] < c.lt;
+    if ('lte' in c) return (ctx) => ctx[f] <= c.lte;
     if (Array.isArray(c.in)) return (ctx) => c.in.includes(ctx[f]);
     return (ctx) => !!ctx[f];
   }

@@ -26,7 +26,8 @@ accessibility, ATL controllable-predecessor fixpoints, and the linear-logic ledg
 | `epistemic.py` | `epistemic.mjs` | S5/KD45 modal logic — E1–E8, EB1–EB3 |
 | `strategic.py` | `strategic.mjs` | ATL / coalition logic — S1–S8, SB1–SB3 |
 | `resource.py` | `resource.mjs` | linear-logic ledger — C1–C8, CB1–CB3 |
-| `laws.py` | `test/laws.mjs` | the 97-law property suite (2000 trials/law) + runner |
+| `evolution.py` | `evolution.mjs` | measured/priced/certified self-revision bridge (reflexive×axiological×resource) — EV1–EV6 |
+| `laws.py` | `test/laws.mjs` | the 103-law property suite (2000 trials/law) + runner |
 
 ## Run the conformance suite
 
@@ -37,11 +38,11 @@ python3 laws.py
 
 It prints per-suite pass counts, a grand total, the cross-personality checks
 (H6 idempotence per semiring, S5-vs-KD45 factivity, coalition power, linear-vs-`!`
-resource use), and exits `0` iff all 97 laws pass.
+resource use), and exits `0` iff all 103 laws pass.
 
 ## Conformance
 
-**JavaScript is the conformance reference; this port passes the same 97 laws**
-(15 suites: L1–14, H1–13, B1–3, D1–9, DB1–3, T1–8, TB1–3, R1–8, RB1–3, E1–8,
-EB1–3, S1–8, SB1–3, C1–8, CB1–3), 2000 randomized trials per law, exactly as
+**JavaScript is the conformance reference; this port passes the same 103 laws**
+(16 suites: L1–14, H1–13, B1–3, D1–9, DB1–3, T1–8, TB1–3, R1–8, RB1–3, E1–8,
+EB1–3, S1–8, SB1–3, C1–8, CB1–3, EV1–6), 2000 randomized trials per law, exactly as
 `../../test/laws.mjs`.

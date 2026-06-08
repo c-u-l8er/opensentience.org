@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """laws.py - run: ``python3 laws.py``
 
-Property tests proving the Python port is the real algebra: the same 97 laws as
-the JavaScript conformance reference (test/laws.mjs), 2000 trials/law across 15
+Property tests proving the Python port is the real algebra: the same 103 laws as
+the JavaScript conformance reference (test/laws.mjs), 2000 trials/law across 16
 suites (L1-14, H1-13, B1-3, D1-9, DB1-3, T1-8, TB1-3, R1-8, RB1-3, E1-8, EB1-3,
-S1-8, SB1-3, C1-8, CB1-3). Exits 0 iff all 97 pass.
+S1-8, SB1-3, C1-8, CB1-3, EV1-6). Exits 0 iff all 103 pass.
 """
 
 import math
@@ -22,6 +22,7 @@ from reflexive import Policy, enact, repeal, amend, admissible, arbitrate, revis
 import epistemic as EP
 import strategic as ST
 import resource as RES
+import evolution as EVO
 
 
 # ---------------- helpers (mirror laws.mjs) ----------------
@@ -1527,6 +1528,104 @@ RESB = [
 ]
 
 
+# ---------------- EVOLUTION LAWS (measured/priced/certified self-revision bridge) ----------------
+def _ev1(n):
+    def b():
+        a = {"x": randint(5), "y": [randint(3), randint(3)], "z": {"p": randint(2), "q": randint(2)}}
+        bb = {"z": {"q": a["z"]["q"], "p": a["z"]["p"]}, "y": list(a["y"]), "x": a["x"]}  # shuffled keys
+        return True if EVO.digest(a) == EVO.digest(bb) else "order-sensitive"
+    return trial(n, b)
+
+
+def _ev2(n):
+    def b():
+        payloads = [{"k": randint(1000000)} for _ in range(1 + randint(4))]
+        ch = EVO.chain(payloads)
+        if not EVO.verify(ch)["ok"]:
+            return "genuine-chain-rejected"
+        i = randint(len(ch))
+        tampered = [({**r, "payload": {"k": r["payload"]["k"] + 1}} if j == i else r) for j, r in enumerate(ch)]
+        return "tamper-undetected" if EVO.verify(tampered)["ok"] else True
+    return trial(n, b)
+
+
+def _ev3(n):
+    def b():
+        P = entrench(Policy({"norms": [nm("floor", "forbidden", 10, "t")]}), "floor")
+        weaken = {"op": "amend", "id": "floor", "item": nm("floor", "permitted"), "time": 1, "authority": "self"}
+        r = EVO.evolve(P, weaken, {"before": [1], "after": [2]})  # even WITH improvement evidence
+        return True if (r["decision"] == "reject" and r["certificate"]["policyAfter"] == r["certificate"]["policyBefore"]) else "weakened-floor"
+    return trial(n, b)
+
+
+def _ev4(n):
+    def b():
+        P = Policy({"norms": [nm("a", "obligatory", 1, "t1")]})
+        am = {"op": "enact", "item": nm("b", "obligatory", 1, "t2"), "time": 1, "authority": "self"}
+        before = [fixed(rnd(0, 5), 2), fixed(rnd(0, 5), 2)]
+        after = list(before)
+        after[randint(2)] -= (0.1 + rnd(0, 3))  # force a regression on one guard
+        return True if EVO.evolve(P, am, {"before": before, "after": after})["decision"] != "accept" else "accepted-regression"
+    return trial(n, b)
+
+
+def _ev5(n):
+    def b():
+        P = Policy()
+        am = {"op": "enact", "item": nm("x", "obligatory", 1, "tt"), "time": 1, "authority": "self"}
+        bal = randint(12)
+        L = RES.Ledger(kind={"tokens": "depletable"}, bal={"self": {"tokens": bal}, RES.SINK: {}})
+        gain = fixed(rnd(0, 6), 2)
+        price = randint(8)
+        r = EVO.evolve(P, am, {"before": [0], "after": [gain], "price": price, "ledger": L, "account": "self", "resource": "tokens"})
+        affordable = bal >= price
+        worth = gain >= price
+        if r["decision"] == "accept":
+            if not (affordable and worth):
+                return "accepted-when-not-justified"
+            if RES.balance(r["ledger"], "self", "tokens") != bal - price:
+                return "wrong-charge"
+        elif affordable and worth:
+            return "rejected-when-justified"
+        return True
+    return trial(n, b)
+
+
+def _ev6(n):
+    def b():
+        P = Policy({"norms": [nm("core", "forbidden", 5, "c")]})
+        if random.random() < 0.5:
+            P = entrench(P, "core")
+        moves = [
+            {"op": "enact", "item": nm("n" + str(randint(9)), ["obligatory", "forbidden", "permitted"][randint(3)], randint(8), "tg" + str(randint(3))), "time": 1, "authority": "self"},
+            {"op": "amend", "id": "core", "item": nm("core", "permitted"), "time": 1, "authority": "self"},
+            {"op": "repeal", "id": "core", "time": 1, "authority": "self"},
+        ]
+        am = moves[randint(len(moves))]
+        r = EVO.evolve(P, am, {"before": [1, 1], "after": [1 + rnd(0, 2), 1 + rnd(0, 2)]})  # non-regressing
+        c = r["certificate"]
+        if c["decision"] == "accept":
+            expect = revise(P, am)
+            if not expect["accepted"]:
+                return "accepted-but-revise-rejects"
+            if c["policyAfter"] != policy_key(expect["policy"]):
+                return "policy-mismatch"
+        elif c["policyAfter"] != c["policyBefore"]:
+            return "rejected-but-policy-changed"
+        return True if r["record"]["id"] == EVO.record(c, r["record"]["prev"])["id"] else "nondeterministic-record"
+    return trial(n, b)
+
+
+EVO_L = [
+    ["EV1", "digest is canonical (key-order independent)", _ev1],
+    ["EV2", "provenance chain verifies; tampering breaks it", _ev2],
+    ["EV3", "evolve refuses to weaken the entrenched floor", _ev3],
+    ["EV4", "a regressing change is never accepted (L-E6)", _ev4],
+    ["EV5", "priced accept => affordable and worthwhile and charged (Type-II)", _ev5],
+    ["EV6", "certificate is sound (accept => revised; reject => unchanged)", _ev6],
+]
+
+
 # ---------------- harness ----------------
 def set_semiring(name):
     global _S
@@ -1563,6 +1662,7 @@ SUITES = [
     {"key": "SB", "label": "Strategic bridge (SB1-SB3)", "laws": SB, "semiring": None},
     {"key": "RESO", "label": "Resource (C1-C8)", "laws": RESO, "semiring": None},
     {"key": "RESB", "label": "Resource bridge (CB1-CB3)", "laws": RESB, "semiring": None},
+    {"key": "EVO", "label": "Evolution (EV1-EV6)", "laws": EVO_L, "semiring": None},
 ]
 
 

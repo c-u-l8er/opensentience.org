@@ -49,6 +49,7 @@ type Amendment struct {
 	ID        string
 	Authority string
 	Time      float64
+	Predict   *float64 // optional self-declared expected Δ (read by evolution.go)
 }
 
 func enact(item interface{}, authority string, time float64) Amendment {
