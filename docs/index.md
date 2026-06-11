@@ -2,6 +2,8 @@
 
 > **"Intelligence is not generation. It is structured accumulation."**
 
+> **Part of the [&] Protocol stack** · [Ecosystem overview](../../ECOSYSTEM.md) · [Three-protocol stack](../../PULSE/docs/THREE_PROTOCOL_STACK.md) · [Stack status](../../STACK_COMPLETION.md)
+
 Welcome to the documentation hub for **OpenSentience** — the research arm and
 runtime governance layer of the [&] Protocol ecosystem.
 
@@ -166,6 +168,32 @@ For deep protocol specifics:
 - **spec/OS-E001-EMPIRICAL-EVALUATION** — empirical evaluation of topology-aware continual learning
 
 ---
+
+## Documentation index
+
+Linked index of every page in this set (renders on GitHub and in the docs atlas; the toctrees above drive the Sphinx build):
+
+**Guides**
+
+- [Quickstart](quickstart.md)
+- [Runtime Walkthrough](runtime-walkthrough.md)
+- [Positioning — The Missing Constraint: Runtime Governance in the Agent Stack](positioning.md)
+- [Competitive Landscape — Agent Governance and Runtime Enforcement](competitive-landscape.md)
+- [Comparison — OpenSentience vs. Alternatives](comparison-table.md)
+- [Ecosystem Overview — How the Protocols Connect](ecosystem-overview.md)
+- [Research Overview](research.md)
+- [FAQ](faq.md)
+- [Agent Skills](skills/SKILLS.md)
+
+**Specifications**
+
+- [OS-011 — Embodiment Protocol](spec/OS-011-EMBODIMENT.md)
+- [OS-E001 — Empirical Evaluation of Topology-Aware Continual Learning](spec/OS-E001-EMPIRICAL-EVALUATION.md)
+
+**UX & build prompts**
+
+- [Embodiment (body-browser + body-os) — User Stories](ux/user-stories-embodiment.md)
+- [OS-008 Agent Harness Protocol — Implementation Build Prompt](../prompts/OS-008-BUILD.md)
 
 ## The Three Enforcement Layers
 

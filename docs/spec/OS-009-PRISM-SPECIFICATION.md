@@ -2826,3 +2826,14 @@ System C       0.81   0.70   0.71   0.65   ...  0.64   0.00→  [0.58, 0.70]  *t
 ```
 
 This worked example demonstrates the full pipeline: scenario → interaction → L2 judgment → L3 meta-judgment → score aggregation → leaderboard. Every intermediate artifact is public and auditable.
+
+---
+
+## Related: PRISM engine implementation docs
+
+The `/PRISM/` codebase (Elixir/OTP, Fly.io) ships its own engineering docs:
+
+- [Dual-Loop Machines](../../../PRISM/docs/DUAL_LOOP_MACHINES.md) — how the PRISM benchmark loop interlocks with the Graphonomous memory loop (and triple-loop nesting via PULSE)
+- [Arithmetic Integration](../../../PRISM/docs/ARITHMETIC_INTEGRATION.md) — how PRISM gates diagnostics on the box-and-box kernel verdict
+- [NPM Package](../../../PRISM/docs/NPM_PACKAGE.md) — the PRISM client/runner package
+- [User Stories](../../../PRISM/docs/ux/user-stories.md) — benchmarking workflows from the operator's perspective
