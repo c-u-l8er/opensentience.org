@@ -374,10 +374,12 @@ delivery semantics.
 
 ---
 
-## 6. The Five Canonical Tokens
+## 6. Cross-Loop Tokens
 
-PULSE defines five canonical type tokens that flow between loops via
-`connections[]`. These tokens are the protocol's **shared vocabulary**.
+PULSE defines six canonical type tokens that flow between loops via
+`connections[]`. These tokens are the protocol's **shared vocabulary**. As of
+v0.1.2 a loop may also carry **vendor-namespaced** tokens (§6.7) for protocols
+layered on top of PULSE.
 
 ### 6.1 TopologyContext
 
@@ -477,6 +479,50 @@ been compressed, merged, or promoted across timescales.
   "metric_deltas": { "graph_size": -12, "avg_confidence": +0.02 }
 }
 ```
+
+### 6.6 SurpriseSignal
+
+Added in **v0.1.1** for OS-011 (Embodiment Protocol). Emitted by a `&body.*`
+provider when an actual environment observation after `act()` diverges
+materially from the forward model's prediction. Full payload shape and
+consumers are defined in `OS-011-EMBODIMENT.md`; the canonical token name is
+reserved here so PULSE runtimes accept it without a vendor namespace.
+
+### 6.7 Vendor-Namespaced Tokens (v0.1.2)
+
+The six names above are the **canonical** vocabulary. A protocol layered on
+top of PULSE (e.g. OS-012 SCOPE) may declare its own cross-loop tokens
+**without forking PULSE** by using a vendor namespace:
+
+```
+<vendor>.v<N>.<TokenName>
+```
+
+- `<vendor>` — lowercase identifier (`^[a-z][a-z0-9_]*`) naming the owning
+  protocol, e.g. `scope`.
+- `v<N>` — integer vocabulary version, e.g. `v1`.
+- `<TokenName>` — PascalCase token name, e.g. `SpatialClaim`.
+
+Full pattern: `^[a-z][a-z0-9_]*\.v[0-9]+\.[A-Z][A-Za-z0-9]*$`. Example:
+`scope.v1.SpatialClaim`.
+
+Rules:
+
+1. The prefixes `pulse`, `opensentience`, and `os` are **reserved** for
+   canonical use and **must not** be used as a vendor namespace.
+2. A vendor token's CloudEvents `type` is `<vendor>.<snake(TokenName)>.v<N>`
+   (e.g. `scope.spatial_claim.v1`) — vendors keep their own type namespace
+   rather than reusing `org.opensentience.pulse.*`.
+3. Vendor token payloads are **opaque** to PULSE; the owning protocol defines
+   their shape and any conformance. A canonical PULSE runtime validates only
+   the namespace form, not the payload.
+4. Vendor namespacing is **additive and backward-compatible** — a v0.1.0/v0.1.1
+   runtime that does not recognize a vendor token simply routes its envelope by
+   `type` without interpreting the payload.
+
+This is the mechanism that lets downstream spatial/temporal protocols register
+tokens (the SCOPE `scope.v1.*` family, future Boundary/Drift tokens, etc.)
+against PULSE's connection layer without enlarging the canonical enum.
 
 ---
 
@@ -658,7 +704,7 @@ Reference implementation: TickTickClock.
 ## 10. Cross-Loop Connections
 
 Connections are CloudEvents-compatible envelopes carrying canonical tokens
-between loops.
+(§6) or vendor-namespaced tokens (§6.7) between loops.
 
 ### 10.1 Envelope Format
 
@@ -1012,7 +1058,9 @@ PULSE follows semantic versioning with **explicit stability guarantees**:
 - **MINOR** (0.1, 0.2): Additive changes — new optional fields, new
   cadence types, new invariants opt-in by default. Backward compatible.
 - **PATCH** (0.1.0 → 0.1.1): Clarifications, conformance test
-  improvements, no schema changes.
+  improvements, additive backward-compatible schema extensions. v0.1.1 added
+  the `SurpriseSignal` canonical token (OS-011); v0.1.2 added the
+  vendor-namespaced token mechanism (§6.7).
 
 Manifests **must** declare `pulse_protocol_version`. Runtimes **must**
 reject manifests declaring a higher minor version than the runtime
@@ -1024,7 +1072,9 @@ The following are stable in v0.1 and will not change before v1.0:
 
 - The 5 canonical phase kinds
 - The 6 cadence types
-- The 5 canonical tokens
+- The 6 canonical tokens (`TopologyContext`, `DeliberationResult`,
+  `OutcomeSignal`, `ReputationUpdate`, `ConsolidationEvent`, `SurpriseSignal`)
+  and the vendor-namespace form for non-canonical tokens (§6.7)
 - The 7 invariants
 - The substrate slot names (`memory`, `policy`, `audit`, `auth`, `transport`, `time`)
 
@@ -1088,9 +1138,9 @@ recurring need.
 | Phase                 | An atomic, idempotent step inside a loop, with a `kind` and a signature. |
 | Cadence               | The trigger that initiates a new iteration of a loop.                      |
 | Substrate             | A referenced infrastructure layer (memory, policy, audit, auth, transport, time). |
-| Connection            | A typed signal envelope carrying a canonical token from one loop to another. |
+| Connection            | A typed signal envelope carrying a canonical or vendor-namespaced token from one loop to another. |
 | Closure               | The path by which a loop's late-stage phase signals back to its early-stage phase. |
-| Token                 | A canonical, versioned data shape used in cross-loop signaling.            |
+| Token                 | A versioned data shape used in cross-loop signaling — one of the six canonical tokens, or a vendor-namespaced `<vendor>.v<N>.<TokenName>` token (§6.7). |
 | Invariant             | A property the runtime must enforce for the loop to be conforming.         |
 | Trace ID              | A unique identifier propagated through every phase and substrate call.     |
 | Manifest              | The JSON/YAML document that declares a single loop.                        |
