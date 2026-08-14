@@ -37,8 +37,26 @@
                     <div class="eyebrow">OS-006 Delegatic kernel</div>
                     <h1>⊘ — No Cycles in Authority</h1>
                     <span class="badge">Proved</span>
+                    <span class="badge tier tier-impl"
+                        >Implementation-verified</span
+                    >
                 </div>
             </header>
+
+            <div class="tier-legend">
+                <b>Method of evidence.</b> Proofs in this table carry one of
+                three honest tiers — <span class="sw m"></span
+                ><b>Machine-checked</b> (exhaustive enumeration or formal proof)
+                · <span class="sw p"></span><b>Property-tested</b> (a universal
+                property over thousands of random trials) ·
+                <span class="sw i"></span><b>Implementation-verified</b> (backed
+                by a concrete implementation's test suite, not exhaustive nor a
+                standalone universal property). This invariant is
+                <b>implementation-verified</b> by the Delegatic authorization
+                kernel's 42-test suite (the same Tarjan machinery as κ, run at
+                write time), with the L14 consume-soundness law (property-tested)
+                backing the gate. Unlike κ, it is not exhaustively enumerated.
+            </div>
 
             <p class="lede">
                 Where the knowledge graph welcomes cycles — that is what κ is for

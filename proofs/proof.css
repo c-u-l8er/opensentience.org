@@ -129,6 +129,54 @@ header.proof-head {
     background: var(--ink);
     margin-left: 0.4rem;
 }
+/* ---- proof tier badges (honest method-of-evidence, 3 tiers) ----
+   machine  — exhaustive enumeration or formal proof (strongest)
+   property — a universal property checked over thousands of random trials
+   impl     — backed by a concrete implementation's test suite (not exhaustive,
+              not a standalone universal property)
+   The headline "Proved" badge states the verdict; the tier badge states HOW. */
+.badge.tier {
+    margin-left: 0.4rem;
+}
+.badge.tier-machine {
+    background: var(--ink);
+}
+.badge.tier-property {
+    background: #2f5d6e;
+}
+.badge.tier-impl {
+    background: #6e5a2f;
+}
+.tier-legend {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule);
+    background: var(--paper-deep);
+    padding: 0.85rem 1.1rem;
+    margin: 1.5rem 0;
+    line-height: 1.7;
+}
+.tier-legend b {
+    color: var(--ink);
+}
+.tier-legend .sw {
+    display: inline-block;
+    width: 0.7rem;
+    height: 0.7rem;
+    vertical-align: middle;
+    margin-right: 0.35rem;
+    border-radius: 2px;
+}
+.tier-legend .sw.m {
+    background: var(--ink);
+}
+.tier-legend .sw.p {
+    background: #2f5d6e;
+}
+.tier-legend .sw.i {
+    background: #6e5a2f;
+}
 h2 {
     font-family: var(--font-display);
     font-size: 1.7rem;
