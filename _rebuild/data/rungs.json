@@ -1,5 +1,9 @@
 {
-  "lawCount": 103,
+  "_note": "Scope matters: 103 is the KERNEL suite (node test/laws.mjs). The compose/CC2 suite (node test/compose-laws.mjs) adds 15 enforced (14 suite + 1 anchor) and declares 3 open gaps that print FALSIFIED by design. The enforced TOTAL is derived as kernelLaws + composeLaws — never type 118 anywhere. Re-derive by running both suites, and move `measured` in the same commit.",
+  "kernelLaws": 103,
+  "composeLaws": 15,
+  "openGaps": 3,
+  "measured": "2026-08-16",
   "trials": 2000,
   "bridge": "feasible ▸ permitted ▸ best",
   "rungs": [
@@ -11,5 +15,5 @@
     { "n": "7", "key": "strategic", "name": "Strategic Arithmetic", "modal": "strategic", "desc": "coalition power · who can ensure it", "page": "/strategic-arithmetic.html" },
     { "n": "8", "key": "resource", "name": "Resource Arithmetic", "modal": "resource", "desc": "affine ledger · can we afford it", "page": "/resource-arithmetic.html" }
   ],
-  "playground": { "page": "/playground.html", "lawsWired": 103 }
+  "playground": { "page": "/playground.html", "lawsWired": 103, "wiredScope": "core suite" }
 }

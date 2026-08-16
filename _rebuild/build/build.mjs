@@ -43,6 +43,22 @@ if (JSON.stringify(ids) !== JSON.stringify(sorted)) errors.push(`protocols not i
 
 if (rungs.rungs.length !== 7) errors.push(`expected 7 rung entries (rungs 1–2 share one card), got ${rungs.rungs.length}`);
 
+// law counts: scoped, and the enforced total is DERIVED (kernel + compose), never
+// typed. A hand-maintained count must carry the date it was measured — that is how
+// 103 and 118 came to read as contradicting each other across two domains.
+for (const f of ["kernelLaws", "composeLaws", "openGaps", "trials"]) {
+  if (!Number.isInteger(rungs[f]) || rungs[f] < 0) errors.push(`rungs.${f} must be a non-negative integer, got ${rungs[f]}`);
+}
+if (!/^\d{4}-\d{2}-\d{2}$/.test(rungs.measured || "")) {
+  errors.push(`rungs.measured must be an ISO date (when the suites were last run), got ${rungs.measured}`);
+}
+if (rungs.playground?.lawsWired > rungs.kernelLaws) {
+  errors.push(`rungs.playground.lawsWired (${rungs.playground.lawsWired}) exceeds kernelLaws (${rungs.kernelLaws})`);
+}
+if ("lawCount" in rungs) {
+  errors.push("rungs.lawCount is retired — it was scope-ambiguous. Use kernelLaws + composeLaws.");
+}
+
 // loop: exactly the 5 canonical PULSE phase kinds, each fully formed and
 // referencing real protocol ids (so the loop diagram can't drift from the map)
 const PHASES = ["retrieve", "route", "act", "learn", "consolidate"];
@@ -107,5 +123,5 @@ for (const asset of ["amp-nav.js", "kappa_proof.js"]) {
 
 const refCount = references.reduce((a, g) => a + g.items.length, 0);
 console.log(
-  `✓ built dist/index.html — ${protocols.length} protocols, ${rungs.rungs.length}+1 rung cards, ${rungs.lawCount} laws, ${refCount} references`,
+  `✓ built dist/index.html — ${protocols.length} protocols, ${rungs.rungs.length}+1 rung cards, ${rungs.kernelLaws} kernel + ${rungs.composeLaws} compose = ${rungs.kernelLaws + rungs.composeLaws} enforced laws (${rungs.openGaps} open, measured ${rungs.measured}), ${refCount} references`,
 );

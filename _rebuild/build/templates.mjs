@@ -396,13 +396,15 @@ function rungCell(r) {
 }
 
 export function Stack(rungs, kernel) {
+  // Derived, never typed. 103 kernel + 15 compose/CC2 = the enforced total.
+  const enforcedTotal = rungs.kernelLaws + rungs.composeLaws;
   const layer = (cls, name, role, note) =>
     `<div class="stack-layer ${cls} reveal"><div class="stack-name">${name}</div><div class="stack-role">${role}</div><div class="stack-note">${note}</div></div>`;
   const cells = rungs.rungs.map(rungCell).join("\n                ");
   const play = `<a href="${esc(rungs.playground.page)}" class="rung-cell rung-play">
                     <div class="rung-modal">▸ bridge · live</div>
                     <strong>Playground</strong>
-                    <span class="rung-desc">interactive law sandbox · ${rungs.playground.lawsWired} of ${rungs.lawCount} wired</span>
+                    <span class="rung-desc">interactive law sandbox · ${rungs.playground.lawsWired} of ${rungs.kernelLaws} ${esc(rungs.playground.wiredScope)} laws wired</span>
                 </a>`;
   return `<section id="stack" class="container">
             <div class="section-label"><span class="sec-num">${NUM("stack")}</span> The Stack</div>
@@ -423,7 +425,7 @@ export function Stack(rungs, kernel) {
                 ${layer("l-floor", "box-and-box", "governance floor", "decides what is allowed, and what is best")}
             </div>
 
-            <h3 class="map-tier" style="margin-top:3.5rem">The governance floor <span>box-and-box · ${rungs.lawCount} laws × ${rungs.trials} trials</span></h3>
+            <h3 class="map-tier" style="margin-top:3.5rem">The governance floor <span>box-and-box · ${rungs.kernelLaws} kernel laws × ${rungs.trials} trials</span></h3>
             <p class="reveal" style="color: var(--text-secondary); margin-bottom: 1.5rem">
                 Protocols say what a system <em>can</em> do. box-and-box answers
                 the question underneath them all: <em>given everything it could
@@ -434,13 +436,32 @@ export function Stack(rungs, kernel) {
                 safety floor that cannot be weakened. Every verdict ships a
                 certificate.
             </p>
+            <p class="reveal" style="color: var(--text-secondary); margin-bottom: 1.5rem">
+                <strong>Two counts, two scopes — and they are not a
+                discrepancy.</strong> <code>node test/laws.mjs</code> enforces
+                the <strong>${rungs.kernelLaws} kernel laws</strong> — the eight
+                rungs and their bridges — which is the suite this page and the
+                playground refer to. <code>node test/compose-laws.mjs</code>
+                enforces a further <strong>${rungs.composeLaws} compose/CC2
+                laws</strong> (the <code>&amp;</code> and <code>|&gt;</code>
+                brick operators; 14 in the suite plus the AC-COMM anchor), for
+                <strong>${enforcedTotal} enforced in total</strong> — the number
+                <a href="${esc(kernel.landing)}">ampersandboxdesign.com</a>
+                quotes. It also declares <strong>${rungs.openGaps} open
+                gaps</strong> (CP5/CP6/CP7, the <code>Value.pi</code> carrier)
+                which print <em>FALSIFIED</em> in red by design; the build fails
+                if one starts passing. Counts measured by running both suites on
+                <strong>${esc(rungs.measured)}</strong>, at
+                ${rungs.trials.toLocaleString("en-US")} trials per law. Nothing
+                here is fetched at runtime — re-run the suites to check us.
+            </p>
             <div class="rung-grid">
                 ${cells}
                 ${play}
             </div>
             <div class="cta-row" style="margin-top:2rem">
                 <a href="${esc(kernel.landing)}" class="btn btn-primary">The kernel landing</a>
-                <a href="${esc(kernel.laws)}" class="btn">All ${rungs.lawCount} laws, live</a>
+                <a href="${esc(kernel.laws)}" class="btn">All ${enforcedTotal} laws, live</a>
                 <a href="${esc(rungs.playground.page)}" class="btn">Open the playground</a>
             </div>
         </section>`;
