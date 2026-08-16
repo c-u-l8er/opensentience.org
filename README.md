@@ -13,11 +13,34 @@ Published by [Ampersand Box Design](https://ampersandboxdesign.com) under the [&
 
 ---
 
+> **Re-checked against the tree 2026-08-16.** This file had not been touched since
+> 2026-04-12. It said **ten** protocols. There are **twelve** — OS-011 Embodiment
+> and OS-012 SCOPE both landed as drafts and neither reached this page.
+> Graphonomous was listed at v0.3.3 and is **v0.4.3**. PULSE was listed with five
+> cross-loop tokens and has **six** since v0.1.1.
+>
+> **The instructive part is how the count was fixed.** It was hand-corrected to
+> *eleven* first — from reading the spec directory, which holds an OS-011 file and
+> no OS-012 file — and eleven was still wrong. The right answer came from
+> `_rebuild/data/protocols.json`, which the **homepage already derives its count
+> from**, and which says twelve. So this repository had solved the drift for the
+> page it generates and left the README outside the mechanism. The live site has
+> been saying `OS-001 → OS-012` the whole time this file said ten.
+>
+> **`_rebuild/data/protocols.json` is the source of truth.** The table below is
+> hand-maintained and will drift again. Check the JSON.
+>
+> **The OS-E001 benchmark figures were deliberately left at v0.3.3.** That
+> measurement was taken against v0.3.3 and re-labelling it would claim a benchmark
+> nobody ran. A dated result stays dated.
+>
+> Everything else below was checked and stands.
+
 ## What is OpenSentience?
 
 OpenSentience is the **research arm** of the [&] Protocol ecosystem. It is **not a product** — it is a research organization that publishes:
 
-1. **Ten numbered protocols** (OS-001 through OS-010) — each defining one cognitive capability or cross-cutting concern, grounded in cognitive science
+1. **Twelve numbered protocols** (OS-001 through OS-012) — each defining one cognitive capability or cross-cutting concern, grounded in cognitive science
 2. **Three runtime artifacts** — a governance shim (OS-006), a benchmark engine (OS-009 PRISM), and a loop manifest standard (OS-010 PULSE)
 3. **Published research** — cognitive science grounding, empirical benchmarks, and open questions
 
@@ -25,13 +48,15 @@ Other [&] portfolio products implement the protocols. OpenSentience defines them
 
 ---
 
-## The Ten Protocols
+## The Twelve Protocols
 
-Eight **cognitive primitives** (OS-001–OS-008) plus two **cross-cutting protocols** (OS-009, OS-010):
+Eight **cognitive primitives** (OS-001–OS-008), two **cross-cutting protocols** (OS-009, OS-010), one that closes the loop to the world (OS-011), and one for space (OS-012).
+
+**This table is hand-maintained and the homepage's is not.** `_rebuild/data/protocols.json` is the source of truth — the homepage derives its count and range from `protocols.length`, which is why the site has said twelve while this file said ten. Check the JSON, not this table:
 
 | ID | Protocol | [&] Primitive | Status | Implementation |
 |----|----------|---------------|--------|----------------|
-| OS-001 | Continual Learning | `&memory.graph` | v0.3.3 shipped | [Graphonomous](../graphonomous/) |
+| OS-001 | Continual Learning | `&memory.graph` | v0.4.3 shipped | [Graphonomous](../graphonomous/) |
 | OS-002 | Topological Routing (κ) | `&reason.deliberate` | Spec complete | Graphonomous routing layer |
 | OS-003 | Deliberation Orchestrator | `&reason.deliberate` | Spec complete | AgenTroMatic |
 | OS-004 | Attention Engine | meta-reasoning | Spec complete | Graphonomous attention module |
@@ -41,6 +66,8 @@ Eight **cognitive primitives** (OS-001–OS-008) plus two **cross-cutting protoc
 | OS-008 | Agent Harness | `&govern.harness` | Draft | OpenSentience harness module |
 | **OS-009** | **PRISM** (Rating Iterative System Memory) | `&memory + &reason` | v3.0 in development | [`/PRISM/`](../PRISM/) — Fly.io deploy |
 | **OS-010** | **PULSE** (Uniform Loop State Exchange) | `&memory + &govern + &time` | v0.1 draft | [`/PULSE/`](../PULSE/) — manifest standard |
+| OS-011 | Embodiment Protocol | `&body.*` | v0.1 draft (2026-04-21) | [spec](docs/spec/OS-011-EMBODIMENT.md) — closes the perception-action gap in OS-001…OS-010 |
+| OS-012 | **SCOPE** (Spatial Claims & Coordination) | `&space.region + &space.claim` | v0.1 draft | [`scope.html`](scope.html) — **no spec document in `docs/spec/` yet** |
 
 ### The Three-Protocol Stack
 
@@ -94,7 +121,7 @@ Pipeline enforcement above governance. Two enforced pipelines (reactive: `query 
 **Protocol for Rating Iterative System Memory.** The first self-improving continual learning benchmark. Measures 9 CL dimensions (retrieval, transfer, uncertainty, feedback integration, forgetting, consolidation, temporal reasoning, multi-agent deliberation, composition). Four-phase evaluation loop: compose → interact → observe → reflect → diagnose. Features BYOR (Bring Your Own Repo), IRT calibration, three-layer judging, closed-loop verification, leaderboards, and actionable diagnostics.
 
 ### OS-010: PULSE
-**Protocol for Uniform Loop State Exchange.** Temporal algebra declaring how loops cycle, nest, and signal. Five canonical phase kinds (retrieve, route, act, learn, consolidate). Six cadence types (event, periodic, streaming, idle, cross_loop_signal, manual). Five canonical cross-loop tokens via CloudEvents v1.0 envelopes. BYOL (Bring Your Own Loop) — any system publishing a conforming manifest is automatically PRISM-evaluable.
+**Protocol for Uniform Loop State Exchange.** Temporal algebra declaring how loops cycle, nest, and signal. Five canonical phase kinds (retrieve, route, act, learn, consolidate). Six cadence types (event, periodic, streaming, idle, cross_loop_signal, manual). Six canonical cross-loop tokens via CloudEvents v1.0 envelopes (`SurpriseSignal` was added in v0.1.1 for OS-011; counted from `PULSE/schemas/pulse-loop-manifest.v0.1.json`). BYOL (Bring Your Own Loop) — any system publishing a conforming manifest is automatically PRISM-evaluable.
 
 ---
 
