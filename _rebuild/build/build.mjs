@@ -214,9 +214,21 @@ if (![2, 3, 4].includes(surface.tier)) errors.push(`surface.tier must be 2, 3 or
 if (surface.tier === 2 && !surface.layer) errors.push("a place-2 surface MUST print its layer word — dropping it is the tier-4 defect inverted (SHELL.md r5)");
 if (surface.tier !== 2 && surface.layer) errors.push(`a place-${surface.tier} surface may not claim the layer "${surface.layer}" — amp-nav records a layer for place-2 entries only`);
 if (!/^shell-r\d+$/.test(surface.shell_revision || "")) errors.push(`surface.shell_revision must name the shell revision this page was built against, got "${surface.shell_revision}"`);
-if (surface.contact?.kind === "mailto" || /^mailto:/i.test(surface.contact?.url || "")) {
-  errors.push("surface.contact is a mailto: — contact goes through an issue tracker or a hosted form, never a mailbox (Travis's call, 2026-08-11)");
+// Contact (SHELL.md r9, ruled 2026-08-17). It is a hosted form now, and the
+// endpoint is declared here ONCE so no template can invent its own.
+if (surface.contact?.kind === "mailto" || /^mailto:/i.test(surface.contact?.url || "") || /^mailto:/i.test(surface.contact?.endpoint || "")) {
+  errors.push("surface.contact is a mailto: — contact goes through a hosted form or an issue tracker, never a mailbox (Travis's call, 2026-08-11)");
 }
+if (surface.contact?.kind !== "formspree") {
+  errors.push(`surface.contact.kind must be "formspree" (SHELL.md r9 — the [TRAVIS] blocker fourteen surfaces reported was ruled on 2026-08-17), got "${surface.contact?.kind}"`);
+}
+if (!/^https:\/\/formspree\.io\/f\/[a-z0-9]+$/i.test(surface.contact?.endpoint || "")) {
+  errors.push(`surface.contact.endpoint must be an https formspree.io/f/<id> URL, got "${surface.contact?.endpoint}"`);
+}
+if (!surface.contact?.placeholder || !/wrong/i.test(surface.contact.placeholder)) {
+  errors.push("surface.contact.placeholder is missing or no longer invites a correction — \"a number of ours you think is wrong\" is the one kind of message this portfolio most needs, and it is the placeholder's whole job");
+}
+if (!surface.contact?.url) errors.push("surface.contact.url is missing — the public second route (an issue tracker) is kept alongside the form, not replaced by it");
 // The review ledger cannot lie: approved needs its evidence, reviewer and date.
 for (const [k, g] of Object.entries(surface.gates || {})) {
   if (k.startsWith("_")) continue;
@@ -539,6 +551,55 @@ const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:
 for (const f of ["build/proof.js", "build/idanim.js"]) {
   if (/IntersectionObserver/.test(stripComments(readFileSync(resolve(root, f), "utf8")))) {
     artifactErrors.push(`${f} reintroduces an IntersectionObserver — it does not fire in a non-compositing renderer and it made the page's CONTENT depend on JavaScript`);
+  }
+}
+
+// ── the contact form, on the ARTIFACT (SHELL.md r9) ─────────────────────
+// The record above says what the endpoint is; this reads what a visitor gets.
+// Every one of these is a thing that fails SILENTLY: a form whose action drifted
+// posts into a void, a missing honeypot lets spam through with no symptom, and a
+// reply paragraph without a live region is invisible to a screen reader while
+// looking perfect in a screenshot.
+{
+  const form = (markup.match(/<form class="say"[\s\S]*?<\/form>/) || [])[0];
+  if (!form) {
+    artifactErrors.push("no contact form in the artifact — SHELL.md r9 makes a hosted form the correction channel on every surface");
+  } else {
+    const action = (form.match(/action="([^"]*)"/) || [, ""])[1];
+    if (action !== surface.contact.endpoint) {
+      artifactErrors.push(`the form posts to "${action}" and the record declares "${surface.contact.endpoint}" — an endpoint that drifts posts a reader's correction into a void and says nothing`);
+    }
+    if (!/method="POST"/i.test(form)) artifactErrors.push("the contact form has no method=\"POST\" — it would GET the endpoint and put the message in the URL");
+    if (!/\snovalidate\b/.test(form)) {
+      artifactErrors.push("the contact form has no novalidate — the script calls checkValidity() itself so the reply paragraph can speak; without it the browser paints its own bubbles and the reply never runs");
+    }
+    const gotcha = (form.match(/<input[^>]*name="_gotcha"[^>]*>/) || [])[0];
+    if (!gotcha) {
+      artifactErrors.push("the contact form has no _gotcha honeypot — a honeypot dropped in a refactor fails silently and invisibly, which is the whole class this gate exists for");
+    } else {
+      for (const attr of ['tabindex="-1"', 'autocomplete="off"', 'aria-hidden="true"']) {
+        if (!gotcha.includes(attr)) artifactErrors.push(`the _gotcha honeypot is missing ${attr} — without it the field is reachable by tab or by a screen reader, and a person fills it in`);
+      }
+    }
+    const reply = (form.match(/<p class="say-msg"[^>]*>/) || [])[0];
+    if (!reply) artifactErrors.push("the contact form has no .say-msg reply paragraph");
+    else {
+      if (!reply.includes('role="status"')) artifactErrors.push('the reply paragraph has no role="status"');
+      if (!reply.includes('aria-live="polite"')) artifactErrors.push('the reply paragraph has no aria-live="polite" — the reply would be invisible to a screen reader and look perfect in a screenshot');
+    }
+    if (!/<button[^>]*type="submit"/.test(form)) artifactErrors.push("the contact form has no submit button, so it cannot be submitted without a script");
+    // The handler may only claim success on a real 2xx. `res.ok` is the check;
+    // an optimistic "sent" printed on submit is the failure this site argues
+    // against, and it is the default of most hand-rolled AJAX forms.
+    const say = stripComments(readFileSync(resolve(root, "build/proof.js"), "utf8"));
+    if (/querySelector\(["']\.say["']\)/.test(say)) {
+      if (!/\br\.ok\b|\bres\.ok\b/.test(say)) {
+        artifactErrors.push("the contact form's script never reads res.ok — success must be printed on an actual 2xx from the endpoint, never optimistically on submit");
+      }
+      if (!/preventDefault/.test(say)) artifactErrors.push("the contact form's script does not preventDefault, so it would both fetch AND navigate");
+    } else {
+      artifactErrors.push("build/proof.js does not upgrade the contact form — the form still works, but a visitor is handed to somebody else's thank-you screen");
+    }
   }
 }
 

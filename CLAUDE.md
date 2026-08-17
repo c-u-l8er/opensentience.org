@@ -80,7 +80,16 @@ after `TOKENS-END` is the shared shell.
 - **The `covers` span is mandatory** and must be long enough to bound something.
 - **The verb table (SITES.md §0.7).** A CTA whose verb the rung has not earned is refused.
 - **The review ledger** — an `approved` gate with no evidence/reviewer/date is refused.
-- **No `mailto:`**, in the record, in a CTA, or anywhere in the artifact.
+- **No `mailto:`**, in the record, in a CTA, in the form's endpoint, or anywhere in the artifact.
+- **Contact is a Formspree form** (`surface.contact`, SHELL.md r9 — ruled by Travis 2026-08-17,
+  ending the `[TRAVIS]` blocker fourteen surfaces reported). The endpoint is declared **once** in the
+  record and the artifact gate re-reads it off the emitted `action`, so no template can invent its
+  own or keep a stale one through a refactor. The build also refuses a missing `_gotcha` honeypot or
+  any of its three attributes, a reply paragraph without `role="status" aria-live="polite"`, a form
+  without `method="POST"` / `novalidate`, and a handler that never reads `res.ok` — **success is
+  printed on an actual 2xx or not at all.** It is a real `<form action>`: with scripting off it
+  posts and works, which is the same contract the identifying animation holds. The issues link stays
+  as the public second route.
 - **Contrast.** No declared text token may measure below 4.5:1 against its own surface. Three of
   this site's own colours were under the floor and were darkened: `--text-dim` (3.32:1), `--cyan`
   (3.55:1), `--amber` (3.20:1).

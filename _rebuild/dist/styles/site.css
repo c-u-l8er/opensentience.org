@@ -2012,6 +2012,76 @@
                 .idanim { width: min(72%, 340px); opacity: 0.3; right: -6%; }
             }
 
+            /* --- the contact form (SHELL.md r9) --------------------------
+               Shape copied from computedriven.com; the colours are this
+               surface's own tokens, which is the whole shell arrangement. --- */
+            .say { max-width: 68ch; }
+            .say-row {
+                display: grid;
+                grid-template-columns: 1fr 1.6fr;
+                gap: 0.8rem;
+                align-items: start;
+            }
+            @media (max-width: 700px) {
+                .say-row { grid-template-columns: 1fr; }
+            }
+            .say-f { display: block; min-width: 0; }
+            .say-f > span {
+                display: block;
+                font-family: var(--mono);
+                font-size: 0.68rem;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--text-dim);
+                margin-bottom: 0.35rem;
+            }
+            .say input[type="email"],
+            .say textarea {
+                width: 100%;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--r);
+                color: var(--text);
+                font-family: var(--sans);
+                font-size: 0.9rem;
+                padding: 0.6rem 0.7rem;
+                resize: vertical;
+            }
+            .say input[type="email"]:focus,
+            .say textarea:focus {
+                outline: none;
+                border-color: var(--acc);
+                box-shadow: 0 0 0 3px var(--accent-glow);
+            }
+            .say input[type="email"]::placeholder,
+            .say textarea::placeholder { color: var(--text-dim); }
+            /* The honeypot. Off-screen rather than display:none — some bots skip
+               anything a stylesheet has explicitly hidden. */
+            .say input[name="_gotcha"] {
+                position: absolute;
+                left: -9999px;
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+            }
+            .say-act {
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                margin-top: 0.8rem;
+                flex-wrap: wrap;
+            }
+            .say-act .btn { cursor: pointer; }
+            .say-act .btn[disabled] { opacity: 0.55; cursor: default; transform: none; }
+            .say-msg {
+                font-family: var(--mono);
+                font-size: 0.76rem;
+                color: var(--text-dim);
+                margin: 0;
+            }
+            .say-msg.ok { color: var(--data); }
+            .say-msg.bad { color: var(--warn); }
+
             /* --- horizontal overflow: wide content scrolls in its own box,
                never the document. The <pre> blocks inside .kappa-visual had no
                overflow-x, and a grid item's default min-width:auto refuses to

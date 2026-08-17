@@ -1,23 +1,23 @@
 {
   "_comment": "Written by build/build.mjs at emit. Every file listed was hashed before it was written and re-hashed after being read back off disk; the build refuses if they differ. `node build/build.mjs --verify` re-checks these against what is on disk right now, which is how a deploy step proves it is shipping the artifact that was gated rather than whatever survived the last failed build.",
-  "built_at": "2026-08-17T16:33:57.553Z",
-  "shell_revision": "shell-r7",
-  "artifact_sha256": "4fe01599a23e0c2abfc9ec8606204331abeb16190b856e2484e38b107d0aa808",
+  "built_at": "2026-08-17T16:47:44.563Z",
+  "shell_revision": "shell-r9",
+  "artifact_sha256": "40f3cde3ab50dd784f700166b87cc0f23e34d11f1e8c575357dd6e38986bedc5",
   "files": [
     {
       "path": "_rebuild/dist/index.html",
-      "sha256": "4fe01599a23e0c2abfc9ec8606204331abeb16190b856e2484e38b107d0aa808",
-      "bytes": 77235
+      "sha256": "40f3cde3ab50dd784f700166b87cc0f23e34d11f1e8c575357dd6e38986bedc5",
+      "bytes": 79231
     },
     {
       "path": "_rebuild/dist/styles/site.css",
-      "sha256": "3bb2343a7662ac0755036021572ec86f1925da3c51bad57c5ea7b1cf403abac9",
-      "bytes": 76170
+      "sha256": "c90ca085f3caa0280c195b845c5ee1c5bc447d2670a95b5b15e6484744cdf856",
+      "bytes": 78846
     },
     {
       "path": "_rebuild/dist/proof.js",
-      "sha256": "ed796ff324622b2b2bbfed90dd87bbfb1b357061d7c09d91aaa7db836823b2b1",
-      "bytes": 11502
+      "sha256": "d14d9f69d846ee23438f91c8e9dce91618f2c9c4aa57e5268210aed447128cf4",
+      "bytes": 16263
     },
     {
       "path": "_rebuild/dist/idanim.js",
@@ -26,18 +26,18 @@
     },
     {
       "path": "index.html",
-      "sha256": "4fe01599a23e0c2abfc9ec8606204331abeb16190b856e2484e38b107d0aa808",
-      "bytes": 77235
+      "sha256": "40f3cde3ab50dd784f700166b87cc0f23e34d11f1e8c575357dd6e38986bedc5",
+      "bytes": 79231
     },
     {
       "path": "styles/site.css",
-      "sha256": "3bb2343a7662ac0755036021572ec86f1925da3c51bad57c5ea7b1cf403abac9",
-      "bytes": 76170
+      "sha256": "c90ca085f3caa0280c195b845c5ee1c5bc447d2670a95b5b15e6484744cdf856",
+      "bytes": 78846
     },
     {
       "path": "proof.js",
-      "sha256": "ed796ff324622b2b2bbfed90dd87bbfb1b357061d7c09d91aaa7db836823b2b1",
-      "bytes": 11502
+      "sha256": "d14d9f69d846ee23438f91c8e9dce91618f2c9c4aa57e5268210aed447128cf4",
+      "bytes": 16263
     },
     {
       "path": "idanim.js",

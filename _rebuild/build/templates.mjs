@@ -663,7 +663,60 @@ compose(action:"scenarios") → interact(action:"run")
 observe(action:"judge_transcript") → reflect("analyze_gaps")</pre>
                 </div>
             </div>
+
+            ${SayForm(surface)}
         </section>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Contact (SHELL.md r9, ruled by Travis 2026-08-17). Copied in SHAPE from
+// computedriven.com, not just in URL, and every part of it is load-bearing:
+//
+//   · A real <form action method="POST">. With scripting off it posts to
+//     Formspree and works. That is the same contract the rest of this page
+//     already holds — the identifying animation is drawn in markup for exactly
+//     this reason — and it is why this is not a fetch bolted to a button.
+//   · The script only UPGRADES it to an inline reply, so a visitor is not
+//     handed to somebody else's thank-you screen. It prints "sent" only on an
+//     actual 2xx from the endpoint; see proof.js. A form that says thank-you on
+//     submit and drops the message is precisely the failure this site is about.
+//   · The `_gotcha` honeypot is Formspree's, and it is hidden off-screen rather
+//     than with display:none, because some bots skip anything a stylesheet has
+//     explicitly hidden. build.mjs refuses the artifact if it goes missing — a
+//     honeypot dropped in a refactor fails silently and invisibly.
+//   · The endpoint is NOT typed here. It comes from the surface record and the
+//     artifact gate re-reads it off the emitted form.
+export function SayForm(surface) {
+  return `<h3 class="map-tier" style="margin-top:4rem">Or tell us <span>we have a number wrong</span></h3>
+            <p class="lead" style="margin-bottom:1.4rem">
+                This page prints an exhaustive proof, two law counts and twelve
+                protocol statuses, and every one of them has a single author —
+                us. The most useful message this site can receive is the one
+                that says a figure on it does not hold. The form posts to
+                <code>formspree.io</code> when <em>you</em> press the button,
+                carrying what you typed and nothing else; it is the only thing
+                on this page that talks to anyone but this domain. If you would
+                rather the correction be public,
+                <a href="${esc(surface.contact.url)}">open an issue instead</a>.
+            </p>
+            <form class="say" action="${esc(surface.contact.endpoint)}" method="POST" novalidate>
+                <div class="say-row">
+                    <label class="say-f">
+                        <span>Your email</span>
+                        <input type="email" name="email" autocomplete="email" placeholder="so a reply can reach you" required />
+                    </label>
+                    <label class="say-f">
+                        <span>Message</span>
+                        <textarea name="message" rows="3" placeholder="${esc(surface.contact.placeholder)}" required></textarea>
+                    </label>
+                </div>
+                <!-- Formspree's honeypot: a bot fills it, a person never sees it. -->
+                <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
+                <div class="say-act">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                    <p class="say-msg" role="status" aria-live="polite"></p>
+                </div>
+            </form>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
