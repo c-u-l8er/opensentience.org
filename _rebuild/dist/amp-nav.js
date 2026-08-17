@@ -31,7 +31,7 @@
  * License: MIT (Ampersand Box Design)
  */
 
-const VERSION = "0.7.1";
+const VERSION = "0.8.3";
 
 // Canonical URLs per property. The "href" is the destination used in cross-property
 // links; the "label" is what visitors see in the dropdown.
@@ -40,6 +40,16 @@ const VERSION = "0.7.1";
 // tier = one of "shipped" | "alpha" | "spec") so the Compose menu can show
 // honest version/maturity at-a-glance. Source of truth: STACK_COMPLETION.md.
 const LINKS = {
+  // Code — the orchestration console for coding agents (repo: c-u-l8er/code).
+  // Leads Products: it is the surface a visitor actually drives the stack from.
+  code: {
+    label: "Code",
+    tagline: "Orchestration console for coding agents",
+    href: "https://code.traaviis.com",
+    status: "in dev",
+    tier: "alpha",
+  },
+
   // Cognitive Primitives — memory / knowledge / reasoning / time / space
   graphonomous: {
     label: "Graphonomous",
@@ -85,18 +95,23 @@ const LINKS = {
     status: "v0.1.0",
     tier: "shipped",
   },
+  // Tagline names the direction, status names what is actually serving. Both
+  // apps are deployed on Fly (app.fleetprompt.com / app.specprompt.com) and
+  // both are the design the landing pages now supersede — so the tier stays
+  // "shipped" (true: they run) while the status refuses to let "shipped" be
+  // read as "the replay-gated / content-addressed thing ships". It does not.
   fleetprompt: {
     label: "FleetPrompt",
-    tagline: "Agent marketplace + trust",
+    tagline: "Replay-gated agent registry",
     href: "https://fleetprompt.com",
-    status: "v0.1.0",
+    status: "live · prior design",
     tier: "shipped",
   },
   specprompt: {
     label: "SpecPrompt",
-    tagline: "Spec-driven dev standard",
+    tagline: "Content-addressed spec layer",
     href: "https://specprompt.com",
-    status: "v0.1.0",
+    status: "live · prior design",
     tier: "shipped",
   },
   delegatic: {
@@ -130,20 +145,77 @@ const LINKS = {
     tier: "alpha",
   },
 
-  // Academy — the institutional loop: systems that teach & prove cognition
+  // Academy — the institutional loop: systems that teach & prove cognition.
+  //
+  // Every entry below resolves to a live page. Cloudflare Pages serves this site extensionless
+  // — /read is canonical and /read.html 308-redirects to it — so the hrefs carry no extension.
+  // Pointing at the .html form worked but advertised a redirect from 22 sites, which is the same
+  // canonical hygiene the atlas crawl flagged (finding A6). Supervisor was a nav peer until 2026-08-10 and is now a
+  // spec doc under Docs — it is a specification, not a surface.
+  //
+  // Statuses are deliberately unflattering. The whole category is a prototype, and a menu that
+  // read "shipped" across a placeholder would be the exact failure the pages themselves refuse.
+  academy_home: {
+    label: "Academy",
+    tagline: "The institutional loop — teach, apply, prove",
+    href: "https://academy.opensentience.org",
+    status: "prototype",
+    tier: "spec",
+  },
+  academy_read: {
+    label: "Read",
+    tagline: "Grounded articles — every sentence shows its source",
+    href: "https://academy.opensentience.org/read",
+    status: "prototype",
+    tier: "spec",
+  },
+  academy_practice: {
+    label: "Practice",
+    tagline: "Real repository tasks, not exercises",
+    href: "https://academy.opensentience.org/practice",
+    status: "blocked",
+    tier: "spec",
+  },
+  academy_prove: {
+    label: "Prove",
+    tagline: "Signed, replayable evidence — six proof gates",
+    href: "https://academy.opensentience.org/prove",
+    status: "prototype",
+    tier: "spec",
+  },
+  academy_refusals: {
+    label: "The refusal log",
+    tagline: "Pages we declined to write, and what was missing",
+    href: "https://academy.opensentience.org/refusals",
+    status: "prototype",
+    tier: "spec",
+  },
+  academy_method: {
+    label: "Method",
+    tagline: "How Academy is allowed to be wrong",
+    href: "https://academy.opensentience.org/method",
+    status: "prototype",
+    tier: "spec",
+  },
+  // Rendered by the Academy promo band, not as a column item — see CATEGORIES.academy.promo.
+  // It still needs a LINKS entry so `property="masterclass"` resolves and the band can mark
+  // itself current when the reader is already on the page.
+  masterclass: {
+    label: "The New SDLC, Made Formal",
+    tagline: "The long read — every claim with the command that would break it",
+    href: "https://ampersandboxdesign.com/agentic-engineering-masterclass.html",
+    status: "live",
+    tier: "shipped",
+  },
+  // Workbench is the proof layer, not a peer product: a run here is what turns practice into a
+  // signed, replayable SkillBundle that PRISM can score. It is the one thing in this category
+  // that actually runs.
   workbench: {
     label: "Workbench",
-    tagline: "Skill workshop + 6-gate proof harness",
+    tagline: "Record a session you already ran — it becomes a scored SkillBundle",
     href: "https://workbench.opensentience.org",
-    status: "v0.3.0-alpha",
+    status: "v0.4.0-alpha",
     tier: "alpha",
-  },
-  supervisor: {
-    label: "Supervisor",
-    tagline: "Teacher loop — invariant curricula",
-    href: "https://opensentience.org/supervisor.html",
-    status: "spec",
-    tier: "spec",
   },
 
   // Protocols — the three-protocol stack ([&] + PULSE + PRISM)
@@ -174,18 +246,48 @@ const LINKS = {
     tagline: "Rungs 1–2 (alethic · axiological)",
     href: "https://opensentience.org/invariant-arithmetic.html",
   },
+  trvm: {
+    label: "TRVM",
+    tagline: "Coordination-free interaction-calculus runtime",
+    href: "https://trvm.traaviis.com",
+    status: "alpha",
+    tier: "alpha",
+  },
+
+  // The execution substrate chain: WRLM proposes → WRL seals → TRVM reduces →
+  // TRAAVIIS admits. TRVM itself is listed under Protocols (above); the other
+  // three surface here, in Research.
+  wrl: {
+    label: "WallRiderLang",
+    tagline: "An executable topology language whose meaning is a hash",
+    href: "https://wrl.traaviis.com",
+    status: "Core 0.1.2",
+    tier: "alpha",
+  },
+  wrlm: {
+    label: "WRLM",
+    tagline: "The generative cortex — a proposer over sealed worlds",
+    href: "https://github.com/c-u-l8er/TRVM/blob/main/WRLM_RESEARCH_BRIEF.md",
+    status: "steps 1–2",
+    tier: "alpha",
+  },
 
   // The arithmetic ladder — box-and-box governance kernel (8 rungs, one bridge,
-  // 97 property-tested laws) + the six living-paper rung pages + playground + laws.
+  // 116 property-tested laws) + the six living-paper rung pages + playground + laws.
   box_and_box: {
     label: "box-and-box",
-    tagline: "The governance kernel · 8 rungs · 97 laws · 5 languages",
+    tagline: "The governance kernel · 8 rungs · 116 laws · npm",
     href: "https://opensentience.org/box-and-box/",
-    status: "v0.8.0",
+    status: "v0.10.0",
     tier: "shipped",
   },
+  weave: {
+    label: "Cost is a Type",
+    tagline: "Weave — the resource rung as a static cost certificate",
+    href: "https://weave.opensentience.org",
+  },
   laws: {
-    label: "The 97 laws",
+    label: "The 116 laws",
     tagline: "Conformance — every law, live",
     href: "https://ampersandboxdesign.com/laws.html",
   },
@@ -221,7 +323,7 @@ const LINKS = {
   },
   arith_playground: {
     label: "Playground",
-    tagline: "Interactive law sandbox · 64 of 97 live",
+    tagline: "Interactive law sandbox · 64 of 116 live",
     href: "https://opensentience.org/playground.html",
   },
 
@@ -282,33 +384,145 @@ const LINKS = {
     href: "https://opensentience.org/proofs/append-only.html",
   },
 
-  // Docs — three docs subdomains
-  docs_abd: {
-    label: "[&] Protocol docs",
-    tagline: "Structural composition guides",
+  // Docs — quick-jumps into the unified stack-docs atlas (docs.ampersandboxdesign.com),
+  // a single filesystem-mirror site covering every project. Rather than linking out to
+  // per-product subdomains, these deep-link to the hottest subjects in the stack.
+  d_home: {
+    label: "Stack docs home",
+    tagline: "Every doc, mirrored from the repo",
     href: "https://docs.ampersandboxdesign.com",
   },
-  docs_graph: {
-    label: "Graphonomous docs",
-    tagline: "Memory substrate API & MCP",
-    href: "https://docs.graphonomous.com",
+  d_index: {
+    label: "[&] Protocol docs",
+    tagline: "The protocol documentation hub",
+    href: "https://docs.ampersandboxdesign.com/#/AmpersandBoxDesign/docs/index.md",
   },
-  docs_os: {
-    label: "OpenSentience docs",
-    tagline: "Research protocols reference",
-    href: "https://docs.opensentience.org",
+  d_eco: {
+    label: "Ecosystem overview",
+    tagline: "Every product in the stack, at a glance",
+    href: "https://docs.ampersandboxdesign.com/#/ECOSYSTEM.md",
+  },
+  d_arch: {
+    label: "Architecture",
+    tagline: "How the core artifacts fit together",
+    href: "https://docs.ampersandboxdesign.com/#/AmpersandBoxDesign/docs/architecture.md",
+  },
+  d_compose: {
+    label: "Capability composition",
+    tagline: "[&] structural composition (CC2)",
+    href: "https://docs.ampersandboxdesign.com/#/AmpersandBoxDesign/docs/CC2-capability-composition.md",
+  },
+  d_three: {
+    label: "The three-protocol stack",
+    tagline: "[&] · PULSE · PRISM, working together",
+    href: "https://docs.ampersandboxdesign.com/#/PULSE/docs/THREE_PROTOCOL_STACK.md",
+  },
+  d_memory: {
+    label: "Graphonomous — memory",
+    tagline: "The continual-learning engine",
+    href: "https://docs.ampersandboxdesign.com/#/graphonomous/docs/spec/README.md",
+  },
+  d_prism: {
+    label: "PRISM — evaluation",
+    tagline: "Benchmark what's broken & what fits",
+    href: "https://docs.ampersandboxdesign.com/#/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md",
+  },
+  d_govern: {
+    label: "&govern — governance",
+    tagline: "Policy, identity, telemetry, cost",
+    href: "https://docs.ampersandboxdesign.com/#/AmpersandBoxDesign/docs/capabilities/govern.md",
+  },
+  d_quickstart: {
+    label: "Quickstart",
+    tagline: "Run the [&] reference CLI in five minutes",
+    href: "https://docs.ampersandboxdesign.com/#/AmpersandBoxDesign/docs/quickstart.md",
+  },
+  d_faq: {
+    label: "FAQ",
+    tagline: "Straight answers to the common questions",
+    href: "https://docs.ampersandboxdesign.com/#/AmpersandBoxDesign/docs/faq.md",
+  },
+  d_umbrella: {
+    label: "The [&] umbrella",
+    tagline: "One pipeline: declare → compose → govern → observe",
+    href: "https://docs.ampersandboxdesign.com/#/AmpersandBoxDesign/docs/UMBRELLA.md",
+  },
+  d_bendscript: {
+    label: "BendScript — documents",
+    tagline: "The graph-first doc protocol these pages run on",
+    href: "https://docs.ampersandboxdesign.com/#/bendscript.com/docs/spec/README.md",
+  },
+  d_wrl: {
+    label: "WallRiderLang — worlds",
+    tagline: "Seal a topology to a SemanticArtifactID",
+    href: "https://docs.ampersandboxdesign.com/#/WRL",
+  },
+  d_trvm: {
+    label: "TRVM — reduction",
+    tagline: "One spec, four packed-word implementations",
+    href: "https://docs.ampersandboxdesign.com/#/TRVM",
+  },
+  d_wrlm: {
+    label: "WRLM — proposal",
+    tagline: "The only statistical layer in the chain",
+    href: "https://docs.ampersandboxdesign.com/#/TRVM/WRLM_RESEARCH_BRIEF.md",
+  },
+  d_traaviis: {
+    label: "TRAAVIIS — evidence",
+    tagline: "trvs: content-addressed evaluation environments",
+    href: "https://docs.ampersandboxdesign.com/#/TRAAVIIS",
+  },
+  d_code: {
+    label: "Code — the console",
+    tagline: "Lanes, budgets, gates — the orchestration harness",
+    href: "https://github.com/c-u-l8er/code",
   },
 
   // Company
+  culler: {
+    label: "c-u-l8er.link",
+    tagline: "Cosmic Ultraviolet Lithographer — the creative studio",
+    href: "https://c-u-l8er.link",
+  },
   home: {
     label: "Ampersand Box Design",
     tagline: "The factory for evaluated cognitive systems",
     href: "https://ampersandboxdesign.com",
   },
+  traaviis: {
+    label: "TRAAVIIS",
+    tagline: "Evidence-grade environments for evaluating agents",
+    href: "https://traaviis.com",
+    // Not a test count. The suite collects 532 but has one open identity defect
+    // (kernel K27), so "532 tests" would read as 532 green. ORS v1 is the shipped,
+    // checkable fact: the Episode Kernel's first transport, profile O1–O30.
+    status: "trvs · ORS v1",
+    tier: "alpha",
+  },
+  // Broader than the [&] stack -- it carries the non-portfolio domains too, so
+  // it sits under Company rather than in any product column. No status/tier for
+  // the same reason c-u-l8er.link and the home entry carry none: it is a
+  // property, not a versioned artifact.
+  wrand: {
+    label: "Wrand.cc",
+    tagline: "R&D domain graph — the whole portfolio, drawn",
+    href: "https://wrand.cc",
+  },
+  // SHELL.md r16. This entry shipped a mailto: href and the bare address as its
+  // tagline, to 22 targets and every live domain. (Both are named in the commit
+  // message, not here: a comment in a published .js file is published, so
+  // writing the address down to explain its removal would re-ship it. The first
+  // draft of this comment did exactly that.) The
+  // page-level mailto anchors were retracted surface by surface, but this one
+  // is in JavaScript, and Cloudflare's email obfuscation does not rewrite JS —
+  // so the address it was masking in HTML was served in the clear here the
+  // whole time. A published .js asset is a published asset; the blocklist that
+  // only reads index.html scored this clean. Corrections go to the form, which
+  // is the r9 ruling for contact everywhere else on the portfolio.
   contact: {
     label: "Talk to us",
-    tagline: "hello@ampersandboxdesign.com",
-    href: "mailto:hello@ampersandboxdesign.com",
+    tagline: "Corrections and questions, through the form",
+    href: "https://computedriven.com/#join",
   },
 };
 
@@ -317,6 +531,7 @@ const LINKS = {
 // (no highlight). Internal aliases ("ampersandboxdesign" → "home") are fine.
 const PROPERTY_MAP = {
   // Hero products — appear in the Products dropdown
+  code: { category: "products", item: "code" },
   graphonomous: { category: "products", item: "graphonomous" },
   bendscript: { category: "products", item: "bendscript" },
   runefort: { category: "products", item: "runefort" },
@@ -334,15 +549,28 @@ const PROPERTY_MAP = {
   webhost: { category: "compose", item: "webhost" },
   // Academy — institutional loop
   workbench: { category: "academy", item: "workbench" },
-  supervisor: { category: "academy", item: "supervisor" },
+  // The Academy prototype identifies as `academy`. It has no nav item of its own yet — the
+  // entry lands when the reading layer serves a page (ACADEMY.md §6, C1) — so it highlights
+  // the category without claiming an item inside it.
+  academy: { category: "academy", item: "academy_home" },
+  academy_read: { category: "academy", item: "academy_read" },
+  academy_practice: { category: "academy", item: "academy_practice" },
+  academy_prove: { category: "academy", item: "academy_prove" },
+  academy_refusals: { category: "academy", item: "academy_refusals" },
+  academy_method: { category: "academy", item: "academy_method" },
+  masterclass: { category: "academy", item: "masterclass" },
   // Other categories
   ampersand: { category: "protocols", item: "ampersand" },
   ampersandboxdesign: { category: "company", item: "home" },
   pulse: { category: "protocols", item: "pulse" },
   prism: { category: "protocols", item: "prism" },
   scope: { category: "protocols", item: "scope" },
+  trvm: { category: "protocols", item: "trvm" },
+  wrl: { category: "research", item: "wrl" },
+  wrlm: { category: "research", item: "wrlm" },
   invariant_arithmetic: { category: "research", item: "invariant_arithmetic" },
   box_and_box: { category: "research", item: "box_and_box" },
+  weave: { category: "research", item: "weave" },
   laws: { category: "research", item: "laws" },
   arith_deontic: { category: "research", item: "arith_deontic" },
   arith_temporal: { category: "research", item: "arith_temporal" },
@@ -361,6 +589,12 @@ const PROPERTY_MAP = {
   proof_monotonic: { category: "research", item: "proof_monotonic" },
   proof_deny: { category: "research", item: "proof_deny" },
   proof_append: { category: "research", item: "proof_append" },
+  // TRAAVIIS is listed twice (Company + the Research substrate column); the
+  // highlight resolves to Company, the same way graphonomous resolves to
+  // Products despite also appearing under Compose.
+  traaviis: { category: "company", item: "traaviis" },
+  wrand: { category: "company", item: "wrand" },
+  culler: { category: "company", item: "culler" },
   docs: { category: "docs", item: null },
 };
 
@@ -374,12 +608,12 @@ const CATEGORIES = [
   {
     id: "products",
     label: "Products",
-    items: ["graphonomous", "bendscript", "runefort"],
+    items: ["code", "graphonomous", "bendscript", "runefort"],
   },
   {
     id: "protocols",
     label: "Protocols",
-    items: ["ampersand", "pulse", "prism", "scope"],
+    items: ["ampersand", "pulse", "prism", "scope", "trvm"],
   },
   {
     id: "research",
@@ -388,7 +622,7 @@ const CATEGORIES = [
     columns: [
       {
         label: "Protocols & Census",
-        items: ["opensentience", "invariants", "topology_warrant"],
+        items: ["opensentience", "invariants", "topology_warrant", "weave"],
       },
       {
         label: "Proven Invariants",
@@ -402,9 +636,22 @@ const CATEGORIES = [
         ],
       },
       {
+        // The kernel-level entry points: the package, its conformance, the sandbox.
         label: "The Arithmetic Ladder",
+        items: ["box_and_box", "laws", "arith_playground"],
+      },
+      {
+        // The execution substrate, in the order a world moves through it:
+        // WRLM proposes → WRL seals → TRVM reduces → TRAAVIIS admits. WRLM is
+        // the only statistical layer; the other three are total + deterministic.
+        label: "The Execution Substrate",
+        items: ["wrl", "trvm", "wrlm", "traaviis"],
+      },
+      {
+        // The eight rungs themselves, as individual living-paper pages
+        // (invariant_arithmetic covers rungs 1–2; arith_* are rungs 3–8).
+        label: "The Eight Rungs",
         items: [
-          "box_and_box",
           "invariant_arithmetic",
           "arith_deontic",
           "arith_temporal",
@@ -412,8 +659,6 @@ const CATEGORIES = [
           "arith_epistemic",
           "arith_strategic",
           "arith_resource",
-          "arith_playground",
-          "laws",
         ],
       },
     ],
@@ -421,17 +666,58 @@ const CATEGORIES = [
   {
     id: "academy",
     label: "Academy",
-    items: ["workbench", "supervisor"],
+    mega: true,
+    columns: [
+      {
+        label: "The loop",
+        items: ["academy_home", "academy_method"],
+      },
+      {
+        label: "Three layers",
+        items: ["academy_read", "academy_practice", "academy_prove"],
+      },
+      {
+        label: "Evidence",
+        items: ["workbench", "academy_refusals"],
+      },
+    ],
+    // A full-width band under the columns. `key` points at a LINKS entry so the band can mark
+    // itself current, and so its href has one definition rather than two.
+    promo: {
+      key: "masterclass",
+      eyebrow: "Long read",
+      title: "The New SDLC, Made Formal",
+      body: "Google named the discipline. This is the substrate underneath it — and every claim on the page ships the command that would break it.",
+      cta: "Read the masterclass",
+    },
   },
   {
     id: "docs",
     label: "Docs",
-    items: ["docs_abd", "docs_graph", "docs_os"],
+    mega: true,
+    columns: [
+      {
+        label: "Start here",
+        items: ["d_home", "d_quickstart", "d_index", "d_eco", "d_faq"],
+      },
+      {
+        label: "The protocol stack",
+        items: ["d_arch", "d_umbrella", "d_compose", "d_three"],
+      },
+      {
+        label: "Engines & capabilities",
+        items: ["d_memory", "d_prism", "d_bendscript", "d_govern"],
+      },
+      {
+        label: "Execution substrate",
+        items: ["d_wrl", "d_trvm", "d_wrlm", "d_traaviis", "d_code"],
+      },
+    ],
   },
   {
     id: "company",
     label: "Company",
-    items: ["home", "contact"],
+    items: ["culler", "home", "traaviis", "wrand", "contact"],
   },
   {
     id: "compose",
@@ -465,11 +751,18 @@ const CATEGORIES = [
   },
 ];
 
+// The subscribe list is a mailbox, not a service — there is no signup form and
+// no newsletter platform behind this. A mailto is the whole mechanism, which is
+// why the label promises a subscription and not a product. If a real list ever
+// exists, swap the href; do not swap the label ahead of it.
+// The qualifier is a span so it can drop out when the bar runs out of room —
+// the desktop bar is ~1270px of nowrap content and starts clipping under about
+// 1300px, which is most laptops. Wide screens get "Join ComputeDriven",
+// everything narrower gets "Join", and the mobile sheet always has room for the
+// full thing. Interpolated raw into innerHTML below, so markup is fine.
 const CTA = {
-  label: "Talk to us →",
-  href: "mailto:hello@ampersandboxdesign.com",
-  // When the Dark Factory demo ships in Q4 2026, swap to:
-  //   label: "Run the factory →", href: "https://runefort.com/factory"
+  label: 'Join<span class="cta-long"> ComputeDriven</span> →',
+  href: "https://computedriven.com",
 };
 
 const STYLE = /* css */ `
@@ -525,6 +818,7 @@ const STYLE = /* css */ `
   }
 
   .bar {
+    position: relative;
     height: var(--amp-nav-height);
     background: var(--amp-nav-bg);
     backdrop-filter: saturate(180%) blur(14px);
@@ -667,24 +961,135 @@ const STYLE = /* css */ `
     letter-spacing: 0;
   }
 
-  /* Mega dropdown — multi-column layout for the Compose catalog */
+  /* Mega dropdown — multi-column layout for the Compose catalog and Research.
+     Each menu is sized from its OWN column count (--cols, set inline at render)
+     rather than one shared min-width: Research carries five columns and Compose
+     three, and a single width would leave one of them either cramped or sparse.
+     auto-fit reflows to fewer, wider columns when the viewport can't fit them
+     all — the desktop nav still shows down to 861px, where five will not fit. */
+  .item[data-open="true"] .dropdown.mega {
+    display: grid;
+  }
+
   .dropdown.mega {
-    flex-direction: row;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    align-items: start;
     gap: 1.25rem;
     padding: 1rem;
-    /* Center under the Compose button so the wide menu stays on-screen */
+    /* Centered on the BAR, not on the trigger button. Centering a wide menu on
+       its own trigger pushes it off-screen whenever the trigger sits near an
+       edge — Research (leftish, 5 columns) fell off the left, Compose (last
+       button) off the right. The bar is the full viewport, so this is the one
+       anchor that keeps every mega menu on-screen at every width. */
     left: 50%;
     transform: translateX(-50%);
-    min-width: 760px;
+    width: min(calc(var(--cols, 3) * 220px + 2rem), calc(100vw - 2rem));
+  }
+
+  /* Mega triggers drop their positioning context so the menu resolves against
+     .bar. Flat dropdowns keep hanging off their own .item. */
+  .item:has(> .dropdown.mega) {
+    position: static;
   }
 
   .dropdown.mega .col {
-    flex: 1 1 240px;
-    min-width: 220px;
     display: flex;
     flex-direction: column;
     gap: 0.125rem;
+    min-width: 0;
   }
+
+  /* Promo band — spans every column of the mega menu, whatever --cols is.
+     Selector is deliberately two classes: ".dropdown a" (0,1,1) sets display:block and its own
+     padding, and would beat a bare ".promo" (0,1,0) no matter where this rule sits. */
+  .dropdown .promo,
+  .mobile-section .promo {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-areas:
+      "eyebrow cta"
+      "title   cta"
+      "body    cta";
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 1.25rem;
+    row-gap: 0.15rem;
+    margin-top: 0.4rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--amp-nav-border);
+    border-radius: 10px;
+    background:
+      linear-gradient(115deg, color-mix(in srgb, var(--amp-nav-accent) 12%, transparent) 0%, transparent 62%),
+      var(--amp-nav-hover);
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  /* Also outruns ".dropdown a:hover", which would otherwise flatten the gradient. */
+  .dropdown .promo:hover,
+  .mobile-section .promo:hover {
+    background:
+      linear-gradient(115deg, color-mix(in srgb, var(--amp-nav-accent) 18%, transparent) 0%, transparent 62%),
+      var(--amp-nav-hover);
+    border-color: color-mix(in srgb, var(--amp-nav-accent) 55%, transparent);
+    transform: translateY(-1px);
+  }
+  .dropdown .promo[aria-current="page"],
+  .mobile-section .promo[aria-current="page"] { border-color: color-mix(in srgb, var(--amp-nav-accent) 45%, transparent); }
+
+  .promo-eyebrow {
+    grid-area: eyebrow;
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--amp-nav-accent);
+  }
+  .promo-title {
+    grid-area: title;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--amp-nav-fg);
+    line-height: 1.3;
+  }
+  .promo-body {
+    grid-area: body;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--amp-nav-muted);
+  }
+  .promo-cta {
+    grid-area: cta;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+    padding: 0.4rem 0.7rem;
+    border-radius: 7px;
+    font-size: 11.5px;
+    font-weight: 600;
+    background: var(--amp-nav-cta-bg, var(--amp-nav-accent));
+    color: var(--amp-nav-cta-fg, #08090c);
+  }
+  .promo-cta svg { width: 9px; height: 9px; flex: none; }
+
+  /* Narrow menus and the mobile sheet: stack the CTA under the copy. */
+  @media (max-width: 560px) {
+    .dropdown .promo {
+      grid-template-areas: "eyebrow" "title" "body" "cta";
+      grid-template-columns: 1fr;
+      row-gap: 0.35rem;
+    }
+    .dropdown .promo-cta { justify-self: start; margin-top: 0.2rem; }
+  }
+  /* The sheet opens at <=860px but the stacking query above fires at <=560px, which would leave
+     the band in its two-column form in the 561–860px sheet. Stack it unconditionally in there. */
+  .mobile-section .promo {
+    margin-top: 0.6rem;
+    grid-template-areas: "eyebrow" "title" "body" "cta";
+    grid-template-columns: 1fr;
+    row-gap: 0.35rem;
+  }
+  .mobile-section .promo-cta { justify-self: start; margin-top: 0.2rem; }
 
   .dropdown.mega .col h4 {
     margin: 0 0 0.4rem 0;
@@ -783,6 +1188,12 @@ const STYLE = /* css */ `
   .cta:focus-visible {
     transform: translateY(-1px);
     outline: none;
+  }
+
+  @media (max-width: 1300px) {
+    .cta .cta-long {
+      display: none;
+    }
   }
 
   .burger {
@@ -912,6 +1323,23 @@ const TEMPLATE = (property) => {
     `;
   };
 
+  // Full-width band beneath a mega menu's columns. Spans every column via grid-column: 1 / -1,
+  // so it stays one band whatever --cols is set to.
+  const renderPromo = (promo) => {
+    if (!promo) return "";
+    const link = LINKS[promo.key];
+    if (!link) return "";
+    const isCurrent = promo.key === currentItem;
+    return `
+      <a class="promo" href="${escapeAttr(link.href)}" role="menuitem"${isCurrent ? ' aria-current="page"' : ""}>
+        <span class="promo-eyebrow">${promo.eyebrow}</span>
+        <span class="promo-title">${promo.title}</span>
+        <span class="promo-body">${promo.body}</span>
+        <span class="promo-cta">${isCurrent ? "You are reading it" : promo.cta}<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3 1.5 L6.5 5 L3 8.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+    `;
+  };
+
   const renderCategory = (cat) => {
     const isCurrent = cat.id === currentCategory;
     const dropdownInner = cat.mega
@@ -935,8 +1363,9 @@ const TEMPLATE = (property) => {
             <path d="M1.5 3.5 L5 7 L8.5 3.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
-        <div class="${dropdownClass}" role="menu">
+        <div class="${dropdownClass}" role="menu"${cat.mega ? ` style="--cols:${cat.columns.length}"` : ""}>
           ${dropdownInner}
+          ${cat.mega ? renderPromo(cat.promo) : ""}
         </div>
       </div>
     `;
@@ -972,6 +1401,7 @@ const TEMPLATE = (property) => {
       <div class="mobile-section">
         <h3>${cat.label}</h3>
         ${body}
+        ${renderPromo(cat.promo)}
       </div>
     `;
   };
