@@ -961,7 +961,9 @@ for (const asset of ["amp-nav.js", "kappa_proof.js"]) {
 // copy step a human performs is a copy step a human forgets, and the failure
 // mode is a gate that passes over yesterday's page.
 mkdirSync(resolve(site_root, "styles"), { recursive: true });
-const publishedIndexHash = stage(resolve(site_root, "index.html"), Buffer.from(html), "index.html");
+const indexBuf = Buffer.from(html);
+const publishedBytes = indexBuf.length;
+const publishedIndexHash = stage(resolve(site_root, "index.html"), indexBuf, "index.html");
 stageCopy(resolve(root, "styles/site.css"), resolve(site_root, "styles/site.css"), "styles/site.css");
 stageCopy(resolve(root, "build/proof.js"), resolve(site_root, "proof.js"), "proof.js");
 stageCopy(resolve(root, "build/idanim.js"), resolve(site_root, "idanim.js"), "idanim.js");
@@ -990,7 +992,14 @@ writeFileSync(
 
 const refCount = references.reduce((a, g) => a + g.items.length, 0);
 console.log(
-  `✓ built + published index.html — ${html.length} bytes · sha256 ${emitHash.slice(0, 16)}… (written, read back, verified) · ` +
+  // ${html.length} is the JS string's UTF-16 code-unit count, not its size on
+  // disk, and this line used to print it as "bytes". The page carries κ, §, —,
+  // ⟺ and twenty other multi-byte characters, so it under-reported by 342 —
+  // and SITES.md §0.1 makes "local bytes vs curl bytes" the check that a
+  // deployed page is the local one. A lane comparing `curl … | wc -c` against
+  // this line would have read a live, correct deploy as stale. It now prints
+  // what was actually written, taken from the staging record.
+  `✓ built + published index.html — ${publishedBytes} bytes · sha256 ${emitHash.slice(0, 16)}… (written, read back, verified) · ` +
     `band rung ${rung} (derived from ${distinctStatuses.length} distinct protocol statuses) · ` +
     `${protocols.length} protocols, ${rungs.rungs.length}+1 rung cards, ${rungs.kernelLaws} kernel + ${rungs.composeLaws} compose = ${rungs.kernelLaws + rungs.composeLaws} enforced laws ` +
     `(${rungs.openGaps} open, measured ${rungs.measured}), ${refCount} references, ${Object.keys(surface.cta).filter((k) => !k.startsWith("_")).length} CTA groups · ` +

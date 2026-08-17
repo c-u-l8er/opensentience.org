@@ -1,6 +1,6 @@
 {
   "_comment": "Written by build/build.mjs at emit. Every file listed was hashed before it was written and re-hashed after being read back off disk; the build refuses if they differ. `node build/build.mjs --verify` re-checks these against what is on disk right now, which is how a deploy step proves it is shipping the artifact that was gated rather than whatever survived the last failed build.",
-  "built_at": "2026-08-17T17:49:36.857Z",
+  "built_at": "2026-08-17T17:54:02.829Z",
   "shell_revision": "shell-r10",
   "artifact_sha256": "53010147cbe53552928929cc7bc257e3e617ecb2835924541860f31ed57d437c",
   "files": [
