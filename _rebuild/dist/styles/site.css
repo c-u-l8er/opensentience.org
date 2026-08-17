@@ -179,7 +179,19 @@
                 gap: 1.8rem;
                 list-style: none;
             }
-            nav .nav-links a {
+            /* `:not(.btn)` is load-bearing, not tidiness. `nav .nav-links a` is
+               specificity 0,2,1 and `.btn` / `.btn-primary` are 0,1,0, so a
+               button placed in this nav loses its own colour to the nav's link
+               colour and paints --text-secondary on the accent fill: measured
+               here as rgb(74,69,60) on rgb(109,59,212), about 1.9:1, against
+               rgb(255,255,255) at 5.6:1 for the identical button in the hero.
+               This nav carries no button TODAY; the conflict is latent and the
+               scope is what stops it landing. Scoping the nav rule is the fix,
+               not raising .btn — raising .btn starts a specificity race that
+               the next selector wins. build.mjs resolves the cascade over the
+               emitted artifact and refuses if any .btn's colour is decided by a
+               rule that is not a button rule. */
+            nav .nav-links a:not(.btn) {
                 font-family: var(--sans);
                 font-size: 0.8rem;
                 font-weight: 500;
@@ -187,7 +199,7 @@
                 letter-spacing: 0.03em;
                 text-transform: uppercase;
             }
-            nav .nav-links a:hover {
+            nav .nav-links a:not(.btn):hover {
                 color: var(--accent);
             }
 
@@ -1926,9 +1938,16 @@
             .cta code { color: var(--data); }
 
             /* --- the identifying animation (§8) ---
-               An eight-rung ladder is what this site is about, so a ladder is
-               what moves. The layer is absolutely positioned so it cannot delay
-               or displace the h1; the hero clips it, so it can never widen the
+               A directed graph, and the loops in it lighting up: κ > 0 holds
+               exactly when the graph contains an irreducible feedback loop, and
+               that is what this page is about. It replaced a ladder of 29
+               horizontal rules which, on paper stock, rendered as ruled
+               notebook paper — the rails read as stray <hr>s and were reported
+               as such. Nothing here is a long horizontal line; the arcs are
+               bowed and none exceeds 78 px of a 300×430 box.
+
+               The layer is absolutely positioned so it cannot delay or
+               displace the h1; the hero clips it, so it can never widen the
                document at any viewport; and it is masked rather than
                hard-edged so the lede stays readable underneath. --- */
             .idanim {
@@ -1946,6 +1965,49 @@
             }
             .idanim svg { display: block; width: 100%; height: 100%; }
             .hero-front { position: relative; z-index: 1; }
+
+            /* Quiet by default, violet when the arc lies on a closed loop. The
+               driver only toggles .lit and writes an opacity and a dash
+               offset — every colour, width and easing below is CSS, so the
+               per-frame work is a handful of attribute writes and the
+               transitions cost nothing on the main thread. */
+            /* --line2 is a hairline colour: 1.4:1 against this paper even at
+               full strength, which is why the first version of this graph
+               vanished. The quiet graph is drawn in --text-dim and carried down
+               by opacity instead, so it reads as pencil rather than as nothing.
+               Opacity itself is eased in the driver, not here: it changes every
+               frame, and a 0.45s transition on a per-frame value is 41 running
+               transitions that all lag. */
+            .ida {
+                fill: none;
+                stroke: var(--text-dim);
+                stroke-width: 1;
+                stroke-linecap: round;
+                transition: stroke 0.4s ease, stroke-width 0.4s ease;
+            }
+            .ida.lit {
+                stroke: var(--acc);
+                stroke-width: 1.7;
+                stroke-dasharray: 5 6;
+            }
+            .idh { fill: var(--text-dim); transition: fill 0.4s ease; }
+            .idh.lit { fill: var(--acc); }
+            .idn {
+                fill: var(--text-dim);
+                fill-opacity: 0.5;
+                stroke: var(--acc);
+                stroke-width: 0;
+                stroke-opacity: 0;
+                transition: fill 0.4s ease, fill-opacity 0.4s ease, stroke-width 0.4s ease, stroke-opacity 0.4s ease;
+            }
+            /* The halo is this circle's own stroke, drawn centred on its edge —
+               a lit node needs no second element and the DOM stays at one node
+               per node. */
+            .idn.lit { fill: var(--acc); fill-opacity: 1; stroke-width: 5.5; stroke-opacity: 0.18; }
+
+            @media (prefers-reduced-motion: reduce) {
+                .ida, .idh, .idn { transition: none; }
+            }
             @media (max-width: 860px) {
                 .idanim { width: min(72%, 340px); opacity: 0.3; right: -6%; }
             }
@@ -1977,7 +2039,7 @@
             :focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
             .logo:hover, .logo:focus-visible { color: var(--acc); }
             .btn:hover, .btn:focus-visible { filter: brightness(1.06); }
-            .nav-links a:hover, .nav-links a:focus-visible { color: var(--acc); }
+            .nav-links a:not(.btn):hover, .nav-links a:not(.btn):focus-visible { color: var(--acc); }
             .footer-links a:hover, .footer-links a:focus-visible { color: var(--acc); }
             .rung-cell:hover, .rung-cell:focus-visible { border-color: var(--acc-line); }
             .receipt-card:hover, .receipt-card:focus-visible { border-color: var(--acc-line); }

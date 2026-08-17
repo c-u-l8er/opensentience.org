@@ -48,15 +48,20 @@ OS-009 (PRISM) and OS-010 (PULSE) are sibling cross-cutting protocols. PRISM is 
 
 The homepage (`index.html`) is **generated**, not hand-edited. Source lives in `_rebuild/`:
 
-- `_rebuild/data/{site,surface,protocols,loop,receipts,rungs,references}.json` — single source of truth. The protocol **count** and **OS-NNN range** in the hero/headings are DERIVED from `protocols.length`, never typed — so "missing OS-011/OS-012" or a wrong count is structurally impossible.
+- `_rebuild/data/{site,surface,protocols,loop,receipts,rungs,references,retractions}.json` — single source of truth. The protocol **count** and **OS-NNN range** in the hero/headings are DERIVED from `protocols.length`, never typed — so "missing OS-011/OS-012" or a wrong count is structurally impossible.
 - `_rebuild/build/templates.mjs` — zero-dependency template-literal components.
-- `_rebuild/build/build.mjs` — validates the data, then **gates the emitted artifact**, then renders. It fails on drift and on a page that would not be publishable.
-- `_rebuild/styles/site.css` + `_rebuild/build/proof.js` — design tokens + the κ proof UI; `_rebuild/build/ladder.js` is the identifying animation. `kappa_proof.js` and `amp-nav.js` already live at the site root.
+- `_rebuild/build/build.mjs` — validates the data, then **gates the emitted artifact**, then emits, **hashes and publishes** it. It fails on drift and on a page that would not be publishable.
+- `_rebuild/styles/site.css` + `_rebuild/build/proof.js` — design tokens + the κ proof UI; `_rebuild/build/idanim.js` is the identifying animation. `kappa_proof.js` and `amp-nav.js` already live at the site root.
 
-To change the homepage: edit the JSON/templates, run `node _rebuild/build/build.mjs`, then copy
-`dist/index.html` → `index.html`, `dist/styles/site.css` → `styles/site.css`,
-`dist/proof.js` → `proof.js`, `dist/ladder.js` → `ladder.js`. The standalone
-arithmetic/playground/scope pages at the root are authored separately and are not generated.
+To change the homepage: edit the JSON/templates and run `node _rebuild/build/build.mjs`. **There is
+no copy step any more, and that is deliberate.** The build stages each file beside its destination,
+reads it back off disk, re-hashes it, and only then renames it into place — into `dist/` *and* into
+the site root, which is what actually serves. A hand-typed `cp` sat outside every check in that
+file, and a copy step a human performs is a copy step a human forgets; the failure mode was a gate
+that passed over yesterday's page. `node _rebuild/build/build.mjs --verify` re-checks what is on
+disk against `_rebuild/dist/artifact.json` and builds nothing — run it before a deploy. The
+standalone arithmetic/playground/scope pages at the root are authored separately and are not
+generated.
 
 > **`_rebuild/dist/amp-nav.js` is NOT this repository's file.** Building refreshes it as a side
 > effect. Its source is `ampersand-nav/src/amp-nav.js`, fanned out by `sync-nav.sh`, and only the
@@ -79,10 +84,27 @@ after `TOKENS-END` is the shared shell.
 - **Contrast.** No declared text token may measure below 4.5:1 against its own surface. Three of
   this site's own colours were under the floor and were darkened: `--text-dim` (3.32:1), `--cyan`
   (3.55:1), `--amber` (3.20:1).
-- **The identifying animation asserts nothing.** `ladder.js` declares its constants in an
-  `IDENTITY-CONSTANTS` block, and the build fails if either number appears as text on the page; it
-  also checks the SVG the template draws agrees with the driver, and that the nodes the script
-  looks up exist.
+- **The identifying animation asserts nothing.** `idanim.js` declares its two countable constants
+  in an `IDENTITY-CONSTANTS` block, and the build fails if either number appears as text on the
+  page. **Every integer from 2 to 28 is already page text** — the reference list is 28 entries — so
+  a small count will be refused; 11 and 7 both were. The geometry is not duplicated: build.mjs
+  extracts the `GRAPH-START … GRAPH-END` region from the driver and the template draws from it, so
+  the drawing and the driver cannot disagree, and the build re-checks the emitted counts and
+  coordinates and that every selector the script looks up exists.
+- **The animation may not be built out of long horizontal lines.** It used to be a 29-rung ladder,
+  which on paper stock rendered as ruled notebook paper; its rails were reported as stray `<hr>`s on
+  a page that has never had one. The build refuses an arc that runs within 8° of horizontal for more
+  than 72 px, refuses a `<line>` anywhere in the animation, and refuses an `<hr>` anywhere on the
+  page.
+- **Retractions are COUNTED, not detected** (`data/retractions.json`, SHELL.md r6). Each entry
+  carries `min`/`max`: too many occurrences is a reinstatement, too few is a retraction that quietly
+  disappeared, and an occurrence in a comment or an attribute — where a reader cannot see it — is
+  refused outright. Testing *presence* is what let a sibling page keep its retraction and reinstate
+  the retracted sentence elsewhere.
+- **The artifact is proved to be this build's** (SHELL.md r6). Bytes are hashed before they are
+  written, read back off disk and re-hashed, staged then renamed, and recorded in
+  `dist/artifact.json`. Nothing published is a file this run did not produce, and `--verify` answers
+  the question afterwards.
 - **No `IntersectionObserver`.** Both were removed — the scroll-reveal and the spine scrollspy. IO
   does not fire in a non-compositing renderer, and the reveal made the page's *content* depend on
   JavaScript. Do not reintroduce one; the build refuses it.

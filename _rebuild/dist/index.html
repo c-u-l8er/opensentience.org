@@ -13,7 +13,7 @@
             href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="/styles/site.css?v=1de42796" />
+        <link rel="stylesheet" href="/styles/site.css?v=900d5760" />
         <script type="module" src="/amp-nav.js"></script>
     </head>
     <body>
@@ -76,51 +76,142 @@
                     <span class="receipt-chip">1 shipped · 4 spec-complete · 2 in development · 5 draft</span>
                 </div>
             </div>
-            <!-- The identifying animation (SHELL.md §8). It comes AFTER the h1
-                 in source order and sits behind it, because the question comes
-                 first. It renders no data and asserts nothing: /ladder.js takes
-                 no input from this document and writes nothing back into it,
-                 and its band and mark counts are DELIBERATELY not the eight
-                 rungs or any law total — the build refuses if one of them turns
-                 up as text on this page. Delete the script tag at the foot of
-                 this file and every figure, chip, status row and count is still
-                 here. -->
+            <!-- The identifying animation (SHELL.md §8): a directed graph whose
+                 arcs drift, lighting whichever loop they happen to close. That
+                 is this page's own subject — κ > 0 holds exactly when a graph
+                 contains an irreducible feedback loop. It comes AFTER the h1 in
+                 source order and sits behind it, because the question comes
+                 first. It renders no data and asserts nothing: /idanim.js takes
+                 no input from this document and writes nothing back into it
+                 except an opacity, a dash offset and a class name, and its node
+                 and arc counts are DELIBERATELY not the eight rungs, the twelve
+                 protocols or any law total — the build refuses if one of them
+                 turns up as text on this page. Delete the script tag at the
+                 foot of this file and the graph is still drawn, still; every
+                 figure, chip, status row and count is still here. It replaced a
+                 29-rung ladder that read, on paper stock, as ruled notebook
+                 paper with two stray horizontal rules. -->
             <div class="idanim" data-identity-animation aria-hidden="true">
                 <svg viewBox="0 0 300 430" preserveAspectRatio="xMidYMid meet" focusable="false">
-                    <g stroke="var(--line2)" stroke-width="1" stroke-linecap="round">
-                        <line x1="34" y1="30" x2="34" y2="400"></line>
-                        <line x1="266" y1="30" x2="266" y2="400"></line>
-                        <line x1="34" y1="400.0" x2="266" y2="400.0"></line>
-                        <line x1="34" y1="386.8" x2="266" y2="386.8"></line>
-                        <line x1="34" y1="373.6" x2="266" y2="373.6"></line>
-                        <line x1="34" y1="360.4" x2="266" y2="360.4"></line>
-                        <line x1="34" y1="347.1" x2="266" y2="347.1"></line>
-                        <line x1="34" y1="333.9" x2="266" y2="333.9"></line>
-                        <line x1="34" y1="320.7" x2="266" y2="320.7"></line>
-                        <line x1="34" y1="307.5" x2="266" y2="307.5"></line>
-                        <line x1="34" y1="294.3" x2="266" y2="294.3"></line>
-                        <line x1="34" y1="281.1" x2="266" y2="281.1"></line>
-                        <line x1="34" y1="267.9" x2="266" y2="267.9"></line>
-                        <line x1="34" y1="254.6" x2="266" y2="254.6"></line>
-                        <line x1="34" y1="241.4" x2="266" y2="241.4"></line>
-                        <line x1="34" y1="228.2" x2="266" y2="228.2"></line>
-                        <line x1="34" y1="215.0" x2="266" y2="215.0"></line>
-                        <line x1="34" y1="201.8" x2="266" y2="201.8"></line>
-                        <line x1="34" y1="188.6" x2="266" y2="188.6"></line>
-                        <line x1="34" y1="175.4" x2="266" y2="175.4"></line>
-                        <line x1="34" y1="162.1" x2="266" y2="162.1"></line>
-                        <line x1="34" y1="148.9" x2="266" y2="148.9"></line>
-                        <line x1="34" y1="135.7" x2="266" y2="135.7"></line>
-                        <line x1="34" y1="122.5" x2="266" y2="122.5"></line>
-                        <line x1="34" y1="109.3" x2="266" y2="109.3"></line>
-                        <line x1="34" y1="96.1" x2="266" y2="96.1"></line>
-                        <line x1="34" y1="82.9" x2="266" y2="82.9"></line>
-                        <line x1="34" y1="69.6" x2="266" y2="69.6"></line>
-                        <line x1="34" y1="56.4" x2="266" y2="56.4"></line>
-                        <line x1="34" y1="43.2" x2="266" y2="43.2"></line>
-                        <line x1="34" y1="30.0" x2="266" y2="30.0"></line>
+                    <g id="idanim-arcs">
+                        <path class="ida" d="M74.54 116.57Q71.95 97.75 83.44 82.62"></path>
+                        <path class="ida" d="M138.75 98.78Q146.07 87.95 142.41 75.40"></path>
+                        <path class="ida" d="M148.83 65.64Q174.28 43.20 208.19 42.30"></path>
+                        <path class="ida" d="M87.75 122.78Q84.49 119.56 80.91 122.41"></path>
+                        <path class="ida" d="M198.66 155.92Q186.83 148.48 184.74 134.66"></path>
+                        <path class="ida" d="M232.92 130.60Q239.98 138.41 250.44 137.21"></path>
+                        <path class="ida" d="M80.13 172.67Q76.23 177.49 70.36 175.51"></path>
+                        <path class="ida" d="M175.77 131.20Q155.78 135.11 144.18 151.85"></path>
+                        <path class="ida" d="M48.08 246.98Q43.70 245.39 44.69 240.85"></path>
+                        <path class="ida" d="M115.30 251.05Q112.42 241.99 103.26 239.43"></path>
+                        <path class="ida" d="M200.23 222.36Q189.26 231.57 175.10 229.38"></path>
+                        <path class="ida" d="M230.49 216.56Q221.11 213.48 213.31 219.52"></path>
+                        <path class="ida" d="M132.88 275.42Q124.48 270.93 123.63 261.45"></path>
+                        <path class="ida" d="M214.12 253.19Q219.81 256.71 225.28 252.87"></path>
+                        <path class="ida" d="M47.88 293.25Q42.02 275.96 50.24 259.66"></path>
+                        <path class="ida" d="M109.61 364.23Q108.72 352.85 99.11 346.67"></path>
+                        <path class="ida" d="M150.55 347.35Q148.73 340.20 154.32 335.40"></path>
+                        <path class="ida" d="M206.75 334.91Q199.65 342.85 201.94 353.26"></path>
+                        <path class="ida" d="M213.48 327.70Q223.80 318.03 237.87 319.49"></path>
+                        <path class="ida" d="M206.12 226.43Q202.10 236.44 207.83 245.58"></path>
+                        <path class="ida" d="M233.52 247.06Q228.90 234.78 235.39 223.39"></path>
+                        <path class="ida" d="M143.76 354.99Q129.23 354.96 119.60 365.84"></path>
+                        <path class="ida" d="M224.15 132.97Q220.20 147.65 206.64 154.54"></path>
+                        <path class="ida" d="M209.28 225.09Q213.86 240.03 227.98 246.74"></path>
+                        <path class="ida" d="M172.53 234.12Q190.37 235.76 201.64 249.67"></path>
+                        <path class="ida" d="M211.82 248.82Q227.28 239.49 231.42 221.91"></path>
+                        <path class="ida" d="M186.06 128.20Q203.04 121.29 219.88 128.54"></path>
+                        <path class="ida" d="M132.72 106.48Q113.81 106.59 100.53 120.05"></path>
+                        <path class="ida" d="M92.43 117.55Q82.36 101.35 86.69 82.77"></path>
+                        <path class="ida" d="M92.44 128.61Q82.40 144.83 86.77 163.41"></path>
+                        <path class="ida" d="M142.77 107.04Q161.78 109.30 173.65 124.33"></path>
+                        <path class="ida" d="M92.42 236.01Q72.57 235.52 58.08 249.10"></path>
+                        <path class="ida" d="M74.49 127.42Q86.41 143.62 83.60 163.55"></path>
+                        <path class="ida" d="M162.27 328.13Q181.09 336.42 200.37 329.26"></path>
+                        <path class="ida" d="M154.40 353.57Q174.55 348.91 192.26 359.59"></path>
+                        <path class="ida" d="M137.67 150.52Q145.53 131.35 137.85 112.11"></path>
+                        <path class="ida" d="M138.19 285.23Q153.06 299.91 153.57 320.80"></path>
+                        <path class="ida" d="M162.55 233.93Q140.93 235.49 126.35 251.53"></path>
+                        <path class="ida" d="M90.89 169.56Q108.27 156.10 130.15 158.28"></path>
+                        <path class="ida" d="M195.50 357.42Q184.12 338.56 162.88 332.68"></path>
+                        <path class="ida" d="M100.55 341.27Q122.82 338.02 141.28 350.90"></path>
                     </g>
-                    <g id="ident-marks"></g>
+                    <g id="idanim-heads">
+                        <path class="idh" d="M83.44 82.62L81.76 89.13L77.62 85.98Z"></path>
+                        <path class="idh" d="M142.41 75.40L146.64 80.62L141.65 82.08Z"></path>
+                        <path class="idh" d="M208.19 42.30L202.06 45.07L201.92 39.87Z"></path>
+                        <path class="idh" d="M80.91 122.41L84.14 116.52L87.38 120.59Z"></path>
+                        <path class="idh" d="M184.74 134.66L188.23 140.40L183.09 141.18Z"></path>
+                        <path class="idh" d="M250.44 137.21L244.58 140.50L243.99 135.33Z"></path>
+                        <path class="idh" d="M70.36 175.51L77.07 175.03L75.41 179.95Z"></path>
+                        <path class="idh" d="M144.18 151.85L145.57 145.28L149.85 148.24Z"></path>
+                        <path class="idh" d="M44.69 240.85L45.92 247.45L40.84 246.36Z"></path>
+                        <path class="idh" d="M103.26 239.43L109.93 238.59L108.53 243.60Z"></path>
+                        <path class="idh" d="M175.10 229.38L181.63 227.76L180.83 232.90Z"></path>
+                        <path class="idh" d="M213.31 219.52L216.62 213.67L219.80 217.79Z"></path>
+                        <path class="idh" d="M123.63 261.45L126.78 267.39L121.60 267.85Z"></path>
+                        <path class="idh" d="M225.28 252.87L221.70 258.56L218.72 254.30Z"></path>
+                        <path class="idh" d="M50.24 259.66L49.77 266.37L45.13 264.03Z"></path>
+                        <path class="idh" d="M99.11 346.67L105.73 347.83L102.92 352.21Z"></path>
+                        <path class="idh" d="M154.32 335.40L151.31 341.41L147.93 337.47Z"></path>
+                        <path class="idh" d="M201.94 353.26L198.07 347.77L203.14 346.65Z"></path>
+                        <path class="idh" d="M237.87 319.49L231.43 321.44L231.97 316.26Z"></path>
+                        <path class="idh" d="M207.83 245.58L202.33 241.71L206.74 238.95Z"></path>
+                        <path class="idh" d="M235.39 223.39L234.59 230.06L230.07 227.49Z"></path>
+                        <path class="idh" d="M119.60 365.84L121.76 359.48L125.66 362.92Z"></path>
+                        <path class="idh" d="M206.64 154.54L210.99 149.41L213.35 154.05Z"></path>
+                        <path class="idh" d="M227.98 246.74L221.27 246.43L223.50 241.73Z"></path>
+                        <path class="idh" d="M201.64 249.67L195.72 246.49L199.76 243.22Z"></path>
+                        <path class="idh" d="M231.42 221.91L232.53 228.55L227.47 227.35Z"></path>
+                        <path class="idh" d="M219.88 128.54L213.16 128.48L215.22 123.70Z"></path>
+                        <path class="idh" d="M100.53 120.05L103.03 113.81L106.73 117.46Z"></path>
+                        <path class="idh" d="M86.69 82.77L87.81 89.39L82.75 88.21Z"></path>
+                        <path class="idh" d="M86.77 163.41L82.82 157.97L87.88 156.78Z"></path>
+                        <path class="idh" d="M173.65 124.33L167.77 121.08L171.85 117.85Z"></path>
+                        <path class="idh" d="M58.08 249.10L60.82 242.96L64.38 246.76Z"></path>
+                        <path class="idh" d="M83.60 163.55L81.89 157.04L87.04 157.77Z"></path>
+                        <path class="idh" d="M200.37 329.26L195.47 333.85L193.66 328.98Z"></path>
+                        <path class="idh" d="M192.26 359.59L185.60 358.61L188.29 354.16Z"></path>
+                        <path class="idh" d="M137.85 112.11L142.56 116.90L137.73 118.83Z"></path>
+                        <path class="idh" d="M153.57 320.80L150.82 314.67L156.02 314.54Z"></path>
+                        <path class="idh" d="M126.35 251.53L128.59 245.19L132.44 248.69Z"></path>
+                        <path class="idh" d="M130.15 158.28L123.73 160.25L124.24 155.07Z"></path>
+                        <path class="idh" d="M162.88 332.68L169.55 331.82L168.16 336.84Z"></path>
+                        <path class="idh" d="M141.28 350.90L134.71 349.48L137.68 345.22Z"></path>
+                    </g>
+                    <g id="idanim-nodes">
+                        <circle class="idn" cx="85.42" cy="75.07" r="3.2"></circle>
+                        <circle class="idn" cx="143.62" cy="67.69" r="3.2"></circle>
+                        <circle class="idn" cx="215.45" cy="39.45" r="3.2"></circle>
+                        <circle class="idn" cx="73.12" cy="121.99" r="3.2"></circle>
+                        <circle class="idn" cx="93.34" cy="123.08" r="3.2"></circle>
+                        <circle class="idn" cx="137.88" cy="104.31" r="3.2"></circle>
+                        <circle class="idn" cx="180.46" cy="128.14" r="3.2"></circle>
+                        <circle class="idn" cx="227.68" cy="128.62" r="3.2"></circle>
+                        <circle class="idn" cx="62.87" cy="177.69" r="3.2"></circle>
+                        <circle class="idn" cx="85.51" cy="171.11" r="3.2"></circle>
+                        <circle class="idn" cx="137.65" cy="156.12" r="3.2"></circle>
+                        <circle class="idn" cx="201.73" cy="160.6" r="3.2"></circle>
+                        <circle class="idn" cx="257.74" cy="139.96" r="3.2"></circle>
+                        <circle class="idn" cx="40.91" cy="234.02" r="3.2"></circle>
+                        <circle class="idn" cx="97.65" cy="234.01" r="3.2"></circle>
+                        <circle class="idn" cx="167.59" cy="231.48" r="3.2"></circle>
+                        <circle class="idn" cx="205.62" cy="220.85" r="3.2"></circle>
+                        <circle class="idn" cx="236.01" cy="215.61" r="3.2"></circle>
+                        <circle class="idn" cx="50.79" cy="251.88" r="3.2"></circle>
+                        <circle class="idn" cx="119.33" cy="254.94" r="3.2"></circle>
+                        <circle class="idn" cx="135.97" cy="280.09" r="3.2"></circle>
+                        <circle class="idn" cx="208.52" cy="253.35" r="3.2"></circle>
+                        <circle class="idn" cx="233.08" cy="252.64" r="3.2"></circle>
+                        <circle class="idn" cx="47.49" cy="298.84" r="3.2"></circle>
+                        <circle class="idn" cx="95.1" cy="339.98" r="3.2"></circle>
+                        <circle class="idn" cx="156.67" cy="327.96" r="3.2"></circle>
+                        <circle class="idn" cx="208.17" cy="329.49" r="3.2"></circle>
+                        <circle class="idn" cx="245.26" cy="317" r="3.2"></circle>
+                        <circle class="idn" cx="112.49" cy="369.04" r="3.2"></circle>
+                        <circle class="idn" cx="148.87" cy="352.69" r="3.2"></circle>
+                        <circle class="idn" cx="199.96" cy="360.81" r="3.2"></circle>
+                    </g>
                 </svg>
             </div>
         </header>
@@ -780,24 +871,36 @@ observe(action:"judge_transcript") → reflect("analyze_gaps")</pre>
                 <a href="https://github.com/c-u-l8er/opensentience.org/issues">Challenge a claim</a>
             </div>
             <p style="margin-top: 2rem; font-size: 0.7rem">
-                Decoration only: the ladder in the header draws nothing that is
-                measured and nothing that is claimed — its band and mark counts
-                are deliberately not the eight rungs and not any law total, and
-                the build refuses if one of them appears as text here. Every
-                count on this page is generated from a record in
-                <code>_rebuild/data/</code>; the enforced law total is derived as
-                kernel&nbsp;+&nbsp;compose and is typed nowhere. Corrections go to
-                the issue tracker — there is no email address on this site,
-                because none has been set up, not because we would not like one.
+                <strong>Corrected 2026-08-16.</strong> Two links on this page were
+                labelled <em>All 103 laws</em> and pointed at a conformance page
+                that lists 118 and says so. They were wrong about their own
+                destination. 103 is the kernel scope; 118 is 103 kernel plus 15
+                compose/CC2, with 3 declared open. Both counts were always true
+                of different things — the page just never said which was which.
+                The label above is quoted here so it can be refused everywhere
+                else: the build counts it, and a second occurrence anywhere on
+                this page fails the build.
+            </p>
+            <p style="margin-top: 1.25rem; font-size: 0.7rem">
+                Decoration only: the drifting graph in the header draws nothing
+                that is measured and nothing that is claimed — its node and arc
+                counts are deliberately not the eight rungs, not the twelve
+                protocols and not any law total, and the build refuses if one of
+                them appears as text here. Every count on this page is generated
+                from a record in <code>_rebuild/data/</code>; the enforced law
+                total is derived as kernel&nbsp;+&nbsp;compose and is typed
+                nowhere. Corrections go to the issue tracker — there is no email
+                address on this site, because none has been set up, not because
+                we would not like one.
             </p>
             <p style="margin-top: 1.25rem; font-size: 0.7rem">
                 © 2026 Ampersand Box Design. Research published under Apache 2.0 where possible.
-                <span class="stamp">opensentience 0.3.0 · shell-r5 · record 2026-08-16</span>
+                <span class="stamp">opensentience 0.3.0 · shell-r7 · record 2026-08-16</span>
             </p>
         </footer>
 
         <script src="/kappa_proof.js"></script>
-        <script src="/proof.js?v=1de42796"></script>
-        <script src="/ladder.js?v=1de42796" defer></script>
+        <script src="/proof.js?v=900d5760"></script>
+        <script src="/idanim.js?v=900d5760" defer></script>
     </body>
 </html>

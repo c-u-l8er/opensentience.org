@@ -1,0 +1,40 @@
+{
+  "schema": "computedriven-retractions-v1",
+  "_comment": "Strings this site has taken back. build.mjs COUNTS each one in the emitted artifact and refuses outside [min,max]. It does NOT test for presence: SHELL.md r6 records that the ancestor of this check asked 'is the retraction still there?' and stopped, which let a page keep its retraction and reinstate the retracted sentence anywhere else. A blocklisted string is allowed exactly as many times as the retraction that names it needs — and no more, and no fewer, because a retraction that quietly disappears is the same defect running the other way.",
+  "_hidden_comment": "Each entry is also counted over the RAW artifact, comments and attributes included. Any occurrence a reader cannot see is refused outright: GPSCoord's blocklist fired on its first run because a fabricated coordinate was living in a source comment that the build inlined into the shipped page.",
+
+  "entries": [
+    {
+      "string": "All 103 laws",
+      "min": 1,
+      "max": 1,
+      "retracted_at": "2026-08-16",
+      "commit": "2af2c1c",
+      "why": "Two links labelled 'All 103 laws' pointed at ampersandboxdesign.com/laws.html, which lists 118 and says so. They were wrong about their own destination. The one permitted occurrence is the correction note in the footer, which has to name the label to retract it."
+    },
+    {
+      "string": "103 laws",
+      "min": 1,
+      "max": 1,
+      "retracted_at": "2026-08-16",
+      "commit": "2af2c1c",
+      "why": "The unscoped count. 103 is the KERNEL scope and 118 is 103 kernel + 15 compose/CC2; both were always true of different things, and the page said neither which. Every surviving mention now reads '103 kernel laws', which does not contain this string. The single permitted occurrence is the one nested inside the retraction of 'All 103 laws' — so a new unscoped '103 laws' anywhere makes the count 2 and the build refuses."
+    },
+    {
+      "string": "117 laws",
+      "min": 0,
+      "max": 0,
+      "retracted_at": "2026-08-14",
+      "commit": "20731ed",
+      "why": "The compose SUITE total without the AC-COMM anchor, which is property-tested at 2,000 trials and does fail the build. It was retracted from playground.html; it is listed here so it cannot migrate onto the generated homepage, where nothing has ever said it."
+    },
+    {
+      "string": "lawCount",
+      "min": 0,
+      "max": 0,
+      "retracted_at": "2026-08-16",
+      "commit": "2af2c1c",
+      "why": "The scope-ambiguous record field, retired in favour of kernelLaws + composeLaws. build.mjs already refuses it in the data; this refuses it in the artifact too, which is where an unrendered template path would surface it."
+    }
+  ]
+}

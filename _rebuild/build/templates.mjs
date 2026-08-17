@@ -74,16 +74,28 @@ export function SpineToc() {
 // status" rather than "unknown".
 export const RUNGS = ["spec", "in_tree", "live_local", "live_deployed", "external"];
 
-// The static rules of the identity ladder. They are markup, not script, so the
-// ladder is drawn with JavaScript off — only the marks that climb it are gone.
-// build.mjs asserts that the number of rules emitted here equals the BANDS
-// constant in build/ladder.js: if the drawing and the driver disagree, the
-// marks land between the rules and nobody notices until it looks wrong.
-export const LADDER_BANDS = 29;
-const LADDER_RULES = Array.from({ length: LADDER_BANDS }, (_, i) => {
-  const y = (400 - (370 / (LADDER_BANDS - 1)) * i).toFixed(1);
-  return `<line x1="34" y1="${y}" x2="266" y2="${y}"></line>`;
-}).join("\n                        ");
+// The identifying animation's graph is drawn as MARKUP, not by script, so it
+// is there with JavaScript off — only the drifting and the lighting are gone.
+// The geometry is not written here: build.mjs extracts it from the driver
+// (build/idanim.js, between GRAPH-START and GRAPH-END) and hands it in. There
+// is exactly one description of where a node is and which way an arc points,
+// so the drawing and the driver cannot disagree about it.
+export function IdAnimSvg(graph) {
+  const arcs = graph.arcs.map((a) => `<path class="ida" d="${a.d}"></path>`).join("\n                        ");
+  const heads = graph.arcs.map((a) => `<path class="idh" d="${a.head}"></path>`).join("\n                        ");
+  const nodes = graph.nodes.map((n) => `<circle class="idn" cx="${n.x}" cy="${n.y}" r="${graph.r}"></circle>`).join("\n                        ");
+  return `<svg viewBox="0 0 300 430" preserveAspectRatio="xMidYMid meet" focusable="false">
+                    <g id="idanim-arcs">
+                        ${arcs}
+                    </g>
+                    <g id="idanim-heads">
+                        ${heads}
+                    </g>
+                    <g id="idanim-nodes">
+                        ${nodes}
+                    </g>
+                </svg>`;
+}
 
 export function rungChip(value) {
   // A defaulted rung is a fabricated status, so there is no default.
@@ -106,7 +118,7 @@ export function Band(surface, rung) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-export function Hero(site, surface, stats, rung) {
+export function Hero(site, surface, stats, rung, idgraph) {
   const range = `${stats.first} → ${stats.last}`;
   const bs = stats.byStatus;
   const statusChip = [
@@ -143,24 +155,23 @@ export function Hero(site, surface, stats, rung) {
                     <span class="receipt-chip">${statusChip}</span>
                 </div>
             </div>
-            <!-- The identifying animation (SHELL.md §8). It comes AFTER the h1
-                 in source order and sits behind it, because the question comes
-                 first. It renders no data and asserts nothing: /ladder.js takes
-                 no input from this document and writes nothing back into it,
-                 and its band and mark counts are DELIBERATELY not the eight
-                 rungs or any law total — the build refuses if one of them turns
-                 up as text on this page. Delete the script tag at the foot of
-                 this file and every figure, chip, status row and count is still
-                 here. -->
+            <!-- The identifying animation (SHELL.md §8): a directed graph whose
+                 arcs drift, lighting whichever loop they happen to close. That
+                 is this page's own subject — κ > 0 holds exactly when a graph
+                 contains an irreducible feedback loop. It comes AFTER the h1 in
+                 source order and sits behind it, because the question comes
+                 first. It renders no data and asserts nothing: /idanim.js takes
+                 no input from this document and writes nothing back into it
+                 except an opacity, a dash offset and a class name, and its node
+                 and arc counts are DELIBERATELY not the eight rungs, the twelve
+                 protocols or any law total — the build refuses if one of them
+                 turns up as text on this page. Delete the script tag at the
+                 foot of this file and the graph is still drawn, still; every
+                 figure, chip, status row and count is still here. It replaced a
+                 29-rung ladder that read, on paper stock, as ruled notebook
+                 paper with two stray horizontal rules. -->
             <div class="idanim" data-identity-animation aria-hidden="true">
-                <svg viewBox="0 0 300 430" preserveAspectRatio="xMidYMid meet" focusable="false">
-                    <g stroke="var(--line2)" stroke-width="1" stroke-linecap="round">
-                        <line x1="34" y1="30" x2="34" y2="400"></line>
-                        <line x1="266" y1="30" x2="266" y2="400"></line>
-                        ${LADDER_RULES}
-                    </g>
-                    <g id="ident-marks"></g>
-                </svg>
+                ${IdAnimSvg(idgraph)}
             </div>
         </header>`;
 }
@@ -694,15 +705,27 @@ export function Footer(site, surface) {
                 <a href="${esc(surface.contact.url)}">Challenge a claim</a>
             </div>
             <p style="margin-top: 2rem; font-size: 0.7rem">
-                Decoration only: the ladder in the header draws nothing that is
-                measured and nothing that is claimed — its band and mark counts
-                are deliberately not the eight rungs and not any law total, and
-                the build refuses if one of them appears as text here. Every
-                count on this page is generated from a record in
-                <code>_rebuild/data/</code>; the enforced law total is derived as
-                kernel&nbsp;+&nbsp;compose and is typed nowhere. Corrections go to
-                the issue tracker — there is no email address on this site,
-                because none has been set up, not because we would not like one.
+                <strong>Corrected 2026-08-16.</strong> Two links on this page were
+                labelled <em>All 103 laws</em> and pointed at a conformance page
+                that lists 118 and says so. They were wrong about their own
+                destination. 103 is the kernel scope; 118 is 103 kernel plus 15
+                compose/CC2, with 3 declared open. Both counts were always true
+                of different things — the page just never said which was which.
+                The label above is quoted here so it can be refused everywhere
+                else: the build counts it, and a second occurrence anywhere on
+                this page fails the build.
+            </p>
+            <p style="margin-top: 1.25rem; font-size: 0.7rem">
+                Decoration only: the drifting graph in the header draws nothing
+                that is measured and nothing that is claimed — its node and arc
+                counts are deliberately not the eight rungs, not the twelve
+                protocols and not any law total, and the build refuses if one of
+                them appears as text here. Every count on this page is generated
+                from a record in <code>_rebuild/data/</code>; the enforced law
+                total is derived as kernel&nbsp;+&nbsp;compose and is typed
+                nowhere. Corrections go to the issue tracker — there is no email
+                address on this site, because none has been set up, not because
+                we would not like one.
             </p>
             <p style="margin-top: 1.25rem; font-size: 0.7rem">
                 © 2026 ${esc(site.parent.name)}. Research published under Apache 2.0 where possible.
@@ -712,7 +735,7 @@ export function Footer(site, surface) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-export function Page({ site, surface, protocols, loop, receipts, rungs, references, stats, rung, assetv }) {
+export function Page({ site, surface, protocols, loop, receipts, rungs, references, stats, rung, assetv, idgraph }) {
   return `<!doctype html>
 <html lang="en">
     <head>
@@ -737,7 +760,7 @@ export function Page({ site, surface, protocols, loop, receipts, rungs, referenc
         ${Nav(site)}
         ${SpineToc()}
 
-        ${Hero(site, surface, stats, rung)}
+        ${Hero(site, surface, stats, rung, idgraph)}
 
         ${TheGap()}
 
@@ -761,7 +784,7 @@ export function Page({ site, surface, protocols, loop, receipts, rungs, referenc
 
         <script src="/kappa_proof.js"></script>
         <script src="/proof.js?v=${assetv}"></script>
-        <script src="/ladder.js?v=${assetv}" defer></script>
+        <script src="/idanim.js?v=${assetv}" defer></script>
     </body>
 </html>`;
 }
