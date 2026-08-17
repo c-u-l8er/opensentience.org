@@ -1,0 +1,124 @@
+{
+  "schema": "computedriven-surface-v1",
+  "_comment": "The frozen record the placement band, the status block and the calls to action are generated from. build/build.mjs validates it, DERIVES the surface rung from the protocol statuses rather than reading one from here, and refuses the build on drift. Page-level treatment: ProjectAmp2/agents/SHELL.md.",
+
+  "version": "0.3.0",
+  "origin": "https://opensentience.org",
+  "surface": "OpenSentience",
+  "layer": "research",
+  "parent": "ComputeDriven",
+
+  "shell_revision": "shell-r5",
+  "_shell_revision_comment": "SHELL.md's own REVISION line still reads shell-r4 while its revision table lists r5 and describes the four r5 additions. Recorded as r5 because that is the content this page was built against; the header string is a defect in that document, reported rather than worked around.",
+
+  "tier": 2,
+  "_tier_comment": "ampersand-nav/src/amp-nav.js records opensentience as { place: 2, layer: \"research\", rung: null } and the null is deliberate: 'Plan §5: mixed across OS-001…OS-011. There is no single rung for eleven protocols, so there is no rung here.' Place 2 is inside the story, so this is the STANDARD band WITH the layer sentence, not the tier-4 variant. Read-only check against ampersand-nav; lane N owns that file.",
+
+  "question": "Does the shape of a knowledge graph tell you when to think harder?",
+
+  "surface_rung_covers": "nothing, on purpose — the 12 protocols on this page run from one shipped to five drafts, so a single chip would be an average and an average would be a lie. Each protocol card carries its own status. The one artifact that would carry a rung on its own is the κ proof below, which runs in your browser",
+  "_surface_rung_comment": "There is NO surface_rung field here, and that is the point. build.mjs derives it: unanimous protocol statuses would produce a rung, and a mixed set produces `?`. Writing one in by hand would be exactly the drift the derivation exists to prevent.",
+
+  "verified_at": "2026-08-16",
+
+  "rung_witness": null,
+  "_rung_witness_comment": "SHELL.md r5 asks the record to name the gate that WITNESSES the rung, because \"any pending gate blocks the rung\" is too blunt — independent_result is pending forever by construction. Here the derived rung is `?`, and a `?` has no witness BY DEFINITION: that is what the question mark says. build.mjs enforces the pair — a real rung must name an approved gate, and a `?` must name none. Filling this in would be claiming a witness for a status that exists precisely because there is not one.",
+
+  "status": {
+    "statement": "The κ proof is exhaustive and runs client-side: 1,052,740 directed graphs on 2–5 nodes and 873,611 finite maps on 2–7 nodes, with 0 counterexamples. The governance floor below it is property-tested — 103 kernel laws and 15 compose laws, at 2,000 trials each. Everything else on this page is a specification, and each card says which.",
+    "source": "The proof is in /kappa_proof.js and runs in the reader's own browser with no server. The law counts were re-derived on 2026-08-16 by running node test/laws.mjs and node test/compose-laws.mjs against the box-and-box package; both suites derive their own printed totals.",
+    "limit": "Exhaustive verification of an equivalence over finite structures is not evidence that routing on it helps. κ > 0 ⟺ a nontrivial strongly connected component is a theorem about graphs; that deliberating when κ > 0 produces better answers than not is an empirical claim, and nothing on this page tests it. Nine of the twelve protocols have no implementation at all, and the one benchmark figure quoted here was produced by us, on our own system."
+  },
+
+  "advance": {
+    "next_rung": "external",
+    "requires": "Someone who is not us runs the κ proof and reports the result, or benchmarks a memory system through PRISM and publishes a number we did not produce. Every figure on this page today has one author."
+  },
+
+  "cta": {
+    "_comment": "One group per rung, never one blended group. build.mjs refuses a verb the rung has not earned (SITES.md §0.7 / SHELL.md §3). The verbs are fixed; the copy under each is this site's own.",
+    "_labels": {
+      "live_deployed": "runs in your browser, on this domain, with no server",
+      "in_tree": "written and property-tested — the suites derive their own totals",
+      "spec": "written down, and nothing runs"
+    },
+    "live_deployed": [
+      {
+        "verb": "Use the deployed artifact",
+        "href": "#proof",
+        "what": "Run the κ proof. It is exhaustive, it is client-side, and it takes no argument from us — if it finds a counterexample it will say so on your machine before it says so on ours."
+      }
+    ],
+    "in_tree": [
+      {
+        "verb": "Run the tests",
+        "href": "https://github.com/c-u-l8er/AmpersandBoxDesign",
+        "what": "<code>node test/laws.mjs &amp;&amp; node test/compose-laws.mjs</code>. The three open gaps print <em>FALSIFIED</em> in red by design, and the build fails if one starts passing."
+      },
+      {
+        "verb": "Inspect the source",
+        "href": "/playground.html",
+        "what": "The playground wires the core suite into a browser sandbox, so you can watch a law hold — or break one and watch the bridge refuse."
+      }
+    ],
+    "spec": [
+      {
+        "verb": "Read",
+        "href": "https://docs.opensentience.org",
+        "what": "Twelve numbered specifications with their cognitive-science grounding and full reference lists. Nine of them have no implementation, and the card for each says so."
+      },
+      {
+        "verb": "Challenge",
+        "href": "https://github.com/c-u-l8er/opensentience.org/issues",
+        "what": "The five open questions further down are the ones we cannot answer. A protocol that survives an attempt to break it is worth more than one nobody read."
+      },
+      {
+        "verb": "Implement",
+        "href": "https://docs.opensentience.org",
+        "what": "Every spec is written to be implementable by someone else. A second implementation is the only thing that would move any of this off <code>spec</code>."
+      }
+    ]
+  },
+
+  "contact": {
+    "kind": "github_issues",
+    "url": "https://github.com/c-u-l8er/opensentience.org/issues",
+    "_comment": "Deliberately not a mailto: — Travis's call, 2026-08-11 — and deliberately not another surface's Formspree endpoint. A live URL that works is the actual requirement."
+  },
+
+  "gates": {
+    "_comment": "A gate may not read approved without its evidence, reviewer and date fields, and build.mjs enforces that.",
+    "law_counts_measured": {
+      "label": "The two law counts were derived by running the suites",
+      "status": "approved",
+      "description": "103 kernel laws and 15 enforced compose/CC2 laws (14 suite + 1 anchor), 3 known gaps xfail. The enforced total is derived in the template as kernel + compose and is typed nowhere.",
+      "evidence": "node test/laws.mjs && node test/compose-laws.mjs against AmpersandBoxDesign/box-and-box, 2000 trials per law.",
+      "reviewer": "the suites themselves — both print totals they derive",
+      "date": "2026-08-16"
+    },
+    "kappa_proof_client_side": {
+      "label": "The κ proof runs in a reader's browser with no server",
+      "status": "approved",
+      "description": "1,052,740 graphs and 873,611 finite maps, exhaustive, 0 counterexamples.",
+      "evidence": "/kappa_proof.js, loaded by this page and driven by /proof.js. No network call is made by either.",
+      "reviewer": "the artifact, run in a browser",
+      "date": "2026-08-16"
+    },
+    "independent_result": {
+      "label": "A figure on this page that we did not produce",
+      "status": "pending",
+      "description": "Every number here — the benchmark, the proof, the law counts — has one author. The only rung nobody can award themselves.",
+      "evidence": null,
+      "reviewer": null,
+      "date": null
+    },
+    "per_protocol_rungs": {
+      "label": "A source of evidence rungs for the twelve protocols",
+      "status": "pending",
+      "description": "The cards carry a development status, which is not the same thing as an evidence rung. Until something records one, the band chip stays ? rather than being filled in from a planning document.",
+      "evidence": null,
+      "reviewer": null,
+      "date": null
+    }
+  }
+}

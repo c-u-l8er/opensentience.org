@@ -3,8 +3,9 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>OpenSentience — Open Research into Machine Cognition</title>
+        <title>Does the shape of a knowledge graph tell you when to think harder? — OpenSentience</title>
         <meta name="description" content="Open research protocols for machine cognition, structured memory, deliberation topology, and agent governance. Published by Ampersand Box Design." />
+        <meta name="falsifiable-question" content="Does the shape of a knowledge graph tell you when to think harder?" />
         <meta name="keywords" content="machine cognition, agent memory, knowledge graph topology, κ-routing, deliberation protocol, cognitive architecture, AI agent governance, continual learning, structured memory" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,10 +13,15 @@
             href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="/styles/site.css" />
+        <link rel="stylesheet" href="/styles/site.css?v=1de42796" />
         <script type="module" src="/amp-nav.js"></script>
     </head>
     <body>
+        <div class="band">
+            <span class="where">OpenSentience is the <b>research</b> layer of ComputeDriven</span>
+            <span class="rung" data-rung="?" title="spec · in_tree · live_local · live_deployed · external">?</span>
+            <span class="covers">That chip covers nothing, on purpose — the 12 protocols on this page run from one shipped to five drafts, so a single chip would be an average and an average would be a lie. Each protocol card carries its own status. The one artifact that would carry a rung on its own is the κ proof below, which runs in your browser.</span>
+        </div>
         <amp-nav property="opensentience"></amp-nav>
         <nav>
             <div class="nav-inner">
@@ -37,31 +43,85 @@
                 <li><a href="#loop" data-spine="loop"><span class="spine-num">02</span><span class="spine-label">The Loop</span></a></li>
                 <li><a href="#protocols" data-spine="protocols"><span class="spine-num">03</span><span class="spine-label">Protocols</span></a></li>
                 <li><a href="#proof" data-spine="proof"><span class="spine-num">04</span><span class="spine-label">Proof</span></a></li>
-                <li><a href="#stack" data-spine="stack"><span class="spine-num">05</span><span class="spine-label">The Stack</span></a></li>
-                <li><a href="#open-questions" data-spine="open-questions"><span class="spine-num">06</span><span class="spine-label">Open Questions</span></a></li>
-                <li><a href="#get-involved" data-spine="get-involved"><span class="spine-num">07</span><span class="spine-label">Get Involved</span></a></li>
-                <li><a href="#references" data-spine="references"><span class="spine-num">08</span><span class="spine-label">References</span></a></li>
+                <li><a href="#status" data-spine="status"><span class="spine-num">05</span><span class="spine-label">Status</span></a></li>
+                <li><a href="#stack" data-spine="stack"><span class="spine-num">06</span><span class="spine-label">The Stack</span></a></li>
+                <li><a href="#open-questions" data-spine="open-questions"><span class="spine-num">07</span><span class="spine-label">Open Questions</span></a></li>
+                <li><a href="#get-involved" data-spine="get-involved"><span class="spine-num">08</span><span class="spine-label">Get Involved</span></a></li>
+                <li><a href="#references" data-spine="references"><span class="spine-num">09</span><span class="spine-label">References</span></a></li>
             </ol>
         </nav>
 
         <header class="hero container">
-            <span class="hero-badge">Open research into machine cognition · an [&amp;] Ampersand Box Design program</span>
-            <h1>Intelligence is not generation.<br /><em>It is structured accumulation.</em></h1>
-            <p class="subtitle">
-                A language model that can't remember yesterday, weigh evidence
-                across sessions, or learn from where it's deployed is a
-                <strong>generator</strong> — not a system. OpenSentience is the
-                open research program defining the protocols that close that gap.
-            </p>
-            <div class="cta-row">
-                <a href="#protocols" class="btn btn-primary">Read the protocols</a>
-                <a href="#proof" class="btn">See the proof</a>
-                <a href="https://github.com/c-u-l8er/opensentience.org" class="btn btn-github"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Star on GitHub</a>
+            <div class="hero-front">
+                <div class="hero-eyebrow">The question this site exists to answer</div>
+                <h1>Does the shape of a knowledge graph tell you <em>when to think harder?</em></h1>
+                <p class="subtitle">
+                    Below, that question is answered exhaustively and in your own
+                    browser: for every directed graph on two to five nodes and
+                    every finite map on two to seven, κ&nbsp;&gt;&nbsp;0 holds
+                    exactly when the graph contains an irreducible feedback loop.
+                    <strong>The theorem is settled and the useful part is not.</strong>
+                    Routing a system's reasoning on that signal is a claim
+                    nothing here tests, and the 12 protocols on this
+                    page are honest one by one about which of the two they are.
+                </p>
+                <div class="cta-row">
+                    <a href="#proof" class="btn btn-primary">Run the proof yourself</a>
+                    <a href="#status" class="btn">What this does not establish</a>
+                    <a href="https://github.com/c-u-l8er/opensentience.org" class="btn btn-github"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Star on GitHub</a>
+                </div>
+                <div class="receipts-strip reveal">
+                    <span class="receipt-chip"><strong>12</strong> protocols</span>
+                    <span class="receipt-chip"><strong>OS-001 → OS-012</strong></span>
+                    <span class="receipt-chip">1 shipped · 4 spec-complete · 2 in development · 5 draft</span>
+                </div>
             </div>
-            <div class="receipts-strip reveal">
-                <span class="receipt-chip"><strong>12</strong> protocols</span>
-                <span class="receipt-chip"><strong>OS-001 → OS-012</strong></span>
-                <span class="receipt-chip">1 shipped · 4 spec-complete · 2 in development · 5 draft</span>
+            <!-- The identifying animation (SHELL.md §8). It comes AFTER the h1
+                 in source order and sits behind it, because the question comes
+                 first. It renders no data and asserts nothing: /ladder.js takes
+                 no input from this document and writes nothing back into it,
+                 and its band and mark counts are DELIBERATELY not the eight
+                 rungs or any law total — the build refuses if one of them turns
+                 up as text on this page. Delete the script tag at the foot of
+                 this file and every figure, chip, status row and count is still
+                 here. -->
+            <div class="idanim" data-identity-animation aria-hidden="true">
+                <svg viewBox="0 0 300 430" preserveAspectRatio="xMidYMid meet" focusable="false">
+                    <g stroke="var(--line2)" stroke-width="1" stroke-linecap="round">
+                        <line x1="34" y1="30" x2="34" y2="400"></line>
+                        <line x1="266" y1="30" x2="266" y2="400"></line>
+                        <line x1="34" y1="400.0" x2="266" y2="400.0"></line>
+                        <line x1="34" y1="386.8" x2="266" y2="386.8"></line>
+                        <line x1="34" y1="373.6" x2="266" y2="373.6"></line>
+                        <line x1="34" y1="360.4" x2="266" y2="360.4"></line>
+                        <line x1="34" y1="347.1" x2="266" y2="347.1"></line>
+                        <line x1="34" y1="333.9" x2="266" y2="333.9"></line>
+                        <line x1="34" y1="320.7" x2="266" y2="320.7"></line>
+                        <line x1="34" y1="307.5" x2="266" y2="307.5"></line>
+                        <line x1="34" y1="294.3" x2="266" y2="294.3"></line>
+                        <line x1="34" y1="281.1" x2="266" y2="281.1"></line>
+                        <line x1="34" y1="267.9" x2="266" y2="267.9"></line>
+                        <line x1="34" y1="254.6" x2="266" y2="254.6"></line>
+                        <line x1="34" y1="241.4" x2="266" y2="241.4"></line>
+                        <line x1="34" y1="228.2" x2="266" y2="228.2"></line>
+                        <line x1="34" y1="215.0" x2="266" y2="215.0"></line>
+                        <line x1="34" y1="201.8" x2="266" y2="201.8"></line>
+                        <line x1="34" y1="188.6" x2="266" y2="188.6"></line>
+                        <line x1="34" y1="175.4" x2="266" y2="175.4"></line>
+                        <line x1="34" y1="162.1" x2="266" y2="162.1"></line>
+                        <line x1="34" y1="148.9" x2="266" y2="148.9"></line>
+                        <line x1="34" y1="135.7" x2="266" y2="135.7"></line>
+                        <line x1="34" y1="122.5" x2="266" y2="122.5"></line>
+                        <line x1="34" y1="109.3" x2="266" y2="109.3"></line>
+                        <line x1="34" y1="96.1" x2="266" y2="96.1"></line>
+                        <line x1="34" y1="82.9" x2="266" y2="82.9"></line>
+                        <line x1="34" y1="69.6" x2="266" y2="69.6"></line>
+                        <line x1="34" y1="56.4" x2="266" y2="56.4"></line>
+                        <line x1="34" y1="43.2" x2="266" y2="43.2"></line>
+                        <line x1="34" y1="30.0" x2="266" y2="30.0"></line>
+                    </g>
+                    <g id="ident-marks"></g>
+                </svg>
             </div>
         </header>
 
@@ -446,8 +506,28 @@ MCP tools used: store_node × 4, then edge creation</pre>
             </div>
         </section>
 
+        <section id="status" class="container">
+            <div class="section-label"><span class="sec-num">05</span> Status</div>
+            <h2>What this page is <em>entitled</em> to claim.</h2>
+            <p class="lead">
+                Every surface in this portfolio carries the same five rows, and
+                the fourth is the one that costs something to write. The chip in
+                the band above reads <strong>?</strong>, and it reads that
+                because it is derived from the twelve protocol statuses rather
+                than chosen — a page with one shipped protocol and five drafts
+                does not get to average itself into a rung.
+            </p>
+            <dl class="status">
+                <div><dt>Status</dt><dd>The κ proof is exhaustive and runs client-side: 1,052,740 directed graphs on 2–5 nodes and 873,611 finite maps on 2–7 nodes, with 0 counterexamples. The governance floor below it is property-tested — 103 kernel laws and 15 compose laws, at 2,000 trials each. Everything else on this page is a specification, and each card says which.</dd></div>
+                <div><dt>Last verified</dt><dd>2026-08-16</dd></div>
+                <div><dt>Source</dt><dd>The proof is in /kappa_proof.js and runs in the reader's own browser with no server. The law counts were re-derived on 2026-08-16 by running node test/laws.mjs and node test/compose-laws.mjs against the box-and-box package; both suites derive their own printed totals.</dd></div>
+                <div class="limit"><dt>Limit</dt><dd>Exhaustive verification of an equivalence over finite structures is not evidence that routing on it helps. κ > 0 ⟺ a nontrivial strongly connected component is a theorem about graphs; that deliberating when κ > 0 produces better answers than not is an empirical claim, and nothing on this page tests it. Nine of the twelve protocols have no implementation at all, and the one benchmark figure quoted here was produced by us, on our own system.</dd></div>
+                <div><dt>Next rung</dt><dd><strong>external</strong> — Someone who is not us runs the κ proof and reports the result, or benchmarks a memory system through PRISM and publishes a number we did not produce. Every figure on this page today has one author.</dd></div>
+            </dl>
+        </section>
+
         <section id="stack" class="container">
-            <div class="section-label"><span class="sec-num">05</span> The Stack</div>
+            <div class="section-label"><span class="sec-num">06</span> The Stack</div>
             <h2>Three protocols, <em>one stack.</em></h2>
             <p class="lead">
                 <strong>[&amp;] composes agents. PULSE gives them a heartbeat.
@@ -545,7 +625,7 @@ MCP tools used: store_node × 4, then edge creation</pre>
         </section>
 
         <section id="open-questions" class="container">
-            <div class="section-label"><span class="sec-num">06</span> Open Questions</div>
+            <div class="section-label"><span class="sec-num">07</span> Open Questions</div>
             <h2>What we don't know <em>yet.</em></h2>
             <p class="lead">
                 A research program publishes its unknowns. These are genuine open
@@ -561,12 +641,41 @@ MCP tools used: store_node × 4, then edge creation</pre>
         </section>
 
         <section id="get-involved" class="container">
-            <div class="section-label"><span class="sec-num">07</span> Get Involved</div>
-            <h2>Three doors <em>in.</em></h2>
+            <div class="section-label"><span class="sec-num">08</span> Get Involved</div>
+            <h2>Three rungs, three different <em>invitations.</em></h2>
             <p class="lead">
-                OpenSentience is open research. Whoever you are, there's a way to
-                use it, build on it, or try to break it.
+                A page may only ask you to do what its evidence has earned. The
+                κ proof is deployed and runs on your machine, so it asks you to
+                run it. The governance floor is written and property-tested, so
+                it asks you to run the suites and read the source. The rest is a
+                specification, so it can ask you to read it, argue with it or
+                implement it — and never to run something that does not exist.
+                The verbs below are not chosen; they are the ones each rung
+                allows, and the build refuses any other.
             </p>
+            <div class="ctagroup">
+                <div class="tag ok">live_deployed &mdash; runs in your browser, on this domain, with no server</div>
+                <div class="cta">
+                    <a href="#proof"><span class="verb">Use the deployed artifact</span><span class="what">Run the κ proof. It is exhaustive, it is client-side, and it takes no argument from us — if it finds a counterexample it will say so on your machine before it says so on ours.</span></a>
+                </div>
+            </div>
+            <div class="ctagroup">
+                <div class="tag">in_tree &mdash; written and property-tested — the suites derive their own totals</div>
+                <div class="cta">
+                    <a href="https://github.com/c-u-l8er/AmpersandBoxDesign"><span class="verb">Run the tests</span><span class="what"><code>node test/laws.mjs &amp;&amp; node test/compose-laws.mjs</code>. The three open gaps print <em>FALSIFIED</em> in red by design, and the build fails if one starts passing.</span></a>
+                    <a href="/playground.html"><span class="verb">Inspect the source</span><span class="what">The playground wires the core suite into a browser sandbox, so you can watch a law hold — or break one and watch the bridge refuse.</span></a>
+                </div>
+            </div>
+            <div class="ctagroup">
+                <div class="tag">spec &mdash; written down, and nothing runs</div>
+                <div class="cta">
+                    <a href="https://docs.opensentience.org"><span class="verb">Read</span><span class="what">Twelve numbered specifications with their cognitive-science grounding and full reference lists. Nine of them have no implementation, and the card for each says so.</span></a>
+                    <a href="https://github.com/c-u-l8er/opensentience.org/issues"><span class="verb">Challenge</span><span class="what">The five open questions further down are the ones we cannot answer. A protocol that survives an attempt to break it is worth more than one nobody read.</span></a>
+                    <a href="https://docs.opensentience.org"><span class="verb">Implement</span><span class="what">Every spec is written to be implementable by someone else. A second implementation is the only thing that would move any of this off <code>spec</code>.</span></a>
+                </div>
+            </div>
+
+            <h3 class="map-tier" style="margin-top:4rem">Or come in as <span>a researcher, a builder, a skeptic</span></h3>
             <div class="doors-grid">
                 <div class="door-card reveal">
                     <div class="door-icon" style="color:var(--cyan)">✶</div>
@@ -599,7 +708,7 @@ observe(action:"judge_transcript") → reflect("analyze_gaps")</pre>
         </section>
 
         <section id="references" class="container">
-            <div class="section-label"><span class="sec-num">08</span> References</div>
+            <div class="section-label"><span class="sec-num">09</span> References</div>
             <h2>Standing on the work of <em>others.</em></h2>
             <h4 class="ref-group">Cognitive Architectures</h4>
             <ul class="ref-list reveal">
@@ -668,13 +777,27 @@ observe(action:"judge_transcript") → reflect("analyze_gaps")</pre>
                 <a href="https://github.com/c-u-l8er/AmpersandBoxDesign">GitHub</a>
                 <a href="https://ampersandboxdesign.com/protocol.html">[&] Protocol</a>
                 <a href="https://traaviis.com">traaviis.com</a>
+                <a href="https://github.com/c-u-l8er/opensentience.org/issues">Challenge a claim</a>
             </div>
             <p style="margin-top: 2rem; font-size: 0.7rem">
+                Decoration only: the ladder in the header draws nothing that is
+                measured and nothing that is claimed — its band and mark counts
+                are deliberately not the eight rungs and not any law total, and
+                the build refuses if one of them appears as text here. Every
+                count on this page is generated from a record in
+                <code>_rebuild/data/</code>; the enforced law total is derived as
+                kernel&nbsp;+&nbsp;compose and is typed nowhere. Corrections go to
+                the issue tracker — there is no email address on this site,
+                because none has been set up, not because we would not like one.
+            </p>
+            <p style="margin-top: 1.25rem; font-size: 0.7rem">
                 © 2026 Ampersand Box Design. Research published under Apache 2.0 where possible.
+                <span class="stamp">opensentience 0.3.0 · shell-r5 · record 2026-08-16</span>
             </p>
         </footer>
 
         <script src="/kappa_proof.js"></script>
-        <script src="/proof.js"></script>
+        <script src="/proof.js?v=1de42796"></script>
+        <script src="/ladder.js?v=1de42796" defer></script>
     </body>
 </html>

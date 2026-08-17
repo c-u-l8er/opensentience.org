@@ -28,6 +28,7 @@ const SECTIONS = [
   { id: "loop", label: "The Loop" },
   { id: "protocols", label: "Protocols" },
   { id: "proof", label: "Proof" },
+  { id: "status", label: "Status" },
   { id: "stack", label: "The Stack" },
   { id: "open-questions", label: "Open Questions" },
   { id: "get-involved", label: "Get Involved" },
@@ -65,7 +66,47 @@ export function SpineToc() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-export function Hero(site, protocols, stats) {
+// The placement band (SHELL.md §1). It sits at the very top of <body>, above
+// everything, and answers "where am I in this thing?" before anything loads.
+//
+// It is rendered at BUILD time, never by a script: a chip painted by JavaScript
+// is blank to anything that does not run scripts, and blank reads as "no
+// status" rather than "unknown".
+export const RUNGS = ["spec", "in_tree", "live_local", "live_deployed", "external"];
+
+// The static rules of the identity ladder. They are markup, not script, so the
+// ladder is drawn with JavaScript off — only the marks that climb it are gone.
+// build.mjs asserts that the number of rules emitted here equals the BANDS
+// constant in build/ladder.js: if the drawing and the driver disagree, the
+// marks land between the rules and nobody notices until it looks wrong.
+export const LADDER_BANDS = 29;
+const LADDER_RULES = Array.from({ length: LADDER_BANDS }, (_, i) => {
+  const y = (400 - (370 / (LADDER_BANDS - 1)) * i).toFixed(1);
+  return `<line x1="34" y1="${y}" x2="266" y2="${y}"></line>`;
+}).join("\n                        ");
+
+export function rungChip(value) {
+  // A defaulted rung is a fabricated status, so there is no default.
+  const r = RUNGS.includes(value) ? value : "?";
+  return `<span class="rung" data-rung="${r}" title="spec · in_tree · live_local · live_deployed · external">${r}</span>`;
+}
+
+export function Band(surface, rung) {
+  // A tier-4 surface drops the layer claim — attribution, not membership.
+  // OpenSentience is amp-nav place:2, so it keeps it.
+  const where =
+    surface.tier === 4
+      ? `A <b>${esc(surface.parent)}</b> project`
+      : `${esc(surface.surface)} is the <b>${esc(surface.layer)}</b> layer of ${esc(surface.parent)}`;
+  return `<div class="band"${surface.tier === 4 ? ' data-tier="4"' : ""}>
+            <span class="where">${where}</span>
+            ${rungChip(rung)}
+            <span class="covers">That chip covers ${surface.surface_rung_covers}.</span>
+        </div>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+export function Hero(site, surface, stats, rung) {
   const range = `${stats.first} → ${stats.last}`;
   const bs = stats.byStatus;
   const statusChip = [
@@ -78,25 +119,98 @@ export function Hero(site, protocols, stats) {
     .map(([n, label]) => `${n} ${label}`)
     .join(" · ");
   return `<header class="hero container">
-            <span class="hero-badge">Open research into machine cognition · an [&amp;] Ampersand Box Design program</span>
-            <h1>Intelligence is not generation.<br /><em>It is structured accumulation.</em></h1>
-            <p class="subtitle">
-                A language model that can't remember yesterday, weigh evidence
-                across sessions, or learn from where it's deployed is a
-                <strong>generator</strong> — not a system. OpenSentience is the
-                open research program defining the protocols that close that gap.
-            </p>
-            <div class="cta-row">
-                <a href="#protocols" class="btn btn-primary">Read the protocols</a>
-                <a href="#proof" class="btn">See the proof</a>
-                <a href="${esc(site.github)}" class="btn btn-github">${GH_SVG}Star on GitHub</a>
+            <div class="hero-front">
+                <div class="hero-eyebrow">The question this site exists to answer</div>
+                <h1>Does the shape of a knowledge graph tell you <em>when to think harder?</em></h1>
+                <p class="subtitle">
+                    Below, that question is answered exhaustively and in your own
+                    browser: for every directed graph on two to five nodes and
+                    every finite map on two to seven, κ&nbsp;&gt;&nbsp;0 holds
+                    exactly when the graph contains an irreducible feedback loop.
+                    <strong>The theorem is settled and the useful part is not.</strong>
+                    Routing a system's reasoning on that signal is a claim
+                    nothing here tests, and the ${stats.total} protocols on this
+                    page are honest one by one about which of the two they are.
+                </p>
+                <div class="cta-row">
+                    <a href="#proof" class="btn btn-primary">Run the proof yourself</a>
+                    <a href="#status" class="btn">What this does not establish</a>
+                    <a href="${esc(site.github)}" class="btn btn-github">${GH_SVG}Star on GitHub</a>
+                </div>
+                <div class="receipts-strip reveal">
+                    <span class="receipt-chip"><strong>${stats.total}</strong> protocols</span>
+                    <span class="receipt-chip"><strong>${range}</strong></span>
+                    <span class="receipt-chip">${statusChip}</span>
+                </div>
             </div>
-            <div class="receipts-strip reveal">
-                <span class="receipt-chip"><strong>${stats.total}</strong> protocols</span>
-                <span class="receipt-chip"><strong>${range}</strong></span>
-                <span class="receipt-chip">${statusChip}</span>
+            <!-- The identifying animation (SHELL.md §8). It comes AFTER the h1
+                 in source order and sits behind it, because the question comes
+                 first. It renders no data and asserts nothing: /ladder.js takes
+                 no input from this document and writes nothing back into it,
+                 and its band and mark counts are DELIBERATELY not the eight
+                 rungs or any law total — the build refuses if one of them turns
+                 up as text on this page. Delete the script tag at the foot of
+                 this file and every figure, chip, status row and count is still
+                 here. -->
+            <div class="idanim" data-identity-animation aria-hidden="true">
+                <svg viewBox="0 0 300 430" preserveAspectRatio="xMidYMid meet" focusable="false">
+                    <g stroke="var(--line2)" stroke-width="1" stroke-linecap="round">
+                        <line x1="34" y1="30" x2="34" y2="400"></line>
+                        <line x1="266" y1="30" x2="266" y2="400"></line>
+                        ${LADDER_RULES}
+                    </g>
+                    <g id="ident-marks"></g>
+                </svg>
             </div>
         </header>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// The status block (SHELL.md §2). LIMIT is the load-bearing row: it is not a
+// caveat and not a disclaimer, it is the strongest claim a reader would
+// reasonably infer that the evidence does not support. If it could be deleted
+// without changing what a reader believes, it is not doing its job.
+export function StatusBlock(surface, rung) {
+  return `<section id="status" class="container">
+            <div class="section-label"><span class="sec-num">${NUM("status")}</span> Status</div>
+            <h2>What this page is <em>entitled</em> to claim.</h2>
+            <p class="lead">
+                Every surface in this portfolio carries the same five rows, and
+                the fourth is the one that costs something to write. The chip in
+                the band above reads <strong>${rung}</strong>, and it reads that
+                because it is derived from the twelve protocol statuses rather
+                than chosen — a page with one shipped protocol and five drafts
+                does not get to average itself into a rung.
+            </p>
+            <dl class="status">
+                <div><dt>Status</dt><dd>${surface.status.statement}</dd></div>
+                <div><dt>Last verified</dt><dd>${esc(surface.verified_at)}</dd></div>
+                <div><dt>Source</dt><dd>${surface.status.source}</dd></div>
+                <div class="limit"><dt>Limit</dt><dd>${surface.status.limit}</dd></div>
+                <div><dt>Next rung</dt><dd><strong>${esc(surface.advance.next_rung)}</strong> — ${surface.advance.requires}</dd></div>
+            </dl>
+        </section>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// One CTA group per rung, never one blended group. A page may only ask a
+// visitor to do what its rung has earned; build.mjs enforces the verb table.
+export function CtaGroups(surface) {
+  const ORDER = ["external", "live_deployed", "live_local", "in_tree", "spec"];
+  return ORDER.filter((r) => surface.cta[r])
+    .map((r) => {
+      const witnessed = ["external", "live_deployed", "live_local"].includes(r);
+      const cards = surface.cta[r]
+        .map((a) => `<a href="${esc(a.href)}"><span class="verb">${esc(a.verb)}</span><span class="what">${a.what}</span></a>`)
+        .join("\n                    ");
+      return `<div class="ctagroup">
+                <div class="tag${witnessed ? " ok" : ""}">${esc(r)} &mdash; ${esc(surface.cta._labels[r])}</div>
+                <div class="cta">
+                    ${cards}
+                </div>
+            </div>`;
+    })
+    .join("\n            ");
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -491,15 +605,24 @@ export function OpenQuestions() {
 
 // ─────────────────────────────────────────────────────────────────────────
 // §7 — Get Involved (three doors)
-export function GetInvolved(site) {
+export function GetInvolved(site, surface) {
   const preStyle = "font-family: var(--mono); font-size: 0.78rem; color: var(--text); line-height: 1.6; white-space: pre-wrap; background: var(--bg-elevated); border:1px solid var(--border); border-radius:8px; padding:1rem; margin-top:1rem;";
   return `<section id="get-involved" class="container">
             <div class="section-label"><span class="sec-num">${NUM("get-involved")}</span> Get Involved</div>
-            <h2>Three doors <em>in.</em></h2>
+            <h2>Three rungs, three different <em>invitations.</em></h2>
             <p class="lead">
-                OpenSentience is open research. Whoever you are, there's a way to
-                use it, build on it, or try to break it.
+                A page may only ask you to do what its evidence has earned. The
+                κ proof is deployed and runs on your machine, so it asks you to
+                run it. The governance floor is written and property-tested, so
+                it asks you to run the suites and read the source. The rest is a
+                specification, so it can ask you to read it, argue with it or
+                implement it — and never to run something that does not exist.
+                The verbs below are not chosen; they are the ones each rung
+                allows, and the build refuses any other.
             </p>
+            ${CtaGroups(surface)}
+
+            <h3 class="map-tier" style="margin-top:4rem">Or come in as <span>a researcher, a builder, a skeptic</span></h3>
             <div class="doors-grid">
                 <div class="door-card reveal">
                     <div class="door-icon" style="color:var(--cyan)">✶</div>
@@ -557,7 +680,7 @@ export function ReferencesSection(references) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-export function Footer(site) {
+export function Footer(site, surface) {
   const links = site.footerLinks.map((l) => `<a href="${esc(l.href)}">${l.label}</a>`).join("\n                ");
   return `<footer class="container">
             <div class="footer-mark">OpenSentience</div>
@@ -568,22 +691,36 @@ export function Footer(site) {
             </p>
             <div class="footer-links">
                 ${links}
+                <a href="${esc(surface.contact.url)}">Challenge a claim</a>
             </div>
             <p style="margin-top: 2rem; font-size: 0.7rem">
+                Decoration only: the ladder in the header draws nothing that is
+                measured and nothing that is claimed — its band and mark counts
+                are deliberately not the eight rungs and not any law total, and
+                the build refuses if one of them appears as text here. Every
+                count on this page is generated from a record in
+                <code>_rebuild/data/</code>; the enforced law total is derived as
+                kernel&nbsp;+&nbsp;compose and is typed nowhere. Corrections go to
+                the issue tracker — there is no email address on this site,
+                because none has been set up, not because we would not like one.
+            </p>
+            <p style="margin-top: 1.25rem; font-size: 0.7rem">
                 © 2026 ${esc(site.parent.name)}. Research published under Apache 2.0 where possible.
+                <span class="stamp">opensentience ${esc(surface.version)} · ${esc(surface.shell_revision)} · record ${esc(surface.verified_at)}</span>
             </p>
         </footer>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-export function Page({ site, protocols, loop, receipts, rungs, references, stats }) {
+export function Page({ site, surface, protocols, loop, receipts, rungs, references, stats, rung, assetv }) {
   return `<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>${esc(site.name)} — ${esc(site.tagline)}</title>
+        <title>${esc(surface.question)} — ${esc(site.name)}</title>
         <meta name="description" content="${esc(site.description)}" />
+        <meta name="falsifiable-question" content="${esc(surface.question)}" />
         <meta name="keywords" content="${esc(site.keywords)}" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -591,15 +728,16 @@ export function Page({ site, protocols, loop, receipts, rungs, references, stats
             href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="/styles/site.css" />
+        <link rel="stylesheet" href="/styles/site.css?v=${assetv}" />
         <script type="module" src="/amp-nav.js"></script>
     </head>
     <body>
+        ${Band(surface, rung)}
         <amp-nav property="opensentience"></amp-nav>
         ${Nav(site)}
         ${SpineToc()}
 
-        ${Hero(site, protocols, stats)}
+        ${Hero(site, surface, stats, rung)}
 
         ${TheGap()}
 
@@ -609,18 +747,21 @@ export function Page({ site, protocols, loop, receipts, rungs, references, stats
 
         ${Proof(receipts)}
 
+        ${StatusBlock(surface, rung)}
+
         ${Stack(rungs, site.kernel)}
 
         ${OpenQuestions()}
 
-        ${GetInvolved(site)}
+        ${GetInvolved(site, surface)}
 
         ${ReferencesSection(references)}
 
-        ${Footer(site)}
+        ${Footer(site, surface)}
 
         <script src="/kappa_proof.js"></script>
-        <script src="/proof.js"></script>
+        <script src="/proof.js?v=${assetv}"></script>
+        <script src="/ladder.js?v=${assetv}" defer></script>
     </body>
 </html>`;
 }

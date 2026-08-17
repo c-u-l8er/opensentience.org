@@ -1,25 +1,70 @@
+/* ==========================================================================
+   The ComputeDriven page shell. Everything between TOKENS-START and TOKENS-END
+   is this site's own character; the ROLES are what carry the family
+   resemblance. Documented in ProjectAmp2/agents/SHELL.md.
+
+   OpenSentience is the one paper-coloured surface in the portfolio and that is
+   deliberate — it publishes papers. The shell fixes the variable names and
+   their roles, never their values: --acc is the colour a visitor remembers,
+   --data means "this number has a witness", --warn means "unbacked or refused".
+   ========================================================================== */
+/* TOKENS-START — OpenSentience: research violet on paper */
 :root {
-                --bg: #faf8f3;
-                --bg-elevated: #f2ede2;
-                --bg-card: #fffdf8;
+                --ink: #faf8f3;
+                --ink2: #f2ede2;
+                --ink3: #fffdf8;
+                --line: #e7e0d2;
+                --line2: #d8cfba;
+                --fg: #1c1a17;
+                --fg2: rgba(28, 26, 23, 0.78);
+                --fg3: rgba(28, 26, 23, 0.68);
+                --acc: #6d3bd4;
+                --acc-soft: rgba(109, 59, 212, 0.08);
+                --acc-line: rgba(109, 59, 212, 0.34);
+                --data: #0a6e62;
+                --data-soft: rgba(10, 110, 98, 0.09);
+                --warn: #96600b;
+                --display: "Crimson Pro", Georgia, serif;
+                --ui: "DM Sans", system-ui, sans-serif;
+                --mono: "JetBrains Mono", monospace;
+                --r: 8px;
+                --rl: 14px;
+            }
+/* TOKENS-END */
+
+            :root {
+                --bg: var(--ink);
+                --bg-elevated: var(--ink2);
+                --bg-card: var(--ink3);
                 --bg-card-hover: #fbf8f0;
-                --text: #1c1a17;
-                --text-secondary: #524c43;
-                --text-dim: #8a8074;
-                --accent: #6d3bd4;
+                --text: var(--fg);
+                --text-secondary: #4a453c;
+                /* --text-dim was #8a8074 — 3.65:1 on the page, 3.32:1 on the
+                   elevated surface. A WCAG AA failure on the token that carries
+                   captions, section numbers and table headers. Measured in a
+                   browser, not eyeballed. It is the same fault as --fg3 at .34
+                   elsewhere in this portfolio: the dim token is where the
+                   caveats live, and a caveat that cannot be read is not one. */
+                --text-dim: #6f665b;
+                --accent: var(--acc);
                 --accent-dim: #5a2fb8;
                 --accent-glow: rgba(109, 59, 212, 0.1);
-                --cyan: #0e8c7e;
+                /* --cyan was #0e8c7e (3.90:1), --amber #b9750f (3.52:1) and
+                   --rose #d6336c (4.35:1). All three are used as text and all
+                   three were under the floor. Darkened to the nearest value
+                   that clears 4.5:1 on all three surfaces; build.mjs now
+                   refuses the build if any of them slips back. */
+                --cyan: var(--data);
                 --blue: #2560c9;
-                --rose: #d6336c;
-                --amber: #b9750f;
-                --border: #e7e0d2;
+                --rose: #c02a5f;
+                --amber: var(--warn);
+                --border: var(--line);
                 --border-accent: #d4c6f0;
-                --serif: "Crimson Pro", Georgia, serif;
-                --sans: "DM Sans", system-ui, sans-serif;
-                --mono: "JetBrains Mono", monospace;
+                --serif: var(--display);
+                --sans: var(--ui);
                 --max-w: 1100px;
                 --gutter: clamp(1.5rem, 4vw, 3rem);
+                --nav-h: 60px;
             }
 
             *,
@@ -33,6 +78,17 @@
             html {
                 scroll-behavior: smooth;
                 -webkit-font-smoothing: antialiased;
+                /* `overflow-x: hidden` on BODY propagates to the viewport when
+                   html is `visible`, which suppresses the scrollbar but leaves
+                   documentElement.scrollWidth reporting the overflow — the page
+                   measured 8px wider than its own client box at every width
+                   tested while looking perfectly fine. `clip` on html clips at
+                   the root, does not propagate, and unlike `hidden` does not
+                   create a scroll container, so the fixed nav and the spine are
+                   unaffected. Measured 8 -> 0 at 390/700/790/800/815/1000/1280/1600.
+                   body keeps overflow-x:hidden as the fallback for engines
+                   without `clip`. */
+                overflow-x: clip;
             }
 
             body {
@@ -95,7 +151,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                height: 60px;
+                height: var(--nav-h);
             }
             nav .logo {
                 font-family: var(--sans);
@@ -143,9 +199,18 @@
 
             /* ─── HERO ─── */
             .hero {
-                padding: 10rem 0 0em;
-                text-align: center;
+                padding: 3.5rem 0 0em;
+                text-align: left;
                 position: relative;
+                /* The glow below is a fixed 800px square centred on the hero.
+                   At a 375px viewport it hung 212px past the right edge, which
+                   is exactly the horizontal overflow measured at 390px — and it
+                   overflowed at EVERY width tested, not only the narrow ones.
+                   It was invisible because body carries overflow-x:hidden,
+                   which propagates to the viewport and hides the symptom while
+                   leaving documentElement.scrollWidth wrong. Clipped here and
+                   bounded below, so the layout is right rather than covered. */
+                overflow: hidden;
             }
             .hero::before {
                 content: "";
@@ -153,7 +218,7 @@
                 top: -10%;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 800px;
+                width: min(800px, 100%);
                 height: 800px;
                 background: radial-gradient(
                     circle,
@@ -1004,16 +1069,20 @@
             }
 
             /* ─── ANIMATIONS ─── */
-            .reveal {
-                opacity: 0;
-                transform: translateY(24px);
-                transition:
-                    opacity 0.6s ease,
-                    transform 0.6s ease;
-            }
+            /* .reveal used to start at opacity:0 and was un-hidden by an
+               IntersectionObserver with no fallback and no done guard. Two
+               things were wrong with that and only one of them was cosmetic:
+               IO does not fire in a non-compositing renderer, so ~40 elements
+               rendered as empty troughs; and with JavaScript off the page's
+               CONTENT was invisible, which SHELL.md §8.4 forbids outright.
+
+               The fix is the one SHELL.md §6 recommends: do not animate on
+               scroll at all. The class is left in the markup so nothing else
+               has to move, and it now paints. Nothing was lost. */
+            .reveal,
             .reveal.visible {
                 opacity: 1;
-                transform: translateY(0);
+                transform: none;
             }
 
             /* ═══════════════════════════════════════════════════════════
@@ -1670,4 +1739,287 @@
                 text-transform: uppercase;
                 color: var(--accent-dim);
                 margin: 2.5rem 0 0.75rem;
+            }
+
+            /* ══════════════════════════════════════════════════════════════
+               THE SHARED SHELL — ProjectAmp2/agents/SHELL.md
+               Copied structure, this site's own values. Everything below is
+               the placement band, the rung chip, the status block, the claim
+               tag and the rung-keyed calls to action, which are meant to look
+               and behave the same on all ~33 surfaces.
+               ══════════════════════════════════════════════════════════════ */
+
+            /* --- placement band (§1). OpenSentience is amp-nav place:2, so
+               this is the STANDARD variant and it carries the layer sentence.
+               .covers is 11px and load-bearing — it is the span that bounds
+               the chip — so it takes --fg2 (7.75:1) not --fg3 (5.57:1). --- */
+            .band {
+                /* The site nav is position:fixed at top:0 (below amp-nav's own
+                   fixed bar, which injects body{padding-top}). A band in normal
+                   flow therefore renders UNDERNEATH it and is invisible — which
+                   is what happened on the first build here. The band is pushed
+                   clear by exactly the nav's own height rather than by a guess,
+                   and the hero's top padding is reduced by the same amount so
+                   nothing moves down the page. */
+                margin-top: var(--nav-h);
+                position: relative;
+                z-index: 90;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px 16px;
+                padding: 11px var(--gutter);
+                background: var(--ink2);
+                border-bottom: 1px solid var(--line);
+                font-family: var(--sans);
+                font-size: 0.6875rem;
+                line-height: 1.5;
+            }
+            .band .where {
+                color: var(--fg2);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            .band .where b {
+                color: var(--fg);
+                font-weight: 600;
+            }
+            .band .covers {
+                color: var(--fg2);
+                flex: 1 1 300px;
+                min-width: 0;
+            }
+            .rung {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                font-family: var(--mono);
+                font-size: 0.6875rem;
+                padding: 2px 9px;
+                border-radius: 999px;
+                border: 1px solid var(--line2);
+                color: var(--fg2);
+                white-space: nowrap;
+            }
+            .rung::before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: currentColor;
+            }
+            .rung[data-rung="spec"] { color: #5d5850; border-color: #b9b1a3; }
+            .rung[data-rung="in_tree"] { color: #1f52ad; border-color: rgba(31, 82, 173, 0.4); }
+            .rung[data-rung="live_local"] { color: var(--data); border-color: rgba(10, 110, 98, 0.45); background: var(--data-soft); }
+            .rung[data-rung="live_deployed"] { color: #196b32; border-color: rgba(25, 107, 50, 0.45); background: rgba(25, 107, 50, 0.07); }
+            .rung[data-rung="external"] { color: #6b3fa0; border-color: rgba(107, 63, 160, 0.45); }
+            /* `?` is a first-class state, not a missing one: dashed and --warn,
+               so it can never be mistaken for a rung that was earned. */
+            .rung[data-rung="?"] {
+                color: var(--warn);
+                border-color: rgba(150, 96, 11, 0.5);
+                border-style: dashed;
+                background: rgba(150, 96, 11, 0.06);
+            }
+
+            /* --- status block (§2). LIMIT is the load-bearing row. --- */
+            .status {
+                border: 1px solid var(--line2);
+                border-radius: var(--rl);
+                background: var(--ink3);
+                overflow: hidden;
+                margin-top: 1.75rem;
+                font-family: var(--sans);
+            }
+            .status > div {
+                display: grid;
+                grid-template-columns: 160px 1fr;
+                gap: 16px;
+                padding: 15px 20px;
+                border-top: 1px solid var(--line);
+                min-width: 0;
+            }
+            .status > div:first-child { border-top: 0; }
+            .status dt {
+                font-family: var(--mono);
+                font-size: 0.6875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--fg2);
+                margin: 0;
+            }
+            .status dd {
+                margin: 0;
+                font-size: 0.86rem;
+                color: var(--fg2);
+                line-height: 1.62;
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+            .status dd strong { color: var(--fg); font-weight: 600; }
+            .status .limit { background: rgba(150, 96, 11, 0.06); }
+            .status .limit dt { color: var(--warn); }
+            @media (max-width: 640px) {
+                .status > div { grid-template-columns: 1fr; gap: 6px; }
+            }
+
+            /* --- claim tag + rung-keyed CTA (§3). Dashed + --warn = unbacked.
+               Solid + --data = has a witness. --- */
+            .ctagroup + .ctagroup { margin-top: 2.25rem; }
+            .tag {
+                display: inline-block;
+                font-family: var(--mono);
+                font-size: 0.6875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                color: var(--warn);
+                background: rgba(150, 96, 11, 0.06);
+                border: 1px dashed rgba(150, 96, 11, 0.4);
+                border-radius: 6px;
+                padding: 5px 11px;
+                margin-bottom: 1rem;
+            }
+            .tag.ok {
+                color: var(--data);
+                border-color: rgba(10, 110, 98, 0.4);
+                border-style: solid;
+                background: var(--data-soft);
+            }
+            .cta {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 14px;
+            }
+            .cta a {
+                display: block;
+                background: var(--ink3);
+                border: 1px solid var(--line);
+                border-radius: var(--r);
+                padding: 20px;
+                text-decoration: none;
+                transition: border-color 0.2s, background 0.2s, transform 0.2s;
+                min-width: 0;
+            }
+            .cta a:hover,
+            .cta a:focus-visible {
+                border-color: var(--acc-line);
+                background: var(--acc-soft);
+                transform: translateY(-2px);
+            }
+            .cta .verb {
+                display: block;
+                font-family: var(--mono);
+                font-size: 0.6875rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--acc);
+                margin-bottom: 7px;
+            }
+            .cta .what {
+                display: block;
+                font-family: var(--sans);
+                font-size: 0.86rem;
+                line-height: 1.55;
+                color: var(--fg2);
+            }
+            .cta code { color: var(--data); }
+
+            /* --- the identifying animation (§8) ---
+               An eight-rung ladder is what this site is about, so a ladder is
+               what moves. The layer is absolutely positioned so it cannot delay
+               or displace the h1; the hero clips it, so it can never widen the
+               document at any viewport; and it is masked rather than
+               hard-edged so the lede stays readable underneath. --- */
+            .idanim {
+                position: absolute;
+                z-index: 0;
+                top: 5.5rem;
+                bottom: 1rem;
+                right: max(0px, calc((100% - var(--max-w)) / 2));
+                width: min(38%, 340px);
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+                -webkit-mask-image: radial-gradient(circle at 55% 50%, #000 48%, transparent 80%);
+                mask-image: radial-gradient(circle at 55% 50%, #000 48%, transparent 80%);
+            }
+            .idanim svg { display: block; width: 100%; height: 100%; }
+            .hero-front { position: relative; z-index: 1; }
+            @media (max-width: 860px) {
+                .idanim { width: min(72%, 340px); opacity: 0.3; right: -6%; }
+            }
+
+            /* --- horizontal overflow: wide content scrolls in its own box,
+               never the document. The <pre> blocks inside .kappa-visual had no
+               overflow-x, and a grid item's default min-width:auto refuses to
+               shrink below its content, so the card pushed the page sideways at
+               every width measured. --- */
+            .kappa-visual > *,
+            .papers-grid > *,
+            .doors-grid > *,
+            .oq-grid > *,
+            .ground-grid > *,
+            .receipts-grid > * {
+                min-width: 0;
+            }
+            .kappa-visual pre,
+            .paper-card pre,
+            .door-card pre {
+                overflow-x: auto;
+                max-width: 100%;
+            }
+
+            /* Every <a> and <button> needs a visible :hover AND a
+               :focus-visible. .logo had neither, which is half of what a real
+               reader hit on a sibling surface: hovering the top-left changed
+               nothing, so there was no way to confirm it was a link. */
+            :focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+            .logo:hover, .logo:focus-visible { color: var(--acc); }
+            .btn:hover, .btn:focus-visible { filter: brightness(1.06); }
+            .nav-links a:hover, .nav-links a:focus-visible { color: var(--acc); }
+            .footer-links a:hover, .footer-links a:focus-visible { color: var(--acc); }
+            .rung-cell:hover, .rung-cell:focus-visible { border-color: var(--acc-line); }
+            .receipt-card:hover, .receipt-card:focus-visible { border-color: var(--acc-line); }
+
+            @media (prefers-reduced-motion: reduce) {
+                html { scroll-behavior: auto; }
+                *, *::before, *::after {
+                    animation-duration: 0.01ms !important;
+                    transition-duration: 0.01ms !important;
+                }
+            }
+
+            /* --- hero, re-laid-out for the shell (§1, §8) ---
+               The question comes first and the motion sits beside it, never on
+               top of it. Left-aligned because the h1 is now a sentence someone
+               could have typed into a search box, and a centred question reads
+               as a slogan. The children below were each centred individually,
+               so text-align on the parent was not enough. --- */
+            .hero .hero-front { max-width: min(62ch, 100%); }
+            .hero h1 { margin: 0 0 1.25rem; max-width: 17ch; }
+            .hero .subtitle { margin: 0 0 2rem; max-width: 60ch; }
+            .hero .cta-row { justify-content: flex-start; }
+            .hero .receipts-strip { justify-content: flex-start; }
+            .hero-eyebrow {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                font-family: var(--mono);
+                font-size: 0.6875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.14em;
+                color: var(--acc);
+                margin-bottom: 1rem;
+            }
+            .hero-eyebrow::before {
+                content: "";
+                width: 20px;
+                height: 1px;
+                background: var(--acc);
+                opacity: 0.6;
+                flex: none;
+            }
+            @media (min-width: 861px) {
+                .hero .hero-front { max-width: min(62ch, 60%); }
             }

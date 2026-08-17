@@ -156,21 +156,22 @@
                 proofRunning = false;
             }
 
-            // Scroll reveal
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add("visible");
-                        }
-                    });
-                },
-                { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
-            );
-
-            document
-                .querySelectorAll(".reveal")
-                .forEach((el) => observer.observe(el));
+            // Scroll reveal — DELETED 2026-08-16, and the deletion is the fix.
+            //
+            // This was an IntersectionObserver with no setTimeout fallback and
+            // no done guard, un-hiding ~40 elements that CSS had set to
+            // opacity:0. IO does not fire in a non-compositing renderer, so in
+            // one it rendered as empty troughs; and with JavaScript disabled the
+            // page's content was invisible outright, which the shell forbids
+            // (SHELL.md §8.4: the animation may require JS, the content may
+            // not). A fallback would have fixed the first fault and not the
+            // second.
+            //
+            // So the machinery is gone rather than repaired, per SHELL.md §6:
+            // "The cleanest fix is the one used here: do not animate on scroll
+            // at all." The .reveal class stays in the markup and now paints.
+            // Do not reintroduce an observer here — the identity animation in
+            // /ladder.js is driven by rAF and a rect check, never by IO.
 
             // ─── Spine scrollspy — highlight the active section in the rail ───
             (function spineScrollspy() {
@@ -188,21 +189,33 @@
                     );
                 }
 
-                const spy = new IntersectionObserver(
-                    (entries) => {
-                        // pick the entry nearest the top that is intersecting
-                        const visible = entries
-                            .filter((e) => e.isIntersecting)
-                            .sort(
-                                (a, b) =>
-                                    a.boundingClientRect.top -
-                                    b.boundingClientRect.top,
-                            );
-                        if (visible.length && visible[0].target.id) {
-                            setActive(visible[0].target.id);
+                // A rect check on a throttled scroll listener, NOT an observer.
+                // This was the second observer on the page and it had the same
+                // defect as the first: in a renderer that does not composite,
+                // it never fires, so the rail silently highlighted nothing and
+                // read as a decoration that was broken. A scroll handler is
+                // three lines longer and works everywhere.
+                let queued = false;
+                function update() {
+                    queued = false;
+                    const mark = (window.innerHeight || 0) * 0.45;
+                    let best = null;
+                    let bestTop = -Infinity;
+                    for (const s of sections) {
+                        const top = s.getBoundingClientRect().top;
+                        if (top <= mark && top > bestTop) {
+                            bestTop = top;
+                            best = s;
                         }
-                    },
-                    { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
-                );
-                sections.forEach((s) => spy.observe(s));
+                    }
+                    if (best && best.id) setActive(best.id);
+                }
+                function onScroll() {
+                    if (queued) return;
+                    queued = true;
+                    requestAnimationFrame(update);
+                }
+                window.addEventListener("scroll", onScroll, { passive: true });
+                window.addEventListener("resize", onScroll, { passive: true });
+                update();
             })();
