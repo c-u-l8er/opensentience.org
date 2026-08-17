@@ -1992,6 +1992,23 @@
             }
             .idh { fill: var(--text-dim); transition: fill 0.4s ease; }
             .idh.lit { fill: var(--acc); }
+            /* The trace layer. One overlay per arc, carrying a dash pattern the
+               BUILD wrote from the arc's own length; the driver moves the
+               offset and nothing else. Deliberately NOT given an opacity here:
+               a stylesheet declaration beats a presentation attribute, so an
+               `opacity: 0` in this block would pin every trace invisible and
+               the driver's writes would do nothing, silently. The markup ships
+               opacity="0" instead, and the build refuses a rule that would
+               override it. --data is the "this has a witness" token; the traces
+               are the second channel and must not be read as the violet, which
+               is κ and only κ. */
+            .idt {
+                fill: none;
+                stroke: var(--data);
+                stroke-width: 2.1;
+                stroke-linecap: round;
+                pointer-events: none;
+            }
             .idn {
                 fill: var(--text-dim);
                 fill-opacity: 0.5;
@@ -2000,16 +2017,34 @@
                 stroke-opacity: 0;
                 transition: fill 0.4s ease, fill-opacity 0.4s ease, stroke-width 0.4s ease, stroke-opacity 0.4s ease;
             }
+            /* A node a trace has just touched. Ordered BEFORE .lit on purpose:
+               a node can be both, and κ wins, because κ is what the page is
+               arguing about and a trace is only how the graph is being walked. */
+            .idn.vis { fill: var(--data); fill-opacity: 1; stroke: var(--data); stroke-width: 4.5; stroke-opacity: 0.16; }
             /* The halo is this circle's own stroke, drawn centred on its edge —
                a lit node needs no second element and the DOM stays at one node
                per node. */
-            .idn.lit { fill: var(--acc); fill-opacity: 1; stroke-width: 5.5; stroke-opacity: 0.18; }
+            .idn.lit { fill: var(--acc); fill-opacity: 1; stroke: var(--acc); stroke-width: 5.5; stroke-opacity: 0.18; }
 
             @media (prefers-reduced-motion: reduce) {
-                .ida, .idh, .idn { transition: none; }
+                .ida, .idh, .idn, .idt { transition: none; }
             }
+            /* right: 0, NOT a negative inset. This layer used to sit at
+               right: -6% under 860 px, which hung 6 % of it past the hero's
+               overflow:hidden — at 390 px that is 23 px of the graph thrown
+               away down the side that has the most nodes in it, and the rest
+               reads as specks rather than as a graph. A sibling surface lost
+               207 px of a 470 px canvas the same way. The check is one
+               subtraction: animRight − heroRight must be 0 at every width. */
             @media (max-width: 860px) {
-                .idanim { width: min(72%, 340px); opacity: 0.3; right: -6%; }
+                /* Under 860 the layer lies UNDER the lede rather than beside
+                   it, so its opacity is the budget for how much ink is allowed
+                   behind running text. The graph went from 41 arcs to 61, which
+                   measured 1.8× the ink at 390 px against the same page with
+                   the layer hidden; 0.3 → 0.22 brings that back to about 1.3×,
+                   so the field is richer than it was and the paragraph is not
+                   harder to read than it was. */
+                .idanim { width: min(76%, 340px); opacity: 0.22; right: 0; }
             }
 
             /* --- the contact form (SHELL.md r9) --------------------------

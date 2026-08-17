@@ -378,6 +378,22 @@ const text = html
   .replace(/&[a-z]+;|&#\d+;/gi, " ")
   .replace(/\s+/g, " ")
   .trim();
+// And the same content again, but kept as TEXT NODES rather than flattened
+// into one blob (SHELL.md r12). Collapsing every tag to a space welds the end
+// of one text node onto the start of the next, so a phrase can be counted that
+// no reader ever sees as a phrase — `<td>All</td><td>103 laws</td>` reads as
+// "All 103 laws" to a blob and as two cells to a person. The retraction counts
+// below run over this instead, and a blocklisted phrase therefore cannot span
+// an element boundary. Measured when it was introduced: on this artifact both
+// extractions return the same four counts, so the bounds that were firing are
+// still firing — the fix closes a hole, it does not paper over a dead check.
+const textNodes = html
+  .replace(/<!--[\s\S]*?-->/g, "")
+  .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, "")
+  .split(/<[^>]+>/)
+  .map((s) => s.replace(/&[a-z]+;|&#\d+;/gi, " ").replace(/\s+/g, " ").trim())
+  .filter(Boolean)
+  .join("\n");
 
 // No page advertises a mailbox, and no bare address either.
 const mailtos = html.match(/mailto:[^"'<> ]*/gi);
@@ -453,9 +469,25 @@ else {
   const nodesInSvg = count(/<circle class="idn"/g);
   const arcsInSvg = count(/<path class="ida"/g);
   const headsInSvg = count(/<path class="idh"/g);
+  const tracesInSvg = count(/<path class="idt"/g);
   if (nodesInSvg !== IDN) artifactErrors.push(`the artifact draws ${nodesInSvg} graph nodes and the driver expects ${IDN}`);
   if (arcsInSvg !== IDA) artifactErrors.push(`the artifact draws ${arcsInSvg} arcs and the driver expects ${IDA}`);
   if (headsInSvg !== IDA) artifactErrors.push(`the artifact draws ${headsInSvg} arrowheads and the driver expects ${IDA}`);
+  if (tracesInSvg !== IDA) artifactErrors.push(`the artifact draws ${tracesInSvg} trace overlays and the driver expects ${IDA} — the driver refuses to run if these disagree, and a still graph is indistinguishable from a quiet one`);
+  // The trace layer must ship silent AND drivable. Silent, because with
+  // scripting off a row of dashes lying over the graph is decoration nobody
+  // asked for; drivable, because the moment its opacity moves into the
+  // stylesheet the driver's presentation attribute stops winning and the
+  // traces never appear — with no error anywhere, on a page whose whole
+  // argument is that a silent failure is the expensive kind.
+  {
+    const idt = html.match(/<path class="idt"[^>]*>/g) || [];
+    const quiet = idt.filter((t) => /\sopacity="0"/.test(t)).length;
+    const dashed = idt.filter((t) => /\sstroke-dasharray="[\d.]+ [\d.]+"/.test(t)).length;
+    if (idt.length && quiet !== idt.length) artifactErrors.push(`${idt.length - quiet} trace overlay(s) do not ship opacity="0" — with scripting off they would draw over the graph`);
+    if (idt.length && dashed !== idt.length) artifactErrors.push(`${idt.length - dashed} trace overlay(s) carry no stroke-dasharray — the driver writes only the offset, so an overlay without a pattern is a whole arc lighting up at once`);
+    if (/\.idt\s*\{[^}]*opacity\s*:/.test(css)) artifactErrors.push("site.css sets opacity on .idt — a stylesheet declaration beats the presentation attribute the driver writes, so every trace would be invisible and nothing would report it");
+  }
   // Coordinates, not just counts: a template that rounds differently, or an
   // artifact edited by hand, puts the arcs somewhere the driver did not.
   for (const n of idgraph.nodes) {
@@ -473,11 +505,15 @@ else {
   // Nothing in the animation may be a long horizontal stroke. That is not a
   // style preference — it is the defect this animation exists because of: a
   // ladder of 29 of them read as ruled notebook paper, and its two rails were
-  // reported as stray <hr>s on a page that has no <hr> at all. The bound is 72
-  // px of a 300-wide box; the longest near-horizontal arc this graph draws is
-  // 51.5, so there is 40 % of headroom and a redesign has to work at it to
-  // reintroduce the fault.
-  const HMAX = 72;
+  // reported as stray <hr>s on a page that has no <hr> at all.
+  //
+  // The bound was 72 px of a 300-wide box, chosen when the longest
+  // near-horizontal arc was 51.5. The arc chooser now refuses such a pair
+  // outright above 50 px, and the graph it produces contains NO arc within 8°
+  // of horizontal at any length — so the bound comes down to 60, which still
+  // clears the source's own limit and refuses a real regression rather than
+  // waiting for one 40 % worse than the shape it is guarding against.
+  const HMAX = 60;
   const wide = idgraph.arcs.filter((a) => {
     const A = idgraph.nodes[a.a], B = idgraph.nodes[a.b];
     const deg = Math.abs((Math.atan2(B.y - A.y, B.x - A.x) * 180) / Math.PI);
@@ -526,7 +562,7 @@ for (const r of retractions.entries) {
       i = at + 1; // overlapping occurrences count, so a doubled phrase cannot hide
     }
   };
-  const seen = occurrences(text, r.string);
+  const seen = occurrences(textNodes, r.string);
   if (seen < r.min || seen > r.max) {
     artifactErrors.push(
       `retracted string "${r.string}" appears ${seen}× in the page text; the bound is ${r.min}–${r.max}. ` +
@@ -534,6 +570,28 @@ for (const r of retractions.entries) {
           ? `Retracted ${r.retracted_at} (${r.commit}): ${r.why}`
           : `The retraction that is entitled to name it is missing — a retraction that quietly disappears is the reinstatement, slower.`),
     );
+  }
+  // The blocklist applies to EVERYTHING THIS BUILD PUBLISHES, not only to the
+  // page. Found by this surface's own break harness: "117 laws" was planted in
+  // a comment in build/idanim.js and the build passed, because idanim.js is a
+  // separate published file rather than an inlined script — so the only text
+  // the blocklist read was index.html. The retraction record says an occurrence
+  // "a reader cannot see" is refused; a comment in a file a visitor downloads
+  // is exactly that, and three of the four published files were exempt from it.
+  // Every file staged below is checked here. (amp-nav.js is deliberately not:
+  // it is another repository's file, refreshed as a side effect, and this
+  // repository's retractions do not govern it.)
+  for (const [label, body] of [
+    ["styles/site.css", css],
+    ["proof.js", readFileSync(resolve(root, "build/proof.js"), "utf8")],
+    ["idanim.js", idanim],
+  ]) {
+    const n = occurrences(body, r.string);
+    if (n > 0) {
+      artifactErrors.push(
+        `retracted string "${r.string}" appears ${n}× in ${label}, which this build publishes — retracted ${r.retracted_at} (${r.commit}). A visitor can fetch that file; nobody reading the page can see it.`,
+      );
+    }
   }
   // And an occurrence a reader cannot see is refused outright — GPSCoord's
   // blocklist fired on a fabricated coordinate living in a source comment that

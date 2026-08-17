@@ -69,6 +69,15 @@ generated.
 
 ## What the build refuses — and each of these has been seen to refuse
 
+Run `node _rebuild/build/prove-gate.mjs` and it proves both halves in one pass: **27 deliberate
+breaks, each of which must fail with the message that break targets** (SHELL.md r12 — a table of
+refusals that all refuse for one unrelated reason proves nothing), and **6 soundness probes, which
+are correct or unusual-but-legitimate inputs the gate must still PERMIT** (SHELL.md r11 — a check
+that refuses everything scores perfectly on a refusal-only harness). It sandboxes into a private
+`mkdtemp`; the working tree is never written to. **The shell revision this page meets in full is
+recorded in `_rebuild/data/surface.json` as `shell_revision`, with the later items it does and does
+not carry spelled out beside it.**
+
 The page-level treatment is `ProjectAmp2/agents/SHELL.md`. The tokens block in
 `_rebuild/styles/site.css` between `TOKENS-START` / `TOKENS-END` is this site's own; everything
 after `TOKENS-END` is the shared shell.
@@ -95,16 +104,33 @@ after `TOKENS-END` is the shared shell.
   (3.55:1), `--amber` (3.20:1).
 - **The identifying animation asserts nothing.** `idanim.js` declares its two countable constants
   in an `IDENTITY-CONSTANTS` block, and the build fails if either number appears as text on the
-  page. **Every integer from 2 to 28 is already page text** — the reference list is 28 entries — so
-  a small count will be refused; 11 and 7 both were. The geometry is not duplicated: build.mjs
-  extracts the `GRAPH-START … GRAPH-END` region from the driver and the template draws from it, so
-  the drawing and the driver cannot disagree, and the build re-checks the emitted counts and
-  coordinates and that every selector the script looks up exists.
+  page. **The integers already standing as page text are every one from 0 to 28, plus 46, 55 and
+  60** — measured 2026-08-17, not assumed; the run to 28 is the reference list's length. A small
+  count will therefore be refused; 11 and 7 both were. It is also why the traces have **no count**:
+  a number of walkers would be countable on screen and every plausible value is page text, so a
+  trace is a pulse spreading over whatever arcs are present and how many are alive is decided by the
+  graph. The geometry is not duplicated: build.mjs extracts the `GRAPH-START … GRAPH-END` region
+  from the driver and the template draws from it, so the drawing and the driver cannot disagree, and
+  the build re-checks the emitted counts and coordinates and that every selector the script looks up
+  exists.
+- **The trace layer ships silent and stays drivable.** Every `<path class="idt">` carries its dash
+  pattern (written by the build from the arc length the geometry already computed) and
+  `opacity="0"`, so with scripting off the layer is invisible and the graph beneath it is whole. The
+  build refuses an overlay without either, and refuses **an `opacity` declaration on `.idt` in
+  site.css** — a stylesheet rule beats the presentation attribute the driver writes, so that one
+  line would make every trace invisible forever with nothing reporting it.
 - **The animation may not be built out of long horizontal lines.** It used to be a 29-rung ladder,
   which on paper stock rendered as ruled notebook paper; its rails were reported as stray `<hr>`s on
   a page that has never had one. The build refuses an arc that runs within 8° of horizontal for more
-  than 72 px, refuses a `<line>` anywhere in the animation, and refuses an `<hr>` anywhere on the
-  page.
+  than **60** px, refuses a `<line>` anywhere in the animation, and refuses an `<hr>` anywhere on the
+  page. The bound came down from 72 because the arc chooser now refuses such a pair outright above
+  50 px and the graph contains **no arc within 8° of horizontal at any length**.
+- **A retracted string may not hide in any file the build publishes.** Found by
+  `_rebuild/build/prove-gate.mjs`: `117 laws` was planted in a comment in `build/idanim.js` and the
+  build passed, because the blocklist read `index.html` and the scripts here are separate published
+  files rather than inlined ones — three of the four published files were exempt. It now reads
+  `site.css`, `proof.js` and `idanim.js` too. `amp-nav.js` is deliberately excluded: another
+  repository's file, and this repository's retractions do not govern it.
 - **Retractions are COUNTED, not detected** (`data/retractions.json`, SHELL.md r6). Each entry
   carries `min`/`max`: too many occurrences is a reinstatement, too few is a retraction that quietly
   disappeared, and an occurrence in a comment or an attribute — where a reader cannot see it — is

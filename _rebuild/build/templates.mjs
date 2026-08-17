@@ -83,6 +83,16 @@ export const RUNGS = ["spec", "in_tree", "live_local", "live_deployed", "externa
 export function IdAnimSvg(graph) {
   const arcs = graph.arcs.map((a) => `<path class="ida" d="${a.d}"></path>`).join("\n                        ");
   const heads = graph.arcs.map((a) => `<path class="idh" d="${a.head}"></path>`).join("\n                        ");
+  // The trace layer. Its dash pattern is written HERE, from the arc length the
+  // geometry already computed, and every one of them ships at opacity="0" — so
+  // with scripting off the layer is silent and the graph beneath it is whole,
+  // and the driver never has to measure a path or set a dash array at run time.
+  // It is a presentation attribute rather than a stylesheet rule on purpose:
+  // CSS beats a presentation attribute, so an `opacity: 0` in site.css could
+  // never be lifted by the driver and the traces would never appear.
+  const traces = graph.arcs
+    .map((a) => `<path class="idt" d="${a.d}" stroke-dasharray="${a.dash}" opacity="0"></path>`)
+    .join("\n                        ");
   const nodes = graph.nodes.map((n) => `<circle class="idn" cx="${n.x}" cy="${n.y}" r="${graph.r}"></circle>`).join("\n                        ");
   return `<svg viewBox="0 0 300 430" preserveAspectRatio="xMidYMid meet" focusable="false">
                     <g id="idanim-arcs">
@@ -90,6 +100,9 @@ export function IdAnimSvg(graph) {
                     </g>
                     <g id="idanim-heads">
                         ${heads}
+                    </g>
+                    <g id="idanim-traces">
+                        ${traces}
                     </g>
                     <g id="idanim-nodes">
                         ${nodes}
