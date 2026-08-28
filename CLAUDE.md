@@ -61,11 +61,106 @@ file, and a copy step a human performs is a copy step a human forgets; the failu
 that passed over yesterday's page. `node _rebuild/build/build.mjs --verify` re-checks what is on
 disk against `_rebuild/dist/artifact.json` and builds nothing — run it before a deploy. The
 standalone arithmetic/playground/scope pages at the root are authored separately and are not
-generated.
+generated. **`invariants.html` USED to be in that list and no longer is** — see the next section.
 
 > **`_rebuild/dist/amp-nav.js` is NOT this repository's file.** Building refreshes it as a side
 > effect. Its source is `ampersand-nav/src/amp-nav.js`, fanned out by `sync-nav.sh`, and only the
 > nav lane may change it. Run `git checkout -- _rebuild/dist/amp-nav.js` before committing.
+
+## The invariants table build (`invariants.html`, v0.8+)
+
+**`invariants.html` is generated. Do not hand-edit it.** Source is `_invariants/`:
+
+- `_invariants/data/cells.json` — the 46 cells' AUTHORED fields (symbol, prose, protocol,
+  authority, source, status, kind). Extracted verbatim at v0.8 from the `const families = [...]`
+  literal that used to live inside the page.
+- `_invariants/data/axes.json` — the four registers and their rules, the status glosses, the
+  evidence tiers. The **kind vocabulary is not here**: it is read from `mosaic/occupancy.json`,
+  which owns it.
+- `_invariants/data/copy.json` — page copy. Counts are `{{PLACEHOLDER}}`s.
+- `_invariants/styles/table.css` — inlined into the artifact at build time.
+- `_invariants/build/{build,templates,prove-gate}.mjs`
+
+```
+node opensentience.org/_invariants/build/build.mjs           # emit
+node opensentience.org/_invariants/build/build.mjs --verify  # check what is served, build nothing
+node opensentience.org/_invariants/build/prove-gate.mjs      # prove the refusals
+```
+
+**Why it stopped being hand-authored.** The cells were a JS literal inside the page, and
+`scripts/check-mosaic.mjs` and `scripts/check-claim-ledger.mjs` both recovered their subject by
+string-slicing that literal out of the HTML and calling `eval()` on it — two gates parsing a web
+page to find the thing they check. Both now read `cells.json`. Everything countable was typed by
+hand beside the data that decides it, and the page shipped one revision's cells and inspector under
+an older revision's masthead for two rounds with nothing to notice.
+
+**The reorganization.** Cells are grouped by **register** — `decided` (an evidence anchor exists),
+`built` (code exists, nothing settled), `named` (a name and nothing else), `proposed` (the economic
+addendum, annexed) — and inside `decided`, by **semantic kind**. The ten protocol groups survive as
+sub-labels in the bands that still need them. The old grouping was by which spec folder owned the
+cell, which is an org chart: an empty slot in it means nobody wrote that spec, so it predicts
+nothing, and the table closed zero cells across nine rounds.
+
+**What the build refuses**, each proven by `prove-gate.mjs` to fire for its own reason — 20 breaks
+and 7 soundness probes (SHELL.md r11 + r12):
+
+- **A count typed in prose** where a derived one exists (`R10`). Write `{{CELL_COUNT}} cells`.
+- **A page-version marker typed literally** in `table.css` or `templates.mjs` (`R20`) — use
+  `{{VERSION}}`. This is the defect that shipped for two rounds.
+- **Calling a property test a proof** (`R22`). Only the `machine` tier's `link_text` may say
+  "proof"; a bounded randomized search corroborates a universal and cannot discharge it, which is
+  what `LED-C9` cost. The link text is generated from the tier, never written per cell.
+- **A dead proof link** (`R12`) — R3's "a witness present and dead" on the public surface.
+- **A kind token outside `mosaic/occupancy.json`** (`R6`), and an **authored kind with no
+  `kind_why`** (`R8`) — an assignment must name the line of the cell's own record it is read off,
+  and the page prints how many are authored.
+- **A conditional cell with no hypothesis** (`R3`), and the converse (`R4`).
+- **An annexed proposal that carries evidence** (`R15`) — the annex's claim is that these have none.
+- **A ledger `cell:NN` binding that does not resolve** (`R18`).
+
+`R23-NOT-A-PARTITION` guards the build's own grouping code and **cannot be fired from data** —
+`prove-gate.mjs` says so rather than letting it look covered. It exists because that code was wrong:
+grouping by `kind.includes(k)` drew every multi-kind cell once per kind and rendered 52 cells over a
+table of 46, inflating every count a reader could see while the derived facts stayed correct.
+
+### Witness pages — `/witness/*.html`, and they RUN the witness
+
+Six decided cells have no static proof page; their evidence is a module. Each gets a generated page
+at `/witness/<num>-<slug>.html` with a **Run it here** button that executes **the real module in the
+browser**, not a port of it.
+
+- **`/witness/src/**` is the staged witness tree** — every runnable witness plus its transitive
+  relative-import closure, byte-identical to source, hashed per file into `dist/artifact.json`.
+  `build.mjs --verify` re-reads each against **both** its source and the served copy and refuses
+  either drift. **This is the check `opensentience.org/box-and-box/` has never had**, and that
+  hand-made copy has already served a playground reporting a stale law count while every other
+  surface disagreed. Do not add a third unsynced copy.
+- **It is not a port.** `kappa_proof.js` is — "the same routine ported to run in your browser" —
+  and nothing checks the two agree. These pages import the witness itself. Measured 2026-08-24:
+  `node test/laws.mjs` prints *all 109 enforced kernel laws hold*; the page prints
+  *109 laws · 109 passing · 0 failing*. Same module, same verdict.
+- **Runnability is DERIVED, never assumed.** `runnable` (pure ESM, whole closure touches no `node:`
+  builtin and no `fs` call) · `node-only` (`check-mosaic.mjs` reads the tree) · `data` (a `.json`) ·
+  `page` (an `.html`). A page lists what it cannot run **with the reason**, and `R28` refuses a
+  witness page where nothing can run.
+- **Two run shapes, because the witnesses have two.** `side-effect` — `scripts/check-*.mjs` run at
+  module scope and `process.exit` last, so shim `process`, capture `console`, `import()`.
+  `suite` — `test/{laws,compose-laws}.mjs` guard `typeof window === 'undefined'`, import cleanly and
+  deliberately do not self-run; drive their exported `runSet` over `SUITES`, the same call
+  `playground.html` makes. The `GAP` laws print as **declared-open**, not failures — they are
+  FALSIFIED by design and the build fails if one starts PASSING.
+- **Where the page runs something WEAKER than the CLI it says so, beside the button.** The
+  federation gate runs `--preflight` (pinned constructions, no exhaustive corroboration); the law
+  suites run 200 trials against the CLI's 2,000. A reduced run presented as the full one is the same
+  laundering as calling a property test a proof.
+- **One build-stamped cache token on every module URL.** A query on the module you import does not
+  bust the cache of the modules *it* imports — that is how the playground once read
+  `106 laws · 3 failing`.
+
+> **Changing `cells.json` changes research-lane state.** `scripts/check-mosaic.mjs` derives
+> `mosaic/derived/occupancy.json` from these cells, and the head receipt binds it. After editing,
+> run `node scripts/check-mosaic.mjs --regen`, and treat the receipt digest mismatch as a real
+> question about which revision the change belongs to — not as noise to refresh away.
 
 ## What the build refuses — and each of these has been seen to refuse
 

@@ -1,0 +1,178 @@
+{
+  "_comment": "Written by _invariants/build/build.mjs. --verify re-checks invariants.html against this.",
+  "built_from": "opensentience.org/_invariants/data/{cells,axes,copy}.json + CLAIM_LEDGER.json + mosaic/{occupancy,defeaters}.json",
+  "version": "0.8",
+  "round": "INV-R7.6",
+  "sha256": "40af287ea38cb67ff0496f0abbebbbb80e3ffa611c86702542c657e59b912962",
+  "bytes": 171226,
+  "cells": 46,
+  "registers": {
+    "decided": 13,
+    "built": 4,
+    "named": 22,
+    "proposed": 7
+  },
+  "facts": {
+    "CELL_COUNT": 46,
+    "DECIDED_COUNT": 13,
+    "BUILT_COUNT": 4,
+    "NAMED_COUNT": 22,
+    "PROPOSED_COUNT": 7,
+    "PROTOCOL_GROUP_COUNT": 10,
+    "BOUND_CLAIM_COUNT": 54,
+    "BOUND_CELL_COUNT": 7,
+    "REFUTED_CLAIM_COUNT": 14,
+    "LEDGER_CLAIM_COUNT": 182,
+    "KIND_COUNT": 13,
+    "KIND_AUTHORED_COUNT": 6,
+    "KIND_DECLARED_COUNT": 7,
+    "KIND_VOCAB_COUNT": 6,
+    "UNKINDED_DECIDED_COUNT": 1,
+    "TIER_COUNT": 12,
+    "ACTIVE_DOUBT_COUNT": 6,
+    "DEFEATER_COUNT": 44,
+    "ROUND": "INV-R7.6",
+    "VERSION": "0.8"
+  },
+  "witness_stamp": "48a67957dd9ea29e",
+  "witness_modules": [
+    {
+      "path": "scripts/check-federation-invariants.mjs",
+      "sha256": "33263750e513ec76b1efbd52f690424298e91a4cca326dcd6f70fa29cd9651ef",
+      "bytes": 65286
+    },
+    {
+      "path": "scripts/federation-kernel.mjs",
+      "sha256": "9536497092fd3e72222846e7e5323dfeea4d64de57a3ae0fac3e2734f42c50ef",
+      "bytes": 42170
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
+      "sha256": "06726c3fb022f31e7b27eb7159c731fd9ecd349405dbc698e84090914856a19b",
+      "bytes": 194797
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/value.mjs",
+      "sha256": "de3e2cdcc9d0704ef6668d27ffdf8b1cc3ff8230a00738e8bae793a382c599d8",
+      "bytes": 5234
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/numerics.mjs",
+      "sha256": "fe106eef03762da57de18b9056848839cafc886131cd18fdafcc1d3f10d67b56",
+      "bytes": 2507
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/compose.mjs",
+      "sha256": "2dfcdff22406a41e8f99fd126f12b104ef683309f7aee8bc9c8749e0e0b37054",
+      "bytes": 154946
+    },
+    {
+      "path": "scripts/check-escalation-claims.mjs",
+      "sha256": "2ba55e7f0734ceed9a9c101f9bf890f643afe36c8fcdd6b3db6b3178fe589dda",
+      "bytes": 6504
+    },
+    {
+      "path": "scripts/check-irreversible-ledger.mjs",
+      "sha256": "a497c84e865fc4dad3e386611aeee6a7ec6850dd443ef672eff939b3ad5aa098",
+      "bytes": 15256
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/resource.mjs",
+      "sha256": "8c6a6c6ffc469ae90cadfde0483cb19e7e2088bf90de718c9c67c21ebf2c2c8f",
+      "bytes": 10551
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/test/laws.mjs",
+      "sha256": "51ffdf3aa3658f1858bae427772f4f776140c3539c2347d0fb847aea2d13c22d",
+      "bytes": 60305
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/score.mjs",
+      "sha256": "8bf19dd794c4320a5a95959329c1336bacced6b0abe3f0a1e848354942cb5bfb",
+      "bytes": 3623
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/bridge.mjs",
+      "sha256": "5fc04a507349885bbf5165ee4a62c89d2c5a5d2c787451b9e3e20193a1a47745",
+      "bytes": 2823
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/norm.mjs",
+      "sha256": "3dab00bc000d31825bd2d7d9ae9116555cad80034e82a5347f4448ebbfaf79e4",
+      "bytes": 5214
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/govern.mjs",
+      "sha256": "3f545dc66d60c6f465bb8e4b5b7e6124d0ef8be5e34b27650bc0762aa176c7a2",
+      "bytes": 4995
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/temporal.mjs",
+      "sha256": "d1e3211f178d3a7380a8ee4ba4c0433ae2965ca094c97df4fe3debfddf8f9dc3",
+      "bytes": 8236
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/supervise.mjs",
+      "sha256": "061a8ca0cc84bee6649b9249d420f8e2c1e09771611a872123b5dfef6f2486f7",
+      "bytes": 2731
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/reflexive.mjs",
+      "sha256": "848eeaafe5ad16b5ab78fe7a8b562add07884bddd04dcaa51f5734ce7ec6a248",
+      "bytes": 6044
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/epistemic.mjs",
+      "sha256": "d9ab7f345235be371146ed31632da5d4fd28e92bc72e606146d10f53b9532a3f",
+      "bytes": 4664
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/strategic.mjs",
+      "sha256": "895c56d065bcadb5f058e6e5864ffd433305d1e94122ccc9fb086384bfc4ce19",
+      "bytes": 4583
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/evolution.mjs",
+      "sha256": "b16a825ca3cfd578aef47366439c83ae11a9fde7504e152500c9e8f6567ad541",
+      "bytes": 6988
+    }
+  ],
+  "witness_pages": [
+    {
+      "num": "45",
+      "file": "45-split-cyclicity.html",
+      "url": "/witness/45-split-cyclicity.html",
+      "sha256": "c4f0bf80cf4e0c622a0fab75c0964bb328d0b3c9a13c1a5d323f1af6bf220c5b"
+    },
+    {
+      "num": "44",
+      "file": "44-non-laundering.html",
+      "url": "/witness/44-non-laundering.html",
+      "sha256": "d54a0076eb5efa9e1a7f3a8d262014c1f450de840bc6e2ff770d1f4e6563ded5"
+    },
+    {
+      "num": "24",
+      "file": "24-escalation-monotonicity.html",
+      "url": "/witness/24-escalation-monotonicity.html",
+      "sha256": "7fb156ced2ff9ecdf22fb560c6d572d40e38f7218fff902151218de7f6f5a5a0"
+    },
+    {
+      "num": "25",
+      "file": "25-cost-conservation.html",
+      "url": "/witness/25-cost-conservation.html",
+      "sha256": "822ad16e08b4bb53f456d1173b37ca106952e88d8d4d1cb60e782e6a0d06409a"
+    },
+    {
+      "num": "27b",
+      "file": "27b-holdout-budget.html",
+      "url": "/witness/27b-holdout-budget.html",
+      "sha256": "ab4a197cb08104377556efac19c5f3e0644d9171e8c43d99bcace44b939d7f55"
+    },
+    {
+      "num": "36",
+      "file": "36-aggregation-fidelity.html",
+      "url": "/witness/36-aggregation-fidelity.html",
+      "sha256": "81537dfae3ac5ec92dfdf63234ef23b983b7468ef63c45413ff0e7b0f1b41374"
+    }
+  ]
+}

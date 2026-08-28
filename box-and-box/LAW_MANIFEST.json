@@ -1,0 +1,10 @@
+{
+  "_comment": "DERIVED. Regenerate with `node scripts/law-manifest.mjs`; never hand-edit. Every published law count is checked against this by scripts/check-law-counts.mjs.",
+  "kernel": 109,
+  "compose": 99,
+  "composeSuite": 98,
+  "anchor": 1,
+  "gaps": 3,
+  "total": 208,
+  "trialsPerLaw": 2000
+}

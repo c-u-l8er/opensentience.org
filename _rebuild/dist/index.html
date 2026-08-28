@@ -606,7 +606,7 @@
             <div class="receipts-grid">
                 <a class="receipt-card reveal" href="https://graphonomous.com"><div class="receipt-metric">LongMemEval</div><div class="receipt-value">92.6%<span class="receipt-unit">500-question QA</span></div><p>Graphonomous (OS-001), shipped · graph-backed memory beats flat RAG</p></a>
                 <a class="receipt-card reveal" href="#proof"><div class="receipt-metric">κ invariant</div><div class="receipt-value">1,926,351<span class="receipt-unit">systems proved</span></div><p>0 counterexamples · exhaustive, and it runs in your browser below</p></a>
-                <a class="receipt-card reveal" href="#stack"><div class="receipt-metric">box-and-box kernel</div><div class="receipt-value">103 kernel laws<span class="receipt-unit">× 2,000 trials</span></div><p>the governance floor, property-tested — 118 enforced across the package (103 kernel + 15 compose/CC2), plus 3 declared-open</p></a>
+                <a class="receipt-card reveal" href="#stack"><div class="receipt-metric">box-and-box kernel</div><div class="receipt-value">109 kernel laws<span class="receipt-unit">× 2,000 trials</span></div><p>the governance floor, property-tested — this is the KERNEL scope; the compose/CC2 suite is counted separately and the enforced total is derived under the stack, not typed here</p></a>
                 <a class="receipt-card reveal" href="https://prism.opensentience.org"><div class="receipt-metric">PRISM self-benchmark</div><div class="receipt-value">0.10 → 0.99<span class="receipt-unit">4 cycles</span></div><p>then adversarial testing crashed it to 0.45 and surfaced real bugs we fixed</p></a>
                 <a class="receipt-card reveal" href="#protocols"><div class="receipt-metric">Cross-machine replay</div><div class="receipt-value">100%<span class="receipt-unit">fidelity</span></div><p>teach a skill on machine A, replay it on machine B (OS-011 Embodiment)</p></a>
             </div>
@@ -712,9 +712,9 @@ MCP tools used: store_node × 4, then edge creation</pre>
                 does not get to average itself into a rung.
             </p>
             <dl class="status">
-                <div><dt>Status</dt><dd>The κ proof is exhaustive and runs client-side: 1,052,740 directed graphs on 2–5 nodes and 873,611 finite maps on 2–7 nodes, with 0 counterexamples. The governance floor below it is property-tested — 103 kernel laws and 15 compose laws, at 2,000 trials each. Everything else on this page is a specification, and each card says which.</dd></div>
+                <div><dt>Status</dt><dd>The κ proof is exhaustive and runs client-side: 1,052,740 directed graphs on 2–5 nodes and 873,611 finite maps on 2–7 nodes, with 0 counterexamples. The governance floor below it is property-tested — 109 kernel laws and 101 compose laws, at 2,000 trials each. Everything else on this page is a specification, and each card says which.</dd></div>
                 <div><dt>Last verified</dt><dd>2026-08-16</dd></div>
-                <div><dt>Source</dt><dd>The proof is in /kappa_proof.js and runs in the reader's own browser with no server. The law counts were re-derived on 2026-08-16 by running node test/laws.mjs and node test/compose-laws.mjs against the box-and-box package; both suites derive their own printed totals.</dd></div>
+                <div><dt>Source</dt><dd>The proof is in /kappa_proof.js and runs in the reader's own browser with no server. The law counts were re-derived on 2026-08-23 by running node test/laws.mjs and node test/compose-laws.mjs against the box-and-box package; both suites derive their own printed totals, and scripts/law-manifest.mjs writes them to LAW_MANIFEST.json, which every published count in the tree is checked against.</dd></div>
                 <div class="limit"><dt>Limit</dt><dd>Exhaustive verification of an equivalence over finite structures is not evidence that routing on it helps. κ > 0 ⟺ a nontrivial strongly connected component is a theorem about graphs; that deliberating when κ > 0 produces better answers than not is an empirical claim, and nothing on this page tests it. Nine of the twelve protocols have no implementation at all, and the one benchmark figure quoted here was produced by us, on our own system.</dd></div>
                 <div><dt>Next rung</dt><dd><strong>external</strong> — Someone who is not us runs the κ proof and reports the result, or benchmarks a memory system through PRISM and publishes a number we did not produce. Every figure on this page today has one author.</dd></div>
             </dl>
@@ -739,7 +739,7 @@ MCP tools used: store_node × 4, then edge creation</pre>
                 <div class="stack-layer l-floor reveal"><div class="stack-name">box-and-box</div><div class="stack-role">governance floor</div><div class="stack-note">decides what is allowed, and what is best</div></div>
             </div>
 
-            <h3 class="map-tier" style="margin-top:3.5rem">The governance floor <span>box-and-box · 103 kernel laws × 2000 trials</span></h3>
+            <h3 class="map-tier" style="margin-top:3.5rem">The governance floor <span>box-and-box · 109 kernel laws × 2000 trials</span></h3>
             <p class="reveal" style="color: var(--text-secondary); margin-bottom: 1.5rem">
                 Protocols say what a system <em>can</em> do. box-and-box answers
                 the question underneath them all: <em>given everything it could
@@ -753,19 +753,19 @@ MCP tools used: store_node × 4, then edge creation</pre>
             <p class="reveal" style="color: var(--text-secondary); margin-bottom: 1.5rem">
                 <strong>Two counts, two scopes — and they are not a
                 discrepancy.</strong> <code>node test/laws.mjs</code> enforces
-                the <strong>103 kernel laws</strong> — the eight
+                the <strong>109 kernel laws</strong> — the eight
                 rungs and their bridges — which is the suite this page and the
                 playground refer to. <code>node test/compose-laws.mjs</code>
-                enforces a further <strong>15 compose/CC2
+                enforces a further <strong>99 compose/CC2
                 laws</strong> (the <code>&amp;</code> and <code>|&gt;</code>
                 brick operators; 14 in the suite plus the AC-COMM anchor), for
-                <strong>118 enforced in total</strong> — the number
+                <strong>210 enforced in total</strong> — the number
                 <a href="https://ampersandboxdesign.com">ampersandboxdesign.com</a>
                 quotes. It also declares <strong>3 open
                 gaps</strong> (CP5/CP6/CP7, the <code>Value.pi</code> carrier)
                 which print <em>FALSIFIED</em> in red by design; the build fails
                 if one starts passing. Counts measured by running both suites on
-                <strong>2026-08-16</strong>, at
+                <strong>2026-08-24</strong>, at
                 2,000 trials per law. Nothing
                 here is fetched at runtime — re-run the suites to check us.
             </p>
@@ -808,12 +808,12 @@ MCP tools used: store_node × 4, then edge creation</pre>
                 <a href="/playground.html" class="rung-cell rung-play">
                     <div class="rung-modal">▸ bridge · live</div>
                     <strong>Playground</strong>
-                    <span class="rung-desc">interactive law sandbox · 103 of 103 core suite laws wired</span>
+                    <span class="rung-desc">interactive law sandbox · 109 of 109 core suite laws wired</span>
                 </a>
             </div>
             <div class="cta-row" style="margin-top:2rem">
                 <a href="https://ampersandboxdesign.com" class="btn btn-primary">The kernel landing</a>
-                <a href="https://ampersandboxdesign.com/laws.html" class="btn">All 118 laws, live</a>
+                <a href="https://ampersandboxdesign.com/laws.html" class="btn">All 210 laws, live</a>
                 <a href="/playground.html" class="btn">Open the playground</a>
             </div>
         </section>
@@ -995,7 +995,7 @@ observe(action:"judge_transcript") → reflect("analyze_gaps")</pre>
                 <a href="https://docs.opensentience.org">Docs</a>
                 <a href="#kernel">box-and-box kernel</a>
                 <a href="/playground.html">Playground</a>
-                <a href="https://ampersandboxdesign.com/laws.html">The 118 laws</a>
+                <a href="https://ampersandboxdesign.com/laws.html">The conformance laws</a>
                 <a href="https://ampersandboxdesign.com">ampersandboxdesign.com</a>
                 <a href="https://graphonomous.com">graphonomous.com</a>
                 <a href="https://deliberatic.com">deliberatic.com</a>
@@ -1007,13 +1007,16 @@ observe(action:"judge_transcript") → reflect("analyze_gaps")</pre>
             <p style="margin-top: 2rem; font-size: 0.7rem">
                 <strong>Corrected 2026-08-16.</strong> Two links on this page were
                 labelled <em>All 103 laws</em> and pointed at a conformance page
-                that lists 118 and says so. They were wrong about their own
-                destination. 103 is the kernel scope; 118 is 103 kernel plus 15
-                compose/CC2, with 3 declared open. Both counts were always true
+                listing the whole enforced set and saying so. They were wrong
+                about their own destination. 103 is the kernel scope; the
+                enforced total is the kernel suite plus the compose/CC2 suite,
+                derived above and typed nowhere. Both counts were always true
                 of different things — the page just never said which was which.
-                The label above is quoted here so it can be refused everywhere
-                else: the build counts it, and a second occurrence anywhere on
-                this page fails the build.
+                The total stood at 118 the day this note was written and the
+                compose suite has grown since, which is the reason no total is
+                written down here either. The label above is quoted so it can be
+                refused everywhere else: the build counts it, and a second
+                occurrence anywhere on this page fails the build.
             </p>
             <p style="margin-top: 1.25rem; font-size: 0.7rem">
                 Decoration only: the drifting graph in the header draws nothing

@@ -1,0 +1,50 @@
+{
+  "_comment": "Authored page copy. Every count is a {{PLACEHOLDER}} substituted by build.mjs from a derived fact; a bare integer standing in front of a noun the build derives is REFUSED (R10-TYPED-COUNT), which is R4.1's rule — a count typed in prose drifts inside one revision.",
+  "meta_description": "A working census of the invariants that let an artificial system establish its operational state — and the authority each established state can honestly justify. Organized by what the tree can actually say about each one.",
+  "subtitle": "A working census of the invariants that let an artificial system establish its operational state — and the authority each established state can honestly justify. Organized by what this tree can say about each one, which for most of them is: not much yet.",
+  "reframe_note": "The table used to be grouped by which spec folder owned each cell — <em>Group I is Graphonomous, Group IV is Delegatic</em> — across {{PROTOCOL_GROUP_COUNT}} protocol groups. That is an org chart wearing a periodic table's clothes, and it has a specific cost: <strong>an empty slot in it means nobody has written that spec yet</strong>, which is an editorial fact and predicts nothing. Mendeleev's gaps were predictions because his groups shared a structural property. These shared a maintainer.<br /><br />So v{{VERSION}} groups the cells by <strong>what this tree can say about them</strong>. Four registers, each with a mechanical rule re-derived on every build: something here <em>decides</em> the cell, or code exists and no proposition has been settled, or it has a name and nothing else, or it is a proposal. Inside the decided register the axis is the <strong>semantic kind</strong> — the {{KIND_VOCAB_COUNT}} kind tokens <code>mosaic/occupancy.json</code> derived by enumerating what the table actually uses. That is the axis cell 27a asked for in round 3, when it argued the table needs orthogonal axes and that <em>“Flow: yes or no”</em> is the wrong question to force.<br /><br /><strong>What the regrouping made visible, and this is the point of it.</strong> {{DECIDED_COUNT}} of {{CELL_COUNT}} cells have an evidence anchor. {{NAMED_COUNT}} have a name, a protocol home, a stated authority, and nothing that decides them. The ledger beside this page holds {{LEDGER_CLAIM_COUNT}} claims and only {{BOUND_CELL_COUNT}} cells receive any of them — {{BOUND_CLAIM_COUNT}} bound claims in all, of which <strong>{{REFUTED_CLAIM_COUNT}} are REFUTED</strong>. The old layout had no way to show that: there was no refuted shading, so nine rounds spent mostly killing propositions rendered as an unbroken accumulation of achievement. κ does not carry the federation obstruction it was published as carrying; aggregation fidelity is false in its universal form; escalation monotonicity is false in its universal form. Each of those is a result, and the page reported none of them.<br /><br /><strong>Two things this page now declines to do.</strong> It no longer calls a property test a <em>proof</em> — a bounded randomized search over a generator's range corroborates a universal and cannot discharge it, which is what <code>LED-C9</code> cost when it shipped PROVED on two thousand trials and was refuted by an operation the generator never reached. And it no longer lets adjacency do the work of evidence: the economic addendum, which has no ledger record, no witness and no obligation between its cells, is annexed rather than distributed through the measured table with a 6&nbsp;px dot.<br /><br /><strong>What is still authored, stated so it can be attacked.</strong> {{KIND_AUTHORED_COUNT}} authored kinds were assigned during the regroup, each read off the cell's own <code>source</code> line and each carrying the line it was read off — open a cell to see it. {{UNKINDED_DECIDED_COUNT}} decided cell is deliberately left unassigned, because <em>“history cannot be rewritten”</em> reads as Conservation, as Structural and as Authority, and no criterion in this tree picks one. Forcing it would be the <code>TAX-COMPOUND</code> error: quantifying over a taxonomy nobody can produce. And the shading inside a register remains editorial — the v0.6 note disclosed that no criterion is stated for what earns <em>proved</em> over <em>named</em>, and that disclosure still stands for the shading. What v{{VERSION}} adds is that the axis now carrying the page's structure has a rule you can run.",
+  "census": [
+    {
+      "fact": "CELL_COUNT",
+      "label": "cells in the census"
+    },
+    {
+      "fact": "DECIDED_COUNT",
+      "label": "decided — an evidence anchor exists",
+      "emphasis": true
+    },
+    {
+      "fact": "NAMED_COUNT",
+      "label": "named — nothing decides them"
+    },
+    {
+      "fact": "BOUND_CLAIM_COUNT",
+      "label": "ledger claims bound to a cell"
+    },
+    {
+      "fact": "REFUTED_CLAIM_COUNT",
+      "label": "of those, refuted",
+      "emphasis": true
+    },
+    {
+      "fact": "ACTIVE_DOUBT_COUNT",
+      "label": "active doubts reaching a cell"
+    },
+    {
+      "fact": "KIND_AUTHORED_COUNT",
+      "label": "kinds authored at the regroup"
+    }
+  ],
+  "unassigned_meta": "No kind assigned. Leaving a cell here is a refusal to force a taxonomy nobody has written down — TAX-COMPOUND is the record that owes the reconciliation.",
+  "proposed_group_name": "The economic addendum",
+  "citations": [
+    "<span class=\"label\">v0.5 citations</span>",
+    "<strong>Lietaer, B., Ulanowicz, R. E., Goerner, S. J., &amp; McLaren, N.</strong> (2010). Is our monetary structure a systemic cause for financial instability? Evidence and remedies from nature. <em>Journal of Future Studies</em>.",
+    "<strong>Ulanowicz, R. E.</strong> (1997). <em>Ecology, the Ascendent Perspective.</em> Columbia University Press. — origin of C = A + Φ.",
+    "<strong>Stodder, J.</strong> (2009). Complementary credit networks and macroeconomic stability: Switzerland's Wirtschaftsring. <em>Journal of Economic Behavior &amp; Organization.</em> — empirical anchor for WIR countercyclicality.",
+    "<strong>Gesell, S.</strong> (1916). <em>Die Natürliche Wirtschaftsordnung.</em> — origin of demurrage; basis for δ.",
+    "<strong>arXiv:2601.14747</strong> (2026). On the existence of Ulanowicz's optimal structural resilience in complex networks. — extends the window-of-vitality theorem to general directed graphs, including the [&amp;] substrate.",
+    "<span class=\"label\">v0.8 sources</span>",
+    "The register rules, the kind vocabulary and every count on this page are derived from <code>CLAIM_LEDGER.json</code>, <code>mosaic/occupancy.json</code> and <code>mosaic/defeaters.json</code> in the ProjectAmp2 tree. Build: <code>node opensentience.org/_invariants/build/build.mjs</code>; re-check what is served with <code>--verify</code>."
+  ]
+}

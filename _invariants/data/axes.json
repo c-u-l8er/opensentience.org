@@ -1,0 +1,79 @@
+{
+  "_comment": "The axes the table is ORGANIZED on, v0.8. Until v0.7 the table's only grouping was `protocol_group` — which spec folder owns the cell — and the ten groups it produced are an org chart, not a structural axis: an empty slot in it means nobody wrote that spec, which is an editorial fact and predicts nothing. That is the reason the table closed ZERO cells across nine rounds while the ledger grew from 62 records to 161 (FAC-PROGRESS; SO-CELLS-CLOSED is UNMEASURED by declaration). v0.8 keeps `protocol_group` as a sub-label, because it is true, and organizes on two axes that are derivable from the tree: the REGISTER a cell stands in, and — inside the decided register — its semantic KIND.",
+
+  "kind_vocabulary_source": {
+    "file": "mosaic/occupancy.json",
+    "path": "kind_vocabulary.declared",
+    "note": "NOT duplicated here. The six tokens were derived by enumerating what the table actually uses, and TAX-COMPOUND is the record that owes the reconciliation with the 'eight-kind taxonomy' the ledger has referred to since round 2 and which is written down nowhere. A second copy of this list is exactly the drift this rebuild exists to end."
+  },
+
+  "registers": [
+    {
+      "id": "decided",
+      "name": "Decided",
+      "roman": "A",
+      "claim": "A proposition about this cell has been settled, and something in the tree reproduces it.",
+      "rule": "cell.tier is set, OR at least one CLAIM_LEDGER.json claim binds `cell:<num>` at a settled status (PROVED · CONDITIONAL · REFUTED · KNOWN · MEASURED).",
+      "grouped_by": "kind",
+      "note": "Settled includes REFUTED. A cell whose universal form died and whose narrowed successor stands has been decided about — twice — and that is the most informative thing the table can say. The old layout could not say it at all: there was no REFUTED colour, so nine rounds of killing propositions rendered as an unbroken accumulation of achievement."
+    },
+    {
+      "id": "built",
+      "name": "Built, not decided",
+      "roman": "B",
+      "claim": "An implementation exists. No proposition about it has been settled here.",
+      "rule": "not decided, AND cell.status is \"shipped\".",
+      "grouped_by": "protocol_group",
+      "note": "This register exists because `shipped` and `proved` were rendered as sibling achievements — solid fills, same weight, adjacent rows — and they are not on one axis at all. One is a fact about code, the other about a proposition. Reading a shipped cell as a decided one is the adjacency laundering Λ (cell 44) names, committed by the page that hosts Λ."
+    },
+    {
+      "id": "named",
+      "name": "Named",
+      "roman": "C",
+      "claim": "A name, a protocol home, and a stated authority consequence. Nothing decides it.",
+      "rule": "not decided, not built, not economic.",
+      "grouped_by": "protocol_group",
+      "note": "These are addresses, not results, and the census line prints how many there are. Grouping them by protocol is honest: the spec folder that would own the cell is genuinely all the structure they have."
+    },
+    {
+      "id": "proposed",
+      "name": "Proposed",
+      "roman": "D",
+      "claim": "A design proposal. No ledger record, no witness, no obligation.",
+      "rule": "cell.economic is true.",
+      "grouped_by": "none",
+      "note": "The v0.5 economic addendum. Seven cells with formal blocks and citations and zero records between them, distributed across five groups of the measured table and marked with a 6px dot. A formal block beside κₛ — which has a matroid theorem and 117,648 checked federations — reads as the same kind of object. Annexing them is not a demotion; it is refusing to let adjacency do the work of evidence."
+    }
+  ],
+
+  "statuses": {
+    "_comment": "The six AUTHORED cell tokens. They are NOT CLAIM_LEDGER.json's eight `_statuses`, which carry written definitions; these carry the operational meanings below, recovered from use. The v0.6 note disclosed that no criterion was stated anywhere for what earns `proved` over `shipped` or `named`, and that disclosure stands for this shading. What v0.8 adds is that the criterion for the REGISTER — the axis that now carries the page's structure — is mechanical, stated above, and re-derived on every build.",
+    "proved": "A result is claimed and an evidence anchor exists. Read the tier: the anchors are not of one strength.",
+    "conditional": "Proved under an antecedent that is NOT discharged. The antecedent is on the cell, and a conditional cell that does not name it is refused by the build.",
+    "shipped": "Running code. Says nothing about whether a proposition has been settled.",
+    "named": "The invariant has a name, a home and a stated authority. Nothing decides it.",
+    "sketched": "A shape has been described. Neither named precisely nor decided.",
+    "missing": "The slot is identified and empty."
+  },
+
+  "tiers": {
+    "_comment": "What an evidence anchor is worth. R5.1 settled the wording that used to be wrong here: a property test is `randomized_search`, not `exhaustion`, and a bounded random search over a generator's range cannot discharge a universal — so it must not be called a proof. The old legend read `Property-tested — universal property, thousands of trials` and the proof links read `Read the property-tested proof →`. LED-C9 is what that laundering costs: a claim shipped PROVED on 2,000 trials, refuted later by an operation the generator never reached.",
+    "machine": {
+      "name": "Machine-checked",
+      "gloss": "Complete finite enumeration, or a deductive proof with an executable check.",
+      "link_text": "Read the machine-checked proof"
+    },
+    "property": {
+      "name": "Property-tested",
+      "gloss": "Randomized search over a generator's range. Corroboration, not discharge — what the generator cannot reach is where the counterexample lives.",
+      "link_text": "Read the property-test record"
+    },
+    "impl": {
+      "name": "Implementation-verified",
+      "gloss": "A test suite passes against one implementation. Scoped to that implementation.",
+      "link_text": "Read the implementation record"
+    }
+  },
+
+  "census_note": "Every number on the page is derived by build.mjs from cells.json, CLAIM_LEDGER.json and mosaic/. None may be typed. The v0.6 page hand-typed its cell count, its economic count, its protocol range and its own version — and shipped v0.7 cells and a v0.7 inspector under a v0.6 masthead for two rounds."
+}

@@ -1,4 +1,5 @@
 // box-and-box — faithful runtime of the modality ladder. Seven rungs, one bridge.
+export * as numerics from './numerics.mjs'; // the normative numeric domain — one rounding util + tolerance
 export * from './value.mjs';     // 1 alethic     — refuses               (L1–L14)
 export * from './score.mjs';     // 2 axiological — ranks                 (H1–H13)
 export * from './bridge.mjs';    //   bridge      — floor-then-gradient   (B1–B3)
@@ -11,3 +12,4 @@ export * as epistemic from './epistemic.mjs'; // 6 epistemic — knowledge & gra
 export * as strategic from './strategic.mjs'; // 7 strategic — coalitional ability (S1–S8, SB1–SB3)
 export * as resource from './resource.mjs'; // + resource — the economy the ladder runs on (C1–C8, CB1–CB3)
 export * as evolution from './evolution.mjs'; // + evolution — measured, priced, certified policy change on a provenance chain (EV1–EV6)
+export * as compose from './compose.mjs'; // the lego layer — bricks compose with & and |> over the shared floor (CA1–CA4, CP1–CP4, CX1–CX6)

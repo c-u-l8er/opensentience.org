@@ -1,11 +1,12 @@
 {
   "name": "box-and-box",
-  "version": "0.9.0",
-  "description": "box-and-box \u2014 faithful runtime of the seven-rung modality ladder plus the resource economy beneath it: alethic, axiological, deontic, temporal, reflexive, epistemic, strategic, and resource (linear/reusable accounting with conservation, capacity-as-continual-learning, and Type-II pricing of the ladder's repair operators). One bridge composes them; an evolution surface measures, prices, and certifies its own revisions on a provenance chain. 103 laws property-tested.",
+  "version": "0.10.0",
+  "description": "box-and-box — faithful runtime of the seven-rung modality ladder plus the resource economy beneath it: alethic, axiological, deontic, temporal, reflexive, epistemic, strategic, and resource (linear/reusable accounting with conservation, capacity-as-continual-learning, and Type-II pricing of the ladder's repair operators). One bridge composes them; an evolution surface measures, prices, and certifies its own revisions on a provenance chain; a compose layer snaps capability bricks together with & and |> over the shared floor. 118 laws property-tested.",
   "type": "module",
   "main": "index.mjs",
   "exports": {
     ".": "./index.mjs",
+    "./numerics": "./numerics.mjs",
     "./value": "./value.mjs",
     "./score": "./score.mjs",
     "./bridge": "./bridge.mjs",
@@ -17,7 +18,8 @@
     "./epistemic": "./epistemic.mjs",
     "./strategic": "./strategic.mjs",
     "./resource": "./resource.mjs",
-    "./evolution": "./evolution.mjs"
+    "./evolution": "./evolution.mjs",
+    "./compose": "./compose.mjs"
   },
   "bin": {
     "box-and-box": "bin/arith.mjs",
@@ -25,6 +27,7 @@
   },
   "files": [
     "index.mjs",
+    "numerics.mjs",
     "value.mjs",
     "score.mjs",
     "bridge.mjs",
@@ -37,6 +40,7 @@
     "strategic.mjs",
     "resource.mjs",
     "evolution.mjs",
+    "compose.mjs",
     "bin/",
     "examples/",
     "test/",
@@ -44,9 +48,10 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node test/laws.mjs",
+    "test": "node test/laws.mjs && node test/compose-laws.mjs",
     "laws": "node test/laws.mjs",
-    "prepublishOnly": "node test/laws.mjs",
+    "compose-laws": "node test/compose-laws.mjs",
+    "prepublishOnly": "node test/laws.mjs && node test/compose-laws.mjs",
     "rag": "node examples/rag.mjs",
     "select": "node examples/select.mjs",
     "govern": "node examples/govern.mjs",
@@ -56,7 +61,9 @@
     "strategy": "node examples/strategy.mjs",
     "economy": "node examples/economy.mjs",
     "assistant": "node examples/app-research-assistant.mjs",
-    "harness": "node examples/harness-builder.mjs"
+    "harness": "node examples/harness-builder.mjs",
+    "weave-rung": "node examples/weave-resource-rung.mjs",
+    "compose-coalition": "node examples/compose-coalition.mjs"
   },
   "keywords": [
     "ai-agents",

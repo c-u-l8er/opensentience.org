@@ -4,7 +4,8 @@
 //   box-and-box govern [file.json] [--quiet]   real verdict: JSON in → certificate out
 //   box-and-box compile <agent.json>           govern bridge: [&] governance block → box-and-box policy
 //   box-and-box lift <agent.json>              CC1 → CC2: a single-agent ampersand.json → a singleton coalition
-//   box-and-box laws                           run the 103-law conformance harness
+//   box-and-box laws                           run the 103-law core conformance harness
+//   box-and-box compose-laws                   run the 14-law compose-runtime harness (& |> floor)
 //   box-and-box demo <name>                    run a bundled example
 //   box-and-box --help
 //
@@ -30,7 +31,8 @@ function usage(code) {
                                              box-and-box policy; with --options, a govern-ready spec to pipe
   box-and-box lift <agent.json>              CC1 → CC2: lift a single-agent ampersand.json into a
                                              singleton coalition (agents:[self], hard ⇒ floor, pipeline ⇒ compose)
-  box-and-box laws                           run the 103-law conformance harness (2000 trials/law)
+  box-and-box laws                           run the 103-law core conformance harness (2000 trials/law)
+  box-and-box compose-laws                   run the 14-law compose-runtime harness (CA1–CA4, CP1–CP4, CX1–CX6)
   box-and-box demo <name>                    run a bundled example: ${DEMOS.join(' | ')}
   box-and-box --help
 
@@ -46,6 +48,7 @@ else if (cmd === 'govern') process.exit(run('bin/govern.mjs', rest));     // rea
 else if (cmd === 'compile') process.exit(run('bin/compile.mjs', rest));   // [&] govern bridge
 else if (cmd === 'lift') process.exit(run('bin/lift.mjs', rest));         // CC1 → CC2 coalition
 else if (cmd === 'laws') process.exit(run('test/laws.mjs'));
+else if (cmd === 'compose-laws') process.exit(run('test/compose-laws.mjs'));
 else if (cmd === 'demo') {
   const name = rest[0];
   if (!DEMOS.includes(name)) { process.stderr.write(`unknown demo '${name ?? ''}'. choose: ${DEMOS.join(' | ')}\n`); process.exit(2); }

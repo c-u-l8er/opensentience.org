@@ -534,7 +534,10 @@ function rungCell(r) {
 }
 
 export function Stack(rungs, kernel) {
-  // Derived, never typed. 103 kernel + 15 compose/CC2 = the enforced total.
+  // Derived, never typed — from rungs.kernelLaws + rungs.composeLaws.
+  // Deliberately no example sum in this comment: the one that used to be here
+  // said "103 kernel + 15 compose/CC2" and was still saying it after the
+  // compose suite reached 22, one line above the code that derives it.
   const enforcedTotal = rungs.kernelLaws + rungs.composeLaws;
   const layer = (cls, name, role, note) =>
     `<div class="stack-layer ${cls} reveal"><div class="stack-name">${name}</div><div class="stack-role">${role}</div><div class="stack-note">${note}</div></div>`;
@@ -773,13 +776,16 @@ export function Footer(site, surface) {
             <p style="margin-top: 2rem; font-size: 0.7rem">
                 <strong>Corrected 2026-08-16.</strong> Two links on this page were
                 labelled <em>All 103 laws</em> and pointed at a conformance page
-                that lists 118 and says so. They were wrong about their own
-                destination. 103 is the kernel scope; 118 is 103 kernel plus 15
-                compose/CC2, with 3 declared open. Both counts were always true
+                listing the whole enforced set and saying so. They were wrong
+                about their own destination. 103 is the kernel scope; the
+                enforced total is the kernel suite plus the compose/CC2 suite,
+                derived above and typed nowhere. Both counts were always true
                 of different things — the page just never said which was which.
-                The label above is quoted here so it can be refused everywhere
-                else: the build counts it, and a second occurrence anywhere on
-                this page fails the build.
+                The total stood at 118 the day this note was written and the
+                compose suite has grown since, which is the reason no total is
+                written down here either. The label above is quoted so it can be
+                refused everywhere else: the build counts it, and a second
+                occurrence anywhere on this page fails the build.
             </p>
             <p style="margin-top: 1.25rem; font-size: 0.7rem">
                 Decoration only: the drifting graph in the header draws nothing

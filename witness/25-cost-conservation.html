@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cost-budget conservation (unnamed) — witness — OpenSentience</title>
+        <meta name="description" content="Spend matches declared budget." />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+/* ─────────────────────────────────────────────────────────────
+   Witness pages — one per decided cell whose evidence is a module
+   rather than a static proof page. Same editorial stock as the
+   /proofs/ pages; the runner is the part those do not have.
+
+   Inlined by build.mjs. The version marker is a PLACEHOLDER and a
+   literal one is refused here for the same reason it is in
+   table.css.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+    --paper: #f4ede0;
+    --paper-deep: #ebe3d2;
+    --ink: #1a1814;
+    --ink-soft: #4a4538;
+    --ink-faint: #8a8472;
+    --rule: #c9bfa8;
+    --rule-soft: #ddd4bc;
+    --proved: #b8451f;
+    --good: #4a5d3a;
+    --warn: #7d5a2e;
+    --font-display: "Cormorant Garamond", Georgia, serif;
+    --font-mono: "JetBrains Mono", "IBM Plex Mono", monospace;
+    --font-body: "Inter", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+}
+
+.wrap {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+}
+
+/* ── head ── */
+.proof-head {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 1.75rem;
+    margin-bottom: 2.5rem;
+}
+.glyph-box {
+    flex-shrink: 0;
+    width: 130px;
+    text-align: center;
+    padding: 1rem 0.75rem;
+    background: var(--paper-deep);
+    border: 2px solid var(--ink);
+}
+.gb-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--ink-faint);
+}
+.gb-sym {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    line-height: 1.05;
+}
+.gb-sym.glyph { font-family: var(--font-mono); font-size: 2.8rem; font-weight: 700; }
+.gb-lab {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+.head-text { flex: 1; }
+.eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.6rem;
+}
+.eyebrow a { color: var(--proved); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.eyebrow a:hover { border-color: var(--proved); }
+h1 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+}
+.lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+    margin-top: 0.5rem;
+}
+.tierline {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    margin-top: 0.9rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--rule);
+    line-height: 1.6;
+}
+
+h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.6rem;
+    margin: 2.75rem 0 0.9rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+}
+h2 .n {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--proved);
+}
+p { max-width: 74ch; margin-bottom: 0.9rem; }
+code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--paper-deep);
+    padding: 0.08em 0.35em;
+    border: 1px solid var(--rule-soft);
+}
+
+.hyp {
+    background: var(--paper-deep);
+    border-left: 3px dashed var(--warn);
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    max-width: 74ch;
+}
+.hyp .label,
+.wrecs .label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warn);
+    margin-bottom: 0.4rem;
+}
+
+/* ── the runner ── */
+.wrun {
+    border: 1.5px solid var(--ink);
+    background: var(--paper-deep);
+    margin: 1.25rem 0 2rem;
+}
+.wrun-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--rule);
+}
+.wrun-cmd {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.76rem;
+    user-select: all;
+}
+.wrun-mode {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-left: auto;
+}
+.wrun-weaker {
+    margin: 0;
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    background: rgba(125, 90, 46, 0.09);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: none;
+}
+.wrun-weaker b { color: var(--warn); }
+
+.wrun-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.9rem;
+}
+.wrun-go {
+    background: var(--proved);
+    color: var(--paper);
+    border: 1.5px solid var(--proved);
+    padding: 0.55rem 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.wrun-go:hover:not(:disabled) { background: var(--ink); border-color: var(--ink); }
+.wrun-go:disabled { opacity: 0.45; cursor: progress; }
+.wstatus {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+}
+.wstatus.running { color: var(--warn); }
+.wstatus.good { color: var(--good); font-weight: 700; }
+.wstatus.bad { color: var(--proved); font-weight: 700; }
+
+.wout {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.55;
+    max-height: 460px;
+    overflow: auto;
+    background: var(--ink);
+    color: #d8d2c4;
+}
+.wout:empty { display: none; }
+.wout .wline {
+    padding: 0.05rem 0.9rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.wout .wline.good { color: #a9c48f; }
+.wout .wline.bad { color: #e8926f; }
+.wout .wline.warn { color: #e0c07a; }
+.wout .wline.group {
+    color: var(--paper);
+    font-weight: 700;
+    border-top: 1px solid #3a352c;
+    margin-top: 0.35rem;
+    padding-top: 0.35rem;
+}
+
+/* ── what cannot run ── */
+.wother { max-width: 82ch; }
+.wo {
+    display: flex;
+    gap: 0.8rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+    padding: 0.5rem 0;
+    border-bottom: 1px dotted var(--rule);
+}
+.wo-kind {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink-faint);
+    padding: 0.1rem 0.4rem;
+}
+.wo-why {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    flex-basis: 100%;
+}
+
+/* ── records ── */
+.wrecs { max-width: 84ch; }
+.wrecs .rec {
+    padding: 0.6rem 0;
+    border-bottom: 1px dotted var(--rule);
+    display: flex;
+    gap: 0.7rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+.rec-status {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    padding: 0.1rem 0.35rem;
+    border: 1px solid currentColor;
+    min-width: 11ch;
+    text-align: center;
+    flex-shrink: 0;
+}
+.rec-status.PROVED, .rec-status.KNOWN { color: var(--good); }
+.rec-status.REFUTED { color: var(--proved); }
+.rec-status.CONDITIONAL, .rec-status.PROVISIONAL, .rec-status.MEASURED { color: var(--warn); }
+.rec-status.OPEN, .rec-status.DECLARED { color: var(--ink-faint); }
+.rec-id { font-family: var(--font-mono); font-size: 0.76rem; font-weight: 500; }
+.rec-obl { font-family: var(--font-mono); font-size: 0.62rem; color: var(--ink-faint); margin-left: auto; }
+.rec-stmt { flex-basis: 100%; font-size: 0.84rem; color: var(--ink-soft); margin: 0.25rem 0 0; }
+.doubt-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px dotted var(--rule);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    max-width: 84ch;
+}
+.doubt-item b { color: var(--ink); font-family: var(--font-mono); font-size: 0.76rem; }
+
+.wfoot {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+}
+.wfoot a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.wfoot a:hover { color: var(--proved); border-color: var(--proved); }
+
+@media (max-width: 700px) {
+    .wrap { padding: 2rem 1.15rem 3rem; }
+    .proof-head { flex-direction: column; gap: 1.25rem; }
+    .glyph-box { width: 108px; }
+    .wrun-mode { margin-left: 0; }
+    .rec-obl { margin-left: 0; }
+}
+
+        </style>
+    </head>
+    <body style="padding-top: 56px">
+        <script type="module" src="/amp-nav.js"></script>
+        <amp-nav property="opensentience"></amp-nav>
+        <div class="wrap">
+            <header class="proof-head">
+                <div class="glyph-box">
+                    <div class="gb-num">25</div>
+                    <div class="gb-sym">?</div>
+                    <div class="gb-lab">Cost conservation</div>
+                </div>
+                <div class="head-text">
+                    <div class="eyebrow"><a href="/invariants.html">← the table</a> · witness</div>
+                    <h1>Cost-budget conservation (unnamed)</h1>
+                    <p class="lede">Spend matches declared budget.</p>
+                    <p class="tierline"><b>Property-tested</b> — Randomized search over a generator's range. Corroboration, not discharge — what the generator cannot reach is where the counterexample lives.</p>
+                </div>
+            </header>
+
+            <h2><span class="n">01</span>What the cell claims</h2>
+            <p>Total cost across a task is bounded by the declared budget. Overruns trigger explicit reauthorization rather than silent debt. Implemented as the affine ledger at rung 8 of the box-and-box arithmetic ladder: C1 conservation (Σ invariant under transfer), C2 no overdraft, C4 linearity, C6 monotone depletion, CB1 exhaustion ⇒ infeasible — which is literally this cell's declared authority — and CB2 additive composition along a pipeline.</p>
+            <div class="hyp"><span class="label">Hypothesis — NOT discharged</span>The meter is faithful — every recorded debit bounds an incurred cost. The ledger algebra is proved; nothing in it certifies that its debits match real spend, and the metered process can lie, crash mid-charge, or be billed out-of-band.</div>
+
+            
+            <h2><span class="n">02</span>Run the witness</h2>
+            <p>
+                The module below is <strong>byte-identical</strong> to the file
+                <code>node scripts/check-irreversible-ledger.mjs</code> executes. It is staged with its whole
+                relative-import closure (2 files) and hashed into
+                this build, so a staged copy that drifts from source is refused. It is not a port
+                and not a re-implementation — the imports resolve to the same code.
+            </p>
+            
+            <div class="wrun" id="wrun-0">
+                <div class="wrun-head">
+                    <code class="wrun-cmd">node scripts/check-irreversible-ledger.mjs</code>
+                    <span class="wrun-mode">runs on import</span>
+                </div>
+                
+                <div class="wrun-bar">
+                    <button class="wrun-go" data-i="0">▶ Run it here</button>
+                    <span class="wstatus" id="wstatus-0">not run</span>
+                </div>
+                <div class="wout" id="wout-0"></div>
+            </div>
+
+            
+
+            
+            <h2><span class="n">03</span>The ledger records bound to this cell</h2>
+            <div class="wrecs">
+                <div class="rec"><span class="rec-status OPEN">OPEN</span><span class="rec-id">LED-METER</span><span class="rec-obl"></span><p class="rec-stmt">A recorded debit provably bounds an incurred cost.</p></div>
+                <div class="rec"><span class="rec-status PROVISIONAL">PROVISIONAL</span><span class="rec-id">EMB-REVOKE-IRREVERSIBLE</span><span class="rec-obl">universal_affirmation</span><p class="rec-stmt">If externalizing a capability into a descendant is modelled as a spend into an irreversible sink, then revocation of already-externalized capability is not a mechanism question but a declaration question: LED-C9-MEDIATED entails that no mediated operation recovers it, and LED-NARROW entails that refusing further externalization remains available.</p></div>
+                <div class="rec"><span class="rec-status OPEN">OPEN</span><span class="rec-id">EMB-REVOCATION-CUT</span><span class="rec-obl"></span><p class="rec-stmt">Revocation of a capability is a minimal CUT: the smallest set of parent-controllable support nodes whose removal breaks every remaining support path. Competence revocation and authority revocation are different cuts and must not be conflated.</p></div>
+            </div>
+
+            
+
+            <footer class="wfoot">
+                <span>© 2026 Ampersand Box Design</span>
+                <span><a href="/invariants.html">The Periodic Table of Agent Invariants</a></span>
+            </footer>
+        </div>
+        <script type="module">
+            import { runWitness } from '/witness/run.js?v=48a67957dd9ea29e';
+            const SPECS = [{"entry":"/witness/src/scripts/check-irreversible-ledger.mjs","mode":"side-effect","stamp":"48a67957dd9ea29e","argv":[],"trials":200}];
+            document.querySelectorAll('.wrun-go').forEach((b) => {
+                b.addEventListener('click', () => {
+                    const i = Number(b.dataset.i);
+                    runWitness({
+                        spec: SPECS[i],
+                        sink: document.getElementById('wout-' + i),
+                        status: document.getElementById('wstatus-' + i),
+                        button: b,
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

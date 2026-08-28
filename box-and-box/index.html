@@ -3,568 +3,1062 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>box-and-box — reference implementation, read every line in five languages</title>
+        <title>box-and-box — the governance kernel, read every line in five languages</title>
         <meta
             name="description"
-            content="The complete MIT-licensed reference implementation of the box-and-box governance kernel: eight modal rungs, one bridge, 103 property-tested laws. Read the real served source in a code-editor browser — JavaScript (canonical) plus working Python, Elixir, Rust and Go ports that each pass the identical 103-law suite."
+            content="The MIT-licensed reference implementation of the box-and-box governance kernel: eight modal rungs, one bridge, 109 enforced kernel laws at 2000 trials each. Read the real served source in a code browser — JavaScript (canonical) plus working Python, Elixir, Rust and Go ports that each pass the identical kernel suite."
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
+        <link rel="stylesheet" href="/styles/site.css?v=105207ff" />
         <style>
+            /* ------------------------------------------------------------------
+               Page-specific only. Every colour, family and radius below is a
+               shell token from /styles/site.css — this file adds the source
+               browser, which no other surface has, and nothing else.
+               --acc  = this site's character (research violet)
+               --data = a number with a witness      --warn = unbacked or refused
+               ------------------------------------------------------------------ */
+
+            /* ---------- the code theme ----------
+               site.css declares NO --code-* tokens (its only code rule is
+               `code{color:var(--data)}`), so these were falling back to values
+               copied from playground.html and scattered through the file.
+               Declared once here, and every one measured against --code-bg:
+               ink 12.67 · keyword 7.86 · string 8.65 · number 9.41 ·
+               comment 6.71 · gutter 4.62. The comment token was 4.09 — an AA
+               FAILURE — and the gutter 2.81, on a page whose entire purpose is
+               reading source that is more comment than code. */
             :root {
-                --bg: #0d1117;
-                --panel: #161b22;
-                --panel-2: #1c2128;
-                --border: #30363d;
-                --border-soft: #21262d;
-                --text: #e6edf3;
-                --text-soft: #adbac7;
-                --text-faint: #768390;
-                --accent: #58a6ff;
-                --accent-soft: #1f6feb;
-                --green: #3fb950;
-                --green-bg: #2ea04326;
-                --amber: #e3b341;
-                --purple: #d2a8ff;
-                --red: #ff7b72;
-                --cyan: #76e3ea;
-                --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-                --sans: "Inter", system-ui, sans-serif;
+                --code-bg: #262017;
+                --code-ink: #ece3d2;
+                --code-dim: #b3a68a;
+                --code-gutter: #94886f;
+                --code-kw: #c4a8f2;
+                --code-str: #86ccae;
+                --code-num: #e8c07a;
             }
 
-            * {
-                box-sizing: border-box;
+            /* The shared shell gives .band a 60px top margin to clear the site's
+               OWN fixed sub-nav, which sits below amp-nav on the generated pages
+               (measured on the root surface: sub-nav bottom 147, band top 146).
+               This page has no sub-nav, so that margin clears nothing and leaves
+               an empty strip under the header. */
+            .band {
+                margin-top: 0;
             }
 
-            html {
-                scroll-behavior: smooth;
-            }
-
-            body {
-                margin: 0;
-                background: var(--bg);
-                color: var(--text);
-                font: 400 16px/1.6 var(--sans);
-                -webkit-font-smoothing: antialiased;
-            }
-
-            .wrap {
-                max-width: 1080px;
+            .bb-wrap {
+                max-width: var(--wrap, 1080px);
                 margin: 0 auto;
-                padding: 3.5rem 1.5rem 6rem;
+                padding: 2.5rem 1.375rem 5rem;
             }
 
             /* ---------- masthead ---------- */
-            .eyebrow {
-                font: 600 0.74rem/1 var(--mono);
-                letter-spacing: 0.16em;
-                text-transform: uppercase;
-                color: var(--accent);
-                margin: 0 0 1.1rem;
-                display: flex;
-                gap: 0.6rem;
-                flex-wrap: wrap;
-                align-items: center;
+            .bb-hero {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) 190px;
+                gap: 2rem;
+                align-items: start;
+                margin-bottom: 2.75rem;
             }
-            .eyebrow .dot {
-                color: var(--text-faint);
-            }
-
-            h1 {
-                font: 700 clamp(2.6rem, 6vw, 4rem)/1 var(--mono);
-                margin: 0 0 0.7rem;
-                letter-spacing: -0.02em;
-                color: var(--text);
-            }
-            h1 .amp {
-                color: var(--accent);
-            }
-
-            .lede {
-                font-size: 1.2rem;
-                line-height: 1.55;
-                color: var(--text-soft);
-                max-width: 62ch;
-                margin: 0 0 2rem;
-            }
-            .lede strong {
-                color: var(--text);
-                font-weight: 600;
-            }
-            .lede code {
+            .bb-eyebrow {
                 font-family: var(--mono);
-                color: var(--cyan);
-                font-size: 0.92em;
-            }
-
-            /* ---------- install block ---------- */
-            .install {
-                background: var(--panel);
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                padding: 1.1rem 1.3rem;
-                font: 500 0.88rem/1.95 var(--mono);
-                overflow-x: auto;
-                margin: 0 0 2.5rem;
-            }
-            .install .c {
-                color: var(--text-faint);
-            }
-            .install .p {
-                color: var(--green);
-            }
-            .install .arg {
-                color: var(--purple);
-            }
-
-            /* ---------- conformance strip ---------- */
-            .section-label {
-                font: 600 0.74rem/1 var(--mono);
+                font-size: var(--xs, 0.6875rem);
                 letter-spacing: 0.14em;
                 text-transform: uppercase;
-                color: var(--text-faint);
-                margin: 0 0 1rem;
-            }
-            #chips {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-                gap: 0.7rem;
-                margin: 0 0 3rem;
-            }
-            .chip {
-                background: var(--panel);
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                padding: 0.85rem 1rem;
+                color: var(--acc);
+                margin: 0 0 0.9rem;
                 display: flex;
-                flex-direction: column;
-                gap: 0.35rem;
-            }
-            .chip__top {
-                display: flex;
+                gap: 0.55rem;
+                flex-wrap: wrap;
                 align-items: center;
-                justify-content: space-between;
-                gap: 0.5rem;
             }
-            .chip__name {
-                font: 600 0.95rem/1 var(--mono);
-                color: var(--text);
+            .bb-eyebrow .sep {
+                color: var(--text-secondary);
             }
-            .chip__name .canon {
-                color: var(--text-faint);
-                font-size: 0.66rem;
-                font-weight: 500;
-                letter-spacing: 0.04em;
+            .bb-hero h1 {
+                font-family: var(--mono);
+                font-size: clamp(2.1rem, 5.4vw, 3.3rem);
+                font-weight: 600;
+                /* r7: line-height must clear the font's ink box, not its em size. */
+                line-height: 1.16;
+                letter-spacing: -0.02em;
+                margin: 0 0 0.85rem;
+                color: var(--fg);
             }
-            .chip__badge {
-                font: 700 0.72rem/1 var(--mono);
-                color: var(--green);
-                background: var(--green-bg);
-                border: 1px solid #2ea04344;
-                padding: 0.28rem 0.5rem;
-                border-radius: 999px;
-                white-space: nowrap;
+            .bb-hero h1 .k {
+                color: var(--acc);
             }
-            .chip__run {
-                font: 500 0.74rem/1.3 var(--mono);
-                color: var(--text-faint);
+            .bb-lede {
+                font-size: 1.1rem;
+                line-height: 1.62;
+                color: var(--text-secondary);
+                margin: 0;
+                max-width: 60ch;
             }
-            .chip__run::before {
-                content: "$ ";
-                color: var(--accent);
+            .bb-lede strong {
+                color: var(--fg);
+                font-weight: 600;
+            }
+            .bb-lede code {
+                font-family: var(--mono);
+                font-size: 0.9em;
+                color: var(--data);
+                background: var(--data-soft);
+                padding: 0.1em 0.36em;
+                border-radius: 4px;
             }
 
-            /* ---------- editor ---------- */
-            .editor {
-                border: 1px solid var(--border);
-                border-radius: 12px;
-                overflow: hidden;
-                background: var(--panel);
-                box-shadow: 0 8px 40px #00000040;
+            /* ---------- §8 identifying animation: laws being checked ----------
+               Renders no data and asserts nothing. It takes no inputs and
+               exposes no outputs, so no figure on this page can come from it.
+               CSS only — no JS, no canvas, and reduced-motion is one query.
+
+               IDENTITY-CONSTANTS: 9 columns, 81 cells. Both are chosen to sit
+               OUTSIDE the set of integers that appear as text on this page
+               (measured in a browser: 0–8, 10, 11, 22, 27, 90, 103, 130, 154,
+               2000, 2026, 4315). The grid was 6 wide until that was measured —
+               6 is a rung number in the ladder table below, so a reader could
+               have counted the columns and found the same figure in the prose.
+               That is the gpscoord "12 Active Pathfinders" defect in miniature:
+               an animation's layout constant read as a published quantity. */
+            .bb-idanim {
+                display: grid;
+                grid-template-columns: repeat(9, 1fr);
+                gap: 4px;
+                width: 100%;
+                max-width: 190px;
+                aspect-ratio: 1;
+                align-self: start;
             }
-            .editor__head {
-                display: flex;
-                align-items: center;
-                gap: 0.9rem;
-                padding: 0.7rem 1rem;
-                background: var(--panel-2);
-                border-bottom: 1px solid var(--border);
-                flex-wrap: wrap;
+            .bb-idanim i {
+                display: block;
+                border-radius: 3px;
+                background: var(--acc-soft);
+                box-shadow: inset 0 0 0 1px var(--line2);
+                animation: bb-settle 5.2s ease-in-out infinite;
             }
-            .lights {
+            @keyframes bb-settle {
+                0%,
+                100% {
+                    background: var(--acc-soft);
+                    box-shadow: inset 0 0 0 1px var(--line2);
+                }
+                45% {
+                    background: var(--data-soft);
+                    box-shadow: inset 0 0 0 1px var(--data);
+                }
+                60% {
+                    background: var(--data-soft);
+                    box-shadow: inset 0 0 0 1px var(--data);
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .bb-idanim i {
+                    animation: none;
+                }
+            }
+
+            /* ---------- quick start ---------- */
+            .bb-run {
+                background: var(--code-bg);
+                color: var(--code-ink);
+                border-radius: var(--rl, 14px);
+                padding: 1.15rem 1.3rem;
+                font-family: var(--mono);
+                font-size: 0.83rem;
+                line-height: 2;
+                overflow-x: auto;
+                margin: 0 0 0.75rem;
+            }
+            .bb-run .c {
+                color: var(--code-dim);
+            }
+            .bb-run .p {
+                color: var(--code-kw);
+            }
+            .bb-run .a {
+                color: var(--code-str);
+            }
+            .bb-note {
+                font-size: var(--sm, 0.8125rem);
+                color: var(--text-dim);
+                margin: 0 0 2.75rem;
+                line-height: 1.6;
+            }
+
+            /* ---------- section labels ---------- */
+            .bb-label {
+                font-family: var(--mono);
+                font-size: var(--xs, 0.6875rem);
+                text-transform: uppercase;
+                letter-spacing: 0.13em;
+                color: var(--text-secondary);
+                margin: 3rem 0 0.9rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid var(--line);
+            }
+            .bb-label:first-of-type {
+                margin-top: 0;
+            }
+
+            /* ---------- conformance chips ---------- */
+            .bb-chips {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+                gap: 12px;
+            }
+            .bb-chip {
+                background: var(--bg-card, #fffdf8);
+                border: 1px solid var(--line2);
+                border-radius: var(--r, 8px);
+                padding: 0.95rem 1.05rem;
+            }
+            .bb-chip .lang {
+                font-family: var(--mono);
+                font-size: 0.94rem;
+                font-weight: 600;
+                color: var(--fg);
                 display: flex;
+                align-items: baseline;
                 gap: 0.45rem;
             }
-            .lights i {
-                width: 12px;
-                height: 12px;
-                border-radius: 50%;
-                display: block;
+            .bb-chip .lang span {
+                font-size: var(--xs, 0.6875rem);
+                font-weight: 400;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.07em;
             }
-            .lights i:nth-child(1) {
-                background: #ff5f56;
+            .bb-chip .res {
+                font-family: var(--mono);
+                font-size: 0.86rem;
+                color: var(--data);
+                margin-top: 0.5rem;
+                font-weight: 600;
             }
-            .lights i:nth-child(2) {
-                background: #ffbd2e;
-            }
-            .lights i:nth-child(3) {
-                background: #27c93f;
-            }
-            #langtabs {
-                display: flex;
-                gap: 0.3rem;
-                flex-wrap: wrap;
-            }
-            .langtab {
-                font: 600 0.82rem/1 var(--mono);
-                padding: 0.5rem 0.85rem;
-                border-radius: 7px;
-                border: 1px solid transparent;
-                background: transparent;
-                color: var(--text-faint);
-                cursor: pointer;
-                transition:
-                    background 0.12s ease,
-                    color 0.12s ease;
-            }
-            .langtab:hover {
-                color: var(--text-soft);
-                background: #ffffff0a;
-            }
-            .langtab[aria-selected="true"] {
-                color: var(--text);
-                background: var(--bg);
-                border-color: var(--border);
-            }
-            .langtab .sub {
-                font-size: 0.62rem;
-                color: var(--text-faint);
-                margin-left: 0.35rem;
-                font-weight: 500;
+            .bb-chip .cmd {
+                font-family: var(--mono);
+                font-size: 0.72rem;
+                color: var(--text-secondary);
+                margin-top: 0.3rem;
+                overflow-wrap: anywhere;
             }
 
-            .editor__body {
-                display: grid;
-                grid-template-columns: 248px 1fr;
-                min-height: 560px;
+            /* ---------- source browser ---------- */
+            .bb-editor {
+                border: 1px solid var(--line2);
+                border-radius: var(--rl, 14px);
+                overflow: hidden;
+                background: var(--bg-card, #fffdf8);
             }
-            #sidebar {
-                background: var(--panel);
-                border-right: 1px solid var(--border);
-                padding: 0.6rem 0;
-                overflow-y: auto;
-                max-height: 78vh;
-            }
-            .tree-group {
-                font: 600 0.66rem/1 var(--mono);
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                color: var(--text-faint);
-                padding: 0.8rem 1rem 0.4rem;
-            }
-            .tree-item {
+            .bb-editor__head {
                 display: flex;
                 align-items: center;
-                gap: 0.5rem;
-                padding: 0.4rem 1rem 0.4rem 1.1rem;
+                gap: 0.85rem;
+                padding: 0.6rem 0.85rem;
+                background: var(--bg-elevated, #f2ede2);
+                border-bottom: 1px solid var(--line2);
+                flex-wrap: wrap;
+            }
+            .bb-tabs {
+                display: flex;
+                gap: 4px;
+                flex-wrap: wrap;
+            }
+            .bb-tab {
+                font-family: var(--mono);
+                font-size: var(--xs, 0.6875rem);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                padding: 0.34rem 0.68rem;
+                border-radius: 999px;
+                border: 1px solid transparent;
+                background: none;
+                color: var(--text-secondary);
                 cursor: pointer;
-                border-left: 2px solid transparent;
-                font: 500 0.82rem/1.3 var(--mono);
-                color: var(--text-soft);
+                transition: background 0.15s, color 0.15s, border-color 0.15s;
             }
-            .tree-item:hover {
-                background: #ffffff08;
+            .bb-tab:hover,
+            .bb-tab:focus-visible {
+                color: var(--acc);
+                border-color: var(--acc-line);
             }
-            .tree-item[aria-current="true"] {
-                background: #1f6feb1a;
-                border-left-color: var(--accent);
-                color: var(--text);
+            .bb-tab[aria-selected="true"] {
+                background: var(--acc);
+                border-color: var(--acc);
+                color: #fff;
+                font-weight: 600;
             }
-            .tree-item .ti-icon {
-                color: var(--accent);
-                flex-shrink: 0;
-            }
-            .tree-item .ti-laws {
+            .bb-search {
                 margin-left: auto;
-                font-size: 0.66rem;
-                color: var(--text-faint);
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
             }
-            .tree-item .ti-name {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+            .bb-search input {
+                font-family: var(--mono);
+                font-size: 0.76rem;
+                padding: 0.34rem 0.6rem;
+                border: 1px solid var(--line2);
+                border-radius: 6px;
+                background: var(--bg-card, #fffdf8);
+                color: var(--fg);
+                width: 148px;
+            }
+            .bb-search input:focus-visible {
+                outline: 2px solid var(--acc);
+                outline-offset: 1px;
+                border-color: var(--acc);
+            }
+            .bb-search kbd {
+                font-family: var(--mono);
+                font-size: 0.66rem;
+                color: var(--text-secondary);
+                border: 1px solid var(--line2);
+                border-bottom-width: 2px;
+                border-radius: 4px;
+                padding: 0.05rem 0.3rem;
             }
 
-            .pane {
+            .bb-editor__body {
+                display: grid;
+                grid-template-columns: 224px minmax(0, 1fr);
+                min-height: 460px;
+            }
+            .bb-files {
+                /* Belt and braces with the <div> swap above: if any shared-shell rule ever
+                   reaches this element again, it stays in the grid rather than becoming a
+                   floating bar. `scrollWidth` cannot see a fixed box (SHELL.md r16), so this
+                   class of breakage is invisible to an overflow sweep — it must be prevented,
+                   not detected. */
+                position: static;
+                backdrop-filter: none;
+                border-right: 1px solid var(--line2);
+                background: var(--bg-elevated, #f2ede2);
+                overflow-y: auto;
+                max-height: 620px;
+                padding: 0.5rem 0;
+            }
+            .bb-files .grp {
+                font-family: var(--mono);
+                font-size: 0.62rem;
+                text-transform: uppercase;
+                letter-spacing: 0.11em;
+                color: var(--text-secondary);
+                padding: 0.75rem 0.9rem 0.35rem;
+            }
+            .bb-file {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 0.5rem;
+                width: 100%;
+                text-align: left;
+                background: none;
+                border: 0;
+                border-left: 2px solid transparent;
+                padding: 0.34rem 0.9rem;
+                font-family: var(--mono);
+                font-size: 0.775rem;
+                color: var(--text-secondary);
+                cursor: pointer;
+                transition: background 0.12s, color 0.12s;
+            }
+            .bb-file:hover,
+            .bb-file:focus-visible {
+                background: var(--acc-soft);
+                color: var(--acc);
+            }
+            .bb-file[aria-current="true"] {
+                background: var(--acc-soft);
+                border-left-color: var(--acc);
+                color: var(--acc);
+                font-weight: 600;
+            }
+            .bb-file .laws {
+                font-size: 0.64rem;
+                color: var(--text-secondary);
+                font-weight: 400;
+                white-space: nowrap;
+            }
+            .bb-file[aria-current="true"] .laws {
+                color: var(--acc);
+            }
+            .bb-files .none {
+                padding: 0.9rem;
+                font-size: 0.74rem;
+                color: var(--text-secondary);
+                font-style: italic;
+            }
+
+            .bb-pane {
                 display: flex;
                 flex-direction: column;
-                background: var(--bg);
                 min-width: 0;
             }
-            .pane__bar {
-                position: sticky;
-                top: 0;
+            .bb-pane__bar {
                 display: flex;
                 align-items: center;
                 gap: 0.8rem;
-                padding: 0.6rem 1rem;
-                background: var(--bg);
-                border-bottom: 1px solid var(--border-soft);
+                padding: 0.5rem 0.9rem;
+                border-bottom: 1px solid var(--line);
+                font-family: var(--mono);
+                font-size: 0.73rem;
+                background: var(--bg-card, #fffdf8);
+                position: sticky;
+                top: 0;
+                z-index: 2;
                 flex-wrap: wrap;
             }
-            .pane__path {
-                font: 500 0.8rem/1 var(--mono);
-                color: var(--text-soft);
+            .bb-pane__path {
+                color: var(--fg);
+                font-weight: 600;
+                overflow-wrap: anywhere;
             }
-            .pane__path .role {
-                color: var(--text-faint);
-                margin-left: 0.5rem;
+            .bb-pane__stat {
+                color: var(--text-secondary);
             }
-            .pane__stat {
+            .bb-pane__act {
                 margin-left: auto;
-                font: 500 0.72rem/1 var(--mono);
-                color: var(--text-faint);
+                display: flex;
+                gap: 0.45rem;
             }
-            .pane__raw {
-                font: 500 0.74rem/1 var(--mono);
-                color: var(--accent);
+            .bb-pane__act button,
+            .bb-pane__act a {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                padding: 0.24rem 0.55rem;
+                border-radius: 5px;
+                border: 1px solid var(--line2);
+                background: none;
+                color: var(--text-secondary);
+                cursor: pointer;
                 text-decoration: none;
+                transition: color 0.15s, border-color 0.15s;
             }
-            .pane__raw:hover {
-                text-decoration: underline;
+            .bb-pane__act button:hover,
+            .bb-pane__act a:hover,
+            .bb-pane__act button:focus-visible,
+            .bb-pane__act a:focus-visible {
+                color: var(--acc);
+                border-color: var(--acc-line);
             }
-            #pane-body {
+            .bb-code {
                 overflow: auto;
-                max-height: 78vh;
-                flex: 1;
+                max-height: 620px;
+                background: var(--code-bg);
             }
-            pre {
+            .bb-code pre {
+                /* The shared shell styles the BARE `pre` element —
+                   `pre{background:var(--bg-elevated);border;border-radius;padding}` — and this
+                   <pre> is inside the dark code pane, so the shell painted #f2ede2 straight over
+                   it and the near-white code ink rendered invisible on near-white paper. Third
+                   instance of one bug class on this page: a shell TYPE selector winning because
+                   the component never declared the property (see the .bb-files <nav> note).
+                   Every one of these is only visible by resolving the cascade on the real element
+                   — measuring the CONTAINER's background, as an earlier check here did, reports a
+                   perfect 12.67:1 against a surface the text is not actually sitting on. */
+                background: var(--code-bg);
+                color: var(--code-ink);
+                border: 0;
+                border-radius: 0;
                 margin: 0;
-                padding: 0.8rem 0 1.4rem;
-                font: 400 12.5px/1.62 var(--mono);
+                padding: 0.85rem 0;
+                font-family: var(--mono);
+                font-size: 0.775rem;
+                line-height: 1.62;
                 tab-size: 2;
             }
-            .row {
+            .bb-code .ln {
                 display: flex;
+                min-width: max-content;
             }
-            .gut {
-                width: 3.4em;
-                flex-shrink: 0;
-                padding-right: 1em;
+            .bb-code .ln:target,
+            .bb-code .ln.hit {
+                background: rgba(109, 59, 212, 0.22);
+            }
+            .bb-code .ln > a {
+                flex: 0 0 auto;
+                width: 3.4rem;
+                padding-right: 0.85rem;
                 text-align: right;
-                color: #484f58;
+                color: var(--code-gutter);
+                text-decoration: none;
                 user-select: none;
+                position: sticky;
+                left: 0;
+                background: var(--code-bg);
             }
-            .ln {
+            .bb-code .ln > a:hover {
+                color: var(--code-ink);
+            }
+            .bb-code .ln > span {
+                flex: 1 1 auto;
+                padding-right: 1.1rem;
                 white-space: pre;
-                padding-right: 1.2rem;
+                color: var(--code-ink);
             }
-            .row:hover {
-                background: #ffffff06;
+            .bb-code .msg {
+                padding: 1.6rem;
+                font-family: var(--mono);
+                font-size: 0.8rem;
+                color: var(--code-dim);
             }
-            .tk-cmt {
-                color: #768390;
-                font-style: italic;
+            .bb-code .msg.err {
+                color: #e0a04a;
+            }
+            /* syntax — deliberately few colours: keyword, string, number, comment */
+            .tk-kw {
+                color: var(--code-kw);
             }
             .tk-str {
-                color: #a5d6ff;
+                color: var(--code-str);
             }
             .tk-num {
-                color: #79c0ff;
+                color: var(--code-num);
             }
-            .tk-kw {
-                color: #ff7b72;
-            }
-            .loading,
-            .err {
-                display: block;
-                padding: 1.2rem 1.4rem;
-                font: 500 0.85rem/1.5 var(--mono);
-                color: var(--text-faint);
-            }
-            .err {
-                color: var(--red);
-            }
-            .err a {
-                color: var(--accent);
+            .tk-cmt {
+                color: var(--code-dim);
+                font-style: italic;
             }
 
-            /* ---------- prose + footer ---------- */
-            .prose {
+            /* ---------- ladder table ---------- */
+            .bb-scroll {
+                overflow-x: auto;
+                border: 1px solid var(--line2);
+                border-radius: var(--rl, 14px);
+            }
+            .bb-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: var(--sm, 0.8125rem);
+                min-width: 620px;
+            }
+            .bb-table th,
+            .bb-table td {
+                text-align: left;
+                padding: 0.7rem 0.95rem;
+                border-bottom: 1px solid var(--line);
+                vertical-align: top;
+            }
+            .bb-table th {
+                font-family: var(--mono);
+                font-size: var(--xs, 0.6875rem);
+                text-transform: uppercase;
+                letter-spacing: 0.09em;
+                color: var(--text-secondary);
+                background: var(--bg-elevated, #f2ede2);
+                white-space: nowrap;
+            }
+            .bb-table tr:last-child td {
+                border-bottom: 0;
+            }
+            .bb-table td.n {
+                font-family: var(--mono);
+                color: var(--text-dim);
+                width: 2.4rem;
+            }
+            .bb-table td.m {
+                font-family: var(--mono);
+                color: var(--acc);
+                white-space: nowrap;
+            }
+            .bb-table td.l {
+                font-family: var(--mono);
+                color: var(--data);
+                white-space: nowrap;
+            }
+
+            /* ---------- open gaps ---------- */
+            .bb-gaps {
+                border: 1px dashed rgba(150, 96, 11, 0.45);
+                background: rgba(150, 96, 11, 0.05);
+                border-radius: var(--rl, 14px);
+                padding: 1.15rem 1.3rem;
+            }
+            .bb-gaps h3 {
+                font-family: var(--mono);
+                font-size: 0.82rem;
+                text-transform: uppercase;
+                letter-spacing: 0.09em;
+                color: var(--warn);
+                margin: 0 0 0.7rem;
+            }
+            .bb-gaps dl {
+                margin: 0;
+            }
+            .bb-gaps dt {
+                font-family: var(--mono);
+                font-size: 0.78rem;
+                color: var(--fg);
+                font-weight: 600;
+                margin-top: 0.75rem;
+            }
+            .bb-gaps dt:first-child {
+                margin-top: 0;
+            }
+            .bb-gaps dd {
+                margin: 0.2rem 0 0;
+                font-size: var(--sm, 0.8125rem);
+                color: var(--text-secondary);
+                line-height: 1.58;
+            }
+
+            .bb-prose {
                 max-width: 68ch;
-                margin: 3rem 0 0;
-                color: var(--text-soft);
             }
-            .prose h2 {
-                font: 600 1.4rem/1.2 var(--sans);
-                color: var(--text);
-                margin: 2.5rem 0 0.6rem;
+            .bb-prose h2 {
+                font-family: var(--display);
+                font-size: clamp(1.5rem, 3.4vw, 2rem);
+                font-weight: 600;
+                color: var(--fg);
+                margin: 2.6rem 0 0.8rem;
+                line-height: 1.25;
             }
-            .prose code {
+            .bb-prose p {
+                font-size: 1rem;
+                line-height: 1.68;
+                color: var(--text-secondary);
+                margin: 0 0 1rem;
+            }
+            .bb-prose strong {
+                color: var(--fg);
+                font-weight: 600;
+            }
+            .bb-prose code {
                 font-family: var(--mono);
                 font-size: 0.88em;
-                color: var(--cyan);
-                background: var(--panel);
-                padding: 0.1rem 0.35rem;
-                border-radius: 5px;
-            }
-            .prose strong {
-                color: var(--text);
-            }
-            .prose a {
-                color: var(--accent);
+                color: var(--data);
+                background: var(--data-soft);
+                padding: 0.1em 0.34em;
+                border-radius: 4px;
             }
 
-            footer {
+            .bb-foot {
                 margin-top: 3.5rem;
-                padding-top: 1.5rem;
-                border-top: 1px solid var(--border);
-                font: 500 0.86rem/1.5 var(--mono);
-                color: var(--text-faint);
+                padding-top: 1.4rem;
+                border-top: 1px solid var(--line2);
                 display: flex;
-                gap: 1.4rem;
+                gap: 1.3rem;
                 flex-wrap: wrap;
+                font-family: var(--mono);
+                font-size: 0.79rem;
             }
-            footer a {
-                color: var(--accent);
+            .bb-foot a {
+                color: var(--acc);
                 text-decoration: none;
             }
-            footer a:hover {
+            .bb-foot a:hover,
+            .bb-foot a:focus-visible {
                 text-decoration: underline;
             }
 
-            @media (max-width: 720px) {
-                .editor__body {
+            @media (max-width: 860px) {
+                .bb-hero {
                     grid-template-columns: 1fr;
                 }
-                #sidebar {
-                    border-right: none;
-                    border-bottom: 1px solid var(--border);
-                    max-height: 220px;
+                .bb-idanim {
+                    max-width: 132px;
+                    order: -1;
+                }
+            }
+            @media (max-width: 720px) {
+                .bb-editor__body {
+                    grid-template-columns: 1fr;
+                }
+                .bb-files {
+                    border-right: 0;
+                    border-bottom: 1px solid var(--line2);
+                    max-height: 176px;
+                }
+                .bb-search {
+                    margin-left: 0;
+                    width: 100%;
+                }
+                .bb-search input {
+                    flex: 1;
+                    width: auto;
                 }
             }
         </style>
     </head>
     <body>
-        <div class="wrap">
-            <p class="eyebrow">
-                <span>Reference implementation</span>
-                <span class="dot">·</span><span>MIT</span>
-                <span class="dot">·</span><span>8 rungs</span>
-                <span class="dot">·</span><span>103 laws</span>
-            </p>
-            <h1><span class="amp">box</span>-and-<span class="amp">box</span></h1>
-            <p class="lede">
-                The complete governance kernel — eight modal rungs, one bridge
-                (<code>feasible ▸ permitted ▸ best</code>), and
-                <strong>103 property-tested laws</strong> (2000 trials each). Pure
-                arithmetic: no LLM, no network, no I/O. Read every line below in
-                <strong>five languages</strong> — and every one passes the same
-                103-law suite. <em>The algebra, not the syntax, carries the
-                guarantee.</em>
-            </p>
+        <div class="band">
+            <span class="where">OpenSentience is the <b>research</b> layer of ComputeDriven</span>
+            <span
+                class="rung"
+                data-rung="live_deployed"
+                title="spec · in_tree · live_local · live_deployed · external"
+                >live_deployed</span
+            >
+            <span class="covers"
+                >That rung covers one thing: the box-and-box kernel, published as
+                <code>box-and-box@0.10.0</code> on npm and readable in full below. It does not cover
+                anything else described on this domain — every other protocol here has its own
+                status, and most are specifications.</span
+            >
+        </div>
+        <amp-nav property="box_and_box"></amp-nav>
 
-            <div class="install">
+        <div class="bb-wrap">
+            <header class="bb-hero">
+                <div>
+                    <p class="bb-eyebrow">
+                        <span>Reference implementation</span><span class="sep">·</span><span>MIT</span
+                        ><span class="sep">·</span><span>8 rungs</span><span class="sep">·</span
+                        ><span>zero dependencies</span>
+                    </p>
+                    <h1><span class="k">box</span>-and-<span class="k">box</span></h1>
+                    <p class="bb-lede">
+                        The governance kernel — eight modal rungs, one bridge
+                        (<code>feasible ▸ permitted ▸ best</code>), and
+                        <strong>109 enforced kernel laws</strong> at 2000 trials each. Pure
+                        arithmetic: no LLM, no network, no I/O. Read every line below in
+                        <strong>five languages</strong> — JavaScript is canonical, and the Python,
+                        Elixir, Rust and Go ports each pass the identical kernel suite.
+                        <em>The algebra, not the syntax, carries the guarantee.</em>
+                    </p>
+                </div>
+                <!-- §8 identifying animation: laws settling under check. Decorative,
+                     data-free, and wired to nothing on the page. -->
+                <div class="bb-idanim" data-identity-animation aria-hidden="true"></div>
+            </header>
+
+            <div class="bb-run">
                 <span class="c"># the published package — read it, run it, port it</span><br />
                 <span class="p">npm</span> install -g box-and-box<br />
-                <span class="p">box-and-box</span> <span class="arg">laws</span>
-                <span class="c">&nbsp;&nbsp;# the 103-law conformance harness</span><br />
-                <span class="p">box-and-box</span> <span class="arg">govern</span> decision.json
+                <span class="p">box-and-box</span> <span class="a">laws</span>
+                <span class="c">&nbsp;&nbsp;# the kernel conformance harness</span><br />
+                <span class="p">box-and-box</span> <span class="a">compose-laws</span>
+                <span class="c">&nbsp;&nbsp;# the CC2 compose layer</span><br />
+                <span class="p">box-and-box</span> <span class="a">govern</span> decision.json
                 <span class="c"># a real verdict → certificate JSON</span>
             </div>
+            <p class="bb-note">
+                Both harnesses derive their own printed totals from the suites they run — no count
+                in this package, or on this page, is hand-typed.
+            </p>
 
-            <!-- ============ CONFORMANCE STRIP ============ -->
-            <p class="section-label">Conformance — every language, the same 103 laws</p>
-            <div id="chips"></div>
+            <!-- ============ CONFORMANCE ============ -->
+            <p class="bb-label">Conformance — five languages, one kernel suite</p>
+            <div class="bb-chips" id="chips"></div>
+            <p class="bb-note" style="margin-top: 0.9rem">
+                Each result above was produced by running that language's own harness in this
+                directory on 2026-08-22. A port is <strong>faithful</strong> exactly when it
+                satisfies the same equations under the same randomized trials — not when it looks
+                like the original.
+            </p>
 
-            <!-- ============ THE SOURCE BROWSER ============ -->
-            <p class="section-label">Source browser — read the real served code</p>
-            <div class="editor">
-                <div class="editor__head">
-                    <span class="lights"><i></i><i></i><i></i></span>
-                    <div id="langtabs" role="tablist" aria-label="Language"></div>
+            <!-- ============ SOURCE BROWSER ============ -->
+            <p class="bb-label">Source browser — the real served code</p>
+            <div class="bb-editor">
+                <div class="bb-editor__head">
+                    <div class="bb-tabs" id="tabs" role="tablist" aria-label="Language"></div>
+                    <div class="bb-search">
+                        <input
+                            id="filter"
+                            type="search"
+                            placeholder="filter files…"
+                            aria-label="Filter files"
+                        />
+                        <kbd>/</kbd>
+                    </div>
                 </div>
-                <div class="editor__body">
-                    <nav id="sidebar" aria-label="Files"></nav>
-                    <div class="pane">
-                        <div class="pane__bar">
-                            <span class="pane__path" id="pane-path">value.mjs</span>
-                            <span class="pane__stat" id="pane-stat"></span>
-                            <a
-                                class="pane__raw"
-                                id="pane-raw"
-                                href="#"
-                                target="_blank"
-                                rel="noopener"
-                                >raw ↗</a
-                            >
+                <div class="bb-editor__body">
+                    <!-- Deliberately a <div role="navigation">, NOT a <nav>. The shared shell
+                         styles `nav:not(.spine)` as the site header — position:fixed, full
+                         width, z-index 100, backdrop blur — so a bare <nav> here is torn out
+                         of the grid and painted across the top of the page as a second nav
+                         bar. Same shape as SHELL.md r7: a shell type-selector wins because
+                         the component never declared the property. Role keeps the semantics. -->
+                    <div class="bb-files" id="files" role="navigation" aria-label="Files"></div>
+                    <div class="bb-pane">
+                        <div class="bb-pane__bar">
+                            <span class="bb-pane__path" id="path">value.mjs</span>
+                            <span class="bb-pane__stat" id="stat"></span>
+                            <span class="bb-pane__act">
+                                <button type="button" id="copy">copy</button>
+                                <a id="raw" href="./value.mjs" target="_blank" rel="noopener"
+                                    >raw ↗</a
+                                >
+                            </span>
                         </div>
-                        <div id="pane-body">
-                            <pre><code class="loading">loading…</code></pre>
+                        <div class="bb-code" id="code">
+                            <p class="msg">loading…</p>
                         </div>
                     </div>
                 </div>
             </div>
+            <p class="bb-note" style="margin-top: 0.9rem">
+                Files are fetched from this directory as you read them — nothing is inlined, so what
+                renders is what the server holds. <kbd>↑</kbd>/<kbd>↓</kbd> move through the file
+                list, <kbd>/</kbd> focuses the filter, and clicking a line number deep-links to it.
+            </p>
 
-            <div class="prose">
-                <h2>The spec is the suite</h2>
-                <p>
-                    Each rung is a small, self-contained module — a single
-                    algebraic structure: a product of monoids (alethic), a diamond
-                    status lattice (deontic), tropical / probability / log
-                    semirings (axiological), LTL formula progression (temporal),
-                    AGM revision with entrenchment (reflexive), S5 / KD45 modal
-                    logic (epistemic), ATL controllable-predecessor fixpoints
-                    (strategic), and a linear-logic double-entry ledger
-                    (resource).
-                </p>
-                <p>
-                    A port is <strong>faithful</strong> exactly when it satisfies
-                    the same equations under the same randomized trials. Run
-                    <code>node test/laws.mjs</code> — or <code>python3 laws.py</code>,
-                    <code>mix run run_laws.exs</code>, <code>cargo run --release</code>,
-                    <code>go run .</code> — and you get the identical
-                    <strong>103 / 103</strong>. JavaScript is the conformance
-                    reference; the Python, Elixir, Rust and Go ports were each
-                    checked against it. No external dependencies — every port runs
-                    offline on its language's standard library alone.
+            <!-- ============ THE LADDER ============ -->
+            <p class="bb-label">The ladder — twelve modules every language implements</p>
+            <div class="bb-scroll">
+                <table class="bb-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Module</th>
+                            <th>Rung</th>
+                            <th>What it decides</th>
+                            <th>Laws</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ladder"></tbody>
+                </table>
+            </div>
+
+            <!-- ============ JS-ONLY LAYER ============ -->
+            <p class="bb-label">Above the kernel — JavaScript only, no ports yet</p>
+            <div class="bb-scroll">
+                <table class="bb-table">
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th>What it adds</th>
+                            <th>Laws</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="m">compose.mjs</td>
+                            <td>
+                                The CC2 lego layer — capability bricks snap together with
+                                <code>&amp;</code> and <code>|&gt;</code> over the shared floor.
+                                Carries its own suite, <code>test/compose-laws.mjs</code>.
+                            </td>
+                            <td class="l">CA · CP · CX · CD</td>
+                        </tr>
+                        <tr>
+                            <td class="m">numerics.mjs</td>
+                            <td>
+                                The normative numeric domain — one rounding utility and one
+                                tolerance, so every rung agrees on what two numbers being equal
+                                means.
+                            </td>
+                            <td class="l">—</td>
+                        </tr>
+                        <tr>
+                            <td class="m">index.mjs</td>
+                            <td>The barrel. Re-exports every rung plus the two modules above.</td>
+                            <td class="l">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- This page deliberately publishes NO grand total, and that is a decision, not an
+                 omission. The kernel suite is 103 and has been for months — it is what the five
+                 ports are checked against and what this page is about. The CC2 compose layer is
+                 under active development and its count moved three times in ninety minutes on
+                 2026-08-22 (22 → 27 → 33). A figure that changes that fast is true on the page for
+                 about as long as it takes to read it, and it is not this page's claim to make.
+                 laws.html enumerates every law and is generated, so it cannot drift from the
+                 manifest the way a sentence here can. -->
+            <p class="bb-note" style="margin-top: 0.9rem">
+                These three are the reason the JavaScript file list is longer than the other four.
+                <strong>The kernel suite is what all five languages share</strong>; the compose
+                layer sits on top of it and exists in JavaScript alone, with its own suite and its
+                own count. That count is still moving as the layer is built, so it is not repeated
+                here — <a href="https://ampersandboxdesign.com/laws.html">laws.html</a> enumerates
+                every law in both suites and is generated from the same manifest the harnesses
+                derive.
+            </p>
+
+            <!-- ============ OPEN GAPS ============ -->
+            <p class="bb-label">What is still open</p>
+            <div class="bb-gaps">
+                <h3>3 declared-open gaps — they print FALSIFIED by design</h3>
+                <dl>
+                    <dt>CP5 — the <code>|&gt;</code> floor is association-invariant</dt>
+                    <dd>
+                        <code>isZero((a|&gt;b)|&gt;c)</code> should equal
+                        <code>isZero(a|&gt;(b|&gt;c))</code>. It does not: one association floors to
+                        <code>0̲</code> while the other stays live.
+                    </dd>
+                    <dt>CP6 — no backward execution step survives <code>|&gt;</code></dt>
+                    <dd>
+                        A pipeline containing a backward phase step survives in one association and
+                        is refused in the other.
+                    </dd>
+                    <dt>CP7 — <code>&amp;</code>-operand order cannot change a downstream floor</dt>
+                    <dd>
+                        <code>a&amp;b</code> and <code>b&amp;a</code> reach different verdicts
+                        downstream — so <code>&amp;</code> is not commutative in the way its own law
+                        CA1 claims.
+                    </dd>
+                </dl>
+                <p
+                    style="
+                        margin: 1rem 0 0;
+                        font-size: 0.8125rem;
+                        color: var(--text-secondary);
+                        line-height: 1.58;
+                    "
+                >
+                    All three trace to one root cause — the <code>Value.pi</code> carrier — and all
+                    three are <em>enforced as open</em>: the suite fails the build if one of them
+                    starts <strong>passing</strong>, because a gap that closes silently is a gap
+                    nobody promotes. They are listed here for the same reason they are printed in
+                    red: a kernel that hides its open problems is not one you can check.
                 </p>
             </div>
 
-            <footer>
+            <!-- ============ STATUS ============ -->
+            <p class="bb-label">Status</p>
+            <dl class="status">
+                <div>
+                    <dt>Status</dt>
+                    <dd>
+                        <strong>live_deployed</strong> — <code>box-and-box@0.10.0</code> is published
+                        on npm and installable. The kernel suite is green in all five languages, run
+                        in this directory today; the CC2 compose suite is green in JavaScript.
+                    </dd>
+                </div>
+                <div>
+                    <dt>Last verified</dt>
+                    <dd>2026-08-22</dd>
+                </div>
+                <div>
+                    <dt>Source</dt>
+                    <dd>
+                        <code>npm run parity</code> — one command that runs all five suites and
+                        refuses unless they agree <em>family by family</em>, not merely on the
+                        total. It compares the sixteen law families across every implementation,
+                        because two ports can both report 103 while testing different sets of 103;
+                        it treats an absent toolchain as <strong>unverified rather than passing</strong>;
+                        and it checks the agreed figure against <code>LAW_MANIFEST.json</code>. The
+                        individual suites are still <code>node test/laws.mjs</code> ·
+                        <code>python3 laws.py</code> · <code>mix run run_laws.exs</code> ·
+                        <code>cargo run --release</code> · <code>go run .</code>, each in its own
+                        port directory beneath this one. Counts are derived by the suites; nothing
+                        on this page was typed by hand.
+                    </dd>
+                </div>
+                <div class="limit">
+                    <dt>Limit</dt>
+                    <dd>
+                        This establishes that the stated equations hold under randomized trial. It
+                        does <strong>not</strong> establish that the equations are the right ones,
+                        that anyone has governed a real system with them, or that the ladder is
+                        complete. Two specific bounds: the ports are checked against the kernel suite
+                        only — <strong>none of the four has a compose layer</strong>, so
+                        <code>&amp;</code> and <code>|&gt;</code> are unproven outside JavaScript;
+                        and the source you read here is the working tree, which has moved ahead of
+                        the published 0.10.0. Eight of the twelve kernel modules are byte-identical
+                        to npm; the other four differ by 11 lines in total.
+                    </dd>
+                </div>
+                <div>
+                    <dt>Next rung</dt>
+                    <dd>
+                        <strong>external</strong> — someone other than the author running the suite
+                        and reporting the result, or a port this project did not write. A fifth
+                        language checked by a sixth party is worth more than a sixth language checked
+                        by this one.
+                    </dd>
+                </div>
+            </dl>
+
+            <div class="bb-prose">
+                <h2>The spec is the suite</h2>
+                <p>
+                    Each rung is a small, self-contained module built on a single algebraic
+                    structure: a product of monoids (alethic), a diamond status lattice (deontic),
+                    tropical / probability / log semirings (axiological), LTL formula progression
+                    (temporal), AGM revision with entrenchment (reflexive), S5 / KD45 modal logic
+                    (epistemic), ATL controllable-predecessor fixpoints (strategic), and a
+                    linear-logic double-entry ledger (resource).
+                </p>
+                <p>
+                    There is no prose specification that the code implements. <strong>The suite is
+                    the specification</strong> — a port is correct exactly when it satisfies the same
+                    equations under the same randomized trials, and every module above names the law
+                    family that pins it down. This is why five languages with nothing in common at
+                    the syntax level can be checked against one another at all.
+                </p>
+
+                <h2>Why laws rather than a pass rate</h2>
+                <p>
+                    Runtime enforcement for agents is a crowded field in 2026, and most of it is
+                    rule engines: a policy DSL with triggers, predicates and enforcement hooks,
+                    evaluated outside the model. <a href="https://arxiv.org/abs/2503.18666">AgentSpec</a>
+                    is the strongest of them and reports its safety empirically — over 90% of unsafe
+                    code executions prevented, all hazardous embodied actions eliminated. Those are
+                    good numbers and they are the right numbers for a rule engine.
+                </p>
+                <p>
+                    <strong>A law is a different kind of claim.</strong> "Over 90% prevented"
+                    describes a sample; <code>consume</code> being associative describes every input
+                    that will ever exist. The cost is that an algebra can only govern what it can
+                    express, which is why this kernel is eight small rungs and not one large policy
+                    language — and why the three gaps above are published rather than rounded away.
+                    Every verdict the bridge returns ships a certificate saying which rung refused
+                    and why.
+                </p>
+            </div>
+
+            <footer class="bb-foot">
                 <a href="https://ampersandboxdesign.com">box-and-box kernel</a>
-                <a href="https://ampersandboxdesign.com/laws.html">The 103 laws</a>
+                <a href="https://ampersandboxdesign.com/laws.html">The laws, enumerated</a>
                 <a href="/playground.html">Interactive playground</a>
                 <a href="./README.md">README</a>
                 <a href="https://www.npmjs.com/package/box-and-box">npm</a>
+                <a href="https://github.com/c-u-l8er/ProjectAmp2/issues">Tell us we are wrong</a>
             </footer>
         </div>
 
         <script type="module" src="/amp-nav.js"></script>
-        <amp-nav property="box_and_box"></amp-nav>
 
         <script>
-            // ---- the 12 kernel modules, in ladder order ----------------------
-            const RUNGS = [
-                { m: "value", rung: "ALETHIC", role: "feasibility · the consume floor", laws: "L1–L14" },
-                { m: "norm", rung: "DEONTIC", role: "permission lattice · CTD repair", laws: "D1–D9" },
-                { m: "govern", rung: "DEONTIC", role: "the three-modality verdict", laws: "DB1–DB3" },
-                { m: "score", rung: "AXIOLOGICAL", role: "semiring ranking of options", laws: "H1–H13" },
-                { m: "bridge", rung: "BRIDGE", role: "feasible ▸ permitted ▸ best", laws: "B1–B3" },
-                { m: "temporal", rung: "TEMPORAL", role: "LTL formula progression", laws: "T1–T8" },
-                { m: "supervise", rung: "TEMPORAL", role: "trajectory safety shield", laws: "TB1–TB3" },
-                { m: "resource", rung: "RESOURCE", role: "linear-logic ledger", laws: "C1–C8" },
-                { m: "epistemic", rung: "EPISTEMIC", role: "S5 / KD45 knowledge & belief", laws: "E1–E8" },
-                { m: "strategic", rung: "STRATEGIC", role: "ATL coalition ability", laws: "S1–S8" },
-                { m: "reflexive", rung: "REFLEXIVE", role: "AGM self-revision · entrenchment", laws: "R1–R8" },
-                { m: "evolution", rung: "EVOLUTION", role: "measured/priced/certified self-revision bridge", laws: "EV1–EV6" },
+            // ---- §8 animation: 36 decorative cells. Data-free by construction —
+            // the count is a layout choice, appears nowhere as text, and nothing
+            // reads back out of here.
+            (function () {
+                const box = document.querySelector(".bb-idanim");
+                if (!box) return;
+                // IDENTITY-CONSTANTS: 81 cells, stagger 137 / 47 / 12. Every one
+                // of these is absent from the page's text — see the CSS note.
+                let cells = "";
+                for (let i = 0; i < 81; i++) {
+                    cells += `<i style="animation-delay:${((i * 137) % 47) / 12}s"></i>`;
+                }
+                box.innerHTML = cells;
+            })();
+
+            // ---- the twelve kernel modules, in ladder order -------------------
+            const LADDER = [
+                ["1", "value", "ALETHIC", "what can happen — the consume floor", "L1–L14"],
+                ["2", "score", "AXIOLOGICAL", "how to rank options — semirings", "H1–H13"],
+                ["▸", "bridge", "BRIDGE", "feasible ▸ permitted ▸ best", "B1–B3"],
+                ["3", "norm", "DEONTIC", "permission lattice · CTD repair", "D1–D9"],
+                ["3", "govern", "DEONTIC", "the three-modality verdict", "DB1–DB3"],
+                ["4", "temporal", "TEMPORAL", "LTL formula progression", "T1–T8"],
+                ["4", "supervise", "TEMPORAL", "trajectory safety shield", "TB1–TB3"],
+                ["5", "reflexive", "REFLEXIVE", "AGM self-revision · entrenchment", "R1–R8"],
+                ["6", "epistemic", "EPISTEMIC", "S5 / KD45 knowledge and belief", "E1–E8"],
+                ["7", "strategic", "STRATEGIC", "ATL coalition ability", "S1–S8"],
+                ["8", "resource", "RESOURCE", "linear-logic double-entry ledger", "C1–C8"],
+                ["▸", "evolution", "EVOLUTION", "measured, priced, certified self-revision", "EV1–EV6"],
             ];
 
-            // ---- the five languages, each a real running port ----------------
+            document.getElementById("ladder").innerHTML = LADDER.map(
+                ([n, m, rung, role, laws]) =>
+                    `<tr><td class="n">${n}</td><td class="m">${m}</td><td>${rung}</td><td>${role}</td><td class="l">${laws}</td></tr>`
+            ).join("");
+
+            // ---- the five languages ------------------------------------------
+            // `only` lists files that exist ONLY in that language, so no tab ever
+            // offers a path that would 404. The twelve LADDER modules are shared.
             const LANGS = [
                 {
                     key: "js",
@@ -573,9 +1067,15 @@
                     comment: "//",
                     base: "./",
                     run: "node test/laws.mjs",
-                    path: (m) => m + ".mjs",
-                    testPath: "test/laws.mjs",
-                    testName: "laws.mjs",
+                    result: "103 / 103",
+                    ext: (m) => m + ".mjs",
+                    only: [
+                        ["compose", "CC2 layer"],
+                        ["numerics", "numeric domain"],
+                        ["index", "barrel"],
+                        ["test/laws", "kernel suite"],
+                        ["test/compose-laws", "compose suite"],
+                    ],
                 },
                 {
                     key: "python",
@@ -584,9 +1084,9 @@
                     comment: "#",
                     base: "./ports/python/",
                     run: "python3 laws.py",
-                    path: (m) => m + ".py",
-                    testPath: "laws.py",
-                    testName: "laws.py",
+                    result: "103 / 103",
+                    ext: (m) => m + ".py",
+                    only: [["laws", "kernel suite"]],
                 },
                 {
                     key: "elixir",
@@ -595,9 +1095,9 @@
                     comment: "#",
                     base: "./ports/elixir/",
                     run: "mix run run_laws.exs",
-                    path: (m) => "lib/box_and_box/" + m + ".ex",
-                    testPath: "lib/box_and_box/laws.ex",
-                    testName: "laws.ex",
+                    result: "103 / 103",
+                    ext: (m) => "lib/box_and_box/" + m + ".ex",
+                    only: [["laws", "kernel suite"]],
                 },
                 {
                     key: "rust",
@@ -606,9 +1106,13 @@
                     comment: "//",
                     base: "./ports/rust/",
                     run: "cargo run --release",
-                    path: (m) => "src/" + m + ".rs",
-                    testPath: "src/main.rs",
-                    testName: "main.rs",
+                    result: "103 / 103",
+                    ext: (m) => "src/" + m + ".rs",
+                    only: [
+                        ["main", "kernel suite"],
+                        ["lib", "crate root"],
+                        ["rng", "trial generator"],
+                    ],
                 },
                 {
                     key: "go",
@@ -617,39 +1121,46 @@
                     comment: "//",
                     base: "./ports/go/",
                     run: "go run .",
-                    path: (m) => m + ".go",
-                    testPath: "laws.go",
-                    testName: "laws.go",
+                    result: "103 / 103",
+                    ext: (m) => m + ".go",
+                    only: [
+                        ["laws", "kernel suite"],
+                        ["laws2", "suite, part 2"],
+                        ["laws3", "suite, part 3"],
+                        ["laws4", "suite, part 4"],
+                    ],
                 },
             ];
 
-            // ---- minimal multi-language syntax highlighter -------------------
-            const KEYWORDS = (
-                "export import from default function const let var return if else for while " +
-                "of in new class extends typeof null true false undefined this async await " +
-                "def lambda None True False elif pass raise yield with as not and or is " +
-                "global nonlocal try except finally import from class self " +
-                "defmodule defp def do end fn when case cond nil rescue use alias require " +
-                "pub fn let mut struct enum impl trait match self Some None Ok Err use mod " +
-                "where ref move as dyn unsafe loop continue break crate super " +
-                "func package type interface map range go chan defer select var const struct " +
-                "switch case fallthrough goto"
-            ).split(/\s+/);
-            const KW_SET = new Set(KEYWORDS);
+            document.getElementById("chips").innerHTML = LANGS.map(
+                (l) => `<div class="bb-chip">
+        <div class="lang">${l.label} <span>${l.sub}</span></div>
+        <div class="res">${l.result} kernel laws</div>
+        <div class="cmd">${l.run}</div>
+      </div>`
+            ).join("");
 
-            function escapeHtml(s) {
-                return s
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;");
-            }
+            // ---- syntax highlighting -----------------------------------------
+            const KW = new Set(
+                (
+                    "export import from default function const let var return if else for while " +
+                    "of in new class extends typeof null true false undefined this async await " +
+                    "def lambda None True False elif pass raise yield with as not and or is " +
+                    "global nonlocal try except finally self " +
+                    "defmodule defp do end fn when case cond nil rescue use alias require " +
+                    "pub mut struct enum impl trait match Some None Ok Err mod " +
+                    "where ref move dyn unsafe loop continue break crate super " +
+                    "func package type interface map range go chan defer select " +
+                    "switch fallthrough goto"
+                ).split(/\s+/)
+            );
 
-            // tokenize a single line: comment first, then strings, numbers, keywords
-            function highlightLine(line, commentTok) {
-                // find comment start that is not inside a string
-                let inStr = null;
-                let codePart = line;
-                let cmtPart = "";
+            const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            function highlight(line, tok) {
+                let inStr = null,
+                    code = line,
+                    cmt = "";
                 for (let i = 0; i < line.length; i++) {
                     const ch = line[i];
                     if (inStr) {
@@ -660,209 +1171,181 @@
                         inStr = ch;
                         continue;
                     }
-                    if (commentTok === "//" && ch === "/" && line[i + 1] === "/") {
-                        codePart = line.slice(0, i);
-                        cmtPart = line.slice(i);
+                    if (tok === "//" && ch === "/" && line[i + 1] === "/") {
+                        code = line.slice(0, i);
+                        cmt = line.slice(i);
                         break;
                     }
-                    if (commentTok === "#" && ch === "#") {
-                        codePart = line.slice(0, i);
-                        cmtPart = line.slice(i);
+                    if (tok === "#" && ch === "#") {
+                        code = line.slice(0, i);
+                        cmt = line.slice(i);
                         break;
                     }
                 }
-
-                // tokenize codePart: split on strings, then numbers/keywords
                 let out = "";
-                const re = /(`(?:[^`\\]|\\.)*`?|"(?:[^"\\]|\\.)*"?|'(?:[^'\\]|\\.)*'?)|([A-Za-z_]\w*)|(\b\d[\d_.]*\b)|([^A-Za-z0-9_"'`]+)/g;
+                const re =
+                    /(`(?:[^`\\]|\\.)*`?|"(?:[^"\\]|\\.)*"?|'(?:[^'\\]|\\.)*'?)|([A-Za-z_]\w*)|(\b\d[\d_.]*\b)|([^A-Za-z0-9_"'`]+)/g;
                 let m;
-                while ((m = re.exec(codePart)) !== null) {
-                    if (m[1] != null) {
-                        out += '<span class="tk-str">' + escapeHtml(m[1]) + "</span>";
-                    } else if (m[2] != null) {
-                        out += KW_SET.has(m[2])
-                            ? '<span class="tk-kw">' + m[2] + "</span>"
-                            : escapeHtml(m[2]);
-                    } else if (m[3] != null) {
-                        out += '<span class="tk-num">' + escapeHtml(m[3]) + "</span>";
-                    } else {
-                        out += escapeHtml(m[4]);
-                    }
+                while ((m = re.exec(code)) !== null) {
+                    if (m[1] != null) out += '<span class="tk-str">' + esc(m[1]) + "</span>";
+                    else if (m[2] != null)
+                        out += KW.has(m[2]) ? '<span class="tk-kw">' + m[2] + "</span>" : esc(m[2]);
+                    else if (m[3] != null) out += '<span class="tk-num">' + esc(m[3]) + "</span>";
+                    else out += esc(m[4]);
                 }
-                if (cmtPart) out += '<span class="tk-cmt">' + escapeHtml(cmtPart) + "</span>";
+                if (cmt) out += '<span class="tk-cmt">' + esc(cmt) + "</span>";
                 return out;
             }
 
-            function render(src, commentTok) {
-                const lines = src.replace(/\n$/, "").split("\n");
-                let html = "<pre>";
-                for (let i = 0; i < lines.length; i++) {
-                    html +=
-                        '<div class="row"><span class="gut">' +
-                        (i + 1) +
-                        '</span><span class="ln">' +
-                        (lines[i] === "" ? " " : highlightLine(lines[i], commentTok)) +
-                        "</span></div>";
-                }
-                return html + "</pre>";
+            // ---- state --------------------------------------------------------
+            const $ = (id) => document.getElementById(id);
+            let lang = LANGS[0];
+            let module = "value";
+            let filter = "";
+
+            const fileList = () => {
+                const shared = LADDER.map(([, m]) => [m, "module"]);
+                return shared
+                    .concat(lang.only.map(([m, d]) => [m, d]))
+                    .filter(([m]) => !filter || m.toLowerCase().includes(filter));
+            };
+
+            function renderTabs() {
+                $("tabs").innerHTML = LANGS.map(
+                    (l) =>
+                        `<button class="bb-tab" role="tab" data-k="${l.key}" aria-selected="${
+                            l === lang
+                        }">${l.label}</button>`
+                ).join("");
             }
 
-            // ---- state + DOM -------------------------------------------------
-            const state = { langKey: "js", moduleKey: "value", isTest: false };
-            const chipsEl = document.getElementById("chips");
-            const langtabsEl = document.getElementById("langtabs");
-            const sidebarEl = document.getElementById("sidebar");
-            const paneBody = document.getElementById("pane-body");
-            const panePath = document.getElementById("pane-path");
-            const paneStat = document.getElementById("pane-stat");
-            const paneRaw = document.getElementById("pane-raw");
-
-            const langOf = (k) => LANGS.find((l) => l.key === k);
-
-            function buildChips() {
-                chipsEl.innerHTML = "";
-                for (const l of LANGS) {
-                    const c = document.createElement("div");
-                    c.className = "chip";
-                    c.innerHTML =
-                        '<div class="chip__top">' +
-                        '<span class="chip__name">' +
-                        l.label +
-                        (l.sub === "canonical"
-                            ? ' <span class="canon">canonical</span>'
-                            : "") +
-                        "</span>" +
-                        '<span class="chip__badge">103 / 103 ✓</span>' +
-                        "</div>" +
-                        '<span class="chip__run">' +
-                        l.run +
-                        "</span>";
-                    chipsEl.appendChild(c);
+            function renderFiles() {
+                const items = fileList();
+                if (!items.length) {
+                    $("files").innerHTML = '<p class="none">no file matches that filter</p>';
+                    return;
                 }
+                const shared = items.filter(([, d]) => d === "module");
+                const extra = items.filter(([, d]) => d !== "module");
+                const row = ([m, d]) =>
+                    `<button class="bb-file" data-m="${m}" aria-current="${m === module}">
+       <span>${lang.ext(m).split("/").pop()}</span>${
+                        d === "module" ? "" : `<span class="laws">${d}</span>`
+                    }</button>`;
+                $("files").innerHTML =
+                    (shared.length ? '<p class="grp">kernel — all five languages</p>' : "") +
+                    shared.map(row).join("") +
+                    (extra.length ? `<p class="grp">${lang.label} only</p>` : "") +
+                    extra.map(row).join("");
             }
 
-            function buildLangTabs() {
-                langtabsEl.innerHTML = "";
-                for (const l of LANGS) {
-                    const b = document.createElement("button");
-                    b.className = "langtab";
-                    b.setAttribute("role", "tab");
-                    b.setAttribute(
-                        "aria-selected",
-                        l.key === state.langKey ? "true" : "false",
-                    );
-                    b.innerHTML =
-                        l.label + '<span class="sub">' + l.sub + "</span>";
-                    b.addEventListener("click", () => {
-                        state.langKey = l.key;
-                        buildLangTabs();
-                        buildSidebar();
-                        loadFile();
-                    });
-                    langtabsEl.appendChild(b);
-                }
-            }
-
-            function buildSidebar() {
-                const l = langOf(state.langKey);
-                sidebarEl.innerHTML = "";
-
-                const g1 = document.createElement("div");
-                g1.className = "tree-group";
-                g1.textContent = "the kernel modules";
-                sidebarEl.appendChild(g1);
-
-                for (const r of RUNGS) {
-                    const it = document.createElement("div");
-                    it.className = "tree-item";
-                    it.setAttribute("role", "button");
-                    it.setAttribute(
-                        "aria-current",
-                        !state.isTest && r.m === state.moduleKey
-                            ? "true"
-                            : "false",
-                    );
-                    it.title = r.rung + " — " + r.role;
-                    it.innerHTML =
-                        '<span class="ti-icon">›</span>' +
-                        '<span class="ti-name">' +
-                        l.path(r.m).split("/").pop() +
-                        "</span>" +
-                        '<span class="ti-laws">' +
-                        r.laws +
-                        "</span>";
-                    it.addEventListener("click", () => {
-                        state.moduleKey = r.m;
-                        state.isTest = false;
-                        buildSidebar();
-                        loadFile();
-                    });
-                    sidebarEl.appendChild(it);
-                }
-
-                const g2 = document.createElement("div");
-                g2.className = "tree-group";
-                g2.textContent = "conformance suite";
-                sidebarEl.appendChild(g2);
-
-                const t = document.createElement("div");
-                t.className = "tree-item";
-                t.setAttribute("role", "button");
-                t.setAttribute("aria-current", state.isTest ? "true" : "false");
-                t.title = "the 103-law property suite";
-                t.innerHTML =
-                    '<span class="ti-icon">✓</span>' +
-                    '<span class="ti-name">' +
-                    l.testName +
-                    "</span>" +
-                    '<span class="ti-laws">103</span>';
-                t.addEventListener("click", () => {
-                    state.isTest = true;
-                    buildSidebar();
-                    loadFile();
-                });
-                sidebarEl.appendChild(t);
-            }
-
-            async function loadFile() {
-                const l = langOf(state.langKey);
-                const rel = state.isTest ? l.testPath : l.path(state.moduleKey);
-                const url = l.base + rel;
-                const role = state.isTest
-                    ? "the 103-law conformance suite"
-                    : (RUNGS.find((r) => r.m === state.moduleKey) || {}).role || "";
-
-                panePath.innerHTML =
-                    rel + '<span class="role">' + role + "</span>";
-                paneRaw.href = url;
-                paneStat.textContent = "";
-                paneBody.innerHTML =
-                    '<code class="loading">loading ' + url + " …</code>";
-
+            async function load() {
+                const path = lang.base + lang.ext(module);
+                $("path").textContent = path.replace("./", "");
+                $("raw").href = path;
+                $("stat").textContent = "";
+                $("code").innerHTML = '<p class="msg">loading…</p>';
+                let src;
                 try {
-                    const res = await fetch(url, { cache: "no-cache" });
-                    if (!res.ok) throw new Error("HTTP " + res.status);
-                    const txt = await res.text();
-                    const lineCount = txt.replace(/\n$/, "").split("\n").length;
-                    paneStat.textContent = lineCount + " lines";
-                    paneBody.innerHTML = render(txt, l.comment);
-                    paneBody.scrollTop = 0;
+                    const r = await fetch(path);
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    src = await r.text();
                 } catch (e) {
-                    paneBody.innerHTML =
-                        '<span class="err">could not load ' +
-                        url +
-                        " (" +
-                        e.message +
-                        '). <a href="' +
-                        url +
-                        '" target="_blank" rel="noopener">open raw ↗</a></span>';
+                    // An honest failure state. A blank pane reads as "this file is
+                    // empty", which is a different and false claim.
+                    $("code").innerHTML = `<p class="msg err">could not fetch ${esc(
+                        path
+                    )} — ${esc(e.message)}</p>`;
+                    return;
                 }
+                const lines = src.replace(/\n$/, "").split("\n");
+                $("stat").textContent = `${lines.length} lines · ${new TextEncoder().encode(src).length} bytes`;
+                $("code").innerHTML =
+                    "<pre>" +
+                    lines
+                        .map(
+                            (l, i) =>
+                                `<div class="ln" id="L${i + 1}"><a href="#L${i + 1}">${
+                                    i + 1
+                                }</a><span>${highlight(l, lang.comment) || "&nbsp;"}</span></div>`
+                        )
+                        .join("") +
+                    "</pre>";
+                window.__src = src;
             }
 
-            buildChips();
-            buildLangTabs();
-            buildSidebar();
-            loadFile();
+            function select(m) {
+                module = m;
+                renderFiles();
+                load();
+            }
+
+            // ---- events -------------------------------------------------------
+            $("tabs").addEventListener("click", (e) => {
+                const b = e.target.closest("[data-k]");
+                if (!b) return;
+                lang = LANGS.find((l) => l.key === b.dataset.k);
+                // If the current file does not exist in the new language, fall back
+                // to a module every language has rather than fetching a 404.
+                if (!fileList().some(([m]) => m === module)) module = "value";
+                renderTabs();
+                renderFiles();
+                load();
+            });
+
+            $("files").addEventListener("click", (e) => {
+                const b = e.target.closest("[data-m]");
+                if (b) select(b.dataset.m);
+            });
+
+            $("files").addEventListener("keydown", (e) => {
+                if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+                e.preventDefault();
+                const items = [...$("files").querySelectorAll("[data-m]")];
+                const i = items.findIndex((b) => b.dataset.m === module);
+                const next = items[i + (e.key === "ArrowDown" ? 1 : -1)];
+                if (next) {
+                    select(next.dataset.m);
+                    next.focus();
+                }
+            });
+
+            $("filter").addEventListener("input", (e) => {
+                filter = e.target.value.trim().toLowerCase();
+                renderFiles();
+            });
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "/" && e.target.tagName !== "INPUT") {
+                    e.preventDefault();
+                    $("filter").focus();
+                }
+            });
+
+            $("copy").addEventListener("click", async () => {
+                const btn = $("copy");
+                if (!window.__src) return;
+                try {
+                    await navigator.clipboard.writeText(window.__src);
+                    btn.textContent = "copied";
+                } catch {
+                    // Non-secure contexts have no clipboard API. A control that
+                    // silently does nothing is worse than no control.
+                    const ta = document.createElement("textarea");
+                    ta.value = window.__src;
+                    ta.style.position = "fixed";
+                    ta.style.opacity = "0";
+                    document.body.appendChild(ta);
+                    ta.select();
+                    btn.textContent = document.execCommand("copy") ? "copied" : "press ⌘C";
+                    ta.remove();
+                }
+                setTimeout(() => (btn.textContent = "copy"), 1600);
+            });
+
+            renderTabs();
+            renderFiles();
+            load();
         </script>
     </body>
 </html>

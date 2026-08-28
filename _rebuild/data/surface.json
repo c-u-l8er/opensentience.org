@@ -25,8 +25,8 @@
   "_rung_witness_comment": "SHELL.md r5 asks the record to name the gate that WITNESSES the rung, because \"any pending gate blocks the rung\" is too blunt — independent_result is pending forever by construction. Here the derived rung is `?`, and a `?` has no witness BY DEFINITION: that is what the question mark says. build.mjs enforces the pair — a real rung must name an approved gate, and a `?` must name none. Filling this in would be claiming a witness for a status that exists precisely because there is not one.",
 
   "status": {
-    "statement": "The κ proof is exhaustive and runs client-side: 1,052,740 directed graphs on 2–5 nodes and 873,611 finite maps on 2–7 nodes, with 0 counterexamples. The governance floor below it is property-tested — 103 kernel laws and 15 compose laws, at 2,000 trials each. Everything else on this page is a specification, and each card says which.",
-    "source": "The proof is in /kappa_proof.js and runs in the reader's own browser with no server. The law counts were re-derived on 2026-08-16 by running node test/laws.mjs and node test/compose-laws.mjs against the box-and-box package; both suites derive their own printed totals.",
+    "statement": "The κ proof is exhaustive and runs client-side: 1,052,740 directed graphs on 2–5 nodes and 873,611 finite maps on 2–7 nodes, with 0 counterexamples. The governance floor below it is property-tested — 109 kernel laws and 101 compose laws, at 2,000 trials each. Everything else on this page is a specification, and each card says which.",
+    "source": "The proof is in /kappa_proof.js and runs in the reader's own browser with no server. The law counts were re-derived on 2026-08-23 by running node test/laws.mjs and node test/compose-laws.mjs against the box-and-box package; both suites derive their own printed totals, and scripts/law-manifest.mjs writes them to LAW_MANIFEST.json, which every published count in the tree is checked against.",
     "limit": "Exhaustive verification of an equivalence over finite structures is not evidence that routing on it helps. κ > 0 ⟺ a nontrivial strongly connected component is a theorem about graphs; that deliberating when κ > 0 produces better answers than not is an empirical claim, and nothing on this page tests it. Nine of the twelve protocols have no implementation at all, and the one benchmark figure quoted here was produced by us, on our own system."
   },
 
@@ -94,8 +94,8 @@
     "law_counts_measured": {
       "label": "The two law counts were derived by running the suites",
       "status": "approved",
-      "description": "103 kernel laws and 15 enforced compose/CC2 laws (14 suite + 1 anchor), 3 known gaps xfail. The enforced total is derived in the template as kernel + compose and is typed nowhere.",
-      "evidence": "node test/laws.mjs && node test/compose-laws.mjs against AmpersandBoxDesign/box-and-box, 2000 trials per law.",
+      "description": "109 kernel laws and 101 enforced compose/CC2 laws (100 suite + 1 anchor), 3 known gaps xfail. The enforced total is derived in the template as kernel + compose and is typed nowhere. The kernel figure moved from 103 on 2026-08-23 when C9/C10/CB4 added the irreversible-resource kind to the ledger.",
+      "evidence": "node test/laws.mjs && node test/compose-laws.mjs against AmpersandBoxDesign/box-and-box, 2000 trials per law, recorded in LAW_MANIFEST.json by scripts/law-manifest.mjs.",
       "reviewer": "the suites themselves — both print totals they derive",
       "date": "2026-08-16"
     },
