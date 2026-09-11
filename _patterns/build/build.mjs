@@ -336,7 +336,7 @@ function chapterWrlSection(p) {
   const w = p.wrl || {};
   const receipts = c.film ? c.film.epochs.at(-1).film.filter((l) => l.startsWith('receipt:')) : [];
   let out = `<p class="syn-label">Chapter ${c.index + 1} of ${chainIds.length} — the fragment <code>_patterns/wrl/chain/${esc(p.id)}.wrl</code>, sealed alone by <code>wrl.js</code></p><pre class="syn">${esc(c.fragment.trim())}</pre><p class="semid">seals alone to → <code>${esc(c.delta.semanticId)}</code></p>
-  ${claimsTable(c.scenario)}`;
+  ${claimsTable(c.scenario)}${c.scenario && c.scenario.expect_idle ? `<p class="exec">Idle by design in this world alone: ${Object.entries(c.scenario.expect_idle).map(([n, why]) => `<code>${esc(n)}</code> — ${esc(why)}`).join('; ')}.</p>` : ''}`;
   if (c.film) {
     const sc = filmSceneFrom(c.film, c.delta.graph, `This chapter's world alone, before epoch 1. Reduced by TRVM's forge in ${c.film.execution_identity.seconds}s (${c.film.execution_identity.reducer}); the forge's id equals the seal above.`);
     out += `<div class="sf" id="film"><div class="sf-stage">${SF.svg(SF.computeState(sc, 0))}</div></div>

@@ -45,7 +45,7 @@ for (const id of CH.order()) {
   if (!jobs.has(key)) jobs.set(key, { files: [], ids: [], epochs, file, chain: true });
   jobs.get(key).files.push(file); jobs.get(key).ids.push(id + ' (chain delta)');
 }
-if (!only.size || only.has('conclusion')) { const file = 'chain/_conclusion.wrl'; const src = readFileSync(join(HERE, '../wrl', file)); const key = sha(src); jobs.set(key, { files: [file], ids: ['conclusion (the whole chain)'], epochs: 4, file, chain: true }); }
+if (!only.size || only.has('conclusion')) { const file = 'chain/_conclusion.wrl'; const src = readFileSync(join(HERE, '../wrl', file)); const key = sha(src); const epochs = Math.max(4, ...CH.order().map((id) => ((CH.scenario(id) || {}).epochs || 4))); jobs.set(key, { files: [file], ids: ['conclusion (the whole chain)'], epochs, file, chain: true }); }
 const env = { ...process.env, PYTHONDONTWRITEBYTECODE: '1', TMPDIR: join(process.env.HOME, '.cache/tmp') };
 let fail = 0;
 for (const [key, j] of jobs) {
