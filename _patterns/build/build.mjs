@@ -242,8 +242,8 @@ ${section('Related', (p.related || []).length ? `<p>${p.related.map(link).join('
 </main>${script}`;
 }
 const pageOutputs = {};
-for (const p of derived) pageOutputs[`patterns/${p.id}.html`] = pageFor(p);
-for (const f of existsSync(DEMOS) ? readdirSync(DEMOS) : []) pageOutputs[`patterns/demos/${f}`] = readFileSync(join(DEMOS, f), 'utf8');
+for (const p of derived) pageOutputs[`${p.id}.html`] = pageFor(p);
+for (const f of existsSync(DEMOS) ? readdirSync(DEMOS) : []) pageOutputs[`demos/${f}`] = readFileSync(join(DEMOS, f), 'utf8');
 
 const DIST = join(SITE, 'patterns');   // SERVED at opensentience.org/patterns/ — ruling R4, 2026-09-11
 const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms, ...pageOutputs };
@@ -260,10 +260,10 @@ if (VERIFY) {
   for (const [k, h] of Object.entries(artifact.outputs)) { const f = join(DIST, k); if (!existsSync(f)) diffs.push(`${k} missing`); else if (sha(stable(readFileSync(f, 'utf8'))) !== h) diffs.push(`${k} on disk is not what these inputs derive`); }
   if (JSON.stringify(onDisk.summary) !== JSON.stringify(summary)) diffs.push('summary on disk differs from derived');
   if (diffs.length) { console.error('✗ --verify:\n  ' + diffs.join('\n  ')); process.exit(1); }
-  console.log(`✓ --verify: dist/ is what data + cells + ledger + ${receipts.length} receipt(s) derive.`); console.log(JSON.stringify(summary, null, 1)); process.exit(0);
+  console.log(`✓ --verify: patterns/ is what data + cells + ledger + ${receipts.length} receipt(s) derive.`); console.log(JSON.stringify(summary, null, 1)); process.exit(0);
 }
 mkdirSync(DIST, { recursive: true });
-mkdirSync(join(DIST, 'patterns/demos'), { recursive: true });
+mkdirSync(join(DIST, 'demos'), { recursive: true });
 for (const [k, v] of Object.entries(outputs)) writeFileSync(join(DIST, k), v);
 writeFileSync(join(DIST, 'artifact.json'), JSON.stringify(artifact, null, 2) + '\n');
 console.log(`✓ built ${Object.keys(outputs).length} file(s) into ${rel(DIST)}\n`);
