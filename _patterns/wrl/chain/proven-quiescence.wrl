@@ -1,5 +1,6 @@
-; PROVEN QUIESCENCE — pq_clock fires ONCE at epoch 2 and is then done; the signal is still travelling
-; through two relays and opens the Door at epoch 5. The pulser's silence is not the world's completion.
+; PROVEN QUIESCENCE — its OWN clock domain: pq_clock fires ONCE at epoch 2 and is then done; the signal is
+; still travelling through two relays and opens the Door later. The pulser's silence is not completion.
+; pq_b is a router: chapter 18 draws from the quiescence chain's last relay.
 [pulser:pq_clock](once at 2){sig_out}
 [relay:pq_a]{sig_in, sig_out}
 [relay:pq_b]{sig_in, sig_out}

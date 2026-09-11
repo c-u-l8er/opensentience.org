@@ -1,0 +1,206 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/three-valued-outcome.wrl"
+ ],
+ "for_patterns": [
+  "three-valued-outcome (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "7fc2689feced76516064e23526d737d3b4ca8f30323fe232acd58220ca19c844",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:13:33.564Z",
+  "finished": "2026-09-11T20:14:54.873Z",
+  "host": "PX13",
+  "seconds": 76.759,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-db31df29ee2f684ed12d78d7f50b2c3437579fca66806c6d6a95d053526bc978",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 6,
+  "batches": [
+   [
+    {
+     "writer": 1,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "tv_open",
+     "rotor": [
+      255,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "writer": 1,
+     "seq": 2,
+     "op": "SetRotor",
+     "target": "tv_fixed",
+     "rotor": [
+      255,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   [],
+   []
+  ]
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:869d37ee6167e6253ccd77193eaafa55bf24e48ef048fadb1adeec2c0352b351",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:tv_fixed:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=tv_b,config=fixed",
+    "spinner:tv_open:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=tv_a,config=configurable",
+    "orb:tv_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=tv_open,fault=0",
+    "orb:tv_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=tv_fixed,fault=0",
+    "pulser:tv_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:tv_in:cur_out=0,next_out=1",
+    "wire:w__tv_bench__tv_in:cur=1,nxt=1",
+    "wire:w__tv_in__tv_fixed:cur=0,nxt=0",
+    "wire:w__tv_in__tv_open:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=70,pkey=0.1.255.0.0.0,payload=SetRotor:tv_open:255.0.0.0",
+    "claim:w=1,s=2,digest=46,pkey=0.0.255.0.0.0,payload=SetRotor:tv_fixed:255.0.0.0",
+    "receipt:w=1,s=1,accepted=70,apkey=0.1.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=1,s=2,accepted=46,apkey=0.0.255.0.0.0,epoch=1,outcome=Rejected(not_configurable)",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:b3344b5f330218dc8b45a651a1a7bff6eb0d4d32ea02097b6b49ea1fab71f26d",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:tv_fixed:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=tv_b,config=fixed",
+    "spinner:tv_open:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=tv_a,config=configurable",
+    "orb:tv_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=tv_open,fault=0",
+    "orb:tv_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=tv_fixed,fault=0",
+    "pulser:tv_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:tv_in:cur_out=1,next_out=1",
+    "wire:w__tv_bench__tv_in:cur=1,nxt=1",
+    "wire:w__tv_in__tv_fixed:cur=0,nxt=1",
+    "wire:w__tv_in__tv_open:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=70,pkey=0.1.255.0.0.0,payload=SetRotor:tv_open:255.0.0.0",
+    "claim:w=1,s=2,digest=46,pkey=0.0.255.0.0.0,payload=SetRotor:tv_fixed:255.0.0.0",
+    "receipt:w=1,s=1,accepted=70,apkey=0.1.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=1,s=2,accepted=46,apkey=0.0.255.0.0.0,epoch=1,outcome=Rejected(not_configurable)",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:76e6f56934e9863f9e5262e19bf7e0e0e774e78dae64ef9dee51c8b0eed11ac3",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:tv_fixed:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=tv_b,config=fixed",
+    "spinner:tv_open:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=tv_a,config=configurable",
+    "orb:tv_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00ff,0000,0000,0000,controller=tv_open,fault=0",
+    "orb:tv_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=tv_fixed,fault=0",
+    "pulser:tv_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:tv_in:cur_out=1,next_out=1",
+    "wire:w__tv_bench__tv_in:cur=1,nxt=1",
+    "wire:w__tv_in__tv_fixed:cur=1,nxt=1",
+    "wire:w__tv_in__tv_open:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=70,pkey=0.1.255.0.0.0,payload=SetRotor:tv_open:255.0.0.0",
+    "claim:w=1,s=2,digest=46,pkey=0.0.255.0.0.0,payload=SetRotor:tv_fixed:255.0.0.0",
+    "receipt:w=1,s=1,accepted=70,apkey=0.1.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=1,s=2,accepted=46,apkey=0.0.255.0.0.0,epoch=1,outcome=Rejected(not_configurable)",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:5d45ed37cdb32eed988e41c0a2f175cc947c813ef2e36bff252460971831c781",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:tv_fixed:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=tv_b,config=fixed",
+    "spinner:tv_open:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=tv_a,config=configurable",
+    "orb:tv_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fe,0000,0000,0000,controller=tv_open,fault=0",
+    "orb:tv_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=tv_fixed,fault=0",
+    "pulser:tv_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:tv_in:cur_out=1,next_out=1",
+    "wire:w__tv_bench__tv_in:cur=1,nxt=1",
+    "wire:w__tv_in__tv_fixed:cur=1,nxt=1",
+    "wire:w__tv_in__tv_open:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=70,pkey=0.1.255.0.0.0,payload=SetRotor:tv_open:255.0.0.0",
+    "claim:w=1,s=2,digest=46,pkey=0.0.255.0.0.0,payload=SetRotor:tv_fixed:255.0.0.0",
+    "receipt:w=1,s=1,accepted=70,apkey=0.1.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=1,s=2,accepted=46,apkey=0.0.255.0.0.0,epoch=1,outcome=Rejected(not_configurable)",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:860c76292b550f5bccf5a06141ae5d69fdaf46c1048fc9364fb90395937f3c3c",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "spinner:tv_fixed:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=tv_b,config=fixed",
+    "spinner:tv_open:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=tv_a,config=configurable",
+    "orb:tv_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fd,0000,0000,0000,controller=tv_open,fault=0",
+    "orb:tv_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff4c,0000,0000,00b4,controller=tv_fixed,fault=0",
+    "pulser:tv_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:tv_in:cur_out=1,next_out=1",
+    "wire:w__tv_bench__tv_in:cur=1,nxt=1",
+    "wire:w__tv_in__tv_fixed:cur=1,nxt=1",
+    "wire:w__tv_in__tv_open:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=70,pkey=0.1.255.0.0.0,payload=SetRotor:tv_open:255.0.0.0",
+    "claim:w=1,s=2,digest=46,pkey=0.0.255.0.0.0,payload=SetRotor:tv_fixed:255.0.0.0",
+    "receipt:w=1,s=1,accepted=70,apkey=0.1.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=1,s=2,accepted=46,apkey=0.0.255.0.0.0,epoch=1,outcome=Rejected(not_configurable)",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:f42430da56d2d8e7c82ac6616a5d6625fbcc99ac6d7fe818c295578d29370b41",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "spinner:tv_fixed:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=tv_b,config=fixed",
+    "spinner:tv_open:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=tv_a,config=configurable",
+    "orb:tv_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fc,0000,0000,0000,controller=tv_open,fault=0",
+    "orb:tv_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff02,0000,0000,0000,controller=tv_fixed,fault=0",
+    "pulser:tv_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:tv_in:cur_out=1,next_out=1",
+    "wire:w__tv_bench__tv_in:cur=1,nxt=1",
+    "wire:w__tv_in__tv_fixed:cur=1,nxt=1",
+    "wire:w__tv_in__tv_open:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=70,pkey=0.1.255.0.0.0,payload=SetRotor:tv_open:255.0.0.0",
+    "claim:w=1,s=2,digest=46,pkey=0.0.255.0.0.0,payload=SetRotor:tv_fixed:255.0.0.0",
+    "receipt:w=1,s=1,accepted=70,apkey=0.1.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=1,s=2,accepted=46,apkey=0.0.255.0.0.0,epoch=1,outcome=Rejected(not_configurable)",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  }
+ ]
+}

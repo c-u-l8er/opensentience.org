@@ -1,14 +1,14 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T19:34:43.055Z",
+  "built": "2026-09-11T20:37:25.131Z",
   "inputs_heads": {
-    ".": "6fc61cd530b25b6780ffe4841473de8a5122acba",
-    "opensentience.org": "4d539a4d4ca4274f0156ca7cf9df538d817d8ba5",
+    ".": "7e91d2d01c57527b39a963deb789237fb13e969e",
+    "opensentience.org": "e697890fc35b3feebe67f886805cece6b80d7cff",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
     "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
-    "computedriven": "19f95846e7484ccc8f7cebc713aa33164ef7b42a",
+    "computedriven": "52240a38848abfeeb9d6a62289055a0735749807",
     "super": "1671d82ffdb4eda34dc4729336c2eec17996b898"
   },
   "summary": {
@@ -46,7 +46,9 @@
       "descent-is-not-dependence"
     ]
   },
-  "findings": [],
+  "findings": [
+    "conclusion: no film receipt for the whole chain — run run-films.mjs conclusion"
+  ],
   "patterns": [
     {
       "id": "active-locus",

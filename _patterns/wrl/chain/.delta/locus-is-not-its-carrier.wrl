@@ -1,16 +1,19 @@
 profile forge.world.core.v1
 
-; LOCUS IS NOT ITS CARRIER — the same signal through three carriers; the locus's state is unchanged
-; by which relay carried it. thread → core → machine are relays: replaceable embodiments.
-[pulser:lc_clock](every 1){sig_out}
+; LOCUS IS NOT ITS CARRIER — one signal through three carriers; the locus's state is unchanged by which relay
+; carried it. lc_thread is this chapter's ENTRY (open port); thread → core → machine are relays: replaceable
+; embodiments — and, in the chain, ROUTERS other chapters draw from.
 [relay:lc_thread]{sig_in, sig_out}
 [relay:lc_core]{sig_in, sig_out}
 [relay:lc_machine]{sig_in, sig_out}
 [spinner:lc_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
 [orb:lc_view]{pose}
 
-[lc_clock] --sig--> [lc_thread]
 [lc_thread] --sig--> [lc_core]
 [lc_core] --sig--> [lc_machine]
 [lc_machine] --sig--> [lc_locus]
 [lc_locus] --socket--> [lc_view]
+
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:lc_bench](every 1){sig_out}
+[lc_bench] --sig--> [lc_thread]

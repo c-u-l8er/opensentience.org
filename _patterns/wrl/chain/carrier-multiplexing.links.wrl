@@ -1,0 +1,2 @@
+; the busy clock's second hop is the floor's router
+[pu_hop1] --sig--> [cm_in]

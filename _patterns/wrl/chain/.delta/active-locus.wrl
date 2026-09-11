@@ -1,8 +1,9 @@
 profile forge.world.core.v1
 
-; ACTIVE LOCUS — where state, authority, observation and continuity couple.
-; al_world is the world's transition relation (a clock). al_locus carries state (a rotor),
-; holds authority (configurable: it ACCEPTS runtime writes), and al_view is what can be observed of it.
+; ACTIVE LOCUS — where state, authority, observation and continuity couple. al_world is the book's ROOT
+; CLOCK: the world's transition relation. al_locus carries state (a rotor), holds authority (configurable:
+; it ACCEPTS runtime writes), al_view is what can be observed of it. Every later chapter is wired,
+; directly or through routers, to this clock or to one of the book's other clock domains.
 [pulser:al_world](every 1){sig_out}
 [spinner:al_locus](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
 [orb:al_view]{pose}

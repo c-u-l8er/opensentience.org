@@ -1,1 +1,1 @@
-{"epochs":4,"batches":[[{"writer":7,"seq":1,"op":"SetRotor","target":"ip_world","rotor":[255,0,0,0]}],[],[{"writer":9,"seq":1,"op":"SetRotor","target":"ip_world","rotor":[0,0,255,0]}],[]]}
+{"epochs":6,"batches":[[{"writer":7,"seq":1,"op":"SetRotor","target":"ip_world","rotor":[255,0,0,0]}],[],[{"writer":9,"seq":1,"op":"SetRotor","target":"ip_world","rotor":[0,0,255,0]}],[]]}

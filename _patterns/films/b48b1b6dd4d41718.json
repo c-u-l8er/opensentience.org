@@ -1,0 +1,156 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/continuity-through-reconstruction.wrl"
+ ],
+ "for_patterns": [
+  "continuity-through-reconstruction (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "b48b1b6dd4d417189fb682c591106f7ab600bee0c685074630807032d6095c4a",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:07:10.100Z",
+  "finished": "2026-09-11T20:07:54.719Z",
+  "host": "PX13",
+  "seconds": 42.764,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-bf7bdf27dbc86cfc315f9db25aacfdb8b2cbe8d81848844038e7761203013e61",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 6,
+  "batches": [
+   [],
+   [
+    {
+     "writer": 1,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "ct_locus",
+     "rotor": [
+      255,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   [],
+   []
+  ]
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:52c1cdea20ace685f5b91c197d654ce6fec089b06672a011845c789b512fccf8",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:ct_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=ct_view,config=configurable",
+    "orb:ct_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=ct_locus,fault=0",
+    "pulser:ct_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ct_in:cur_out=0,next_out=1",
+    "wire:w__ct_bench__ct_in:cur=1,nxt=1",
+    "wire:w__ct_in__ct_locus:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:2da03ecafb0c91967746b4e9ee7ca2defd21ebd373bdabc3268d3d50b82700de",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:ct_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=ct_view,config=configurable",
+    "orb:ct_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=ct_locus,fault=0",
+    "pulser:ct_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ct_in:cur_out=1,next_out=1",
+    "wire:w__ct_bench__ct_in:cur=1,nxt=1",
+    "wire:w__ct_in__ct_locus:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=e0,pkey=0.0.255.0.0.0,payload=SetRotor:ct_locus:255.0.0.0",
+    "receipt:w=1,s=1,accepted=e0,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:42fa3abcbe9e44664de0171633c5b2ec8b9aa92b416d00d26872ae65366b28c8",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:ct_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=ct_view,config=configurable",
+    "orb:ct_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00ff,0000,0000,0000,controller=ct_locus,fault=0",
+    "pulser:ct_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ct_in:cur_out=1,next_out=1",
+    "wire:w__ct_bench__ct_in:cur=1,nxt=1",
+    "wire:w__ct_in__ct_locus:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=e0,pkey=0.0.255.0.0.0,payload=SetRotor:ct_locus:255.0.0.0",
+    "receipt:w=1,s=1,accepted=e0,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:8a2141a8e21060d7ff10b0596fc65d89be4c1ccf00391e10b5d8db23e83a2eb2",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:ct_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=ct_view,config=configurable",
+    "orb:ct_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fe,0000,0000,0000,controller=ct_locus,fault=0",
+    "pulser:ct_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ct_in:cur_out=1,next_out=1",
+    "wire:w__ct_bench__ct_in:cur=1,nxt=1",
+    "wire:w__ct_in__ct_locus:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=e0,pkey=0.0.255.0.0.0,payload=SetRotor:ct_locus:255.0.0.0",
+    "receipt:w=1,s=1,accepted=e0,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:a7eee031cb7f098947ccd78f841827d0656bf8871fd3d0e8407a63e28854b58f",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "spinner:ct_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=ct_view,config=configurable",
+    "orb:ct_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fd,0000,0000,0000,controller=ct_locus,fault=0",
+    "pulser:ct_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ct_in:cur_out=1,next_out=1",
+    "wire:w__ct_bench__ct_in:cur=1,nxt=1",
+    "wire:w__ct_in__ct_locus:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=e0,pkey=0.0.255.0.0.0,payload=SetRotor:ct_locus:255.0.0.0",
+    "receipt:w=1,s=1,accepted=e0,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:1fc9d701a94368490b4176a3963c2fc2088100612fef19901cd1166afea1db91",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "spinner:ct_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=ct_view,config=configurable",
+    "orb:ct_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fc,0000,0000,0000,controller=ct_locus,fault=0",
+    "pulser:ct_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ct_in:cur_out=1,next_out=1",
+    "wire:w__ct_bench__ct_in:cur=1,nxt=1",
+    "wire:w__ct_in__ct_locus:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=e0,pkey=0.0.255.0.0.0,payload=SetRotor:ct_locus:255.0.0.0",
+    "receipt:w=1,s=1,accepted=e0,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  }
+ ]
+}

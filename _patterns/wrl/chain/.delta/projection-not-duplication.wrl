@@ -1,11 +1,15 @@
 profile forge.world.core.v1
 
 ; PROJECTION, NOT DUPLICATION — pj_view_a and pj_view_b are both derived from pj_artifact through
-; SocketControl; neither is a copy. pj_replica has NO controller: it is a copy of nothing (see links).
-[pulser:pj_clock](every 2){sig_out}
+; SocketControl; neither is a copy. pj_in is the entry, fed by the grant router.
+[relay:pj_in]{sig_in, sig_out}
 [spinner:pj_artifact](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
 [orb:pj_view_a]{pose}
 [orb:pj_view_b]{pose}
 
-[pj_clock] --sig--> [pj_artifact]
+[pj_in] --sig--> [pj_artifact]
 [pj_artifact] --socket--> {[pj_view_a], [pj_view_b]}
+
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:pj_bench](every 1){sig_out}
+[pj_bench] --sig--> [pj_in]

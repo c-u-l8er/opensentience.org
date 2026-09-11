@@ -1,0 +1,186 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/refusable-divergence.wrl"
+ ],
+ "for_patterns": [
+  "refusable-divergence (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "81589fcfe3d709699315ad9686fe6f2bd6cf0bd736233c4ce45ad78643d24d32",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:10:51.817Z",
+  "finished": "2026-09-11T20:11:37.019Z",
+  "host": "PX13",
+  "seconds": 43.413,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-a2734400042b9cdbd440169056b0bd05d0523aad1438197cec5b60aae9533dd5",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 6,
+  "batches": [
+   [
+    {
+     "writer": 1,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "rd_ghost",
+     "rotor": [
+      1,
+      2,
+      3,
+      4
+     ]
+    }
+   ],
+   [
+    {
+     "writer": 1,
+     "seq": 2,
+     "op": "SetRotor",
+     "target": "rd_real",
+     "rotor": [
+      255,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   []
+  ]
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:2b6a0aef7f941303d098ab0ebb474b720f4bfe62852358f1b32b6a34acb624bb",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:rd_real:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=rd_view,config=configurable",
+    "orb:rd_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=rd_real,fault=0",
+    "pulser:rd_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:rd_in:cur_out=0,next_out=1",
+    "wire:w__rd_bench__rd_in:cur=1,nxt=1",
+    "wire:w__rd_in__rd_real:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=ee,pkey=0.1.1.2.3.4,payload=SetRotor:#?:1.2.3.4",
+    "receipt:w=1,s=1,accepted=ee,apkey=0.1.1.2.3.4,epoch=1,outcome=Rejected(unknown_spinner)",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:2087fc22b1ff12345b0e8d706dcb97c83b2225e5efc778b8acf5d6daf61df10d",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:rd_real:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=rd_view,config=configurable",
+    "orb:rd_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=rd_real,fault=0",
+    "pulser:rd_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:rd_in:cur_out=1,next_out=1",
+    "wire:w__rd_bench__rd_in:cur=1,nxt=1",
+    "wire:w__rd_in__rd_real:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=ee,pkey=0.1.1.2.3.4,payload=SetRotor:#?:1.2.3.4",
+    "claim:w=1,s=2,digest=3f,pkey=0.0.255.0.0.0,payload=SetRotor:rd_real:255.0.0.0",
+    "receipt:w=1,s=1,accepted=ee,apkey=0.1.1.2.3.4,epoch=1,outcome=Rejected(unknown_spinner)",
+    "receipt:w=1,s=2,accepted=3f,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:85abb23b842d0355bf821007be8d7f6332e4b22478bf9185bb561dcaf37ff795",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:rd_real:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=rd_view,config=configurable",
+    "orb:rd_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00ff,0000,0000,0000,controller=rd_real,fault=0",
+    "pulser:rd_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:rd_in:cur_out=1,next_out=1",
+    "wire:w__rd_bench__rd_in:cur=1,nxt=1",
+    "wire:w__rd_in__rd_real:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=ee,pkey=0.1.1.2.3.4,payload=SetRotor:#?:1.2.3.4",
+    "claim:w=1,s=2,digest=3f,pkey=0.0.255.0.0.0,payload=SetRotor:rd_real:255.0.0.0",
+    "receipt:w=1,s=1,accepted=ee,apkey=0.1.1.2.3.4,epoch=1,outcome=Rejected(unknown_spinner)",
+    "receipt:w=1,s=2,accepted=3f,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:fffc8f2fd6a1fe601bbb811ba8041a50b4ff32683caec8f13de9aa7940278fef",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:rd_real:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=rd_view,config=configurable",
+    "orb:rd_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fe,0000,0000,0000,controller=rd_real,fault=0",
+    "pulser:rd_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:rd_in:cur_out=1,next_out=1",
+    "wire:w__rd_bench__rd_in:cur=1,nxt=1",
+    "wire:w__rd_in__rd_real:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=ee,pkey=0.1.1.2.3.4,payload=SetRotor:#?:1.2.3.4",
+    "claim:w=1,s=2,digest=3f,pkey=0.0.255.0.0.0,payload=SetRotor:rd_real:255.0.0.0",
+    "receipt:w=1,s=1,accepted=ee,apkey=0.1.1.2.3.4,epoch=1,outcome=Rejected(unknown_spinner)",
+    "receipt:w=1,s=2,accepted=3f,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:5b399c598188f59b3aef5c0cf34caabfe096f2ecd7003a5c1e50e38cac9b3ac1",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "spinner:rd_real:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=rd_view,config=configurable",
+    "orb:rd_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fd,0000,0000,0000,controller=rd_real,fault=0",
+    "pulser:rd_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:rd_in:cur_out=1,next_out=1",
+    "wire:w__rd_bench__rd_in:cur=1,nxt=1",
+    "wire:w__rd_in__rd_real:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=ee,pkey=0.1.1.2.3.4,payload=SetRotor:#?:1.2.3.4",
+    "claim:w=1,s=2,digest=3f,pkey=0.0.255.0.0.0,payload=SetRotor:rd_real:255.0.0.0",
+    "receipt:w=1,s=1,accepted=ee,apkey=0.1.1.2.3.4,epoch=1,outcome=Rejected(unknown_spinner)",
+    "receipt:w=1,s=2,accepted=3f,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:425fa543cc61aaabc1a7ed14d871be21e5ba2f6c35294b8f3fa644ab84bee51d",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "spinner:rd_real:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=rd_view,config=configurable",
+    "orb:rd_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fc,0000,0000,0000,controller=rd_real,fault=0",
+    "pulser:rd_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:rd_in:cur_out=1,next_out=1",
+    "wire:w__rd_bench__rd_in:cur=1,nxt=1",
+    "wire:w__rd_in__rd_real:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=ee,pkey=0.1.1.2.3.4,payload=SetRotor:#?:1.2.3.4",
+    "claim:w=1,s=2,digest=3f,pkey=0.0.255.0.0.0,payload=SetRotor:rd_real:255.0.0.0",
+    "receipt:w=1,s=1,accepted=ee,apkey=0.1.1.2.3.4,epoch=1,outcome=Rejected(unknown_spinner)",
+    "receipt:w=1,s=2,accepted=3f,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  }
+ ]
+}

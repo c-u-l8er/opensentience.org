@@ -1,10 +1,10 @@
-; CARRIER MULTIPLEXING — one floor clock fans out to four slots (relays); each slot carries to a
-; locus (a Door that opens when its signal arrives). Replication `*4` is the language's own fan-out.
-[pulser:cm_floor](every 1){sig_out}
+; CARRIER MULTIPLEXING — the floor's signal arrives at cm_in (a router) and fans out to four slots (relays),
+; each carrying to a locus (a Door that opens when its signal arrives). Replication `*4` is the language's own.
+[relay:cm_in]{sig_in, sig_out}
 [relay:cm_slot*4]{sig_in, sig_out}
 [door:cm_locus*4]{sig_in}
 
-[cm_floor] --sig--> {[cm_slot0], [cm_slot1], [cm_slot2], [cm_slot3]}
+[cm_in] --sig--> {[cm_slot0], [cm_slot1], [cm_slot2], [cm_slot3]}
 [cm_slot0] --sig--> [cm_locus0]
 [cm_slot1] --sig--> [cm_locus1]
 [cm_slot2] --sig--> [cm_locus2]

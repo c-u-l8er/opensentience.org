@@ -1,0 +1,165 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/evidence-before-claim.wrl"
+ ],
+ "for_patterns": [
+  "evidence-before-claim (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "07c4d4b18c26aa3b5097e27c2104c9d35b6511ee26129dbb5d9f4e077c2f8a8e",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:16:06.691Z",
+  "finished": "2026-09-11T20:16:51.202Z",
+  "host": "PX13",
+  "seconds": 42.539,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-b1b88c7dbc3335cde087329fe36756733499f64164c1c3aef8c0d477a2406a7d",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 6,
+  "batches": [
+   [],
+   [
+    {
+     "writer": 1,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "ec_subject",
+     "rotor": [
+      0,
+      255,
+      0,
+      0
+     ]
+    }
+   ],
+   [],
+   []
+  ],
+  "expect_idle": {
+   "ec_ledger": "an open port alone: in the chain it is fed by chapter 1's world clock (see links)"
+  }
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:82a6202b41d1af24d2f1ae8ad07fe641b57131ce03f085e67a23b2c2e082746b",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=ec_subject,fault=0",
+    "pulser:ec_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "relay:ec_in:cur_out=0,next_out=1",
+    "wire:w__ec_bench__ec_in:cur=1,nxt=1",
+    "wire:w__ec_in__ec_subject:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:5b5fe4e9d16bf1be5cda14d981cb99e83609d0a3380a06c4eadb11a0e354695e",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=ec_subject,fault=0",
+    "pulser:ec_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "relay:ec_in:cur_out=1,next_out=1",
+    "wire:w__ec_bench__ec_in:cur=1,nxt=1",
+    "wire:w__ec_in__ec_subject:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=bc,pkey=0.0.0.255.0.0,payload=SetRotor:ec_subject:0.255.0.0",
+    "receipt:w=1,s=1,accepted=bc,apkey=0.0.0.255.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:ff1fe645dde0646d84842ee09423300ad04adf343e7ce105b0f3bbb8e5bfb705",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,00ff,0000,0000,controller=ec_subject,fault=0",
+    "pulser:ec_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "relay:ec_in:cur_out=1,next_out=1",
+    "wire:w__ec_bench__ec_in:cur=1,nxt=1",
+    "wire:w__ec_in__ec_subject:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=bc,pkey=0.0.0.255.0.0,payload=SetRotor:ec_subject:0.255.0.0",
+    "receipt:w=1,s=1,accepted=bc,apkey=0.0.0.255.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:0934fcfbe19729947159392743063b37c75cae15524d3f3f0a26e8768000e31a",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff02,0000,0000,0000,controller=ec_subject,fault=0",
+    "pulser:ec_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "relay:ec_in:cur_out=1,next_out=1",
+    "wire:w__ec_bench__ec_in:cur=1,nxt=1",
+    "wire:w__ec_in__ec_subject:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=bc,pkey=0.0.0.255.0.0,payload=SetRotor:ec_subject:0.255.0.0",
+    "receipt:w=1,s=1,accepted=bc,apkey=0.0.0.255.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:781e69c6dd957101f9087235df0190ac3c86cf283b6e0c8e1e78e51be92e86b0",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,ff03,0000,0000,controller=ec_subject,fault=0",
+    "pulser:ec_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "relay:ec_in:cur_out=1,next_out=1",
+    "wire:w__ec_bench__ec_in:cur=1,nxt=1",
+    "wire:w__ec_in__ec_subject:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=bc,pkey=0.0.0.255.0.0,payload=SetRotor:ec_subject:0.255.0.0",
+    "receipt:w=1,s=1,accepted=bc,apkey=0.0.0.255.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:a0f539032cf76e492e81ced9bd0e024f33ce0a40613efd74b87e100c8b861ed8",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fc,0000,0000,0000,controller=ec_subject,fault=0",
+    "pulser:ec_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "relay:ec_in:cur_out=1,next_out=1",
+    "wire:w__ec_bench__ec_in:cur=1,nxt=1",
+    "wire:w__ec_in__ec_subject:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=bc,pkey=0.0.0.255.0.0,payload=SetRotor:ec_subject:0.255.0.0",
+    "receipt:w=1,s=1,accepted=bc,apkey=0.0.0.255.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  }
+ ]
+}

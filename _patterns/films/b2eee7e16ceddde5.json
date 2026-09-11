@@ -1,0 +1,231 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/progress-over-utilization.wrl"
+ ],
+ "for_patterns": [
+  "progress-over-utilization (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "b2eee7e16ceddde58b708bad7be232649c0542d3bc32bc687b4b8fb72e39aa9e",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:11:37.020Z",
+  "finished": "2026-09-11T20:12:21.992Z",
+  "host": "PX13",
+  "seconds": 43.534,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-203ebe6c904f39e68cf5f7c2a0e595b8daeed850ed7b3ad9b88c92db0b52065f",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "batches": [],
+  "epochs": 9
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:77071e23299071a6819d90900b48d9218a22bf403a3faf4fe7a0ca0ed4894280",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:pu_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pu_admitted,config=fixed",
+    "orb:pu_admitted:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=pu_locus,fault=0",
+    "pulser:pu_busy:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "pulser:pu_progress:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:pu_sink:open=0,next_open=0",
+    "relay:pu_hop0:cur_out=0,next_out=1",
+    "relay:pu_hop1:cur_out=0,next_out=0",
+    "relay:pu_hop2:cur_out=0,next_out=0",
+    "wire:w__pu_busy__pu_hop0:cur=1,nxt=1",
+    "wire:w__pu_hop0__pu_hop1:cur=0,nxt=0",
+    "wire:w__pu_hop1__pu_hop2:cur=0,nxt=0",
+    "wire:w__pu_hop2__pu_sink:cur=0,nxt=0",
+    "wire:w__pu_progress__pu_locus:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:fec0809a6fdf53189b6db3d26e610ff3fc2e49e7d8f790169c047ef1693c0bdd",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:pu_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pu_admitted,config=fixed",
+    "orb:pu_admitted:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=pu_locus,fault=0",
+    "pulser:pu_busy:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "pulser:pu_progress:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:pu_sink:open=0,next_open=0",
+    "relay:pu_hop0:cur_out=1,next_out=1",
+    "relay:pu_hop1:cur_out=0,next_out=0",
+    "relay:pu_hop2:cur_out=0,next_out=0",
+    "wire:w__pu_busy__pu_hop0:cur=1,nxt=1",
+    "wire:w__pu_hop0__pu_hop1:cur=0,nxt=1",
+    "wire:w__pu_hop1__pu_hop2:cur=0,nxt=0",
+    "wire:w__pu_hop2__pu_sink:cur=0,nxt=0",
+    "wire:w__pu_progress__pu_locus:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:9de339fcda35dd31871deb7e9d24d0e9f7c593749f4cccf99d1542a3ad7e05f7",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:pu_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pu_admitted,config=fixed",
+    "orb:pu_admitted:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=pu_locus,fault=0",
+    "pulser:pu_busy:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "pulser:pu_progress:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:pu_sink:open=0,next_open=0",
+    "relay:pu_hop0:cur_out=1,next_out=1",
+    "relay:pu_hop1:cur_out=0,next_out=1",
+    "relay:pu_hop2:cur_out=0,next_out=0",
+    "wire:w__pu_busy__pu_hop0:cur=1,nxt=1",
+    "wire:w__pu_hop0__pu_hop1:cur=1,nxt=1",
+    "wire:w__pu_hop1__pu_hop2:cur=0,nxt=0",
+    "wire:w__pu_hop2__pu_sink:cur=0,nxt=0",
+    "wire:w__pu_progress__pu_locus:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:d56440ed4f262745a8ce5dfe0ecbc014cd40c898b5e1c847d87d25c2ff763a63",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:pu_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pu_admitted,config=fixed",
+    "orb:pu_admitted:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=pu_locus,fault=0",
+    "pulser:pu_busy:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "pulser:pu_progress:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:pu_sink:open=0,next_open=0",
+    "relay:pu_hop0:cur_out=1,next_out=1",
+    "relay:pu_hop1:cur_out=1,next_out=1",
+    "relay:pu_hop2:cur_out=0,next_out=0",
+    "wire:w__pu_busy__pu_hop0:cur=1,nxt=1",
+    "wire:w__pu_hop0__pu_hop1:cur=1,nxt=1",
+    "wire:w__pu_hop1__pu_hop2:cur=0,nxt=1",
+    "wire:w__pu_hop2__pu_sink:cur=0,nxt=0",
+    "wire:w__pu_progress__pu_locus:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:efb6c7866bb71d8f5e752e224a54aae16d288fbcb5a323a4f88ee1ad5dc7572a",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "spinner:pu_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pu_admitted,config=fixed",
+    "orb:pu_admitted:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=pu_locus,fault=0",
+    "pulser:pu_busy:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "pulser:pu_progress:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:pu_sink:open=0,next_open=0",
+    "relay:pu_hop0:cur_out=1,next_out=1",
+    "relay:pu_hop1:cur_out=1,next_out=1",
+    "relay:pu_hop2:cur_out=0,next_out=1",
+    "wire:w__pu_busy__pu_hop0:cur=1,nxt=1",
+    "wire:w__pu_hop0__pu_hop1:cur=1,nxt=1",
+    "wire:w__pu_hop1__pu_hop2:cur=1,nxt=1",
+    "wire:w__pu_hop2__pu_sink:cur=0,nxt=0",
+    "wire:w__pu_progress__pu_locus:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:11b0d588bb6f9e8ee67edf89aea345fd6fe6ca9ae739817249b33830817d7449",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "spinner:pu_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pu_admitted,config=fixed",
+    "orb:pu_admitted:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff4c,0000,0000,00b4,controller=pu_locus,fault=0",
+    "pulser:pu_busy:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "pulser:pu_progress:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:pu_sink:open=0,next_open=0",
+    "relay:pu_hop0:cur_out=1,next_out=1",
+    "relay:pu_hop1:cur_out=1,next_out=1",
+    "relay:pu_hop2:cur_out=1,next_out=1",
+    "wire:w__pu_busy__pu_hop0:cur=1,nxt=1",
+    "wire:w__pu_hop0__pu_hop1:cur=1,nxt=1",
+    "wire:w__pu_hop1__pu_hop2:cur=1,nxt=1",
+    "wire:w__pu_hop2__pu_sink:cur=0,nxt=1",
+    "wire:w__pu_progress__pu_locus:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 7,
+   "film_hash": "sha256:244107134307b0c7b2cde310e6be79ec36d09713ac279374f953b5cc9e283000",
+   "film": [
+    "FILM v0.7",
+    "t=7",
+    "spinner:pu_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pu_admitted,config=fixed",
+    "orb:pu_admitted:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff4c,0000,0000,00b4,controller=pu_locus,fault=0",
+    "pulser:pu_busy:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "pulser:pu_progress:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:pu_sink:open=0,next_open=1",
+    "relay:pu_hop0:cur_out=1,next_out=1",
+    "relay:pu_hop1:cur_out=1,next_out=1",
+    "relay:pu_hop2:cur_out=1,next_out=1",
+    "wire:w__pu_busy__pu_hop0:cur=1,nxt=1",
+    "wire:w__pu_hop0__pu_hop1:cur=1,nxt=1",
+    "wire:w__pu_hop1__pu_hop2:cur=1,nxt=1",
+    "wire:w__pu_hop2__pu_sink:cur=1,nxt=1",
+    "wire:w__pu_progress__pu_locus:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 8,
+   "film_hash": "sha256:594eae7b44e96344852aae232544998089786a65e83362d9ffd7a04a4d0c545d",
+   "film": [
+    "FILM v0.7",
+    "t=8",
+    "spinner:pu_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pu_admitted,config=fixed",
+    "orb:pu_admitted:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff02,0000,0000,0000,controller=pu_locus,fault=0",
+    "pulser:pu_busy:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "pulser:pu_progress:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:pu_sink:open=1,next_open=1",
+    "relay:pu_hop0:cur_out=1,next_out=1",
+    "relay:pu_hop1:cur_out=1,next_out=1",
+    "relay:pu_hop2:cur_out=1,next_out=1",
+    "wire:w__pu_busy__pu_hop0:cur=1,nxt=1",
+    "wire:w__pu_hop0__pu_hop1:cur=1,nxt=1",
+    "wire:w__pu_hop1__pu_hop2:cur=1,nxt=1",
+    "wire:w__pu_hop2__pu_sink:cur=1,nxt=1",
+    "wire:w__pu_progress__pu_locus:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 9,
+   "film_hash": "sha256:1606adfec82efcfb9cdc9eec562e0afd1d2c9b313aa41bd56fde57cde1e1e2bb",
+   "film": [
+    "FILM v0.7",
+    "t=9",
+    "spinner:pu_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pu_admitted,config=fixed",
+    "orb:pu_admitted:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff02,0000,0000,0000,controller=pu_locus,fault=0",
+    "pulser:pu_busy:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "pulser:pu_progress:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:pu_sink:open=1,next_open=1",
+    "relay:pu_hop0:cur_out=1,next_out=1",
+    "relay:pu_hop1:cur_out=1,next_out=1",
+    "relay:pu_hop2:cur_out=1,next_out=1",
+    "wire:w__pu_busy__pu_hop0:cur=1,nxt=1",
+    "wire:w__pu_hop0__pu_hop1:cur=1,nxt=1",
+    "wire:w__pu_hop1__pu_hop2:cur=1,nxt=1",
+    "wire:w__pu_hop2__pu_sink:cur=1,nxt=1",
+    "wire:w__pu_progress__pu_locus:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

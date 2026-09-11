@@ -1,5 +1,5 @@
-; ORTHOGONAL PERSISTENCE — the rotor persists between ticks (every 3) without the locus asking to be
-; saved; where the state physically lives between epochs is the runtime's business, not the world's.
+; ORTHOGONAL PERSISTENCE — its OWN slow clock domain (every 3): the rotor persists between ticks without the
+; locus asking to be saved; where the state physically lives between epochs is the runtime's business.
 [pulser:op_clock](every 3){sig_out}
 [spinner:op_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
 [orb:op_view]{pose}

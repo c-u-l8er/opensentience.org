@@ -1,0 +1,3 @@
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:ip_bench](every 1){sig_out}
+[ip_bench] --sig--> [ip_in]

@@ -1,10 +1,12 @@
 profile forge.world.core.v1
 
-; CARRIER CONFINEMENT — the carrier (a Door) opens only through the grant (a Relay); nothing else can
-; reach its one input port. Confinement is the topology, not a promise.
-[pulser:cc_worker](every 1){sig_out}
+; CARRIER CONFINEMENT — the carrier (a Door) opens only through the grant (a relay); nothing else can reach
+; its one input port. cc_grant is the entry and a router: chapters 11 and 12 draw from it.
 [relay:cc_grant]{sig_in, sig_out}
 [door:cc_carrier]{sig_in}
 
-[cc_worker] --sig--> [cc_grant]
 [cc_grant] --sig--> [cc_carrier]
+
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:cc_bench](every 1){sig_out}
+[cc_bench] --sig--> [cc_grant]

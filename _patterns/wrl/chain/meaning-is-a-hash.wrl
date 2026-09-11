@@ -1,5 +1,5 @@
-; MEANING IS A HASH — a clock and a door; the variant beside this on the page changes `every 3` to
-; `every 4` and seals to a different id. There is no version number to consult.
+; MEANING IS A HASH — its OWN clock domain and a door; the variant beside this changes `every 3` to `every 4`
+; and seals to a different id. There is no version number to consult.
 [pulser:mh_clock](every 3){sig_out}
 [door:mh_gate]{sig_in}
 

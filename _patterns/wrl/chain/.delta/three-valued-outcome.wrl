@@ -1,13 +1,17 @@
 profile forge.world.core.v1
 
 ; THREE-VALUED OUTCOME — two claims in one batch: one Applied (tv_open is configurable), one Rejected
-; (tv_fixed is not). The third value has no forge counterpart: a Film is total, and the page says so.
-[pulser:tv_clock](every 1){sig_out}
+; (tv_fixed is not). The third value has no forge counterpart: a Film is total. tv_in is the entry.
+[relay:tv_in]{sig_in, sig_out}
 [spinner:tv_open](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
 [spinner:tv_fixed](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
 [orb:tv_a]{pose}
 [orb:tv_b]{pose}
 
-[tv_clock] --sig--> {[tv_open], [tv_fixed]}
+[tv_in] --sig--> {[tv_open], [tv_fixed]}
 [tv_open] --socket--> [tv_a]
 [tv_fixed] --socket--> [tv_b]
+
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:tv_bench](every 1){sig_out}
+[tv_bench] --sig--> [tv_in]

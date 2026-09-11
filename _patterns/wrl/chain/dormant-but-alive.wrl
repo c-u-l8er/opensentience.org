@@ -1,5 +1,5 @@
-; DORMANT BUT ALIVE — a clock with phase 3: the locus receives nothing for three epochs and is fully
-; defined the whole time; at epoch 4 it turns. Dormant is a placement fact, not a liveness fact.
+; DORMANT BUT ALIVE — its OWN clock domain, with phase 3: the locus receives nothing for three epochs and is
+; fully defined the whole time; at epoch 4 it turns. Dormant is a placement fact, not a liveness fact.
 [pulser:db_clock](every 4, phase 3){sig_out}
 [spinner:db_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
 [orb:db_view]{pose}

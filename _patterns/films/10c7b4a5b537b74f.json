@@ -1,0 +1,184 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/intervention-provenance.wrl"
+ ],
+ "for_patterns": [
+  "intervention-provenance (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "10c7b4a5b537b74fb487c9664e553b66888cd70b827ada97cb079429705fe9c5",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:16:51.345Z",
+  "finished": "2026-09-11T20:17:32.841Z",
+  "host": "PX13",
+  "seconds": 39.332,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-28af0fc6bf2e128c06f301cb8034fd36dd2e56830f932f9d057a3aad049676dc",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 6,
+  "batches": [
+   [
+    {
+     "writer": 7,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "ip_world",
+     "rotor": [
+      255,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   [],
+   [
+    {
+     "writer": 9,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "ip_world",
+     "rotor": [
+      0,
+      0,
+      255,
+      0
+     ]
+    }
+   ],
+   []
+  ]
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:4facc1ac2251a4777e76dd3f436c1561b219bfbee20e1af2393def5e8b738c2f",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:ip_world:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=ip_view,config=configurable",
+    "orb:ip_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=ip_world,fault=0",
+    "pulser:ip_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ip_in:cur_out=0,next_out=1",
+    "wire:w__ip_bench__ip_in:cur=1,nxt=1",
+    "wire:w__ip_in__ip_world:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=7,s=1,digest=0b,pkey=0.0.255.0.0.0,payload=SetRotor:ip_world:255.0.0.0",
+    "receipt:w=7,s=1,accepted=0b,apkey=0.0.255.0.0.0,epoch=1,outcome=Applied",
+    "recognition:w=7,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:bc8c7f1b849a86bb8f90f612503f663ec9a2aa89f221aeaf60655bf5407d8340",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:ip_world:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=ip_view,config=configurable",
+    "orb:ip_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=ip_world,fault=0",
+    "pulser:ip_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ip_in:cur_out=1,next_out=1",
+    "wire:w__ip_bench__ip_in:cur=1,nxt=1",
+    "wire:w__ip_in__ip_world:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=7,s=1,digest=0b,pkey=0.0.255.0.0.0,payload=SetRotor:ip_world:255.0.0.0",
+    "receipt:w=7,s=1,accepted=0b,apkey=0.0.255.0.0.0,epoch=1,outcome=Applied",
+    "recognition:w=7,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:7cd76c0e21bbc2eaa790df6747952830cb4d64f5d9c22d2e6762da3af2b70dce",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:ip_world:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,0000,00ff,0000,socket=ip_view,config=configurable",
+    "orb:ip_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,00ff,0000,controller=ip_world,fault=0",
+    "pulser:ip_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ip_in:cur_out=1,next_out=1",
+    "wire:w__ip_bench__ip_in:cur=1,nxt=1",
+    "wire:w__ip_in__ip_world:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=7,s=1,digest=0b,pkey=0.0.255.0.0.0,payload=SetRotor:ip_world:255.0.0.0",
+    "claim:w=9,s=1,digest=5c,pkey=0.0.0.0.255.0,payload=SetRotor:ip_world:0.0.255.0",
+    "receipt:w=7,s=1,accepted=0b,apkey=0.0.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=9,s=1,accepted=5c,apkey=0.0.0.0.255.0,epoch=3,outcome=Applied",
+    "recognition:w=7,s=1,state=unambiguous",
+    "recognition:w=9,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:f22e4f00feb27da87d17d346264ca9ab0cf23f8bfd9dbb8e04d6f1b4d31f6a2e",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:ip_world:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,0000,00ff,0000,socket=ip_view,config=configurable",
+    "orb:ip_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff02,0000,0000,0000,controller=ip_world,fault=0",
+    "pulser:ip_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ip_in:cur_out=1,next_out=1",
+    "wire:w__ip_bench__ip_in:cur=1,nxt=1",
+    "wire:w__ip_in__ip_world:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=7,s=1,digest=0b,pkey=0.0.255.0.0.0,payload=SetRotor:ip_world:255.0.0.0",
+    "claim:w=9,s=1,digest=5c,pkey=0.0.0.0.255.0,payload=SetRotor:ip_world:0.0.255.0",
+    "receipt:w=7,s=1,accepted=0b,apkey=0.0.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=9,s=1,accepted=5c,apkey=0.0.0.0.255.0,epoch=3,outcome=Applied",
+    "recognition:w=7,s=1,state=unambiguous",
+    "recognition:w=9,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:61b54c3a8791d1f86513a3ae529f01bc517c0461213e13fe5740f18e8a5736a5",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "spinner:ip_world:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,0000,00ff,0000,socket=ip_view,config=configurable",
+    "orb:ip_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,ff03,0000,controller=ip_world,fault=0",
+    "pulser:ip_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ip_in:cur_out=1,next_out=1",
+    "wire:w__ip_bench__ip_in:cur=1,nxt=1",
+    "wire:w__ip_in__ip_world:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=7,s=1,digest=0b,pkey=0.0.255.0.0.0,payload=SetRotor:ip_world:255.0.0.0",
+    "claim:w=9,s=1,digest=5c,pkey=0.0.0.0.255.0,payload=SetRotor:ip_world:0.0.255.0",
+    "receipt:w=7,s=1,accepted=0b,apkey=0.0.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=9,s=1,accepted=5c,apkey=0.0.0.0.255.0,epoch=3,outcome=Applied",
+    "recognition:w=7,s=1,state=unambiguous",
+    "recognition:w=9,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:10f15a32782ce94f1f7e8b732593e3bac86d6d1fd1a4a0e6ff1337d6954df621",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "spinner:ip_world:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,0000,00ff,0000,socket=ip_view,config=configurable",
+    "orb:ip_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00fc,0000,0000,0000,controller=ip_world,fault=0",
+    "pulser:ip_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:ip_in:cur_out=1,next_out=1",
+    "wire:w__ip_bench__ip_in:cur=1,nxt=1",
+    "wire:w__ip_in__ip_world:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=7,s=1,digest=0b,pkey=0.0.255.0.0.0,payload=SetRotor:ip_world:255.0.0.0",
+    "claim:w=9,s=1,digest=5c,pkey=0.0.0.0.255.0,payload=SetRotor:ip_world:0.0.255.0",
+    "receipt:w=7,s=1,accepted=0b,apkey=0.0.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=9,s=1,accepted=5c,apkey=0.0.0.0.255.0,epoch=3,outcome=Applied",
+    "recognition:w=7,s=1,state=unambiguous",
+    "recognition:w=9,s=1,state=unambiguous"
+   ]
+  }
+ ]
+}

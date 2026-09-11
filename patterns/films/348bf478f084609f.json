@@ -1,0 +1,94 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/semantic-membrane.wrl"
+ ],
+ "for_patterns": [
+  "semantic-membrane (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "348bf478f084609faf74e4d6f469320894a17920e8f03d96f3edcf95a43f7330",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:08:29.166Z",
+  "finished": "2026-09-11T20:09:24.409Z",
+  "host": "PX13",
+  "seconds": 50.773,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-0a213fb326446d64221574567087597936629d334cdb5dcca000bc2ba1d77019",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:02b0a6ffaa59f75394a43e0197f3f7b2679b9c55acb0c186d3e80e3e7483ee4a",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:sm_inside:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=sm_outside_a,config=fixed",
+    "orb:sm_outside_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=sm_inside,fault=0",
+    "orb:sm_outside_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=sm_inside,fault=0",
+    "pulser:sm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:sm_in:cur_out=0,next_out=1",
+    "wire:w__sm_bench__sm_in:cur=1,nxt=1",
+    "wire:w__sm_in__sm_inside:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:276446debe7c100b4a17673407641984bc1aa74d0b2e4928a82801cbbe6fea7a",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:sm_inside:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=sm_outside_a,config=fixed",
+    "orb:sm_outside_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=sm_inside,fault=0",
+    "orb:sm_outside_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=sm_inside,fault=0",
+    "pulser:sm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:sm_in:cur_out=1,next_out=1",
+    "wire:w__sm_bench__sm_in:cur=1,nxt=1",
+    "wire:w__sm_in__sm_inside:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:28badb9f28ccaf044477972bcc99e3a6625a462963ff63f6c819a2b743bbf6ff",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:sm_inside:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=sm_outside_a,config=fixed",
+    "orb:sm_outside_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=sm_inside,fault=0",
+    "orb:sm_outside_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=sm_inside,fault=0",
+    "pulser:sm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:sm_in:cur_out=1,next_out=1",
+    "wire:w__sm_bench__sm_in:cur=1,nxt=1",
+    "wire:w__sm_in__sm_inside:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:12c22dc86f6477040d4d7a5dcad8e6b205f1610645eea1df83a4ae0b0df87a48",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:sm_inside:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=sm_outside_a,config=fixed",
+    "orb:sm_outside_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=sm_inside,fault=0",
+    "orb:sm_outside_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=sm_inside,fault=0",
+    "pulser:sm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:sm_in:cur_out=1,next_out=1",
+    "wire:w__sm_bench__sm_in:cur=1,nxt=1",
+    "wire:w__sm_in__sm_inside:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

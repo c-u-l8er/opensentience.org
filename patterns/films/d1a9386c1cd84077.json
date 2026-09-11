@@ -1,0 +1,129 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/proven-quiescence.wrl"
+ ],
+ "for_patterns": [
+  "proven-quiescence (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "d1a9386c1cd84077ca483f5df06a21ec16706efff0ce7305b89ea2fa421b8373",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:13:33.467Z",
+  "finished": "2026-09-11T20:13:33.564Z",
+  "host": "PX13",
+  "seconds": 0.005,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-3f0d499f7e69fc20f10dad37ccb88861c6c007fa0f62a482b82ca7df42bcdf70",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 6,
+  "batches": []
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:cf79d117b114bc68aa9998e0ee7752ba8e6cebc98cd96ff34e351bf4a5881c72",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "pulser:pq_clock:mode=once,p=2,phase=2,armed=0,done=1,nf=-1",
+    "door:pq_done:open=0,next_open=0",
+    "relay:pq_a:cur_out=0,next_out=0",
+    "relay:pq_b:cur_out=0,next_out=0",
+    "wire:w__pq_a__pq_b:cur=0,nxt=0",
+    "wire:w__pq_b__pq_done:cur=0,nxt=0",
+    "wire:w__pq_clock__pq_a:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:a0ab27b931f701a78cc9d9df86df494435730f0b6749a978813decfdef365d54",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "pulser:pq_clock:mode=once,p=2,phase=2,armed=0,done=1,nf=-1",
+    "door:pq_done:open=0,next_open=0",
+    "relay:pq_a:cur_out=0,next_out=1",
+    "relay:pq_b:cur_out=0,next_out=0",
+    "wire:w__pq_a__pq_b:cur=0,nxt=0",
+    "wire:w__pq_b__pq_done:cur=0,nxt=0",
+    "wire:w__pq_clock__pq_a:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:ff28404f356bab99e9191d01429c8c137401939ef7303592aec6df2d2adc0f90",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "pulser:pq_clock:mode=once,p=2,phase=2,armed=0,done=1,nf=-1",
+    "door:pq_done:open=0,next_open=0",
+    "relay:pq_a:cur_out=1,next_out=0",
+    "relay:pq_b:cur_out=0,next_out=0",
+    "wire:w__pq_a__pq_b:cur=0,nxt=1",
+    "wire:w__pq_b__pq_done:cur=0,nxt=0",
+    "wire:w__pq_clock__pq_a:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:3e70dbe48616d04edd236557540f30e74dc2ea21296209ae319bbb790a8ffc74",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "pulser:pq_clock:mode=once,p=2,phase=2,armed=0,done=1,nf=-1",
+    "door:pq_done:open=0,next_open=0",
+    "relay:pq_a:cur_out=0,next_out=0",
+    "relay:pq_b:cur_out=0,next_out=1",
+    "wire:w__pq_a__pq_b:cur=1,nxt=0",
+    "wire:w__pq_b__pq_done:cur=0,nxt=0",
+    "wire:w__pq_clock__pq_a:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:e9d3e5fc8035278c918cf87af6ff2a3d72fa454df4381cc34c677029205601d4",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "pulser:pq_clock:mode=once,p=2,phase=2,armed=0,done=1,nf=-1",
+    "door:pq_done:open=0,next_open=0",
+    "relay:pq_a:cur_out=0,next_out=0",
+    "relay:pq_b:cur_out=1,next_out=0",
+    "wire:w__pq_a__pq_b:cur=0,nxt=0",
+    "wire:w__pq_b__pq_done:cur=0,nxt=1",
+    "wire:w__pq_clock__pq_a:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:6eda6d235deecf38f70527506146d06ea0fd2672ff6590a148106b9e3fcb7846",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "pulser:pq_clock:mode=once,p=2,phase=2,armed=0,done=1,nf=-1",
+    "door:pq_done:open=0,next_open=1",
+    "relay:pq_a:cur_out=0,next_out=0",
+    "relay:pq_b:cur_out=0,next_out=0",
+    "wire:w__pq_a__pq_b:cur=0,nxt=0",
+    "wire:w__pq_b__pq_done:cur=1,nxt=0",
+    "wire:w__pq_clock__pq_a:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

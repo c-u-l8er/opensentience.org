@@ -1,0 +1,2 @@
+; the root clock drives the carrier chain
+[al_world] --sig--> [lc_thread]

@@ -1,10 +1,12 @@
 profile forge.world.core.v1
 
-; REFUSING JOIN — a Door admits exactly one signal wire. The refused variant (two producers into one
-; Door, WRL_CONTROLLER_CONFLICT) is beside this on the page; this is the admitted join.
-[pulser:rj_a](every 1){sig_out}
+; REFUSING JOIN — a Door admits exactly one signal wire. rj_r is the entry AND Part II's router: in the chain
+; it is fed by the machine router and feeds the composition chapters. The refused variant is beside this.
 [relay:rj_r]{sig_in, sig_out}
 [door:rj_join]{sig_in}
 
-[rj_a] --sig--> [rj_r]
 [rj_r] --sig--> [rj_join]
+
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:rj_bench](every 1){sig_out}
+[rj_bench] --sig--> [rj_r]

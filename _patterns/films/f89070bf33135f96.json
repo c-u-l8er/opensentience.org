@@ -1,0 +1,229 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/carrier-multiplexing.wrl"
+ ],
+ "for_patterns": [
+  "carrier-multiplexing (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "f89070bf33135f96740122f104c1e7f474a3a2aace917e1decea594bb22a1d9e",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:37:24.166Z",
+  "finished": "2026-09-11T20:37:24.333Z",
+  "host": "PX13",
+  "seconds": 0.011,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-f6b2fd2004e277f5a10df9174c87843937a8d3e552fcd77ee7c8d71a5a292ce5",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "batches": [],
+  "epochs": 7
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:ac1afc4e7ef3b79bee182c914e2bff2ea512a63131146e696070a2faed76c901",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "pulser:cm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cm_locus0:open=0,next_open=0",
+    "door:cm_locus1:open=0,next_open=0",
+    "door:cm_locus2:open=0,next_open=0",
+    "door:cm_locus3:open=0,next_open=0",
+    "relay:cm_in:cur_out=0,next_out=1",
+    "relay:cm_slot0:cur_out=0,next_out=0",
+    "relay:cm_slot1:cur_out=0,next_out=0",
+    "relay:cm_slot2:cur_out=0,next_out=0",
+    "relay:cm_slot3:cur_out=0,next_out=0",
+    "wire:w__cm_bench__cm_in:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot0:cur=0,nxt=0",
+    "wire:w__cm_in__cm_slot1:cur=0,nxt=0",
+    "wire:w__cm_in__cm_slot2:cur=0,nxt=0",
+    "wire:w__cm_in__cm_slot3:cur=0,nxt=0",
+    "wire:w__cm_slot0__cm_locus0:cur=0,nxt=0",
+    "wire:w__cm_slot1__cm_locus1:cur=0,nxt=0",
+    "wire:w__cm_slot2__cm_locus2:cur=0,nxt=0",
+    "wire:w__cm_slot3__cm_locus3:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:88f304ad725f33c76a937859aafb0254636c107294f146446ebe62bf7cd0cca4",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "pulser:cm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cm_locus0:open=0,next_open=0",
+    "door:cm_locus1:open=0,next_open=0",
+    "door:cm_locus2:open=0,next_open=0",
+    "door:cm_locus3:open=0,next_open=0",
+    "relay:cm_in:cur_out=1,next_out=1",
+    "relay:cm_slot0:cur_out=0,next_out=0",
+    "relay:cm_slot1:cur_out=0,next_out=0",
+    "relay:cm_slot2:cur_out=0,next_out=0",
+    "relay:cm_slot3:cur_out=0,next_out=0",
+    "wire:w__cm_bench__cm_in:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot0:cur=0,nxt=1",
+    "wire:w__cm_in__cm_slot1:cur=0,nxt=1",
+    "wire:w__cm_in__cm_slot2:cur=0,nxt=1",
+    "wire:w__cm_in__cm_slot3:cur=0,nxt=1",
+    "wire:w__cm_slot0__cm_locus0:cur=0,nxt=0",
+    "wire:w__cm_slot1__cm_locus1:cur=0,nxt=0",
+    "wire:w__cm_slot2__cm_locus2:cur=0,nxt=0",
+    "wire:w__cm_slot3__cm_locus3:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:89a5a260d854066926e5b77b825d9f7af374fc36e61860651d0c7336662bac46",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "pulser:cm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cm_locus0:open=0,next_open=0",
+    "door:cm_locus1:open=0,next_open=0",
+    "door:cm_locus2:open=0,next_open=0",
+    "door:cm_locus3:open=0,next_open=0",
+    "relay:cm_in:cur_out=1,next_out=1",
+    "relay:cm_slot0:cur_out=0,next_out=1",
+    "relay:cm_slot1:cur_out=0,next_out=1",
+    "relay:cm_slot2:cur_out=0,next_out=1",
+    "relay:cm_slot3:cur_out=0,next_out=1",
+    "wire:w__cm_bench__cm_in:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot0:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot1:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot2:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot3:cur=1,nxt=1",
+    "wire:w__cm_slot0__cm_locus0:cur=0,nxt=0",
+    "wire:w__cm_slot1__cm_locus1:cur=0,nxt=0",
+    "wire:w__cm_slot2__cm_locus2:cur=0,nxt=0",
+    "wire:w__cm_slot3__cm_locus3:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:72e8f7bd89986e98f7ce6d53eedf95db766bcbec4dd962f5c0628b041caed2e3",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "pulser:cm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cm_locus0:open=0,next_open=0",
+    "door:cm_locus1:open=0,next_open=0",
+    "door:cm_locus2:open=0,next_open=0",
+    "door:cm_locus3:open=0,next_open=0",
+    "relay:cm_in:cur_out=1,next_out=1",
+    "relay:cm_slot0:cur_out=1,next_out=1",
+    "relay:cm_slot1:cur_out=1,next_out=1",
+    "relay:cm_slot2:cur_out=1,next_out=1",
+    "relay:cm_slot3:cur_out=1,next_out=1",
+    "wire:w__cm_bench__cm_in:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot0:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot1:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot2:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot3:cur=1,nxt=1",
+    "wire:w__cm_slot0__cm_locus0:cur=0,nxt=1",
+    "wire:w__cm_slot1__cm_locus1:cur=0,nxt=1",
+    "wire:w__cm_slot2__cm_locus2:cur=0,nxt=1",
+    "wire:w__cm_slot3__cm_locus3:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:d342c7de60e056f3c06c255f6becdf1a63e42fb58a812f238c9cd3c335444923",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "pulser:cm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cm_locus0:open=0,next_open=1",
+    "door:cm_locus1:open=0,next_open=1",
+    "door:cm_locus2:open=0,next_open=1",
+    "door:cm_locus3:open=0,next_open=1",
+    "relay:cm_in:cur_out=1,next_out=1",
+    "relay:cm_slot0:cur_out=1,next_out=1",
+    "relay:cm_slot1:cur_out=1,next_out=1",
+    "relay:cm_slot2:cur_out=1,next_out=1",
+    "relay:cm_slot3:cur_out=1,next_out=1",
+    "wire:w__cm_bench__cm_in:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot0:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot1:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot2:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot3:cur=1,nxt=1",
+    "wire:w__cm_slot0__cm_locus0:cur=1,nxt=1",
+    "wire:w__cm_slot1__cm_locus1:cur=1,nxt=1",
+    "wire:w__cm_slot2__cm_locus2:cur=1,nxt=1",
+    "wire:w__cm_slot3__cm_locus3:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:997d43196cddb4755abd0d5ada3f60eea57d69b7f4aa63daf020dfc61f5add3f",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "pulser:cm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cm_locus0:open=1,next_open=1",
+    "door:cm_locus1:open=1,next_open=1",
+    "door:cm_locus2:open=1,next_open=1",
+    "door:cm_locus3:open=1,next_open=1",
+    "relay:cm_in:cur_out=1,next_out=1",
+    "relay:cm_slot0:cur_out=1,next_out=1",
+    "relay:cm_slot1:cur_out=1,next_out=1",
+    "relay:cm_slot2:cur_out=1,next_out=1",
+    "relay:cm_slot3:cur_out=1,next_out=1",
+    "wire:w__cm_bench__cm_in:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot0:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot1:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot2:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot3:cur=1,nxt=1",
+    "wire:w__cm_slot0__cm_locus0:cur=1,nxt=1",
+    "wire:w__cm_slot1__cm_locus1:cur=1,nxt=1",
+    "wire:w__cm_slot2__cm_locus2:cur=1,nxt=1",
+    "wire:w__cm_slot3__cm_locus3:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 7,
+   "film_hash": "sha256:137d6cf6f8eafbc3074193fb0a98a0921f74903bbe207e38942c958ed951c689",
+   "film": [
+    "FILM v0.7",
+    "t=7",
+    "pulser:cm_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cm_locus0:open=1,next_open=1",
+    "door:cm_locus1:open=1,next_open=1",
+    "door:cm_locus2:open=1,next_open=1",
+    "door:cm_locus3:open=1,next_open=1",
+    "relay:cm_in:cur_out=1,next_out=1",
+    "relay:cm_slot0:cur_out=1,next_out=1",
+    "relay:cm_slot1:cur_out=1,next_out=1",
+    "relay:cm_slot2:cur_out=1,next_out=1",
+    "relay:cm_slot3:cur_out=1,next_out=1",
+    "wire:w__cm_bench__cm_in:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot0:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot1:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot2:cur=1,nxt=1",
+    "wire:w__cm_in__cm_slot3:cur=1,nxt=1",
+    "wire:w__cm_slot0__cm_locus0:cur=1,nxt=1",
+    "wire:w__cm_slot1__cm_locus1:cur=1,nxt=1",
+    "wire:w__cm_slot2__cm_locus2:cur=1,nxt=1",
+    "wire:w__cm_slot3__cm_locus3:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

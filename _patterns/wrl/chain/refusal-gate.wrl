@@ -1,8 +1,8 @@
-; REFUSAL GATE — the page is a Door; material must pass rg_sufficiency (a relay) to open it. A Door
-; with nothing sufficient behind it stays shut, and stays shut is a state the Film prints.
-[pulser:rg_request](every 2){sig_out}
+; REFUSAL GATE — the page is a Door; material must pass rg_sufficiency (a relay, and a router) to open it.
+; rg_in is the entry, fed by the evidence router.
+[relay:rg_in]{sig_in, sig_out}
 [relay:rg_sufficiency]{sig_in, sig_out}
 [door:rg_page]{sig_in}
 
-[rg_request] --sig--> [rg_sufficiency]
+[rg_in] --sig--> [rg_sufficiency]
 [rg_sufficiency] --sig--> [rg_page]

@@ -1,0 +1,111 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/orthogonal-persistence.wrl"
+ ],
+ "for_patterns": [
+  "orthogonal-persistence (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "217bb507f2ff409df5a15fa565bc19b4824699c962eb3ea40e2158a479c2b7f3",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:14:54.873Z",
+  "finished": "2026-09-11T20:15:31.782Z",
+  "host": "PX13",
+  "seconds": 35.175,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-2f7cb882544ba87c3d34a8d86297fe3104a73adf1a54ec4d0e0a9c0a8d5cb2d8",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 6,
+  "batches": []
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:7bf5841e7510168668794baef7b46bf4fa604fa23f7165e928252c90df30c4de",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:op_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=op_view,config=fixed",
+    "orb:op_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=op_locus,fault=0",
+    "pulser:op_clock:mode=periodic,p=3,phase=0,armed=0,done=0,nf=1",
+    "wire:w__op_clock__op_locus:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:2eeefc38f3b8ecbd72ec53dfbff232aac292548d520b9c91da810b224a66c4c2",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:op_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=op_view,config=fixed",
+    "orb:op_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=op_locus,fault=0",
+    "pulser:op_clock:mode=periodic,p=3,phase=0,armed=0,done=0,nf=3",
+    "wire:w__op_clock__op_locus:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:2758e7e95ae9fa34f69b0f5e900c9ac7549f09864cb05313bb1126fa426d2d5c",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:op_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=op_view,config=fixed",
+    "orb:op_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=op_locus,fault=0",
+    "pulser:op_clock:mode=periodic,p=3,phase=0,armed=0,done=0,nf=2",
+    "wire:w__op_clock__op_locus:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:d7533821cdffef91f32cffb7e31d58755aeb3d7c076dc6f162ac48ea6b89f459",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:op_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=op_view,config=fixed",
+    "orb:op_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=op_locus,fault=0",
+    "pulser:op_clock:mode=periodic,p=3,phase=0,armed=0,done=0,nf=1",
+    "wire:w__op_clock__op_locus:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:480b51586e6e1d3e9f0b2322390b5565b78a1f0d1ac1e62ec48a3b6ec694082f",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "spinner:op_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=op_view,config=fixed",
+    "orb:op_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=op_locus,fault=0",
+    "pulser:op_clock:mode=periodic,p=3,phase=0,armed=0,done=0,nf=3",
+    "wire:w__op_clock__op_locus:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:7c3662e20f95a2735f8242f76aee66b69fef6295a060825249120a3dc205b427",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "spinner:op_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=op_view,config=fixed",
+    "orb:op_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=op_locus,fault=0",
+    "pulser:op_clock:mode=periodic,p=3,phase=0,armed=0,done=0,nf=2",
+    "wire:w__op_clock__op_locus:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

@@ -110,6 +110,41 @@ const STENCILS = {
     st.anchors = Object.fromEntries(names.map((n) => [n, pos[n]])); st.anchors.off = { x: -80, y: 200 };
     return st;
   },
+  /* the circuit board: the whole world as a network. params.nodes / edges as for `world`; params.groups maps an
+     id prefix to a band id; params.bands = [{id,label}] top to bottom. Columns are signal depth across the whole
+     board (left → right); each band holds its own objects, stacked where a depth has several. Relays that fan out
+     are the routers, doors the switches, pulsers the clock domains. Bands render as rings behind the wiring. */
+  network(p = {}) {
+    const st = base(); const nodes = (p.nodes || []).filter((n) => n[0] !== 'Ledger'), edges = p.edges || [];
+    const names = nodes.map((n) => n[1]); const depth = Object.fromEntries(names.map((n) => [n, 0]));
+    for (let k = 0; k < names.length; k++) for (const [, a, b] of edges) if (depth[b] !== undefined && depth[a] !== undefined) depth[b] = Math.max(depth[b], depth[a] + 1);
+    const pfx = (n) => (n.includes('_') ? n.split('_')[0] : '·'); const groups = p.groups || {};
+    const bands = (p.bands || []).filter((b) => names.some((n) => groups[pfx(n)] === b.id));
+    const bandOf = (n) => groups[pfx(n)] || (bands[0] && bands[0].id);
+    const PITCH = 150, STACK = 62, X0 = 150, Y0 = 40, PAD = 34;
+    const maxCol = Math.max(0, ...names.map((n) => depth[n]));
+    const stackIdx = {}, stackSize = {};
+    const order = names.slice().sort((a, b) => ((p.rowOrder || []).indexOf(pfx(a)) - (p.rowOrder || []).indexOf(pfx(b))) || a.localeCompare(b));
+    for (const n of order) { const k = bandOf(n) + '/' + depth[n]; stackIdx[n] = stackSize[k] = (stackSize[k] || 0); stackSize[k]++; }
+    const bandTop = {}, bandH = {}; let y = Y0;
+    for (const b of bands) { const h = PAD * 2 + Math.max(1, ...names.filter((n) => bandOf(n) === b.id).map((n) => stackSize[bandOf(n) + '/' + depth[n]])) * STACK; bandTop[b.id] = y; bandH[b.id] = h; y += h + 14; }
+    st.W = Math.max(720, X0 + (maxCol + 1) * PITCH + 40); st.H = y + 44;
+    const role = Object.fromEntries(nodes.map((n) => [n[1], n[0]])); const pos = {};
+    for (const n of names) pos[n] = { x: X0 + depth[n] * PITCH, y: bandTop[bandOf(n)] + PAD + 18 + stackIdx[n] * STACK };
+    for (const b of bands) st.rings.push({ id: 'band-' + b.id, label: b.label, x: 16, y: bandTop[b.id], w: st.W - 32, h: bandH[b.id], state: 'idle', note: '' });
+    for (const n of names) st.stations.push({ id: n, x: pos[n].x, y: pos[n].y, label: n, state: 'idle', note: '', role: role[n], box: true, sub: role[n].toLowerCase(), compact: true });
+    if ((p.nodes || []).some((n) => n[0] === 'Ledger')) st.stations.push({ id: 'ledger', x: st.W - 120, y: 18, label: 'ledger · receipts', state: 'idle', note: '', role: 'Ledger', box: true, count: 0 });
+    const bw = (n) => Math.max(72, n.length * 6.6 + 14);
+    for (const [kind, a, b] of edges) if (pos[a] && pos[b]) {
+      const sx = pos[a].x + bw(a) / 2, sy = pos[a].y, tx = pos[b].x - bw(b) / 2, ty = pos[b].y; let points, link = false;
+      if (Math.abs(sy - ty) < 1) points = [[sx, sy], [tx, ty]];
+      else if (tx - sx > 30) { const far = bandOf(a) !== bandOf(b); const xm = far ? sx + 12 + (stackIdx[a] % 3) * 6 : sx + (tx - sx) / 2; points = [[sx, sy], [xm, sy], [xm, ty], [tx, ty]]; link = far; }
+      else { const xm = sx + 14, xn = tx - 14; points = [[sx, sy], [xm, sy], [xm, ty], [xn, ty], [tx, ty]]; link = bandOf(a) !== bandOf(b); }
+      st.wires.push({ id: `${a}->${b}`, points, x1: sx, y1: sy, x2: tx, y2: ty, label: '', note: '', thin: true, link });
+    }
+    st.anchors = Object.fromEntries(names.map((n) => [n, pos[n]])); st.anchors.off = { x: -80, y: 200 };
+    return st;
+  },
   /* concentric boundaries: params.rings = [{id,label}] outermost first; a locus can sit in any ring */
   nest(p = {}) {
     const st = base(); const rings = p.rings || [{ id: 'r0', label: 'outer' }, { id: 'r1', label: 'inner' }];
@@ -182,7 +217,7 @@ export function svg(st, { thumb = false, caption = true } = {}) {
   }
   for (const s of st.slots) { const w = s.wide ? 150 : 60; o.push(`<g class="sf-slot ${s.state}"><rect x="${s.x - w / 2}" y="${s.y - 16}" width="${w}" height="32" rx="6"/><text x="${s.x}" y="${s.y + 5}" text-anchor="middle">${esc(s.label)}</text></g>`); }
   for (const m of st.meters) { const pct = Math.max(0, Math.min(1, m.value / m.max)); o.push(`<g class="sf-meter ${m.kind}"><text class="sf-label" x="${m.x}" y="${m.y - 6}">${esc(m.label)} · ${Math.round(pct * 100)}%</text><rect class="sf-track" x="${m.x}" y="${m.y}" width="${m.w}" height="10" rx="5"/><rect class="sf-fill" x="${m.x}" y="${m.y}" width="${(m.w * pct).toFixed(1)}" height="10" rx="5"/></g>`); }
-  for (const s of st.stations) { const bw = Math.max(80, (s.label || '').length * 7 + 16); o.push(s.box ? `<g class="sf-station ${s.state} ${s.role || ''}"><rect x="${s.x - bw / 2}" y="${s.y - 22}" width="${bw}" height="44" rx="6"/><text x="${s.x}" y="${s.y - 2}" text-anchor="middle">${esc(s.label)}</text><text class="sf-count" x="${s.x}" y="${s.y + 15}" text-anchor="middle">${s.sub ? esc(s.sub) : s.role === 'Ledger' ? (s.count ? s.count + ' receipt(s)' : 'no receipts') : (s.count ? s.count + ' pending' : 'empty')}</text></g>` : `<g class="sf-station ${s.state}"><path d="M${s.x} ${s.y - 34} L${s.x + Math.max(44, s.label.length * 5 + 22)} ${s.y} L${s.x} ${s.y + 34} L${s.x - Math.max(44, s.label.length * 5 + 22)} ${s.y} Z"/><text x="${s.x}" y="${s.y + 5}" text-anchor="middle">${esc(s.label)}</text></g>`); if (s.note) o.push(`<text class="sf-note ${s.state} ${s.box ? 'small' : ''}" x="${s.x}" y="${s.y + (s.box ? 38 : 56)}" text-anchor="middle">${esc(s.note)}</text>`); }
+  for (const s of st.stations) { const bw = s.compact ? Math.max(72, (s.label || '').length * 6.6 + 14) : Math.max(80, (s.label || '').length * 7 + 16); o.push(s.box ? `<g class="sf-station ${s.state} ${s.role || ''} ${s.compact ? 'compact' : ''}"><title>${esc(s.label)}${s.note ? ' — ' + esc(s.note) : ''}</title><rect x="${s.x - bw / 2}" y="${s.y - (s.compact ? 17 : 22)}" width="${bw}" height="${s.compact ? 34 : 44}" rx="6"/><text x="${s.x}" y="${s.y - (s.compact ? 1 : 2)}" text-anchor="middle">${esc(s.label)}</text><text class="sf-count" x="${s.x}" y="${s.y + (s.compact ? 11 : 15)}" text-anchor="middle">${s.sub ? esc(s.sub) : s.role === 'Ledger' ? (s.count ? s.count + ' receipt(s)' : 'no receipts') : (s.count ? s.count + ' pending' : 'empty')}</text></g>` : `<g class="sf-station ${s.state}"><path d="M${s.x} ${s.y - 34} L${s.x + Math.max(44, s.label.length * 5 + 22)} ${s.y} L${s.x} ${s.y + 34} L${s.x - Math.max(44, s.label.length * 5 + 22)} ${s.y} Z"/><text x="${s.x}" y="${s.y + 5}" text-anchor="middle">${esc(s.label)}</text></g>`); if (s.note && !s.compact) o.push(`<text class="sf-note ${s.state} ${s.box ? 'small' : ''}" x="${s.x}" y="${s.y + (s.box ? 38 : 56)}" text-anchor="middle">${esc(s.note)}</text>`); }
   for (const l of st.loci) o.push(`<g class="sf-locus ${l.state}" data-id="${esc(l.id)}" transform="translate(${l.x.toFixed(1)} ${l.y.toFixed(1)})"><circle r="${l.r}"/>${l.label ? `<text class="sf-id" y="5" text-anchor="middle">${esc(l.label)}</text>` : ''}${l.tag ? (l.tagAbove ? `<text class="sf-tag" y="-${l.r + 8}" text-anchor="middle">${esc(l.tag)}</text>` : `<text class="sf-tag" x="${l.x < W / 2 ? -(l.r + 8) : l.r + 8}" y="4" text-anchor="${l.x < W / 2 ? 'end' : 'start'}">${esc(l.tag)}</text>`) : ''}</g>`);
   if (!thumb && caption && st.caption) o.push(`<text class="sf-caption" x="${W / 2}" y="30" text-anchor="middle">${esc(st.caption)}</text>`);
   o.push('</svg>');
@@ -251,7 +286,7 @@ export const CSS = `
 .sf-station.admitted path,.sf-station.admitted rect{stroke:var(--data,#0a6e62);fill:var(--data-soft,rgba(10,110,98,.09))}.sf-station.refused path,.sf-station.refused rect{stroke:var(--rose,#c02a5f);fill:rgba(192,42,95,.08)}
 .sf-station.indeterminate path,.sf-station.indeterminate rect{stroke:var(--warn,#96600b);fill:rgba(150,96,11,.10);stroke-dasharray:5 3}.sf-note.indeterminate{fill:var(--warn,#96600b)}
 .sf-ring rect{fill:none;stroke:var(--line2,#d8cfba);stroke-width:1.5}.sf-ring text{font:11px var(--mono,monospace);fill:var(--fg3,#666);letter-spacing:.06em;text-transform:uppercase}.sf-ring.held rect{stroke:var(--acc,#6d3bd4);fill:var(--acc-soft,rgba(109,59,212,.05))}.sf-ring.held text{fill:var(--acc,#6d3bd4)}.sf-ring.refused rect{stroke:var(--rose,#c02a5f)}.sf-ring.refused text{fill:var(--rose,#c02a5f)}.sf-ring.admitted rect{stroke:var(--data,#0a6e62)}.sf-ring.admitted text{fill:var(--data,#0a6e62)}
-.sf-station .sf-count{font:10px var(--mono,monospace);fill:var(--fg3,#555)}.sf-station.Pulser rect,.sf-station.Relay rect,.sf-station.Door rect,.sf-station.Spinner rect,.sf-station.Orb rect{stroke-width:1.2}.sf-station.Pulser rect{stroke:var(--acc,#6d3bd4)}.sf-station.Door rect{stroke:var(--rose,#c02a5f)}.sf-station.Orb rect{stroke:var(--data,#0a6e62)}
+.sf-station .sf-count{font:10px var(--mono,monospace);fill:var(--fg3,#555)}.sf-station.compact text{font-size:10.5px}.sf-station.compact .sf-count{font-size:8.5px}.sf-station.compact.admitted rect{fill:var(--data-soft,rgba(10,110,98,.18))}.sf-station.compact.refused rect{fill:rgba(192,42,95,.16)}.sf-station.Pulser rect,.sf-station.Relay rect,.sf-station.Door rect,.sf-station.Spinner rect,.sf-station.Orb rect{stroke-width:1.2}.sf-station.Pulser rect{stroke:var(--acc,#6d3bd4)}.sf-station.Door rect{stroke:var(--rose,#c02a5f)}.sf-station.Orb rect{stroke:var(--data,#0a6e62)}
 .sf-note{font:12px var(--mono,monospace);fill:var(--fg2,#333)}.sf-note.refused{fill:var(--rose,#c02a5f)}.sf-note.admitted{fill:var(--data,#0a6e62)}
 .sf-wire{stroke:var(--fg3,#555);stroke-width:2;stroke-dasharray:6 4;fill:none;color:var(--fg3,#555)}.sf-wire.on{color:var(--acc,#6d3bd4)}.sf-wire.thin{stroke-width:1.4;stroke-dasharray:4 3}.sf-wire.link{stroke-width:1;opacity:.55}.sf-wire.link.on{stroke-width:1.6;opacity:.8}.sf-label.small{font-size:10px}.sf-note.small{font-size:10.5px}.sf-stage{cursor:grab;touch-action:none}.sf-stage.grabbing{cursor:grabbing}.sf-zoom{display:inline-flex;gap:.2rem;margin-left:.4rem}.sf-zoom button{padding:.2rem .5rem}.sf-hint{font:11px var(--ui,system-ui);color:var(--fg3,#777);margin-left:.4rem}.sf-wire.on{stroke:var(--acc,#6d3bd4);stroke-width:3;stroke-dasharray:none}.sf-label{font:12px var(--ui,system-ui);fill:var(--fg2,#333)}
 .sf-meter .sf-track{fill:var(--ink3,#fff);stroke:var(--line2,#d8cfba)}.sf-meter.util .sf-fill{fill:var(--warn,#96600b);transition:width .7s}.sf-meter.prog .sf-fill{fill:var(--data,#0a6e62);transition:width .7s}

@@ -1,9 +1,9 @@
-; CROSS-MACHINE SKILL REPLAY — one signal, two machines (replicated relays), two doors that open at
-; the same epoch. The trace is what crosses; the machines are `*2`.
-[pulser:cx_skill](every 1){sig_out}
+; CROSS-MACHINE SKILL REPLAY — one signal, two machines (replicated relays), two doors that open at the same
+; epoch. cx_in is the entry; the machines are `*2`; cx_machine0 routes on to Part V.
+[relay:cx_in]{sig_in, sig_out}
 [relay:cx_machine*2]{sig_in, sig_out}
 [door:cx_replay*2]{sig_in}
 
-[cx_skill] --sig--> {[cx_machine0], [cx_machine1]}
+[cx_in] --sig--> {[cx_machine0], [cx_machine1]}
 [cx_machine0] --sig--> [cx_replay0]
 [cx_machine1] --sig--> [cx_replay1]

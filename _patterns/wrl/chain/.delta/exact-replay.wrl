@@ -1,7 +1,7 @@
 profile forge.world.core.v1
 
-; EXACT REPLAY — a relay chain into a Door. The film runner reduces this world TWICE and the build
-; refuses unless both runs produce identical Film hashes epoch for epoch.
+; EXACT REPLAY — its OWN clock domain into a relay chain and a Door; the runner reduces this world TWICE and
+; the build refuses unless both runs produce identical Film hashes. er_a is Part V's router in the chain.
 [pulser:er_clock](every 2){sig_out}
 [relay:er_a]{sig_in, sig_out}
 [relay:er_b]{sig_in, sig_out}

@@ -1,10 +1,14 @@
 profile forge.world.core.v1
 
-; STATE DOES NOT GRANT AUTHORITY — sd_state has state (a rotor) and no grant (not configurable). The
-; claim at epoch 1 is Rejected(not_configurable): the fact about the locus never became a power.
-[pulser:sd_clock](every 1){sig_out}
+; STATE DOES NOT GRANT AUTHORITY — sd_state has state (a rotor) and no grant (not configurable). The claim at
+; epoch 1 is Rejected(not_configurable). sd_in is the entry, fed by the established router.
+[relay:sd_in]{sig_in, sig_out}
 [spinner:sd_state](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
 [orb:sd_view]{pose}
 
-[sd_clock] --sig--> [sd_state]
+[sd_in] --sig--> [sd_state]
 [sd_state] --socket--> [sd_view]
+
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:sd_bench](every 1){sig_out}
+[sd_bench] --sig--> [sd_in]

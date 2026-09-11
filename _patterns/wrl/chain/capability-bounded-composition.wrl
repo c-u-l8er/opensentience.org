@@ -1,9 +1,9 @@
 ; CAPABILITY-BOUNDED COMPOSITION — cb_fixed is feasible to write to and NOT permitted (no `configurable`):
-; the claim at epoch 1 is Rejected(not_configurable). cb_gate is the Door the same signal must pass.
-[pulser:cb_clock](every 1){sig_out}
+; the claim at epoch 1 is Rejected(not_configurable). cb_in fans out to the spinner and to the gate (a Door).
+[relay:cb_in]{sig_in, sig_out}
 [spinner:cb_fixed](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
 [orb:cb_view]{pose}
 [door:cb_gate]{sig_in}
 
-[cb_clock] --sig--> {[cb_fixed], [cb_gate]}
+[cb_in] --sig--> {[cb_fixed], [cb_gate]}
 [cb_fixed] --socket--> [cb_view]

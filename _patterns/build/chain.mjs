@@ -13,9 +13,10 @@ export function order() {
   return D.families.flatMap((f) => D.patterns.filter((p) => p.family === f)).map((p) => p.id);
 }
 export function fragment(id) { const f = join(CHAIN, id + '.wrl'); return existsSync(f) ? readFileSync(f, 'utf8') : null; }
+export function bench(id) { const f = join(CHAIN, id + '.bench.wrl'); return existsSync(f) ? readFileSync(f, 'utf8') : ''; }
 export function links(id) { const f = join(CHAIN, id + '.links.wrl'); return existsSync(f) ? readFileSync(f, 'utf8') : ''; }
 export function scenario(id) { const f = join(CHAIN, id + '.scenario.json'); return existsSync(f) ? JSON.parse(readFileSync(f, 'utf8')) : null; }
-export const deltaSource = (id) => PROFILE + '\n' + fragment(id);
+export const deltaSource = (id) => PROFILE + '\n' + fragment(id) + (bench(id) ? '\n' + bench(id) : '');
 export function cumulativeSource(ids) { return PROFILE + ids.map((id) => '\n' + fragment(id) + (links(id) ? '\n' + links(id) : '')).join(''); }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const W = await import(join(ROOT, 'WRL/wrl.js'));

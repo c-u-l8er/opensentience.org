@@ -1,0 +1,3 @@
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:sd_bench](every 1){sig_out}
+[sd_bench] --sig--> [sd_in]

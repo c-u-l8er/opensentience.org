@@ -1,0 +1,2 @@
+; slot 0 of the multiplexer routes to home B
+[cm_slot0] --sig--> [pp_in]

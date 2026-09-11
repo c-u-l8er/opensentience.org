@@ -1,0 +1,94 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/projection-not-duplication.wrl"
+ ],
+ "for_patterns": [
+  "projection-not-duplication (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "19c322c96d94c488359eaee2a4099afaf0784dfd7c8d30a1c05aed3fa31176b5",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:10:00.912Z",
+  "finished": "2026-09-11T20:10:51.817Z",
+  "host": "PX13",
+  "seconds": 46.331,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-7e9b02088e689d96680477ca165ad6e8f6ae575d47913b7fbf1f7c189a58648b",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:fb2c4975b7bdcba090926926df7373ad28b422f6646764bb3abc8a99431e238a",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:pj_artifact:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pj_view_a,config=fixed",
+    "orb:pj_view_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=pj_artifact,fault=0",
+    "orb:pj_view_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=pj_artifact,fault=0",
+    "pulser:pj_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:pj_in:cur_out=0,next_out=1",
+    "wire:w__pj_bench__pj_in:cur=1,nxt=1",
+    "wire:w__pj_in__pj_artifact:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:4d885cf88f3378fffe3454d8d9b1be3cfb4e4d773a58a927c5e7bf5d0e257750",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:pj_artifact:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pj_view_a,config=fixed",
+    "orb:pj_view_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=pj_artifact,fault=0",
+    "orb:pj_view_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=pj_artifact,fault=0",
+    "pulser:pj_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:pj_in:cur_out=1,next_out=1",
+    "wire:w__pj_bench__pj_in:cur=1,nxt=1",
+    "wire:w__pj_in__pj_artifact:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:e37c4d4b30741d10519a387c22f571c197c0a8c2c903535f44d15cfb5243b4e2",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:pj_artifact:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pj_view_a,config=fixed",
+    "orb:pj_view_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=pj_artifact,fault=0",
+    "orb:pj_view_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=pj_artifact,fault=0",
+    "pulser:pj_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:pj_in:cur_out=1,next_out=1",
+    "wire:w__pj_bench__pj_in:cur=1,nxt=1",
+    "wire:w__pj_in__pj_artifact:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:ce88a51cbe43b6b1500a2ab79acdc0c2ddba06d2957fc45abb2e07eaf04b077a",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:pj_artifact:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pj_view_a,config=fixed",
+    "orb:pj_view_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=pj_artifact,fault=0",
+    "orb:pj_view_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=pj_artifact,fault=0",
+    "pulser:pj_bench:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:pj_in:cur_out=1,next_out=1",
+    "wire:w__pj_bench__pj_in:cur=1,nxt=1",
+    "wire:w__pj_in__pj_artifact:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

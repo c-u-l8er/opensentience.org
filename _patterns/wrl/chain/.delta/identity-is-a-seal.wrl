@@ -1,10 +1,14 @@
 profile forge.world.core.v1
 
 ; IDENTITY IS A SEAL — the named rotor `identity` is the unit; the world's id is the hash of this text's
-; canonical form. Change a lane and the seal moves; move the file and it does not.
-[pulser:is_clock](every 2){sig_out}
+; canonical form. is_in is the entry; in the chain it is fed by the machine router of chapter 3.
+[relay:is_in]{sig_in, sig_out}
 [spinner:is_seal](w=16, n=8, rotor=identity){sig_in, socket}
 [orb:is_id]{pose}
 
-[is_clock] --sig--> [is_seal]
+[is_in] --sig--> [is_seal]
 [is_seal] --socket--> [is_id]
+
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:is_bench](every 1){sig_out}
+[is_bench] --sig--> [is_in]

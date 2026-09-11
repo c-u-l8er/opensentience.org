@@ -1,8 +1,8 @@
-; INTERVENTION PROVENANCE — two writers (w=7, w=9) intervene on the same locus; every receipt names
-; its writer and sequence. Attribution is in the Film, not in a log beside it.
-[pulser:ip_clock](every 1){sig_out}
+; INTERVENTION PROVENANCE — two writers (w=7, w=9) intervene on the same locus; every receipt names its writer
+; and sequence. ip_in is the entry, fed by the sufficiency router.
+[relay:ip_in]{sig_in, sig_out}
 [spinner:ip_world](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
 [orb:ip_view]{pose}
 
-[ip_clock] --sig--> [ip_world]
+[ip_in] --sig--> [ip_world]
 [ip_world] --socket--> [ip_view]

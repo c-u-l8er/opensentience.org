@@ -1,0 +1,174 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/exact-replay.wrl"
+ ],
+ "for_patterns": [
+  "exact-replay (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "763c288d3cd4d111fe9952e1e1aae84ac83bfaf94fd534b25efa1370f4b3e97a",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T20:15:32.101Z",
+  "finished": "2026-09-11T20:15:32.202Z",
+  "host": "PX13",
+  "seconds": 0.004,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-bccd2ab7d2bba016be4313f2d890cc2bf6299327626dce84454a14cbf7c3bb36",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 8,
+  "batches": [],
+  "determinism": true
+ },
+ "determinism": {
+  "second_run_hashes": [
+   "sha256:9bc2fb1e3393d3f92e469305feb057610e9d758d4d346f56b02db4a66e513934",
+   "sha256:a1900b684b75c9a505e12983f146e3405370754f04f669422a5d5f50acc04c0d",
+   "sha256:f22f752034b4dab181a407a9bcff7e6dfec3dd6eab195f8619ca0fe6695e68df",
+   "sha256:edc109cd1ad8a0bc3668655f7e27e68c1d7ed92f9f3404d75624f47b16ebed3a",
+   "sha256:91ce47fd3177360e53a07021ed9264bb8fd1368583a1d2edd00efae097e3e86b",
+   "sha256:7cf87244cc75545564b08b65c0c166751def0cc75bbf92d89f1a6206ec3e96fe",
+   "sha256:e5602e7da4df2f0d8b2c03a1a2094a7645897e945a1f2f4049eee0d7bd28eae0",
+   "sha256:2e1faafa9e22aa15c157674452aedb92bbc0df0c393a26a314e57641cf4d0827"
+  ],
+  "identical": true
+ },
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:9bc2fb1e3393d3f92e469305feb057610e9d758d4d346f56b02db4a66e513934",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "pulser:er_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:er_player:open=0,next_open=0",
+    "relay:er_a:cur_out=0,next_out=0",
+    "relay:er_b:cur_out=0,next_out=0",
+    "wire:w__er_a__er_b:cur=0,nxt=0",
+    "wire:w__er_b__er_player:cur=0,nxt=0",
+    "wire:w__er_clock__er_a:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:a1900b684b75c9a505e12983f146e3405370754f04f669422a5d5f50acc04c0d",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "pulser:er_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:er_player:open=0,next_open=0",
+    "relay:er_a:cur_out=0,next_out=1",
+    "relay:er_b:cur_out=0,next_out=0",
+    "wire:w__er_a__er_b:cur=0,nxt=0",
+    "wire:w__er_b__er_player:cur=0,nxt=0",
+    "wire:w__er_clock__er_a:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:f22f752034b4dab181a407a9bcff7e6dfec3dd6eab195f8619ca0fe6695e68df",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "pulser:er_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:er_player:open=0,next_open=0",
+    "relay:er_a:cur_out=1,next_out=0",
+    "relay:er_b:cur_out=0,next_out=0",
+    "wire:w__er_a__er_b:cur=0,nxt=1",
+    "wire:w__er_b__er_player:cur=0,nxt=0",
+    "wire:w__er_clock__er_a:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:edc109cd1ad8a0bc3668655f7e27e68c1d7ed92f9f3404d75624f47b16ebed3a",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "pulser:er_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:er_player:open=0,next_open=0",
+    "relay:er_a:cur_out=0,next_out=1",
+    "relay:er_b:cur_out=0,next_out=1",
+    "wire:w__er_a__er_b:cur=1,nxt=0",
+    "wire:w__er_b__er_player:cur=0,nxt=0",
+    "wire:w__er_clock__er_a:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 5,
+   "film_hash": "sha256:91ce47fd3177360e53a07021ed9264bb8fd1368583a1d2edd00efae097e3e86b",
+   "film": [
+    "FILM v0.7",
+    "t=5",
+    "pulser:er_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:er_player:open=0,next_open=0",
+    "relay:er_a:cur_out=1,next_out=0",
+    "relay:er_b:cur_out=1,next_out=0",
+    "wire:w__er_a__er_b:cur=0,nxt=1",
+    "wire:w__er_b__er_player:cur=0,nxt=1",
+    "wire:w__er_clock__er_a:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 6,
+   "film_hash": "sha256:7cf87244cc75545564b08b65c0c166751def0cc75bbf92d89f1a6206ec3e96fe",
+   "film": [
+    "FILM v0.7",
+    "t=6",
+    "pulser:er_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:er_player:open=0,next_open=1",
+    "relay:er_a:cur_out=0,next_out=1",
+    "relay:er_b:cur_out=0,next_out=1",
+    "wire:w__er_a__er_b:cur=1,nxt=0",
+    "wire:w__er_b__er_player:cur=1,nxt=0",
+    "wire:w__er_clock__er_a:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 7,
+   "film_hash": "sha256:e5602e7da4df2f0d8b2c03a1a2094a7645897e945a1f2f4049eee0d7bd28eae0",
+   "film": [
+    "FILM v0.7",
+    "t=7",
+    "pulser:er_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:er_player:open=1,next_open=0",
+    "relay:er_a:cur_out=1,next_out=0",
+    "relay:er_b:cur_out=1,next_out=0",
+    "wire:w__er_a__er_b:cur=0,nxt=1",
+    "wire:w__er_b__er_player:cur=0,nxt=1",
+    "wire:w__er_clock__er_a:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 8,
+   "film_hash": "sha256:2e1faafa9e22aa15c157674452aedb92bbc0df0c393a26a314e57641cf4d0827",
+   "film": [
+    "FILM v0.7",
+    "t=8",
+    "pulser:er_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:er_player:open=0,next_open=1",
+    "relay:er_a:cur_out=0,next_out=1",
+    "relay:er_b:cur_out=0,next_out=1",
+    "wire:w__er_a__er_b:cur=1,nxt=0",
+    "wire:w__er_b__er_player:cur=1,nxt=0",
+    "wire:w__er_clock__er_a:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

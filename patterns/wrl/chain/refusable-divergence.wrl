@@ -1,8 +1,8 @@
-; REFUSABLE DIVERGENCE — a claim that names a target the world does not have is Rejected(unknown_spinner)
-; by name, with a receipt; the world's own seal is what the receiver recomputes.
-[pulser:rd_clock](every 1){sig_out}
+; REFUSABLE DIVERGENCE — a claim naming a target the world does not have is Rejected(unknown_spinner) by
+; name, with a receipt. rd_in is the entry, fed by the grant router.
+[relay:rd_in]{sig_in, sig_out}
 [spinner:rd_real](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
 [orb:rd_view]{pose}
 
-[rd_clock] --sig--> [rd_real]
+[rd_in] --sig--> [rd_real]
 [rd_real] --socket--> [rd_view]

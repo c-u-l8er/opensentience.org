@@ -1,7 +1,7 @@
 profile forge.world.core.v1
 
-; THREE SIZES OF WORLD — this fragment is a WRL GRAPH (the smallest size). ts_version fires ONCE at
-; epoch 3: a version is a root taken at an instant. The chain so far is the graph; its seal is a wrl_head.
+; THREE SIZES OF WORLD — this fragment is a WRL GRAPH (the smallest size). ts_version fires ONCE at epoch 3:
+; a version is a root taken at an instant. The chain so far is the graph; its seal is a wrl_head.
 [pulser:ts_version](once at 3){sig_out}
 [door:ts_root]{sig_in}
 

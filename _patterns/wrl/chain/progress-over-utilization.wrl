@@ -1,5 +1,6 @@
-; PROGRESS OVER UTILIZATION — pu_busy fires every epoch into three relays that only relocate the
-; signal; pu_progress fires every 2 and turns a rotor. Busy is not the same as admitted.
+; PROGRESS OVER UTILIZATION — TWO CLOCK DOMAINS: pu_busy fires every epoch into three relays that only
+; relocate the signal; pu_progress fires every 2 and turns a rotor. Busy is not the same as admitted.
+; pu_hop1 is also Part III's router in the chain.
 [pulser:pu_busy](every 1){sig_out}
 [relay:pu_hop*3]{sig_in, sig_out}
 [door:pu_sink]{sig_in}

@@ -1,11 +1,16 @@
 profile forge.world.core.v1
 
-; EVIDENCE BEFORE CLAIM — a claim at epoch 2 becomes a receipt with an outcome, in the Film, before
-; anything downstream may cite it. ec_ledger is a Door with an open port: the chain feeds it (links).
-[pulser:ec_clock](every 1){sig_out}
+; EVIDENCE BEFORE CLAIM — a claim at epoch 2 becomes a receipt with an outcome, in the Film, before anything
+; downstream may cite it. ec_in is the entry and a router (chapter 29 draws from it); ec_ledger is a Door
+; with an open port the chain feeds from the root clock.
+[relay:ec_in]{sig_in, sig_out}
 [spinner:ec_subject](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
 [orb:ec_witness]{pose}
 [door:ec_ledger]{sig_in}
 
-[ec_clock] --sig--> [ec_subject]
+[ec_in] --sig--> [ec_subject]
 [ec_subject] --socket--> [ec_witness]
+
+; TEST BENCH — drives this chapter's entry alone; the chain replaces it with a wire from an earlier chapter
+[pulser:ec_bench](every 1){sig_out}
+[ec_bench] --sig--> [ec_in]
