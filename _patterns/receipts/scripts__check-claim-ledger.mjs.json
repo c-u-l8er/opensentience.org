@@ -1,0 +1,34 @@
+{
+  "kind": "PATTERN_WITNESS_RECEIPT",
+  "version": 1,
+  "witness": {
+    "path": "scripts/check-claim-ledger.mjs",
+    "cmd": "node scripts/check-claim-ledger.mjs",
+    "cwd": ".",
+    "shape": "side-effect",
+    "repo": "."
+  },
+  "source_identity": {
+    "sha256": "33e6af41713b45bee9d581fc069dd614a0ca831f985cb3ee51f84f0bdee88064",
+    "repo_head": "92d99bf0f69f23bafb2dad7b1312ed2f3beb2164"
+  },
+  "execution_identity": {
+    "started": "2026-09-11T15:26:22.369Z",
+    "finished": "2026-09-11T15:26:22.542Z",
+    "host": "PX13",
+    "exit": 0,
+    "signal": null,
+    "timed_out": false
+  },
+  "for_patterns": [
+    "evidence-before-claim"
+  ],
+  "output_tail": [
+    "",
+    "2 note(s) — allowed, but worth seeing:",
+    "  ESC-UNIV: PROVED claim on cell 24, which is \"sketched\" — result stated, not shipped",
+    "  ESC-N: PROVED claim on cell 24, which is \"sketched\" — result stated, not shipped",
+    "",
+    "✓ every claim names a witness that exists, every cell binding resolves, and no status contradicts the table."
+  ]
+}

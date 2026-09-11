@@ -1,0 +1,32 @@
+{
+  "kind": "PATTERN_WITNESS_RECEIPT",
+  "version": 1,
+  "witness": {
+    "path": "WRL/test/conformance.mjs",
+    "cmd": "node test/conformance.mjs",
+    "cwd": "WRL",
+    "shape": "side-effect",
+    "repo": "WRL"
+  },
+  "source_identity": {
+    "sha256": "e1f1e313eefe0001dc23d95da90011a36596924915d185ce6b1171219ef1925c",
+    "repo_head": "32160fec77a13ad152176fed3001b0afbdebee42"
+  },
+  "execution_identity": {
+    "started": "2026-09-11T15:25:45.285Z",
+    "finished": "2026-09-11T15:25:45.592Z",
+    "host": "PX13",
+    "exit": 0,
+    "signal": null,
+    "timed_out": false
+  },
+  "for_patterns": [
+    "identity-is-a-seal",
+    "refusable-divergence",
+    "meaning-is-a-hash"
+  ],
+  "output_tail": [
+    "924 passed, 0 failed (70 annotated doc blocks of 115 swept, 26/26 capabilities cited)",
+    "  not-current: 9 complete world(s), 54 fragment(s) -- a fragment's non-acceptance is weak evidence, and needs a fixture context to become a positive test when its capability ships"
+  ]
+}

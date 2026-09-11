@@ -1,0 +1,34 @@
+{
+  "kind": "PATTERN_WITNESS_RECEIPT",
+  "version": 1,
+  "witness": {
+    "path": "AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
+    "cmd": "node test/compose-laws.mjs",
+    "cwd": "AmpersandBoxDesign/box-and-box",
+    "shape": "suite",
+    "repo": "AmpersandBoxDesign"
+  },
+  "source_identity": {
+    "sha256": "06726c3fb022f31e7b27eb7159c731fd9ecd349405dbc698e84090914856a19b",
+    "repo_head": "e41e5fab63c19a3671bf417a6949e10a27782830"
+  },
+  "execution_identity": {
+    "started": "2026-09-11T15:25:45.724Z",
+    "finished": "2026-09-11T15:26:16.293Z",
+    "host": "PX13",
+    "exit": 0,
+    "signal": null,
+    "timed_out": false
+  },
+  "for_patterns": [
+    "refusing-join"
+  ],
+  "output_tail": [
+    "  ✗ CP5 the |> floor is ASSOCIATION-INVARIANT: isZero((a|>b)|>c) === isZero(a|>(b|>c)) — FALSIFIED @trial 18 (known gap)  π=[learn, route, learn] → (a|>b)|>c 0̲, a|>(b|>c) live",
+    "  ✗ CP6 NO backward execution step survives |>, in either association — FALSIFIED @trial 7 (known gap)  π=[act, retrieve, act] has a backward step yet survives: (a|>b)|>c 0̲, a|>(b|>c) LIVE",
+    "  ✗ CP7 &-operand order does not change a downstream |> floor: isZero((a&b)|>c) === isZero((b&a)|>c) — FALSIFIED @trial 8 (known gap)  π=[retrieve, act, route] → (a&b)|>c LIVE, (b&a)|>c 0̲ (& is \"commutative\")",
+    "────────────────────────────────────────────────────",
+    "✓ all 101 enforced CC2 compose laws hold — 100 suite + 1 anchor (a brick of bricks is a brick).",
+    "· 3 known gap(s) still open (xfail) — see the-residency/EVIDENCE/algebra-finding.md."
+  ]
+}

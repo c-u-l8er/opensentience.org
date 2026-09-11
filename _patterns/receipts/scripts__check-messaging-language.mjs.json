@@ -1,0 +1,32 @@
+{
+  "kind": "PATTERN_WITNESS_RECEIPT",
+  "version": 1,
+  "witness": {
+    "path": "scripts/check-messaging-language.mjs",
+    "cmd": "node scripts/check-messaging-language.mjs",
+    "cwd": ".",
+    "shape": "lint",
+    "repo": "."
+  },
+  "source_identity": {
+    "sha256": "4c1baac1ee7b0a3985fc5d8bc206009f42b5b114bf378797059ecdf873ec0d04",
+    "repo_head": "92d99bf0f69f23bafb2dad7b1312ed2f3beb2164"
+  },
+  "execution_identity": {
+    "started": "2026-09-11T15:27:41.066Z",
+    "finished": "2026-09-11T15:27:41.240Z",
+    "host": "PX13",
+    "exit": 0,
+    "signal": null,
+    "timed_out": false
+  },
+  "for_patterns": [
+    "record-at-a-boundary"
+  ],
+  "output_tail": [
+    "messaging language — 6 rules over 10 declared targets",
+    "",
+    "✓ no retired formulation is live · 291575 phrase checks",
+    "\u001b[2m  AGENCY.md governed to its history marker\u001b[0m"
+  ]
+}

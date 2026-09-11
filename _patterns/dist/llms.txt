@@ -1,0 +1,49 @@
+# Unboxed Patterns — registry (P1, derived 2026-09-11)
+# 32 records · 13 WITNESSED · 14 STATED · 3 PROPOSED · 12 anti-patterns. Labels are derived by build.mjs, never typed. WITNESSED = a recorded run of a check on these exact bytes exists at rung ≥ in_tree.
+
+- active-locus [definition] (locus) — (no invariant)
+- record-at-a-boundary [WITNESSED] (locus) — A record that carries a locus's fields describes, certifies or bounds the locus at a named boundary; it does not observe, act, or participate in the transition relation. — witness: scripts/check-messaging-language.mjs (lint, in_tree, executed)
+- locus-is-not-its-carrier [STATED] (locus) — A Carrier is a replaceable execution embodiment; no property of the locus is defined in terms of the thread, core or process currently carrying it.
+- identity-is-a-seal [WITNESSED] (locus) — The identity of a semantic artifact is the hash of its canonical form, computed identically on every host; two artifacts with different futures have different seals. — witness: WRL/test/conformance.mjs (side-effect, in_tree, executed)
+- continuity-through-reconstruction [STATED] (locus) — A locus continues across a replacement iff a minimal causally established support set sufficient for each declared capability is retained; reconstruction from durable facts is continuity, not creation. — witness: scripts/emb-support.mjs (side-effect, in_tree, executed)
+- refusing-join [WITNESSED] (composition) — Composition of two independently produced assemblies either yields a composite that satisfies the compose laws or is refused naming the field that made it impossible; refusal is a valid outcome, not a failure. — witness: AmpersandBoxDesign/box-and-box/test/compose-laws.mjs (suite, in_tree, executed)
+- shared-observable [WITNESSED] (composition) — A canonical shared observable carries every state variable that can determine future behaviour within its declared domain; two states with different futures have different observable bytes. — witness: TRVM/forge/FORGE_BINDING_RESULTS.md (receipt, in_tree, executed)
+- semantic-membrane [PROPOSED] (composition) — A composed subsystem exposes exactly the state that affects externally observable future behaviour and no more (the ADEQUACY half of shared-observable, quotiented by EQUIVARIANCE).
+- capability-bounded-composition [WITNESSED] (composition) — An action is admissible only if it is feasible AND permitted under an explicit grant; feasibility never implies permission, and the safety floor cannot be weakened by composition. — witness: AmpersandBoxDesign/box-and-box/test/laws.mjs (suite, in_tree, executed)
+- carrier-confinement [STATED] (composition) — A Carrier is started with exactly the filesystem and descriptor authority its Worker's grant names; the descriptor seal is CLOSE_RANGE_CLOEXEC, never a blind close.
+- projection-not-duplication [WITNESSED] (composition) — Every view of a semantic artifact is derived from it by a declared, recomputable projection; a receiver recomputes the claims on the wire rather than trusting flags or prose. — witness: graphonomous/v2/test/projection_v1.test.mjs (side-effect, in_tree, executed)
+- refusable-divergence [WITNESSED] (composition) — An implementation divergence between two verifiers of the same artifact is refused by name rather than passing silently: no flags, no prose, only claims a receiver recomputes. — witness: WRL/test/conformance.mjs (side-effect, in_tree, executed)
+- progress-over-utilization [WITNESSED] (progress) — System health is measured by admitted semantic transitions per unit cost, never by carrier busyness; a Carrier may be fully busy while the loci it carries make no progress. — witness: computedriven/receipts/R7-EXECUTED.md (receipt, in_tree, executed)
+- dormant-but-alive [STATED] (progress) — A locus with no Carrier and pending mailbox depth is fully live: its admissibility and future transitions are defined, and readiness changes without executing a floor command. — witness: computedriven/receipts/R7.1-OPEN.md (spec, spec, NOT executed)
+- carrier-multiplexing [WITNESSED] (progress) — A population of loci larger than a floor's slot count is carried by rotating loci through slots; the slot is not the unit of identity and no locus is lost by not currently holding one. — witness: computedriven/receipts/R7-EXECUTED.md (receipt, in_tree, executed)
+- progress-aware-placement [STATED] (progress) — A locus is placed on the home where the semantic progress it can make is greatest, not where fairness among runnable carriers is greatest.
+- proven-quiescence [PROPOSED] (progress) — A system is quiescent only when a sweep establishes that no locus has admissible pending work; silence of the currently observed carriers is not completion.
+- three-valued-outcome [STATED] (progress) — Every attempted intervention resolves to exactly one of APPLIED, REFUSED, INDETERMINATE; INDETERMINATE is a fact about an attempt and is never rewritten.
+- orthogonal-persistence [STATED] (world) — Whether a locus's state is in cache, RAM, disk or a remote node is an implementation choice below its semantic level; code is identical for short-lived and long-lived state.
+- three-sizes-of-world [STATED] (world) — WORLD (the machine, 10 GB–10 TB), WORLD VERSION (a content-addressed root, KB) and WRL GRAPH (the semantic layer inside, KB–MB) are three sizes with three names; no field is called current_head — a head is always qualified.
+- world-boundary [PROPOSED] (world) — (no invariant)
+- meaning-is-a-hash [WITNESSED] (world) — The semantics of a WRL world is its SemanticArtifactID; a change of meaning is a change of hash and a preserved hash is a preserved meaning on every host, forever. — witness: WRL/test/conformance.mjs (side-effect, in_tree, executed)
+- exact-replay [STATED] (world) — A run of a sealed world is a film that replays byte-identically; any divergence on replay is a divergence of the world, not of the player.
+- cross-machine-skill-replay [STATED] (world) — A skill taught on machine A replays on machine B with the declared fidelity; the InteractionTrace is the unit of transfer. — witness: opensentience.org/_rebuild/data/receipts.json (card, in_tree, NOT executed)
+- confidentiality-under-content-addressing [STATED] (world) — (no invariant)
+- established-not-known [definition] (agency) — (no invariant)
+- state-does-not-grant-authority [WITNESSED] (agency) — Admissible action = f(established state, explicit grant, policy, contracts), never f(established state) alone; a fact about a locus never constitutes a power. — witness: scripts/check-messaging-language.mjs (lint, in_tree, executed)
+- evidence-before-claim [WITNESSED] (agency) — A public proposition is admitted only with a named witness that exists; a claim whose witness is absent, whose antecedent is missing, or whose cell binding contradicts the table is refused. — witness: scripts/check-claim-ledger.mjs (side-effect, in_tree, executed)
+- refusal-gate [STATED] (agency) — Below material sufficiency the page is not written and the reason is published; a check that can be satisfied by constructing its own argument is not a check.
+- intervention-provenance [STATED] (agency) — Every intervention on the world carries the identity of the Worker and generation that made it and the evidence it acted on; an intervention that cannot be attributed is not admissible.
+- descent-is-not-dependence [WITNESSED] (agency) — A lineage edge generates a candidate support set and establishes none; support for a capability requires ablation, intervention, runtime dependency or replacement replay, and provenance-only support is refused. — witness: scripts/emb-support.mjs (side-effect, in_tree, executed)
+- understanding-boundary [STATED] (agency) — A locus distinguishes what exists, what it can observe, what it believes, what it understands, what it intends and what it may alter; a claim in one register is never promoted to another without evidence.
+
+## anti-patterns
+- carrier-identity — Treating a thing as the process, thread or container currently executing it.
+- location-leak — Encoding physical placement into identity when placement is not semantic.
+- false-quiescence — Declaring completion because no currently observed worker has work.
+- invisible-state — Allowing state that affects future behaviour to remain outside the shared observable.
+- ambient-authority — Granting access to an environment because some part of it needs one capability.
+- replica-theater — Calling independent mutable copies 'the same thing'.
+- busywork-scheduling — Maximizing resource utilization while semantic progress stalls.
+- agent-omniscience — Letting an agent's claims exceed its evidence boundary.
+- number-in-two-places — A count or definition typed where it is displayed instead of derived from its source; the two drift.
+- record-is-locus — Inferring that X is a locus because X carries the locus fields.
+- provenance-as-support — Treating a lineage edge as causal support for a capability.
+- quiet-correction — Fixing a published error without retracting it by name where it was published.
