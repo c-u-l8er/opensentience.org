@@ -10,14 +10,14 @@
  "source_identity": {
   "world_sha256": "0041a47b7f28e8012e5f25139d04a633e3803c05753b8ffb84fd733b374968c5",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:19:07.496Z",
-  "finished": "2026-09-11T20:19:43.108Z",
+  "started": "2026-09-11T21:02:48.645Z",
+  "finished": "2026-09-11T21:03:34.720Z",
   "host": "PX13",
-  "seconds": 33.571,
-  "reducer": "ref_reduce"
+  "seconds": 2.561,
+  "reducer": "native_reduce"
  },
  "forge": {
   "semantic_artifact_id": "sem-d55eddde7b7de757e9ddf1d4e848e042591cd4342d84eff2b9cbbae1f1844262",
@@ -57,6 +57,12 @@
   ]
  },
  "determinism": null,
+ "parity": {
+  "other_reducer": "ref_reduce",
+  "seconds": 41.255,
+  "identical": true,
+  "semantic_artifact_id": "sem-d55eddde7b7de757e9ddf1d4e848e042591cd4342d84eff2b9cbbae1f1844262"
+ },
  "epochs": [
   {
    "t": 1,

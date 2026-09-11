@@ -46,13 +46,15 @@ def main(path, epochs):
             payload = ("SetRotor", c["target"], tuple(int(v) for v in c["rotor"])) if c["op"] == "SetRotor" else ("ResetFault", c["target"])
             raw[i].append(AD.mk_claim(c["writer"], c["seq"], payload))
     batches = FD.fold_batches(prog.artifact, raw, epoch0=1)
+    reducer_name = os.environ.get("FILM_REDUCER", "ref_reduce")
+    reduce_ = O.native_reduce if reducer_name == "native_reduce" else O.ref_reduce
     out = {"semantic_artifact_id": prog.semantic_artifact_id, "policy_id": seams.admit_policy_id,
-           "reducer": "ref_reduce", "scenario": scen, "epochs": []}
+           "reducer": reducer_name, "scenario": scen, "epochs": []}
     for e, batch in enumerate(batches):
         ep = 1 + e
         claim, cfg_map, resets = FD.admit_step_sealed(claim, batch, ep, view, seams)
         ec = C.enc_config_bundle(view, cfg_map, resets)
-        world = C.dec_state_v6(view, O.ref_reduce("((%s %s) %s)" % (step, ec, C.enc_state_v6(view, world))))
+        world = C.dec_state_v6(view, reduce_("((%s %s) %s)" % (step, ec, C.enc_state_v6(view, world))))
         film = FD.film_sealed(seams, *state_to_film_args_v6(view, world, ep), state=claim)
         text = film.decode()
         out["epochs"].append({"t": ep, "film_hash": "sha256:" + hashlib.sha256(film).hexdigest(),
@@ -68,7 +70,7 @@ def main(path, epochs):
             ep = 1 + e
             claim2, cfg_map, resets = FD.admit_step_sealed(claim2, batch, ep, view, seams)
             ec = C.enc_config_bundle(view, cfg_map, resets)
-            world2 = C.dec_state_v6(view, O.ref_reduce("((%s %s) %s)" % (step, ec, C.enc_state_v6(view, world2))))
+            world2 = C.dec_state_v6(view, reduce_("((%s %s) %s)" % (step, ec, C.enc_state_v6(view, world2))))
             hashes2.append("sha256:" + hashlib.sha256(FD.film_sealed(seams, *state_to_film_args_v6(view, world2, ep), state=claim2)).hexdigest())
         out["determinism"] = {"second_run_hashes": hashes2, "identical": hashes2 == [e["film_hash"] for e in out["epochs"]]}
     json.dump(out, sys.stdout)

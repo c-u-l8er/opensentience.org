@@ -24,7 +24,10 @@ const DATA = JSON.parse(readFileSync(join(HERE, '../data/patterns.json'), 'utf8'
 const OUT = join(HERE, '../films'); mkdirSync(OUT, { recursive: true });
 const sha = (b) => createHash('sha256').update(b).digest('hex');
 const head = (cwd) => { try { return execSync('git rev-parse HEAD', { cwd, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
-const only = new Set(process.argv.slice(2));
+const PARITY = process.argv.includes('--parity');
+const only = new Set(process.argv.slice(2).filter((a) => a !== '--parity'));
+const REDUCER = process.env.FILM_REDUCER || 'ref_reduce';
+const OTHER = REDUCER === 'native_reduce' ? 'ref_reduce' : 'native_reduce';
 const FILM_PY = join(HERE, 'film.py');
 const jobs = new Map();
 for (const p of DATA.patterns) {
@@ -53,14 +56,22 @@ for (const [key, j] of jobs) {
   const started = new Date().toISOString();
   let target = join(HERE, '../wrl', j.file);
   if (j.chain && !j.file.endsWith('_conclusion.wrl')) { const id = j.file.replace(/^chain\//, '').replace(/\.wrl$/, ''); const stage = join(HERE, '../wrl/chain/.delta'); mkdirSync(stage, { recursive: true }); target = join(stage, id + '.wrl'); writeFileSync(target, CH.deltaSource(id)); const sc = CH.scenario(id); if (sc) writeFileSync(join(stage, id + '.scenario.json'), JSON.stringify(sc)); }
-  const r = spawnSync('python3', [FILM_PY, target, String(j.epochs)], { env, encoding: 'utf8', timeout: 1_800_000, maxBuffer: 64 << 20 });
+  const r = spawnSync('python3', [FILM_PY, target, String(j.epochs)], { env: { ...env, FILM_REDUCER: REDUCER }, encoding: 'utf8', timeout: 10_800_000, maxBuffer: 64 << 20 });
   if (r.status !== 0) { console.log(`EXIT ${r.status}\n${(r.stderr || '').trim().split('\n').slice(-3).join('\n')}`); fail++; continue; }
   const out = JSON.parse(r.stdout);
+  let parity = null;
+  if (PARITY) {
+    /* the OTHER reducer, from a fresh state, on the same bytes: the forge's batteries assert ic_ref == ic32; here the book
+       re-derives that for this world and the build refuses a disagreement (P19). */
+    const r2 = spawnSync('python3', [FILM_PY, target, String(j.epochs)], { env: { ...env, FILM_REDUCER: OTHER }, encoding: 'utf8', timeout: 10_800_000, maxBuffer: 64 << 20 });
+    if (r2.status === 0) { const o2 = JSON.parse(r2.stdout); parity = { other_reducer: OTHER, seconds: o2.seconds, identical: o2.epochs.map((e) => e.film_hash).join() === out.epochs.map((e) => e.film_hash).join(), semantic_artifact_id: o2.semantic_artifact_id }; }
+    else parity = { other_reducer: OTHER, failed: true, tail: (r2.stderr || '').trim().split('\n').slice(-2) };
+  }
   const receipt = { kind: 'PATTERN_FILM_RECEIPT', version: 1, world_files: j.files, for_patterns: j.ids,
     source_identity: { world_sha256: key, trvm_head: head(join(ROOT, 'TRVM')), film_py_sha256: sha(readFileSync(FILM_PY)) },
     execution_identity: { started, finished: new Date().toISOString(), host: hostname(), seconds: out.seconds, reducer: out.reducer },
-    forge: { semantic_artifact_id: out.semantic_artifact_id, policy_id: out.policy_id }, scenario: out.scenario || null, determinism: out.determinism || null, epochs: out.epochs };
+    forge: { semantic_artifact_id: out.semantic_artifact_id, policy_id: out.policy_id }, scenario: out.scenario || null, determinism: out.determinism || null, parity, epochs: out.epochs };
   writeFileSync(join(OUT, key.slice(0, 16) + '.json'), JSON.stringify(receipt, null, 1) + '\n');
-  console.log(`${out.seconds}s → ${out.semantic_artifact_id.slice(0, 20)}… · ${out.epochs.length} epochs`);
+  console.log(`${out.seconds}s (${REDUCER}) → ${out.semantic_artifact_id.slice(0, 20)}… · ${out.epochs.length} epochs${parity ? (parity.failed ? ' · parity run FAILED' : ` · ${parity.other_reducer} ${parity.identical ? 'agrees' : 'DISAGREES'} (${parity.seconds}s)`) : ''}`);
 }
 console.log(`\n${jobs.size} world(s) reduced, ${fail} failed.`); process.exit(fail ? 1 : 0);

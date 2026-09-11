@@ -1,9 +1,9 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T20:37:25.131Z",
+  "built": "2026-09-11T21:33:37.124Z",
   "inputs_heads": {
     ".": "7e91d2d01c57527b39a963deb789237fb13e969e",
-    "opensentience.org": "e697890fc35b3feebe67f886805cece6b80d7cff",
+    "opensentience.org": "2a7d8d5f71aa2eae60602cb6cb81a7b4c24fd749",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
@@ -46,9 +46,7 @@
       "descent-is-not-dependence"
     ]
   },
-  "findings": [
-    "conclusion: no film receipt for the whole chain — run run-films.mjs conclusion"
-  ],
+  "findings": [],
   "patterns": [
     {
       "id": "active-locus",

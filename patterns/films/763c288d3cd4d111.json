@@ -10,14 +10,14 @@
  "source_identity": {
   "world_sha256": "763c288d3cd4d111fe9952e1e1aae84ac83bfaf94fd534b25efa1370f4b3e97a",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:15:32.101Z",
-  "finished": "2026-09-11T20:15:32.202Z",
+  "started": "2026-09-11T21:00:37.935Z",
+  "finished": "2026-09-11T21:00:38.150Z",
   "host": "PX13",
-  "seconds": 0.004,
-  "reducer": "ref_reduce"
+  "seconds": 0.007,
+  "reducer": "native_reduce"
  },
  "forge": {
   "semantic_artifact_id": "sem-bccd2ab7d2bba016be4313f2d890cc2bf6299327626dce84454a14cbf7c3bb36",
@@ -40,6 +40,12 @@
    "sha256:2e1faafa9e22aa15c157674452aedb92bbc0df0c393a26a314e57641cf4d0827"
   ],
   "identical": true
+ },
+ "parity": {
+  "other_reducer": "ref_reduce",
+  "seconds": 0.005,
+  "identical": true,
+  "semantic_artifact_id": "sem-bccd2ab7d2bba016be4313f2d890cc2bf6299327626dce84454a14cbf7c3bb36"
  },
  "epochs": [
   {
