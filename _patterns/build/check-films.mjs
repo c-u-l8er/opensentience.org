@@ -21,7 +21,7 @@ for (const id of CH.order()) {
   if (!rc) { console.log(`✗  ${id.padEnd(42)} NO RECEIPT`); bad++; continue; }
   const first = Object.fromEntries(rc.epochs[0].film.filter((l) => /^(pulser|relay|door|spinner|orb|wire):/.test(l)).map((l) => { const p = parse(l); return [p.role + ':' + p.name, p.rest]; }));
   const seen = {}; for (const ep of rc.epochs) for (const l of ep.film) { if (!/^(pulser|relay|door|spinner|orb|wire):/.test(l)) continue; const p = parse(l); (seen[p.role + ':' + p.name] ||= new Set()).add(p.rest); }
-  const dead = []; const idle = (CH.scenario(id) || {}).expect_idle || {};
+  const dead = []; const idle = CH.filmMeta(id).expect_idle || {};
   for (const [k, v] of Object.entries(seen)) {
     const [role, name] = k.split(':'); if (idle[name] || Object.keys(idle).some((n) => k.includes('__' + n))) continue;
     if (role === 'door' && ![...v].some((r) => /open=1/.test(r))) dead.push(k + ' never opens');
@@ -40,4 +40,22 @@ for (const id of CH.order()) {
   if (!ok) bad++;
   console.log(`${ok ? '✓' : '✗'}  ${id.padEnd(42)} ${String(rc.epochs.length).padStart(2)} epochs · longest path ${longest} · slowest clock ${slowest} · suggest ≥ ${suggest}${dead.length ? '\n      ' + dead.join('\n      ') : ''}`);
 }
+/* the board itself: every chapter's expect_idle applies; anything else that never changes is a cut-short board */
+{ const CONC = join(CH.CHAIN, '_conclusion.wrl');
+  if (existsSync(CONC)) {
+    const src = readFileSync(CONC, 'utf8'); const key = (await import('node:crypto')).createHash('sha256').update(src).digest('hex');
+    const rc = receipts.find((r) => r.source_identity.world_sha256 === key);
+    if (!rc) { console.log('✗  board: NO RECEIPT'); bad++; }
+    else {
+      const idle = Object.assign({}, ...CH.order().map((id) => CH.filmMeta(id).expect_idle || {}));
+      const seen = {}; for (const ep of rc.epochs) for (const l of ep.film) { if (!/^(pulser|relay|door|spinner|orb|wire):/.test(l)) continue; const p = parse(l); (seen[p.role + ':' + p.name] ||= new Set()).add(p.rest); }
+      const dead = [];
+      for (const [k, v] of Object.entries(seen)) { const [role, name] = k.split(':'); if (idle[name] || Object.keys(idle).some((n) => k.includes('__' + n))) continue;
+        if (role === 'door' && ![...v].some((r) => /open=1/.test(r))) dead.push(k + ' never opens');
+        if (role === 'orb' && v.size === 1) dead.push(k + ' pose never changes');
+        if (role === 'wire' && ![...v].some((r) => /cur=1/.test(r))) dead.push(k + ' never carries');
+        if (role === 'relay' && ![...v].some((r) => /cur_out=1/.test(r))) dead.push(k + ' never outputs'); }
+      console.log(`${dead.length ? '✗' : '✓'}  ${'board (the whole chain)'.padEnd(42)} ${rc.epochs.length} epochs${dead.length ? '\n      ' + dead.join('\n      ') : ''}`);
+      if (dead.length) bad++;
+    } } }
 console.log(`\n${bad} chapter(s) cut short`); process.exit(bad ? 1 : 0);

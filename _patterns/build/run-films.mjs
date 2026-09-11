@@ -44,18 +44,25 @@ for (const id of CH.order()) {
   if (!CH.fragment(id)) continue;
   if (only.size && !only.has(id) && !only.has('chain')) continue;
   const file = `chain/${id}.wrl`; const src = Buffer.from(CH.deltaSource(id)); const key = sha(src);
-  const sc = CH.scenario(id); const epochs = sc && sc.epochs ? sc.epochs : 4;
+  const epochs = CH.epochsOf(id);
   if (!jobs.has(key)) jobs.set(key, { files: [], ids: [], epochs, file, chain: true });
   jobs.get(key).files.push(file); jobs.get(key).ids.push(id + ' (chain delta)');
 }
-if (!only.size || only.has('conclusion')) { const file = 'chain/_conclusion.wrl'; const src = readFileSync(join(HERE, '../wrl', file)); const key = sha(src); const epochs = Math.max(4, ...CH.order().map((id) => ((CH.scenario(id) || {}).epochs || 4))) + 6;   /* the board's longest signal path is deeper than any chapter's */ jobs.set(key, { files: [file], ids: ['conclusion (the whole chain)'], epochs, file, chain: true }); }
+if (!only.size || only.has('conclusion')) { const file = 'chain/_conclusion.wrl'; const src = readFileSync(join(HERE, '../wrl', file)); const key = sha(src); /* the board's epochs come from the board: longest signal path (columns) + the slowest clock's first firing + settle */
+  const W = await import(join(ROOT, 'WRL/wrl.js')); const sealedBoard = await W.sealWorld(src.toString());
+  const names = sealedBoard.ok ? sealedBoard.graph.nodes.map((n) => n[1]) : []; const depth = Object.fromEntries(names.map((n) => [n, 0]));
+  for (let k = 0; k < names.length; k++) for (const [, a, b] of (sealedBoard.ok ? sealedBoard.graph.edges : [])) depth[b] = Math.max(depth[b], depth[a] + 1);
+  const longest = Math.max(0, ...Object.values(depth));
+  const clocks = (src.toString().match(/\(every (\d+)(?:, phase (\d+))?\)|\(once at (\d+)\)/g) || []).map((c) => { const m = c.match(/every (\d+)(?:, phase (\d+))?/); const o = c.match(/once at (\d+)/); return m ? +m[1] + (+(m[2] || 0)) : o ? +o[1] : 1; });
+  const epochs = longest + Math.max(1, ...clocks) + 4;
+  console.log(`board: longest signal path ${longest}, slowest clock ${Math.max(1, ...clocks)} → ${epochs} epochs`); jobs.set(key, { files: [file], ids: ['conclusion (the whole chain)'], epochs, file, chain: true }); }
 const env = { ...process.env, PYTHONDONTWRITEBYTECODE: '1', TMPDIR: join(process.env.HOME, '.cache/tmp') };
 let fail = 0;
 for (const [key, j] of jobs) {
   process.stdout.write(`▸ ${j.file} (${j.epochs} epochs) for ${j.ids.join(', ')} … `);
   const started = new Date().toISOString();
   let target = join(HERE, '../wrl', j.file);
-  if (j.chain && !j.file.endsWith('_conclusion.wrl')) { const id = j.file.replace(/^chain\//, '').replace(/\.wrl$/, ''); const stage = join(HERE, '../wrl/chain/.delta'); mkdirSync(stage, { recursive: true }); target = join(stage, id + '.wrl'); writeFileSync(target, CH.deltaSource(id)); const sc = CH.scenario(id); if (sc) writeFileSync(join(stage, id + '.scenario.json'), JSON.stringify(sc)); }
+  if (j.chain && !j.file.endsWith('_conclusion.wrl')) { const id = j.file.replace(/^chain\//, '').replace(/\.wrl$/, ''); const stage = join(HERE, '../wrl/chain/.delta'); mkdirSync(stage, { recursive: true }); target = join(stage, id + '.wrl'); writeFileSync(target, CH.deltaSource(id)); const sc = CH.scenario(id); if (sc) writeFileSync(join(stage, id + '.scenario.json'), JSON.stringify(sc)); const fm = CH.filmMeta(id); writeFileSync(join(stage, id + '.film.json'), JSON.stringify(fm)); }
   const r = spawnSync('python3', [FILM_PY, target, String(j.epochs)], { env: { ...env, FILM_REDUCER: REDUCER }, encoding: 'utf8', timeout: 10_800_000, maxBuffer: 64 << 20 });
   if (r.status !== 0) { console.log(`EXIT ${r.status}\n${(r.stderr || '').trim().split('\n').slice(-3).join('\n')}`); fail++; continue; }
   const out = JSON.parse(r.stdout);

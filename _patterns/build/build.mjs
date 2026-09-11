@@ -249,7 +249,7 @@ const chain = new Map();   // id → { delta, cum, prevCum, links, scenario, fil
     if (rc && rc.determinism && !rc.determinism.identical) refuse('P18-REPLAY-DIVERGED', `chain/${id}: the second reduction did not reproduce the first`);
     if (rc && rc.parity && !rc.parity.failed && !rc.parity.identical) refuse('P19-REDUCERS-DISAGREE', `chain/${id}: ${rc.execution_identity.reducer} and ${rc.parity.other_reducer} produced different films`);
     if (!rc && delta.ok && delta.graph.nodes.length) findings.push(`chain/${id}: no film receipt for these bytes — run run-films.mjs chain`);
-    chain.set(id, { index: i, delta, cum, prevCum: prev, links: CH.links(id), scenario: CH.scenario(id), film: rc || null, deltaSrc, fragment: CH.fragment(id) });
+    chain.set(id, { index: i, delta, cum, prevCum: prev, links: CH.links(id), scenario: CH.scenario(id), meta: CH.filmMeta(id), bench: CH.bench(id), film: rc || null, deltaSrc, fragment: CH.fragment(id) });
     if (cum.ok) prev = cum;
   } }
 const conclusionSrc = existsSync(join(CH.CHAIN, '_conclusion.wrl')) ? readFileSync(join(CH.CHAIN, '_conclusion.wrl'), 'utf8') : null;
@@ -333,17 +333,22 @@ function filmSection(p) {
   <div class="sf" id="film"><div class="sf-stage">${SF.svg(SF.computeState(sc, 0))}</div></div>
   <details class="tech"><summary>The Film, epoch by epoch (${rc.epochs.length})</summary>${rc.epochs.map((e) => `<p class="syn-label">epoch ${e.t} · <code>${esc(e.film_hash)}</code></p><pre class="syn">${esc(e.film.join('\n'))}</pre>`).join('')}</details>`;
 }
-function claimsTable(sc) {
+function claimsTable(sc, meta, rc) {
   if (!sc) return '';
-  const rows = (sc.batches || []).flatMap((b, i) => b.map((c) => `<tr><td>${i + 1}</td><td>w${c.writer} s${c.seq}</td><td><code>${esc(c.op)}</code></td><td><code>${esc(c.target)}</code></td><td>${c.rotor ? `<code>${c.rotor.join('.')}</code>` : '—'}</td></tr>`));
-  return `<p class="syn-label">Run inputs — claims bound to this world's id, never part of it (D3)${sc.numeric_faults && sc.numeric_faults.length ? ` · initial numeric fault on <code>${sc.numeric_faults.map(esc).join(', ')}</code>` : ''}${sc.determinism ? ' · reduced twice, hashes compared' : ''}</p>${rows.length ? `<table class="claims"><tr><th>epoch</th><th>writer · seq</th><th>op</th><th>target</th><th>rotor</th></tr>${rows.join('')}</table>` : '<p class="exec">No claims: the world runs on its clocks alone.</p>'}`;
+  const v1 = sc.scenario_version === 'scenario.v1';
+  const faults = v1 ? (sc.initial_runtime || {}).numeric_faults || [] : sc.numeric_faults || [];
+  const rows = v1
+    ? sc.epochs.flatMap((e) => e.claims.map((c) => `<tr><td>${e.epoch}</td><td>w${c.writer_id} s${c.sequence}</td><td><code>${esc(c.operation)}</code></td><td><code>${esc(c.target)}</code></td><td>${c.payload && c.payload.rotor ? `<code>${c.payload.rotor.join('.')}</code>` : '—'}</td><td>${esc(e.label || '')}</td></tr>`))
+    : (sc.batches || []).flatMap((b, i) => b.map((c) => `<tr><td>${i + 1}</td><td>w${c.writer} s${c.seq}</td><td><code>${esc(c.op)}</code></td><td><code>${esc(c.target)}</code></td><td>${c.rotor ? `<code>${c.rotor.join('.')}</code>` : '—'}</td><td></td></tr>`));
+  const digest = rc && rc.scenario_digest ? ` · ScenarioDigest <code>${esc(String(rc.scenario_digest).slice(0, 24))}…</code> (the run inputs' own identity, computed by the forge)` : '';
+  return `<p class="syn-label">Run inputs — ${v1 ? 'a <code>ScenarioV1</code>, the forge\'s own document' : 'claims'}, bound to this world\'s id and never part of it (D3)${faults.length ? ` · initial numeric fault on <code>${faults.map(esc).join(', ')}</code>` : ''}${meta && meta.determinism ? ' · reduced twice, hashes compared' : ''}${digest}</p>${rows.length ? `<table class="claims"><tr><th>epoch</th><th>writer · seq</th><th>op</th><th>target</th><th>rotor</th><th>label</th></tr>${rows.join('')}</table>` : `<p class="exec">No claims: the world runs on its clocks alone for ${v1 ? sc.epochs.length : (sc.epochs || 4)} epochs.</p>`}`;
 }
 function chapterWrlSection(p) {
   const c = chain.get(p.id); if (!c) return '';
   const w = p.wrl || {};
   const receipts = c.film ? c.film.epochs.at(-1).film.filter((l) => l.startsWith('receipt:')) : [];
-  let out = `<p class="syn-label">Chapter ${c.index + 1} of ${chainIds.length} — the fragment <code>_patterns/wrl/chain/${esc(p.id)}.wrl</code>, sealed alone by <code>wrl.js</code></p><pre class="syn">${esc(c.fragment.trim())}</pre><p class="semid">seals alone to → <code>${esc(c.delta.semanticId)}</code></p>
-  ${claimsTable(c.scenario)}${c.scenario && c.scenario.expect_idle ? `<p class="exec">Idle by design in this world alone: ${Object.entries(c.scenario.expect_idle).map(([n, why]) => `<code>${esc(n)}</code> — ${esc(why)}`).join('; ')}.</p>` : ''}`;
+  let out = `<p class="syn-label">Chapter ${c.index + 1} of ${chainIds.length} — the fragment <code>_patterns/wrl/chain/${esc(p.id)}.wrl</code>, sealed alone by <code>wrl.js</code></p><pre class="syn">${esc(c.fragment.trim())}</pre>${c.bench ? `<p class="syn-label">Its test bench <code>_patterns/wrl/chain/${esc(p.id)}.bench.wrl</code> — drives the entry for this chapter's own film; never part of the chain</p><pre class="syn">${esc(c.bench.trim())}</pre>` : ''}<p class="semid">module + bench seal to → <code>${esc(c.delta.semanticId)}</code></p>
+  ${claimsTable(c.scenario, c.meta, c.film)}${c.meta && c.meta.expect_idle ? `<p class="exec">Idle by design in this world alone: ${Object.entries(c.meta.expect_idle).map(([n, why]) => `<code>${esc(n)}</code> — ${esc(why)}`).join('; ')}.</p>` : ''}`;
   if (c.film) {
     const sc = filmSceneFrom(c.film, c.delta.graph, `This chapter's world alone, before epoch 1. Reduced by TRVM's forge in ${c.film.execution_identity.seconds}s; the forge's id equals the seal above.`);
     out += `<p class="exec">Reduced by ${reducerLine(c.film)}.</p>`;

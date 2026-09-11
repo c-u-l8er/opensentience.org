@@ -1,4 +1,44 @@
 {
- "batches": [],
- "epochs": 7
+ "scenario_version": "scenario.v1",
+ "world_semantic_id": "sem-17af9a11c5b42eba0f1f374dc608638a58cae1c09bc4a6945e31be0604e430c0",
+ "initial_runtime": {
+  "numeric_faults": []
+ },
+ "epochs": [
+  {
+   "epoch": 1,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 2,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 3,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 4,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 5,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 6,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 7,
+   "label": "idle pulse tick",
+   "claims": []
+  }
+ ]
 }
