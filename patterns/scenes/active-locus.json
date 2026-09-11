@@ -1,0 +1,95 @@
+{
+ "stencil": "migrate",
+ "interval": 2400,
+ "intro": "A model, a harness, a world — and the thing that is the agent.",
+ "params": {
+  "carriers": [
+   "model M₀",
+   "harness H₀",
+   "world"
+  ],
+  "loci": [
+   {
+    "id": "L",
+    "label": "L",
+    "tag": "active locus: state · authority · continuity",
+    "at": "c2"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "The model proposes. The harness carries the proposal. The world carries the state. None of them is the agent.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "held"
+    },
+    {
+     "op": "state",
+     "target": "c1",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "The agent is the active locus: where established state, scoped authority, observation, admissible action and causal continuity become operationally coupled in the world.",
+   "takeaway": "An agent is an active locus in a world. The load-bearing word is active: it participates in the transition relation rather than describing something.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "c2",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Swap the model for M₁. Did the agent persist? The definition refuses to answer by fiat — it hands you a continuity question to test.",
+   "takeaway": "Model and harness are not identity criteria; changing one decides neither persistence nor replacement.",
+   "actions": [
+    {
+     "op": "label",
+     "target": "c0",
+     "text": "model M₁"
+    },
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "gone"
+    },
+    {
+     "op": "state",
+     "target": "L",
+     "state": "dormant"
+    },
+    {
+     "op": "tag",
+     "target": "L",
+     "text": "continuity question: can the successor re-establish?"
+    }
+   ]
+  },
+  {
+   "caption": "That refusal is the advantage over Agent = Model + Harness, which answers the identity question by construction and always dumbly.",
+   "takeaway": "A definition that creates an answerable question beats one that assumes the answer.",
+   "actions": []
+  },
+  {
+   "caption": "A definition carries no evidence rung; the systems built on it do. This page is labelled accordingly: none.",
+   "takeaway": "Do not attach a rung to a definition (AGENCY.md §6).",
+   "actions": [
+    {
+     "op": "state",
+     "target": "L",
+     "state": "live"
+    },
+    {
+     "op": "tag",
+     "target": "L",
+     "text": "definition — no rung"
+    }
+   ]
+  }
+ ]
+}

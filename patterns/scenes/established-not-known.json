@@ -1,0 +1,120 @@
+{
+ "stencil": "wire",
+ "interval": 2300,
+ "intro": "An observation, and two ways of taking it in.",
+ "params": {
+  "producer": "observation",
+  "v1": "'known' — taken as read",
+  "v2": "established — checked",
+  "wire": "stale? forged? partial?",
+  "loci": [
+   {
+    "id": "O",
+    "label": "o",
+    "tag": "reading: door is locked",
+    "state": "record",
+    "at": "P",
+    "tagAbove": true
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "An observation arrives: the door is locked. It was true when taken.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "O",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "One reader knows it. The other establishes it: checks freshness, provenance and completeness before it becomes operational state.",
+   "takeaway": "An observation can be stale, forged or partial; establishing is what survives that.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "O",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "known"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "established · fresh"
+    }
+   ]
+  },
+  {
+   "caption": "Time passes. The same reading, an hour old. The first reader still knows it. The second marks it STALE — still established, no longer fresh.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "O",
+     "state": "tampered"
+    },
+    {
+     "op": "tag",
+     "target": "O",
+     "text": "reading: door is locked · 1 h old"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "established · STALE"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "indeterminate"
+    }
+   ]
+  },
+  {
+   "caption": "A forged reading arrives with no provenance. The first reader knows it too. The second refuses: unestablished — this was never an observation.",
+   "takeaway": "STALE ≠ UNESTABLISHED. Use establish, never know or detect.",
+   "actions": [
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "known (also the forgery)"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "REFUSED · unestablished"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "refused"
+    }
+   ]
+  },
+  {
+   "caption": "This is vocabulary, and the counterexample for vocabulary is a sentence; the gate that refuses it is the witness of the neighbouring pattern.",
+   "takeaway": "'Position' is deprecated as the technical term; say established operational state.",
+   "actions": []
+  }
+ ]
+}

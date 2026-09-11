@@ -1,0 +1,90 @@
+{
+ "stencil": "join",
+ "interval": 2300,
+ "intro": "A locus whose carrier is gone, the records that survive it, and the question of whether what comes next is the same thing.",
+ "params": {
+  "station": "reconstruct",
+  "loci": [
+   {
+    "id": "K",
+    "label": "K",
+    "tag": "support set: weights + memory + tools",
+    "at": "left"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "L's carrier is gone. What remains is K: a candidate support set for L's declared capability c.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "K",
+     "to": "J",
+     "dx": -100
+    }
+   ]
+  },
+  {
+   "caption": "A successor is built from K. Does it retain c under the declared replacement contract? That is an experiment, not a sentence.",
+   "takeaway": "Continuity is a question the definition hands you to test — never an answer it gives by construction.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "K",
+     "b": "K",
+     "result": "composite",
+     "note": "L′ built · c retained? — to be established"
+    }
+   ]
+  },
+  {
+   "caption": "Ablate: remove the support set under test and check that c is lost. Only then is K a continuity kernel — minimal, causally established.",
+   "actions": [
+    {
+     "op": "spawn",
+     "id": "A",
+     "label": "−K",
+     "tag": "ablation: c lost without K",
+     "at": "left2"
+    },
+    {
+     "op": "move",
+     "locus": "A",
+     "to": "J",
+     "dx": -100,
+     "dy": -46
+    }
+   ]
+  },
+  {
+   "caption": "Kernels are set-shaped: K₁ = {A} and K₂ = {B, C} can both suffice, so deleting one file proves nothing.",
+   "takeaway": "A continuity kernel is a minimal causally established support set — set-shaped, because support is a hypergraph.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "K",
+     "b": "A",
+     "result": "composite",
+     "note": "kernel K established by ablation"
+    }
+   ]
+  },
+  {
+   "caption": "Today: 4 capabilities, 4 synthetic, 0 observed. Stage 5 (Inheritance) has never been reached. This page is STATED, and the present perfect is banned.",
+   "takeaway": "Never write 'has continued' or 'has inherited' about a locus nobody has reconstructed and tested.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "J",
+     "state": "indeterminate"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": "0 observed — unwitnessed"
+    }
+   ]
+  }
+ ]
+}

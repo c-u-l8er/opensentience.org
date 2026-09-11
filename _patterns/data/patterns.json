@@ -25,6 +25,53 @@
       "related": [
         "record-at-a-boundary",
         "locus-is-not-its-carrier"
+      ],
+      "scene": "active-locus",
+      "headline": "An agent is an active locus in a world.",
+      "explanatory": "An active locus carries state, scoped authority, and causal continuity: it can establish its operational state, determine which actions are admissible under that state, the governing policy and its explicit grants, act on the world, and preserve the evidence needed to continue.",
+      "technical": "An agent is an active locus of established operational state, scoped authority, observation, admissible action, and causal continuity within a world. Models and harnesses are components through which that locus reasons and acts; neither is, by itself, an identity criterion. — AGENCY.md §1, proposed 2026-08-25, not entrenched; only Travis ratifies it. The three registers above are the definition's own, and the headline is never shipped alone.",
+      "problem": "Agent = Model + Harness describes an implementation bundle, not a property. It cannot tell two identical systems apart when one holds an authority the other does not, and it makes continuity unaskable: swap the model and it says the agent changed; reload the same weights and it says the agent continued — both wrong in the direction that matters.",
+      "forces": "The industry shorthand is convenient and everywhere. The replacement decomposes instead of bundling, and costs a continuity question every time a component changes — a question it refuses to answer by fiat. That refusal is the advantage, and the careless sentence throws it away.",
+      "construction": "Not a construction: a definition. What a page does with it is pick the register its reader stands at, never blend them, and trace to AGENCY.md rather than paraphrase.",
+      "transformations": {
+        "allowed": [
+          "quoting one register whole",
+          "tracing to AGENCY.md"
+        ],
+        "forbidden": [
+          "paraphrasing the definition into a nearby synonym",
+          "asserting by fiat that the locus survives a model swap — the retired formulation the IDENTITY_ASSERTED lint lists",
+          "attaching an evidence rung to the definition"
+        ]
+      },
+      "consequences": "Identity becomes something to test rather than assume. The locus vocabulary makes continuity claims easy to overclaim, which is why six lint classes guard the copy.",
+      "analogy": "A seat on a council. The person in it changes; the seat's authority, its record and its place in the vote do not — and whether the new occupant carries the old one's commitments is a question the council can actually ask.",
+      "applicability": "Every page in this portfolio that says 'agent'.",
+      "syntax": [
+        {
+          "label": "The headline register, verbatim (AGENCY.md §1)",
+          "path": "AGENCY.md",
+          "start": "> An agent is an active locus in a world.",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Swapping the model did not answer whether the agent persisted; it asked."
+        },
+        {
+          "from": "syntax",
+          "text": "Three registers, one claim, three depths; the headline never ships alone."
+        },
+        {
+          "from": "literature",
+          "text": "Anthropic's 2026 PSM work asks whether the Assistant is the 'locus of agency' — the phrase is not a coinage and is never marketed as one."
+        },
+        {
+          "from": "witness",
+          "text": "A definition carries no rung; this page is labelled none by rule."
+        }
       ]
     },
     {
@@ -309,6 +356,60 @@
       "related": [
         "descent-is-not-dependence",
         "orthogonal-persistence"
+      ],
+      "scene": "continuity-through-reconstruction",
+      "headline": "A locus continues across a replacement only if a minimal, causally established support set for each declared capability is retained.",
+      "explanatory": "When a carrier is gone and something is rebuilt from what survived, the rebuilt thing is either a continuation or a new being, and the difference is testable: does it retain the declared capabilities under the declared replacement contract, and is the support that carries them causally established rather than merely inherited? Reconstruction from durable facts is continuity when that test passes. Nothing in this tree has passed it yet.",
+      "technical": "AGENCY.md §5b: a continuity kernel is a minimal causally established support set sufficient to retain a declared capability under a declared replacement contract — M′ + K_c → c and M′ + (S ∖ K_c) ↛ c. Support is a hypergraph, so kernels are set-shaped; the revocation-cut dual holds only when the support function is monotone, and scripts/emb-support.mjs refuses kernels for a capability whose observations falsify it. Six-stage lifecycle Motor → Crystallization → Certification → Promotion → Inheritance → Composition; stage 5 has never been reached. Claims EMB-SUPPORT-GRAPH and EMB-KERNEL-LOCATION are OPEN.",
+      "problem": "'Reload the weights and it is the same agent; swap the model and it is a different one.' Both are wrong in the direction that matters, because neither asked what was retained. A successor that keeps the name and loses the capability is a new being wearing a label; a successor that keeps the capability from different support is a continuation the old definition could not see.",
+      "forces": "Ablation is expensive and lineage is free, so provenance will always be the evidence at hand. The obligation 'capability extends' is satisfied by equality — a total no-op satisfies it — so the test has to be about support topology, not capability. And the natural way to write the machinery puts a lineage edge in the causal chain, which the tree already refused once on review.",
+      "construction": "Declare the capability and the replacement contract before the replacement. Generate candidate support sets from lineage, then establish support by ablation of the set under test, intervention, runtime dependency or replacement replay. Compute kernels over sets. Refuse when monotonicity is falsified. Report observed kernels as observed and synthetic ones as synthetic.",
+      "transformations": {
+        "allowed": [
+          "rebuilding a locus from durable facts and testing what it retained",
+          "declaring a weaker replacement contract and testing against that",
+          "keeping several sufficient kernels at once"
+        ],
+        "forbidden": [
+          "asserting continuity from a preserved name or a lineage edge",
+          "'has continued' / 'has inherited' in the present perfect without an observed kernel",
+          "ablating one artifact and concluding about a set"
+        ]
+      },
+      "consequences": "Identity across replacement becomes an experiment with a receipt. The cost is that every 'the agent resumes where it left off' sentence is banned until the experiment runs — a cost this stack has already paid in retracted copy.",
+      "analogy": "A ship rebuilt plank by plank is the same ship if what made it seaworthy was carried across, and you find that out by removing planks, not by reading the nameplate.",
+      "applicability": "Model substitution, factory lineages, restarts of long-running agents, migrations between runtimes — anywhere 'the same' is claimed across a discontinuity.",
+      "syntax": [
+        {
+          "label": "The definition, verbatim (AGENCY.md §5b)",
+          "path": "AGENCY.md",
+          "start": "A continuity kernel is",
+          "count": 2
+        },
+        {
+          "label": "The two refusals the engine makes before computing anything",
+          "path": "scripts/emb-support.mjs",
+          "start": " * THE TWO REFUSALS",
+          "count": 8
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The successor was built from K, and K became a kernel only after ablation showed c was lost without it."
+        },
+        {
+          "from": "syntax",
+          "text": "Kernels are minimal support SETS under a declared contract; the dual with revocation cuts needs monotonicity, which is a hypothesis with a falsifier."
+        },
+        {
+          "from": "literature",
+          "text": "Orthogonal persistence's reconstruction, Erlang's code change, and the ship of Theseus — all about what is carried, none about the name."
+        },
+        {
+          "from": "witness",
+          "text": "emb-support.mjs runs today: 4 capabilities, 4 synthetic, 0 observed. Both refusals fire. Heredity is unwitnessed and the page says so."
+        }
       ]
     },
     {
@@ -513,6 +614,52 @@
       "failure_mode": "invisible-state",
       "related": [
         "shared-observable"
+      ],
+      "scene": "semantic-membrane",
+      "headline": "A composed subsystem exposes exactly the state that affects externally observable future behaviour — and no more.",
+      "explanatory": "Shared Observable says what must cross a composition boundary: every variable that determines a future. This pattern is its other half: what must not cross. Exposing internal, behaviour-irrelevant state makes equivalent subsystems look different and breaks convergence. The membrane is adequacy quotiented by equivariance.",
+      "technical": "Nowhere named in the tree — PROPOSED. Its nearest relative is the frontier package's adjudication of the observable-completeness law: 'as stated, too strong alone: carrying byte-level variables breaks convergence'; it survives only as the ADEQUACY/EQUIVARIANCE pair (invariant-r10/package-v2.8/v1-provenance/03_CANDIDATE_INVARIANTS.md). Parnas's information hiding is the ancestor.",
+      "problem": "A subsystem that exposes everything is easy to write and impossible to compose: every caller couples to internals, every refactor is an interface change, and two implementations that behave identically are told apart by noise. A subsystem that exposes too little hides state that determines futures — Invisible State, the opposite failure.",
+      "forces": "Deciding what is behaviour-relevant requires a model of the futures, which is exactly what a subsystem author does not want to commit to. Equivariance — the relation under which two internal states count as the same — has to be stated and, ideally, checked. The membrane is a claim about a quotient, and quotients are where proofs get hard.",
+      "construction": "State the observable (Shared Observable). State the equivalence on internal states under which futures are identical. Expose the quotient, not the representative. Write a witness that constructs two internal states in the same class and checks that every exposed byte agrees.",
+      "transformations": {
+        "allowed": [
+          "refactoring internals within an equivalence class",
+          "widening the membrane when a new variable is shown to determine a future"
+        ],
+        "forbidden": [
+          "exposing a representative where a quotient was meant",
+          "hiding a variable that determines a future (Invisible State)"
+        ]
+      },
+      "consequences": "Composition stops depending on internals and starts depending on declared behaviour. The honest status: this is the book proposing a name for one half of a law the tree has already adjudicated; nothing in the tree witnesses the membrane by that name.",
+      "analogy": "A restaurant's menu is a membrane: what you can order is exposed, the kitchen's shelf layout is not, and two kitchens with different layouts and the same menu are the same restaurant to a diner.",
+      "applicability": "Module and service boundaries, agent-to-agent interfaces, world serializations — anywhere two implementations must be interchangeable behind one boundary.",
+      "syntax": [
+        {
+          "label": "Where the tree says the naked law is too strong (frontier package X-1)",
+          "path": "invariant-r10/package-v2.8/v1-provenance/03_CANDIDATE_INVARIANTS.md",
+          "start": "Too strong alone",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Exposing y determined the futures; exposing x too made equivalent subsystems look different."
+        },
+        {
+          "from": "syntax",
+          "text": "The frontier package keeps the law only as an ADEQUACY / EQUIVARIANCE pair — this pattern is the second word."
+        },
+        {
+          "from": "literature",
+          "text": "Parnas 1972: a module hides a design decision. The membrane hides what does not determine a future."
+        },
+        {
+          "from": "witness",
+          "text": "PROPOSED: no witness, no counterexample, and the label derives to say so."
+        }
       ]
     },
     {
@@ -625,6 +772,54 @@
       "failure_mode": "ambient-authority",
       "related": [
         "capability-bounded-composition"
+      ],
+      "scene": "carrier-confinement",
+      "headline": "A Carrier starts with exactly the filesystem and descriptor authority its Worker's grant names.",
+      "explanatory": "Capability-Bounded Composition at the operating-system boundary. Before a Carrier's payload runs, its filesystem view is restricted to the directories the grant names and every inherited descriptor beyond the allowlist is sealed. Sealing is done with a range close-on-exec, never a blind close, because a blind close leaves a duplicated master in the census.",
+      "technical": "Super D.1.3b floor: Landlock (ABI 10 on this host per super/docs/reviews/D_1_3B_2F.md), the descriptor seal is CLOSE_RANGE_CLOEXEC; the refusal token carrier-confinement-unacceptable. Measured findings recorded in that lane: a same-UID battery measures yama unless it carries a bare control; static-link or grant all of /usr/lib; the ruleset fd collides with the allowlist. The witness lives in super/, which this book references and never copies.",
+      "problem": "A worker needs to write one directory and gets the parent's whole environment: every open file, every socket, the whole filesystem. The grant it was started under is then decoration. Every escape story starts here.",
+      "forces": "Confinement must happen before the payload runs and after the runtime has what it needs, and the two windows barely overlap. Dynamic linking needs /usr/lib; a ruleset lives in a descriptor that could itself be swept by the seal. And a battery that shares a UID with its subject measures the wrong enforcement layer unless it carries a control that would fail.",
+      "construction": "Build the ruleset from the grant, not from the environment. Apply it before exec. Seal descriptors by range with close-on-exec so the census can prove the seal. Run a red control: a Carrier that should be refused, and is.",
+      "transformations": {
+        "allowed": [
+          "narrowing the ruleset",
+          "adding a read-only directory the grant names",
+          "re-measuring on a host with a different ABI"
+        ],
+        "forbidden": [
+          "inheriting the parent's descriptors by default",
+          "a blind close in place of the seal",
+          "a battery without a bare control"
+        ]
+      },
+      "consequences": "A Carrier's authority becomes a fact about its start, checkable from the outside. The honest status here: STATED — the receipts are in another lane, and this page cannot run them.",
+      "analogy": "A contractor given keys to one room, with the rest of the building's keys removed from the ring before they walk in — and a locksmith who checks the ring, not the contractor's promise.",
+      "applicability": "Any process that runs on behalf of a grant: agent workers, plugin hosts, build sandboxes, the T&R shell's native apps.",
+      "syntax": [
+        {
+          "label": "The refusal token, in the review that measured it (super/docs)",
+          "path": "super/docs/reviews/D_1_3B_2F.md",
+          "start": "carrier-confinement-unacceptable",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The request with everything was refused; the same request with a ruleset and a seal started, confined."
+        },
+        {
+          "from": "syntax",
+          "text": "The refusal is a named token, not a crash; the seal is a range close-on-exec."
+        },
+        {
+          "from": "literature",
+          "text": "Landlock, Capsicum and the E language's confinement; Miller's ambient authority is the thing being removed."
+        },
+        {
+          "from": "witness",
+          "text": "STATED: the witness is a review document in super/, referenced by path and never copied; ABI 10 on this host."
+        }
       ]
     },
     {
@@ -1083,6 +1278,52 @@
       "failure_mode": "busywork-scheduling",
       "related": [
         "carrier-multiplexing"
+      ],
+      "scene": "progress-aware-placement",
+      "headline": "Place a locus where the semantic progress it can make is greatest, not where fairness among carriers is.",
+      "explanatory": "Once progress is what is measured (Progress Over Utilization), placement can be chosen for it. A locus whose mailbox and authority working set are resident on one home makes progress there and spends its commands relocating anywhere else. The battery that would measure this — placement on the compiled home — is prespecified and has not run.",
+      "technical": "ComputeDriven R7.2.1D: stage 1 executed; stage 2, the placement battery on the compiled home, is written in R7.2.1D-OPEN.md §2–§3 and blocked on review. The metrics comparator has its own red control (metrics_mutant=), and the oracle for the compiled home was built and validated against mutants before the home existed. No placement number exists; none is written here.",
+      "problem": "Schedulers place for fairness because fairness is what they can see. A locus placed 'fairly' onto a home where nothing it needs is resident is a locus that relocates instead of transitioning, and the fairness meter calls that healthy.",
+      "forces": "Progress-aware placement needs a progress signal per locus per home, which is exactly the instrumentation Progress Over Utilization demands. It also risks starvation: a locus that can make progress nowhere must still be placed somewhere, and the pattern is not a licence to abandon it.",
+      "construction": "Instrument admitted transitions per locus per home. Choose placement to maximize expected progress under a fairness floor. Run the battery against fair arms with a red control on the comparator. Do not write the number before the run.",
+      "transformations": {
+        "allowed": [
+          "re-placing a locus when its progress signal moves",
+          "holding a fairness floor beneath the progress objective"
+        ],
+        "forbidden": [
+          "quoting a placement gain before the battery has run",
+          "starving a locus in the name of progress"
+        ]
+      },
+      "consequences": "If the battery confirms it, capacity becomes a placement question; if it does not, the pattern is retracted here by name. Either outcome is a receipt.",
+      "analogy": "Seating a violinist next to the orchestra's other strings rather than in the first empty chair. The empty chair is fair; the section is where the music happens.",
+      "applicability": "Multiplexed floors with more than one home; agent runtimes whose loci carry state that is expensive to move; the FPLA's readiness engine.",
+      "syntax": [
+        {
+          "label": "The comparator's own red control — the oracle exists before the home does (R7.2.1D-OPEN)",
+          "path": "computedriven/receipts/R7.2.1D-OPEN.md",
+          "start": "the metrics comparator's own red control",
+          "count": 3
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The bars moved because a picture moved them; the receipt that could move them has not been produced."
+        },
+        {
+          "from": "syntax",
+          "text": "A comparator with a red control can be trusted to have looked; the mutant that changed the protocol is a defect of the control."
+        },
+        {
+          "from": "literature",
+          "text": "Work stealing and NUMA-aware placement are the ancestors; the objective here is admitted transitions, not cache locality."
+        },
+        {
+          "from": "witness",
+          "text": "STATED, in progress: stage 2 of R7.2.1D is prespecified and unrun."
+        }
       ]
     },
     {
@@ -1099,6 +1340,53 @@
       "failure_mode": "false-quiescence",
       "related": [
         "three-valued-outcome"
+      ],
+      "scene": "proven-quiescence",
+      "headline": "Silence is not completion: quiescence is established by a sweep over the loci, never read off idle carriers.",
+      "explanatory": "A system whose carriers are all idle may hold loci with pending work above the floor (Dormant But Alive). Declaring it finished because no observed worker is busy is False Quiescence. Proven quiescence is a sweep that asks every locus whether it has admissible pending work and carries, beside its assertion, what it does not assert.",
+      "technical": "PROPOSED — the phrase appears nowhere in the tree. Nearest relatives: REVISION_REGISTER.md R79.2, where CompletedScan was renamed CompletedSweep because a multi-page enumeration is not a point-in-time snapshot, and the artifact gained a doesNotAssert field; and Super's ordered-participant semantics, where a timeout abandons the request but not the work. Prior art: Dijkstra–Scholten termination detection.",
+      "problem": "'All workers idle' is the completion signal in most systems, and it is wrong whenever work can wait somewhere a worker is not looking: a mailbox, a queue, a suspended locus. The failure is silent by construction — the system reports done and stops looking.",
+      "forces": "A sweep is not atomic: work can arrive behind it. So a sweep must say what it asserts (nothing was pending as of each locus's visit) and what it does not (that nothing arrived since), and a consumer must treat the second as the honest part. Two sweeps in a row with no arrivals between them is the usual proof shape.",
+      "construction": "Enumerate the loci, not the carriers. Ask each for admissible pending work. Record the sweep as a sweep with a doesNotAssert field. Repeat until a full sweep finds nothing and no admission happened during it. Only then say quiescent.",
+      "transformations": {
+        "allowed": [
+          "repeating the sweep",
+          "narrowing the claim to the loci actually visited"
+        ],
+        "forbidden": [
+          "inferring quiescence from carrier idleness",
+          "a snapshot presented as a sweep",
+          "dropping the doesNotAssert field"
+        ]
+      },
+      "consequences": "'Is it done?' gets an answer with a scope. The name is the book's; the pieces are the tree's, and P1 would label a witness for it the day one exists.",
+      "analogy": "A librarian who checks that no reader is at a desk, versus one who walks every shelf for a book left out. Only the second can say the library is in order, and only for the shelves walked.",
+      "applicability": "Shutdown, checkpointing, 'the migration is complete', end-of-turn for an agent runtime, any place a supervisor decides nothing is pending.",
+      "syntax": [
+        {
+          "label": "The nearest thing the tree already says (REVISION_REGISTER.md R79.2)",
+          "path": "REVISION_REGISTER.md",
+          "start": "CompletedSweep",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Every slot was idle and two loci held pending work; a sweep found them, and only a second clean sweep proved quiet."
+        },
+        {
+          "from": "syntax",
+          "text": "A sweep carries a doesNotAssert field: what it could not have seen is stated beside what it saw."
+        },
+        {
+          "from": "literature",
+          "text": "Dijkstra–Scholten (1980) proved termination for diffusing computations; the shape is the same."
+        },
+        {
+          "from": "witness",
+          "text": "PROPOSED: no witness. The label says so and nothing on this page argues otherwise."
+        }
       ]
     },
     {
@@ -1121,6 +1409,53 @@
       "related": [
         "refusing-join",
         "intervention-provenance"
+      ],
+      "scene": "three-valued-outcome",
+      "headline": "Every attempted intervention resolves to APPLIED, REFUSED or INDETERMINATE — and INDETERMINATE is never rewritten.",
+      "explanatory": "Two values are not enough for an action on a world you do not fully control. A timeout abandons the request but not the work: the effect may be about to land. Recording that attempt as failed is a lie the future may contradict; recording it as succeeded is a guess. INDETERMINATE is a fact about an attempt, kept as such forever.",
+      "technical": "Super D.1.3c·2d·2 intervention provenance: outcome vocabulary APPLIED | REFUSED | INDETERMINATE; 'INDETERMINATE is a fact about an attempt. It is never rewritten.' The same document's §0 refutes its predecessor round's settle-in-place design: Ampd.Receipts has no update-in-place operation, and the re-observation that would repair INDETERMINATE (Pty::winsize()) has zero callers. A witness is sound after a death and unsound after a timeout.",
+      "problem": "Distributed systems teach the Two Generals problem and then write boolean return types anyway. An intervention that timed out gets retried, and the retry applies twice; or it gets marked failed, and the world quietly holds an effect nobody recorded.",
+      "forces": "Three values make every caller handle a case it would rather not. The temptation is to 'settle' INDETERMINATE later by re-observing — which needs the re-observation to exist and the record to be rewritable, and this specification found it had neither. Keeping the attempt's fact and adding a new fact is the honest shape.",
+      "construction": "Return three values. Append a new record for any later observation rather than rewriting the attempt. Distinguish a death (witness sound) from a timeout (witness unsound). Name the re-observation the design depends on, and check that it exists.",
+      "transformations": {
+        "allowed": [
+          "appending a later observation beside an INDETERMINATE attempt",
+          "treating REFUSED as a normal outcome"
+        ],
+        "forbidden": [
+          "rewriting INDETERMINATE to APPLIED or REFUSED",
+          "retrying an INDETERMINATE attempt as if it had failed",
+          "a settle-in-place that the ledger cannot perform"
+        ]
+      },
+      "consequences": "Interventions become auditable as attempts, and duplicates become visible instead of silent. The honest status: STATED, with the specification's own refutation of its predecessor printed beside it.",
+      "analogy": "A letter posted to a friend abroad. Delivered, returned to sender, or — for a while, maybe forever — unknown. Writing 'lost' on your copy because a week passed does not make it so.",
+      "applicability": "Any side effect over a boundary you do not control: terminal writes, remote calls, agent actions on a user's machine, payments.",
+      "syntax": [
+        {
+          "label": "The rule, verbatim (super/docs/reviews)",
+          "path": "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md",
+          "start": "INDETERMINATE is a fact about an attempt",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Applied, refused, and one that timed out; the third stayed what it was."
+        },
+        {
+          "from": "syntax",
+          "text": "INDETERMINATE is appended beside, never rewritten — the ledger has no update-in-place."
+        },
+        {
+          "from": "literature",
+          "text": "Two Generals; at-least-once versus at-most-once delivery; the third value is what idempotency keys exist to compensate for."
+        },
+        {
+          "from": "witness",
+          "text": "STATED: the witness is a review in super/, and its §0 is the refutation of the round before it."
+        }
       ]
     },
     {
@@ -1140,6 +1475,59 @@
       "related": [
         "continuity-through-reconstruction",
         "three-sizes-of-world"
+      ],
+      "scene": "orthogonal-persistence",
+      "headline": "Whether a locus's state is in cache, RAM, disk or a remote node is an implementation choice below its semantic level.",
+      "explanatory": "Atkinson and Morrison's three principles: persistence is available for every type; lifetime is determined by reachability from durable roots; code is identical whether it operates on short-lived or long-lived state. A locus never decides whether it is 'in memory' — that decision belongs to the substrate, and the locus's semantics are unchanged by it.",
+      "technical": "The term and the principles are Atkinson & Morrison's (PS-algol, Napier88; VLDB J. 4, 1995). In this stack the store that would realize them is studbook, at the spec rung with one unruled question (§10.2, where confidentiality comes from). The previous data layer was abandoned because Postgres stores a row but not why the row is that row, and nothing in its migration layer could refuse a row whose provenance did not check out. STATED; nothing implements it here.",
+      "problem": "Every application has a save path and a load path, and the bugs live between them: state that was in memory and not on disk, objects that persist by accident, serializers that lose the reason a value is what it is. The locus is made to care about its own storage, which is not a semantic question.",
+      "forces": "Orthogonal persistence hides a cost model: a remote node is not RAM. Reachability-based lifetime needs a garbage collector that understands durability. And a content-addressed store makes persistence honest and access control hard — the open ruling that blocks studbook.",
+      "construction": "Give the substrate the persistence decision. Determine lifetime by reachability from declared roots. Keep one code path. Address content by hash so provenance is checkable. Rule the confidentiality question before holding anything with a user in it.",
+      "transformations": {
+        "allowed": [
+          "moving state between tiers",
+          "garbage-collecting what no root reaches"
+        ],
+        "forbidden": [
+          "a save() the locus must call",
+          "a persistent type distinct from a transient one",
+          "holding user data before §10.2 is ruled"
+        ]
+      },
+      "consequences": "The locus stops asking where it lives. The cost is a substrate that must be built with the same care as the language — and, here, has not been built.",
+      "analogy": "A library where every book is shelved by content and re-shelved as demand moves, and a reader who only ever asks for the book — never which stack it is on.",
+      "applicability": "Durable agents, worlds that must survive their machines, any system whose 'persistence layer' is currently a source of bugs.",
+      "syntax": [
+        {
+          "label": "Why the previous data layer went (studbook §2)",
+          "path": "studbook/docs/spec/README.md",
+          "start": "Postgres stores a row",
+          "count": 2
+        },
+        {
+          "label": "What has to be ruled first (studbook §10)",
+          "path": "studbook/docs/spec/README.md",
+          "start": "## 10. What has to be ruled before implementation starts",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The locus moved through four tiers and its code path never changed."
+        },
+        {
+          "from": "syntax",
+          "text": "The spec's own header says: no implementation, do not build from this yet."
+        },
+        {
+          "from": "literature",
+          "text": "Type orthogonality, persistence by reachability, persistence independence — credit Atkinson & Morrison, whose term this is."
+        },
+        {
+          "from": "witness",
+          "text": "STATED at the spec rung; the studbook §10.2 ruling is the blocker and is published as one."
+        }
       ]
     },
     {
@@ -1159,6 +1547,58 @@
       "related": [
         "world-boundary",
         "orthogonal-persistence"
+      ],
+      "scene": "three-sizes-of-world",
+      "headline": "WORLD, WORLD VERSION and WRL GRAPH are three sizes with three names; a head is always qualified.",
+      "explanatory": "Three things are called 'world' in this stack and they differ by six orders of magnitude. The WORLD is the machine, ten gigabytes to ten terabytes. A WORLD VERSION is a content-addressed root describing that machine at an instant — kilobytes. The WRL GRAPH is the semantic layer inside a world, with its own head. Conflating them once produced a measurement of 0.21 % reported as the whole.",
+      "technical": "CLOUD_V1.md §2, frozen vocabulary. There is no current_head field anywhere: a head is always manifest_root or wrl_head. The scope error is recorded in WORLD_SIZE.md §11 — a 247 KB world layer was reported as a conclusion about a 10 TB product. T&R backs up the user's machine, not the shell's graph.",
+      "problem": "One word, three referents. A backup plan sized for the graph; a benchmark run against the manifest and reported for the machine; a 'current head' that meant different things in two files. Every one of these happened here.",
+      "forces": "Short names are convenient and the three things are genuinely nested, so 'the world' will always be reached for. Freezing the vocabulary costs a sentence per use; it buys measurements that mean what they say.",
+      "construction": "Name each size. Forbid the bare word in technical copy. Qualify every head. Record the scope error where it happened so the next reader finds it before repeating it.",
+      "transformations": {
+        "allowed": [
+          "describing a WORLD by a WORLD VERSION",
+          "embedding a WRL GRAPH in a WORLD"
+        ],
+        "forbidden": [
+          "reporting a graph-sized measurement as a machine-sized one",
+          "a field called current_head"
+        ]
+      },
+      "consequences": "Sizes and heads become unambiguous. This is A Number in Two Places, prevented at the vocabulary rather than at the number.",
+      "analogy": "A city, a map of the city, and the map's legend. Each has a size; a plan to move the city that was budgeted from the map is the §11 error.",
+      "applicability": "Any system with a machine-sized state, a snapshot format and a semantic layer — which is every backup, every VM image with a manifest, every document store with a graph in it.",
+      "syntax": [
+        {
+          "label": "The frozen table row (CLOUD_V1.md §2)",
+          "path": "CLOUD_V1.md",
+          "start": "WORLD VERSION",
+          "count": 1
+        },
+        {
+          "label": "The anti-relapse rule",
+          "path": "CLOUD_V1.md",
+          "start": "current_head",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Three rings, three sizes; the inner ring taken for the outer is the recorded error."
+        },
+        {
+          "from": "syntax",
+          "text": "No current_head anywhere: manifest_root or wrl_head, always."
+        },
+        {
+          "from": "literature",
+          "text": "Git's object / ref / worktree split makes the same three-way distinction."
+        },
+        {
+          "from": "witness",
+          "text": "STATED: frozen vocabulary; the witness is the retraction record in WORLD_SIZE.md §11."
+        }
       ]
     },
     {
@@ -1174,6 +1614,42 @@
       "realizations": [],
       "related": [
         "three-sizes-of-world"
+      ],
+      "scene": "world-boundary",
+      "headline": "A world is a coherent domain of authority, state and observation — and the tree has not yet defined its boundary.",
+      "explanatory": "Three sizes of world have frozen names; the boundary that separates a world from what is outside it has none. The candidate definition, from the book's own drafting, is: a coherent authority, state and observation domain that need not be an operating-system process, a virtual machine or a machine. It is unruled, and this page is empty where an invariant would go because nothing in the tree states one.",
+      "technical": "GAP. CLOUD_V1.md §2 defines WORLD, WORLD VERSION and WRL GRAPH by size and role; AGENCY.md §3 places 'world' in the chain as what carries state; neither defines the boundary. The label vocabulary has no word for a gap, so this record derives as PROPOSED. Ruling needed: whether the candidate definition is adopted, amended or refused.",
+      "problem": "Without a boundary, 'in the world' and 'outside it' are readings. Authority scoped 'to the world' cannot be checked; a locus crossing between worlds cannot be said to have crossed anything.",
+      "forces": "The obvious boundaries — process, VM, machine — are carrier boundaries, and this book's first family exists to say carriers are not identity. A semantic boundary has to be defined in terms of authority, state and observation, and those are the three things the agency definition already names.",
+      "construction": "Not yet. What this page can do is state the candidate, name what it would need — a check that a claimed crossing actually crossed — and stop.",
+      "consequences": "Until ruled, every sentence of the form 'inside the world' in this catalog is a reading. The gap is load-bearing: it is how the next writer knows where to stand.",
+      "analogy": "A country whose size, population and capital are recorded and whose border has never been drawn.",
+      "applicability": "This page is applicable to the ruling, not to designs.",
+      "syntax": [
+        {
+          "label": "What is defined — the sizes (CLOUD_V1.md §2) — so the reader can see what is not",
+          "path": "CLOUD_V1.md",
+          "start": "WORLD VERSION",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The middle ring is drawn and unlabelled by the tree; the picture is the gap."
+        },
+        {
+          "from": "syntax",
+          "text": "Three sizes have rows in a frozen table; the boundary has no row."
+        },
+        {
+          "from": "literature",
+          "text": "Domain boundaries in Evans's DDD are the nearest prior art, and they too are drawn by hand."
+        },
+        {
+          "from": "witness",
+          "text": "GAP, derived as PROPOSED: no invariant, no witness, one open ruling."
+        }
       ]
     },
     {
@@ -1283,6 +1759,52 @@
       "related": [
         "cross-machine-skill-replay",
         "meaning-is-a-hash"
+      ],
+      "scene": "exact-replay",
+      "headline": "A run of a sealed world is a film that replays byte-identically; a divergence on replay is the world's, not the player's.",
+      "explanatory": "When identity is a seal and the observable is complete, a run is reproducible: the film of one run replays to the same bytes on another player. If it does not, the world hid state or the seal lied, and the replay has found a bug in the world, not in the player.",
+      "technical": "TRVM film replay. Law 4: every reported reduction cost must name the reduction strategy under which it was measured. Law 6 is the completeness condition replay depends on. No receipt in the tree states a fidelity percentage for TRVM film replay; the v0.2 review of this book's plan looked for one and did not find it, so this page carries a '?' where a number would be. Not to be confused with Cross-Machine Skill Replay, which is about OS-011 traces.",
+      "problem": "Reproducibility is claimed and rarely measured. 'It replayed' usually means a log was read back, not that a second player produced the same bytes from the same sealed world. When two players disagree, the player is blamed, because the world was never sealed to begin with.",
+      "forces": "Exact replay needs everything Shared Observable demands and a cost model that names its strategy, since a replay that takes a different reduction path is a different run. The number that would witness it is a receipt this tree does not yet hold.",
+      "construction": "Seal the world. Record the film with its reduction strategy. Replay on a second player. Compare bytes. Publish the fidelity with the method, or publish '?'.",
+      "transformations": {
+        "allowed": [
+          "replaying on any conforming player",
+          "comparing films across players"
+        ],
+        "forbidden": [
+          "a replay claim without a second player",
+          "a fidelity number without a receipt"
+        ]
+      },
+      "consequences": "Bugs in worlds become reproducible by construction. The honest status: STATED, with an explicit '?' — an acceptable answer under the doctrine, and the only honest one today.",
+      "analogy": "A player piano roll. Two pianos, one roll, the same tune — or the roll is damaged, and it was never the piano.",
+      "applicability": "Verification of transitions, debugging distributed runs, any claim that a computation is deterministic.",
+      "syntax": [
+        {
+          "label": "Law 4 (TRVM/LAWS.md)",
+          "path": "TRVM/LAWS.md",
+          "start": "### Law 4",
+          "count": 3
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Two players, identical films — and a '?' where the fidelity number would be."
+        },
+        {
+          "from": "syntax",
+          "text": "A cost without its reduction strategy is a rumour (Law 4); a replay without its strategy is not exact."
+        },
+        {
+          "from": "literature",
+          "text": "Deterministic replay (rr), event sourcing, and the reproducible-builds movement."
+        },
+        {
+          "from": "witness",
+          "text": "STATED with '?': no receipt states a fidelity, and the page says so instead of inventing one."
+        }
       ]
     },
     {
@@ -1310,6 +1832,52 @@
       "failure_mode": "replica-theater",
       "related": [
         "exact-replay"
+      ],
+      "scene": "cross-machine-skill-replay",
+      "headline": "A skill taught on machine A replays on machine B with the declared fidelity; the InteractionTrace is the unit of transfer.",
+      "explanatory": "An embodied skill — a sequence of observations and actions against a body — is recorded as a trace and replayed elsewhere. What crosses machines is the trace, not the machine. The homepage carries a receipt card for this at 100 % fidelity; this build reports the card and did not open the run behind it.",
+      "technical": "OS-011 Embodiment: InteractionTrace → replay; the receipt card in opensentience.org/_rebuild/data/receipts.json reads 'Cross-machine replay · 100 % fidelity · teach a skill on machine A, replay it on machine B'. STATED: a card is a claim about a receipt, and the receipt was not opened by the patterns build. Distinct from Exact Replay (a film of a world).",
+      "problem": "Skills are taught to one body and die with it. Robotic process automation records screen coordinates and breaks on the next monitor. The unit of transfer is either too low (pixels) or too high (a prose description) to replay.",
+      "forces": "A trace must be body-independent enough to replay and body-specific enough to act. Fidelity has to be declared before it is measured, or the measurement decides what fidelity meant. And a card on a homepage is not a receipt, however green.",
+      "construction": "Record observations and actions as a trace with the body's affordances named. Declare fidelity. Replay on a second body. Publish the run, not only the card.",
+      "transformations": {
+        "allowed": [
+          "replaying on a body with the same declared affordances",
+          "declaring a lower fidelity for a different body"
+        ],
+        "forbidden": [
+          "a fidelity card whose run is not published beside it",
+          "replaying pixels and calling it a skill"
+        ]
+      },
+      "consequences": "Skills become portable artifacts. The honest status: STATED, because this page reports a card it did not verify.",
+      "analogy": "Sheet music versus a recording. The recording replays one performance; the sheet music replays on any instrument that can read it, at the fidelity the arrangement allows.",
+      "applicability": "Agent skills, RPA, robotics, the Workbench's SkillBundles.",
+      "syntax": [
+        {
+          "label": "The receipt card, verbatim (homepage data)",
+          "path": "opensentience.org/_rebuild/data/receipts.json",
+          "start": "\"metric\": \"Cross-machine replay\"",
+          "count": 5
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The trace moved; the machine stayed."
+        },
+        {
+          "from": "syntax",
+          "text": "A card names a metric, a value and a note; the run behind it is a separate artifact this build did not open."
+        },
+        {
+          "from": "literature",
+          "text": "OS-011 Embodiment; RPA's record-and-replay is the failure mode being answered."
+        },
+        {
+          "from": "witness",
+          "text": "STATED: shape 'card' carries no execution, and the derivation says so."
+        }
       ]
     },
     {
@@ -1327,6 +1895,42 @@
       ],
       "related": [
         "meaning-is-a-hash"
+      ],
+      "scene": "confidentiality-under-content-addressing",
+      "headline": "If the key is the hash of the content, knowing the content is knowing the key — and where confidentiality comes from is unruled.",
+      "explanatory": "Content addressing makes identity honest and access control hostile. Anyone who holds the content can derive its key and prove they hold it; a store that is keyed by content cannot hide that a given content exists. Until this is ruled, studbook cannot hold anything with a user in it. This page publishes the question, not a design.",
+      "technical": "studbook §10.2, the named blocker: 'Where confidentiality comes from, given §6.2.' Convergent encryption and its known leaks (confirmation-of-a-file, learn-the-remaining-information) are the prior art. OPEN; the pattern registry has no label for open, so this record derives as STATED via its realizations. No invariant is stated because none has been ruled.",
+      "problem": "A store that refuses rows whose provenance does not check out needs content addressing; a store that holds a user's data needs to keep the existence of a content secret from readers who could guess it. The two requirements pull apart at exactly the key.",
+      "forces": "Every mitigation — salted keys, per-user namespaces, encrypting before hashing — weakens the property that made content addressing worth having: that two holders of the same content agree on its key. The ruling is about which property to give up, for which data.",
+      "construction": "Not yet. What can be done: name the requirement (§6.2), name the conflict (§10.2), and refuse to hold user data until ruled.",
+      "consequences": "The data layer stays at the spec rung. The book's contribution is to publish the refusal in a pattern-shaped slot so the gap is as findable as the patterns.",
+      "analogy": "A library that files every book by its full text. Nothing can be mis-shelved — and anyone who can recite a page can prove which book is on the shelf.",
+      "applicability": "Any content-addressed store that will hold data with a person in it.",
+      "syntax": [
+        {
+          "label": "The blocker, verbatim (studbook §10)",
+          "path": "studbook/docs/spec/README.md",
+          "start": "knowing the content",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The reader who knows the content derived the key; the one who did not could not — and the first can prove it."
+        },
+        {
+          "from": "syntax",
+          "text": "§10.2 is a numbered ruling the spec says must precede implementation."
+        },
+        {
+          "from": "literature",
+          "text": "Convergent encryption; Tahoe-LAFS's capability model is the closest attempt at both properties at once."
+        },
+        {
+          "from": "witness",
+          "text": "OPEN: no pattern, one ruling, published as the question."
+        }
       ]
     },
     {
@@ -1345,6 +1949,52 @@
       "related": [
         "active-locus",
         "understanding-boundary"
+      ],
+      "scene": "established-not-known",
+      "headline": "Establish, never know or detect: an observation can be stale, forged or partial, and establishing is what survives that.",
+      "explanatory": "Operational state is established, not known. To establish is to take an observation through freshness, provenance and completeness before it becomes state a locus acts on. A stale observation is still established — it was once true and is marked old. An unestablished one was never an observation at all. 'Position' is deprecated as the technical term; say established operational state.",
+      "technical": "AGENCY.md §4 vocabulary. STALE ≠ UNESTABLISHED (Super bot spec). This is vocabulary, so its counterexample is a sentence and its nearest witness is the ontology lint; the record is a definition and carries no rung.",
+      "problem": "'The agent detected that the door is locked' reads as fact and is a reading of a reading. Copy written with know and detect grants observations a certainty they never earned, and systems built on that copy act on forgeries with the same confidence as on truths.",
+      "forces": "Establish is a longer word and a longer process, and it produces a state that can go stale — which readers experience as the system being unsure. Know is shorter and never unsure, which is the problem.",
+      "construction": "Vocabulary: establish, established operational state, stale, unestablished. Retire know, detect, position. Run the lint.",
+      "transformations": {
+        "allowed": [
+          "marking an established state stale",
+          "refusing an observation with no provenance"
+        ],
+        "forbidden": [
+          "know / detect in technical copy",
+          "treating stale as unestablished, or the reverse"
+        ]
+      },
+      "consequences": "The system's confidence becomes a property of its evidence rather than its prose.",
+      "analogy": "A ship's log entry versus a rumour on deck. The log entry can be old; the rumour was never an observation.",
+      "applicability": "Every technical sentence about what an agent has observed.",
+      "syntax": [
+        {
+          "label": "Where the vocabulary is set (AGENCY.md §4)",
+          "path": "AGENCY.md",
+          "start": "### State does not grant authority",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The naive reader knew the stale reading and the forgery alike; the establishing reader marked one stale and refused the other."
+        },
+        {
+          "from": "syntax",
+          "text": "Two words retired, one adopted; the difference is whether the sentence can be wrong."
+        },
+        {
+          "from": "literature",
+          "text": "Byzantine observation; Gettier's problem, if you like — a true belief with the wrong provenance."
+        },
+        {
+          "from": "witness",
+          "text": "A definition; no rung; the lint on the neighbouring pattern is the falsifier."
+        }
       ]
     },
     {
@@ -1541,6 +2191,52 @@
       "related": [
         "evidence-before-claim",
         "refusing-join"
+      ],
+      "scene": "refusal-gate",
+      "headline": "Below material sufficiency the page is not written, and the reason is published.",
+      "explanatory": "A correct agent sometimes advances the system by not acting. A generator that writes a page from thin material produces something that reads well and cites nothing; the gate refuses it and publishes why. The refusals are the feature no autoblog can copy. A check that can be satisfied by constructing its own argument is not a check.",
+      "technical": "alkeyword's refusal rule (alkeyword.com/docs/spec/README.md §3.2), inherited by Academy's Read layer without relaxation. The Academy refusal log is a MOCK: real format, illustrative entries, counts not measured against a live crawl (ACADEMY.md). Its worked example: a statistics page held because the corpus contradicted itself on a law count (103 vs 116), resolved by running both suites. This book's registry runs a gate of the same shape.",
+      "problem": "Content generators never refuse. Every prompt yields a page; the pages that had nothing behind them look exactly like the ones that did. Readers learn to trust none of them.",
+      "forces": "A refusal is a visible gap on a site that wants to look complete. Sufficiency needs a definition — source spans per factual sentence — that costs the generator most of its throughput. And a mock log that reads as measured is a refusal gate lying about itself.",
+      "construction": "Define material sufficiency. Trace every factual sentence to a source span. Refuse below the threshold and publish the reason in the same place the page would have been. Keep the refusal log measured, or label it MOCK.",
+      "transformations": {
+        "allowed": [
+          "holding a page until a contradiction in the corpus is resolved",
+          "publishing a refusal where a page was expected"
+        ],
+        "forbidden": [
+          "writing from a single sentence",
+          "a refusal log that reads as measured when it is illustrative"
+        ]
+      },
+      "consequences": "What is published can be trusted because what was not published is visible. The honest status: STATED — the live instance is alkeyword's; the log that would witness it here is a mock.",
+      "analogy": "A newspaper that prints, in the space where a story would have run, 'we could not confirm this' — and is read for exactly that reason.",
+      "applicability": "Generated documentation, grounded articles, this catalog's thin records.",
+      "syntax": [
+        {
+          "label": "The rule Academy inherits, in its own words (ACADEMY.md)",
+          "path": "ACADEMY.md",
+          "start": "sufficiency",
+          "count": 2
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The thin page was refused with its reason published; the sourced one was written."
+        },
+        {
+          "from": "syntax",
+          "text": "The gate lives in the alkeyword spec §3.2 and is inherited without relaxation."
+        },
+        {
+          "from": "literature",
+          "text": "Popper: a claim that cannot be refused is not a claim; fail-closed defaults in security."
+        },
+        {
+          "from": "witness",
+          "text": "STATED: the Academy refusal log is MOCK and this page says so; the thin records in this catalog are the same discipline applied to itself."
+        }
       ]
     },
     {
@@ -1561,6 +2257,53 @@
       "failure_mode": "agent-omniscience",
       "related": [
         "three-valued-outcome"
+      ],
+      "scene": "intervention-provenance",
+      "headline": "Every intervention carries the Worker and generation that made it and the evidence it acted on; an unattributable intervention is inadmissible.",
+      "explanatory": "Acting on a world someone else inhabits — a terminal, a filesystem, a user's machine — is admissible only when the action can be answered for: who, under which generation of authority, on what evidence. The operator-disclosure policy is keyed on Worker + generation because, when this was measured, no cross-peer terminal authority existed to key it on.",
+      "technical": "Super D.1.3c·2d·2: outcome vocabulary APPLIED | REFUSED | INDETERMINATE (Three-Valued Outcome); provenance keyed on a Worker + generation. The same document records that the re-observation INDETERMINATE was to be repaired by does not exist — Pty::winsize() has zero callers — and refutes the predecessor round's settle-in-place design. Cell 17 (⊕ append-only) is the ledger property this depends on. Witness in super/, referenced not copied.",
+      "problem": "An agent writes to a terminal. Later, something is different. Which action did it, under whose authority, because of what? Without provenance the answer is a log grep and a guess, and the guess is usually 'the agent'.",
+      "forces": "Provenance costs a record per action and a key to attribute to. When the natural key (a terminal authority shared across peers) does not exist, the honest move is to key on what does — a Worker and its generation — and to say so, rather than invent the missing authority.",
+      "construction": "Attach Worker, generation and evidence to every intervention before it is attempted. Append the outcome as one of three values. Never rewrite. Name the re-observation the design depends on and check it has callers.",
+      "transformations": {
+        "allowed": [
+          "revoking a generation and refusing its later interventions",
+          "appending observations beside an attempt"
+        ],
+        "forbidden": [
+          "an intervention without a Worker and generation",
+          "rewriting an outcome",
+          "a repair path with zero callers presented as a property"
+        ]
+      },
+      "consequences": "Interventions become answerable. The honest status: STATED, in a lane this book does not edit, with the specification's unimplemented dependency printed beside it.",
+      "analogy": "A surgical count: every instrument signed in and out by name, and an operation that cannot account for one is not closed.",
+      "applicability": "Agent runtimes acting on user machines, terminal possession, any actuator shared between principals.",
+      "syntax": [
+        {
+          "label": "The three outcomes, where they are specified (super/docs/reviews)",
+          "path": "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md",
+          "start": "APPLIED",
+          "count": 2
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The unattributed action was refused; the same action with Worker, generation and evidence was applied."
+        },
+        {
+          "from": "syntax",
+          "text": "The policy is keyed on Worker + generation because the authority it would rather key on did not exist."
+        },
+        {
+          "from": "literature",
+          "text": "W3C PROV; surgical counts; the audit log that is a precondition rather than a record."
+        },
+        {
+          "from": "witness",
+          "text": "STATED: the review in super/ specifies it and names its own unimplemented re-observation."
+        }
       ]
     },
     {
@@ -1666,6 +2409,52 @@
       "failure_mode": "agent-omniscience",
       "related": [
         "established-not-known"
+      ],
+      "scene": "understanding-boundary",
+      "headline": "A locus keeps apart what exists, what it can observe, what it believes, what it understands, what it intends and what it may alter.",
+      "explanatory": "Six registers, each narrower than the last. A claim in one is not a claim in the next: an observation is not a belief until it is established; a belief is not understanding until it is connected to why; intent is not permission. Agent Omniscience is the failure of promoting a claim across registers without evidence for the step.",
+      "technical": "AGENCY.md §3's chain: observation exposes a scoped view; invariants establish operational state; policy and grant establish scoped authority; authority constrains admissible action. The epistemic rung of the box-and-box ladder is where 'do we know enough?' is asked. Graphonomous Bot spec: a Bot knows its projection, not the world; STALE ≠ UNESTABLISHED. STATED; the neighbouring vocabulary pattern's lint is the closest witness.",
+      "problem": "'I saw it, so I know it, so I may change it.' Three promotions in one sentence, none earned. Agents built on this collapse act on stale observations with full confidence and call the result knowledge.",
+      "forces": "Keeping six registers is expensive in prose and in code; most systems keep two (true/false) and call the rest metadata. The registers are only worth keeping if something checks the promotions — a lint for prose, a ladder rung for verdicts.",
+      "construction": "Name the registers. Require evidence for each promotion. Put 'do we know enough?' on its own rung, before action. Write copy with establish, never know or detect.",
+      "transformations": {
+        "allowed": [
+          "promoting a claim one register with evidence",
+          "demoting a claim when its observation goes stale"
+        ],
+        "forbidden": [
+          "'observed, therefore may alter'",
+          "confidence inflated across registers without evidence"
+        ]
+      },
+      "consequences": "Confidence becomes a position in a ladder rather than a number. The honest status: STATED — this is vocabulary and doctrine, witnessed only through the lint on the neighbouring pattern.",
+      "analogy": "A detective's board: seen, suspected, understood, planned, permitted. Arresting on 'seen' is the error every good story is about.",
+      "applicability": "Agent architectures, belief revision, any copy that says an agent 'knows'.",
+      "syntax": [
+        {
+          "label": "The chain (AGENCY.md §3)",
+          "path": "AGENCY.md",
+          "start": "exposes a scoped view of it",
+          "count": 6
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The claim moved inward one ring at a time, and the jump to the smallest ring was refused."
+        },
+        {
+          "from": "syntax",
+          "text": "observation → exposes; invariants → establish; policy + grant → authority; authority → constrains action."
+        },
+        {
+          "from": "literature",
+          "text": "Hintikka's epistemic logic; the DIKW ladder, with the difference that here each step needs a check."
+        },
+        {
+          "from": "witness",
+          "text": "STATED: doctrine and vocabulary; the lint on State Does Not Grant Authority is the nearest mechanical falsifier."
+        }
       ]
     }
   ],

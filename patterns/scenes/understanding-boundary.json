@@ -1,0 +1,156 @@
+{
+ "stencil": "nest",
+ "interval": 2300,
+ "intro": "Six things a locus must keep apart. A claim in one ring is not a claim in the next.",
+ "params": {
+  "rings": [
+   {
+    "id": "e",
+    "label": "what exists"
+   },
+   {
+    "id": "o",
+    "label": "what it can observe"
+   },
+   {
+    "id": "b",
+    "label": "what it believes"
+   },
+   {
+    "id": "u",
+    "label": "what it understands"
+   },
+   {
+    "id": "i",
+    "label": "what it intends"
+   },
+   {
+    "id": "a",
+    "label": "what it may alter"
+   }
+  ],
+  "loci": [
+   {
+    "id": "C",
+    "label": "c",
+    "tag": "a claim",
+    "at": "o"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "A locus observes something. The observation may be stale, forged or partial — it is in the second ring, not the first.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "o",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "It forms a belief. Belief is not observation: the ring narrows and the claim must earn its way in.",
+   "takeaway": "Establish, never know: an observation survives staleness and forgery checks before it becomes a belief.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "C",
+     "to": "b"
+    },
+    {
+     "op": "state",
+     "target": "o",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "b",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Understanding is narrower still — the belief connected to why. Intent narrower again. And what it may alter is the smallest ring: scoped authority.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "C",
+     "to": "u"
+    },
+    {
+     "op": "state",
+     "target": "b",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "u",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Agent Omniscience is a claim that jumps rings: 'I observed it, so I may alter it.' Refused — the rings between were skipped.",
+   "takeaway": "A claim is never promoted from one register to the next without evidence for the step.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "C",
+     "to": "a"
+    },
+    {
+     "op": "state",
+     "target": "u",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "a",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "a",
+     "text": "promoted without evidence — REFUSED"
+    },
+    {
+     "op": "state",
+     "target": "C",
+     "state": "refused"
+    }
+   ]
+  },
+  {
+   "caption": "The epistemic rung of the governance ladder is where 'do we know enough?' is asked; a Bot knows its projection, not the world.",
+   "takeaway": "STALE ≠ UNESTABLISHED: an old observation is still established; an unestablished one was never an observation at all.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "a",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "a",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "C",
+     "state": "live"
+    },
+    {
+     "op": "move",
+     "locus": "C",
+     "to": "u"
+    },
+    {
+     "op": "state",
+     "target": "u",
+     "state": "admitted"
+    }
+   ]
+  }
+ ]
+}

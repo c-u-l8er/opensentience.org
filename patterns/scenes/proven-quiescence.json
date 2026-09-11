@@ -1,0 +1,118 @@
+{
+ "stencil": "multiplex",
+ "interval": 2300,
+ "intro": "Four slots, all empty. Six loci above them. Is the system quiet?",
+ "params": {
+  "slots": 4,
+  "loci": 6
+ },
+ "steps": [
+  {
+   "caption": "Every slot is idle. A supervisor that reads the carriers concludes: nothing to do.",
+   "actions": [
+    {
+     "op": "tag",
+     "target": "L1",
+     "text": "pending: 2"
+    },
+    {
+     "op": "tag",
+     "target": "L4",
+     "text": "pending: 1"
+    }
+   ]
+  },
+  {
+   "caption": "But L1 and L4 hold pending work in their mailboxes. Silence of the carriers was never evidence about the loci.",
+   "takeaway": "False Quiescence: declaring completion because no currently observed worker has work.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "L1",
+     "state": "refused"
+    },
+    {
+     "op": "state",
+     "target": "L4",
+     "state": "refused"
+    }
+   ]
+  },
+  {
+   "caption": "A sweep — not a snapshot — asks every locus whether it has admissible pending work. Two say yes. Not quiescent.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "L1",
+     "to": "s0"
+    },
+    {
+     "op": "move",
+     "locus": "L4",
+     "to": "s1"
+    },
+    {
+     "op": "state",
+     "target": "s0",
+     "state": "held"
+    },
+    {
+     "op": "state",
+     "target": "s1",
+     "state": "held"
+    },
+    {
+     "op": "state",
+     "target": "L1",
+     "state": "live"
+    },
+    {
+     "op": "state",
+     "target": "L4",
+     "state": "live"
+    }
+   ]
+  },
+  {
+   "caption": "They run. The sweep repeats and finds nothing pending anywhere. Now quiescence is established, from the loci.",
+   "takeaway": "Quiescence is proven by a sweep over the loci; it is never read off idle carriers.",
+   "actions": [
+    {
+     "op": "tag",
+     "target": "L1",
+     "text": ""
+    },
+    {
+     "op": "tag",
+     "target": "L4",
+     "text": ""
+    },
+    {
+     "op": "move",
+     "locus": "L1",
+     "to": "q1"
+    },
+    {
+     "op": "move",
+     "locus": "L4",
+     "to": "q4"
+    },
+    {
+     "op": "state",
+     "target": "s0",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "s1",
+     "state": "idle"
+    }
+   ]
+  },
+  {
+   "caption": "The tree has the pieces — CompletedSweep with a doesNotAssert field; 'a timeout abandons the request but not the work' — and not the name. PROPOSED.",
+   "takeaway": "A sweep carries what it does not assert; Dijkstra–Scholten is the prior art for proving termination in a distributed system.",
+   "actions": []
+  }
+ ]
+}

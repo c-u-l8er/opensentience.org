@@ -1,0 +1,119 @@
+{
+ "stencil": "nest",
+ "interval": 2300,
+ "intro": "Three things called 'world', three sizes, three names — frozen because the confusion was made once.",
+ "params": {
+  "rings": [
+   {
+    "id": "w",
+    "label": "WORLD · the machine · 10 GB – 10 TB"
+   },
+   {
+    "id": "v",
+    "label": "WORLD VERSION · a manifest root · KB"
+   },
+   {
+    "id": "g",
+    "label": "WRL GRAPH · the semantic layer · KB – MB"
+   }
+  ],
+  "loci": [
+   {
+    "id": "H",
+    "label": "head",
+    "tag": "wrl_head — always qualified",
+    "at": "g"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "WORLD is the persistent, machine-sized environment: the user's machine, 10 GB to 10 TB. It is what is backed up.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "w",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "WORLD VERSION is a content-addressed description of that machine at one instant. Kilobytes. It is a root, not the world.",
+   "takeaway": "A version is a root that names a state; it is not the state.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "w",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "v",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "WRL GRAPH is the semantic, topological and control layer inside a world — with its own head.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "v",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "g",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "The error, once: a 247 KB WRL layer was reported as a conclusion about a 10 TB product. 0.21 % was mistaken for the whole.",
+   "takeaway": "There is no current_head field anywhere: a head is always qualified — manifest_root or wrl_head.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "g",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "g",
+     "text": "0.21 % taken for the whole — WORLD_SIZE.md §11"
+    },
+    {
+     "op": "state",
+     "target": "w",
+     "state": "refused"
+    }
+   ]
+  },
+  {
+   "caption": "Frozen vocabulary in CLOUD_V1.md §2. Conflating them is the recorded failure this pattern exists to prevent.",
+   "takeaway": "When one word means three sizes, give each size its own word and refuse the bare one.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "g",
+     "state": "admitted"
+    },
+    {
+     "op": "state",
+     "target": "w",
+     "state": "admitted"
+    },
+    {
+     "op": "state",
+     "target": "v",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "g",
+     "text": ""
+    }
+   ]
+  }
+ ]
+}

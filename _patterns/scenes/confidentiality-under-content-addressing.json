@@ -1,0 +1,90 @@
+{
+ "stencil": "wire",
+ "interval": 2300,
+ "intro": "Content, the key that is its hash, and two readers — one who knows the content and one who does not.",
+ "params": {
+  "producer": "content",
+  "v1": "reader who knows it",
+  "v2": "reader who does not",
+  "wire": "key = hash(content)",
+  "loci": [
+   {
+    "id": "C",
+    "label": "c",
+    "tag": "secret content",
+    "state": "record",
+    "at": "P",
+    "tagAbove": true
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "Content addressing makes identity honest: the key is the hash of the content.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "C",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "Which means: knowing the content is knowing the key. A reader who already has the content can find it; one who does not, cannot guess it.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "C",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "can derive the key"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "cannot"
+    }
+   ]
+  },
+  {
+   "caption": "So where does confidentiality come from, for content with a user in it? Content addressing is hostile to access control, and studbook §10 says this must be ruled before implementation.",
+   "takeaway": "If the key is the hash of the content, knowing the content is knowing the key — convergent encryption's known leak.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "indeterminate"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "…and can prove they know it"
+    }
+   ]
+  },
+  {
+   "caption": "There is no pattern here yet. The book publishes the refusal — the open ruling — rather than a pattern it does not have.",
+   "takeaway": "An OPEN blocker is published as the question, not papered over with a design.",
+   "actions": [
+    {
+     "op": "wirenote",
+     "wire": "w",
+     "text": "OPEN · studbook §10.2 — unruled"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,111 @@
+{
+ "stencil": "migrate",
+ "interval": 2200,
+ "intro": "One locus, four places its state might physically be. It never decides which.",
+ "params": {
+  "carriers": [
+   "cache",
+   "RAM",
+   "SSD",
+   "remote node"
+  ],
+  "loci": [
+   {
+    "id": "L",
+    "label": "L",
+    "tag": "same code path",
+    "at": "c0"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "L's state is in cache. The code that reads it does not know that.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Evicted to RAM. Same code path — persistence independence.",
+   "takeaway": "Code is identical whether it operates on short-lived or long-lived state (Atkinson & Morrison's third principle).",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "L",
+     "to": "c1"
+    },
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "c1",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Written to SSD. Persistence by reachability: L persists because something durable reaches it, not because L asked.",
+   "takeaway": "Lifetime is determined by reachability from durable roots, not by a save() call.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "L",
+     "to": "c2"
+    },
+    {
+     "op": "state",
+     "target": "c1",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "c2",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Replicated to a remote node. Type orthogonality: any locus, any type, no special persistent class.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "L",
+     "to": "c3"
+    },
+    {
+     "op": "state",
+     "target": "c2",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "c3",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "In this stack the store that would do this is studbook — at the spec rung, with one unruled question in its way. STATED; nothing implements it.",
+   "takeaway": "Postgres stores a row but not why the row is that row — the reason the previous data layer was abandoned.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "L",
+     "state": "dormant"
+    },
+    {
+     "op": "tag",
+     "target": "L",
+     "text": "spec rung · nothing implements this"
+    }
+   ]
+  }
+ ]
+}

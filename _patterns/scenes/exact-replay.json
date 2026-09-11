@@ -1,0 +1,100 @@
+{
+ "stencil": "wire",
+ "interval": 2300,
+ "intro": "A sealed world, the film of a run, and two players.",
+ "params": {
+  "producer": "sealed world",
+  "v1": "player A",
+  "v2": "player B",
+  "wire": "the film",
+  "loci": [
+   {
+    "id": "F",
+    "label": "F",
+    "tag": "film of one run",
+    "state": "record",
+    "at": "P",
+    "tagAbove": true
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "A run of a sealed world produces a film. Every byte of it is determined by the world and its inputs.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "F",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "Two players replay the film. Byte-identical, or the divergence is the world's — not the player's.",
+   "takeaway": "If replay diverges, the world hid state (Shared Observable) or the seal lied (Identity Is a Seal); the player is never the suspect.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "F",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "identical"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "identical"
+    }
+   ]
+  },
+  {
+   "caption": "Law 4: every reported reduction cost names the strategy it was measured under — a replay without its strategy is not exact.",
+   "actions": [
+    {
+     "op": "wirenote",
+     "wire": "w",
+     "text": "Law 4: cost names its reduction strategy"
+    }
+   ]
+  },
+  {
+   "caption": "No receipt in the tree states a replay fidelity for TRVM film; the review that found that gap is recorded. STATED, with a '?' where a number would be.",
+   "takeaway": "A '?' is an acceptable answer; a percentage without a receipt is not.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "indeterminate"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "fidelity: ? (no receipt located)"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "indeterminate"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "fidelity: ?"
+    }
+   ]
+  }
+ ]
+}

@@ -71,12 +71,22 @@ const STENCILS = {
     for (const l of p.loci || []) st.loci.push(locus(l, st.anchors[l.at || 'off']));
     return st;
   },
+  /* concentric boundaries: params.rings = [{id,label}] outermost first; a locus can sit in any ring */
+  nest(p = {}) {
+    const st = base(); const rings = p.rings || [{ id: 'r0', label: 'outer' }, { id: 'r1', label: 'inner' }];
+    const n = rings.length, cx = 420, cy = 186, W0 = 700, H0 = 272, stepW = (W0 - 160) / n, stepH = (H0 - 90) / n;
+    rings.forEach((r, i) => st.rings.push({ id: r.id, label: r.label, x: cx - (W0 - i * stepW) / 2, y: cy - (H0 - i * stepH) / 2, w: W0 - i * stepW, h: H0 - i * stepH, state: 'idle', note: r.note || '' }));
+    st.anchors = Object.fromEntries(st.rings.map((r, i) => [r.id, { x: r.x + 44, y: r.y + r.h / 2 + (i % 2 ? 18 : -18) }]));
+    st.anchors.center = { x: cx, y: cy }; st.anchors.off = { x: -80, y: cy };
+    for (const l of p.loci || []) st.loci.push(locus(l, st.anchors[l.at || 'center']));
+    return st;
+  },
 };
-function base() { return { slots: [], loci: [], stations: [], meters: [], wires: [], anchors: {}, notes: [], caption: '' }; }
+function base() { return { slots: [], loci: [], stations: [], meters: [], wires: [], rings: [], anchors: {}, notes: [], caption: '' }; }
 function locus(l, at) { return { id: l.id, label: l.label ?? l.id, state: l.state || 'live', x: at.x, y: at.y, tag: l.tag || '', r: l.r || 16, tagAbove: !!l.tagAbove }; }
 
 /* ── generic actions ────────────────────────────────────────────────────────────────────────────── */
-const find = (st, id) => st.loci.find((l) => l.id === id) || st.slots.find((s) => s.id === id) || st.stations.find((s) => s.id === id) || st.meters.find((m) => m.id === id);
+const find = (st, id) => st.loci.find((l) => l.id === id) || st.slots.find((s) => s.id === id) || st.stations.find((s) => s.id === id) || st.meters.find((m) => m.id === id) || st.rings.find((r) => r.id === id);
 const ACTIONS = {
   place(st, a) { const l = find(st, a.locus), at = st.anchors[a.at]; if (l && at) { l.x = at.x + (a.dx || 0); l.y = at.y + (a.dy || 0); } },
   move(st, a) { ACTIONS.place(st, { locus: a.locus, at: a.to, dx: a.dx, dy: a.dy }); },
@@ -112,6 +122,7 @@ export function svg(st, { thumb = false, caption = true } = {}) {
   o.push(`<svg class="surface" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(st.caption)}">`);
   o.push(`<rect class="sf-floor" x="0" y="336" width="${W}" height="44"/>`);
   o.push(`<text class="sf-floorlabel" x="12" y="366">compute surface</text>`);
+  for (const r of st.rings) o.push(`<g class="sf-ring ${r.state}"><rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="14"/><text x="${r.x + 12}" y="${r.y + 18}">${esc(r.label)}</text>${r.note ? `<text class="sf-note ${r.state}" x="${r.x + r.w - 12}" y="${r.y + r.h - 10}" text-anchor="end">${esc(r.note)}</text>` : ''}</g>`);
   for (const w of st.wires) o.push(`<line class="sf-wire" x1="${w.x1}" y1="${w.y1}" x2="${w.x2}" y2="${w.y2}"/><text class="sf-label" x="${(w.x1 + w.x2) / 2}" y="${w.y1 - 14}" text-anchor="middle">${esc(w.label)}</text>${w.note ? `<text class="sf-note" x="${(w.x1 + w.x2) / 2}" y="${w.y1 + 26}" text-anchor="middle">${esc(w.note)}</text>` : ''}`);
   for (const s of st.slots) { const w = s.wide ? 150 : 60; o.push(`<g class="sf-slot ${s.state}"><rect x="${s.x - w / 2}" y="${s.y - 16}" width="${w}" height="32" rx="6"/><text x="${s.x}" y="${s.y + 5}" text-anchor="middle">${esc(s.label)}</text></g>`); }
   for (const m of st.meters) { const pct = Math.max(0, Math.min(1, m.value / m.max)); o.push(`<g class="sf-meter ${m.kind}"><text class="sf-label" x="${m.x}" y="${m.y - 6}">${esc(m.label)} · ${Math.round(pct * 100)}%</text><rect class="sf-track" x="${m.x}" y="${m.y}" width="${m.w}" height="10" rx="5"/><rect class="sf-fill" x="${m.x}" y="${m.y}" width="${(m.w * pct).toFixed(1)}" height="10" rx="5"/></g>`); }
@@ -166,6 +177,8 @@ export const CSS = `
 .sf-locus.tampered circle{fill:var(--ink3,#fff);stroke:var(--rose,#c02a5f);stroke-width:2;stroke-dasharray:3 2}.sf-locus.tampered text.sf-id{fill:var(--rose,#c02a5f)}
 .sf-station path,.sf-station rect{fill:var(--ink3,#fff);stroke:var(--fg2,#333);stroke-width:1.5}.sf-station text{font:12px var(--mono,monospace);fill:var(--fg,#1c1a17)}
 .sf-station.admitted path,.sf-station.admitted rect{stroke:var(--data,#0a6e62);fill:var(--data-soft,rgba(10,110,98,.09))}.sf-station.refused path,.sf-station.refused rect{stroke:var(--rose,#c02a5f);fill:rgba(192,42,95,.08)}
+.sf-station.indeterminate path,.sf-station.indeterminate rect{stroke:var(--warn,#96600b);fill:rgba(150,96,11,.10);stroke-dasharray:5 3}.sf-note.indeterminate{fill:var(--warn,#96600b)}
+.sf-ring rect{fill:none;stroke:var(--line2,#d8cfba);stroke-width:1.5}.sf-ring text{font:11px var(--mono,monospace);fill:var(--fg3,#666);letter-spacing:.06em;text-transform:uppercase}.sf-ring.held rect{stroke:var(--acc,#6d3bd4);fill:var(--acc-soft,rgba(109,59,212,.05))}.sf-ring.held text{fill:var(--acc,#6d3bd4)}.sf-ring.refused rect{stroke:var(--rose,#c02a5f)}.sf-ring.refused text{fill:var(--rose,#c02a5f)}.sf-ring.admitted rect{stroke:var(--data,#0a6e62)}.sf-ring.admitted text{fill:var(--data,#0a6e62)}
 .sf-station .sf-count{font:10px var(--mono,monospace);fill:var(--fg3,#555)}
 .sf-note{font:12px var(--mono,monospace);fill:var(--fg2,#333)}.sf-note.refused{fill:var(--rose,#c02a5f)}.sf-note.admitted{fill:var(--data,#0a6e62)}
 .sf-wire{stroke:var(--fg3,#555);stroke-width:2;stroke-dasharray:6 4}.sf-label{font:12px var(--ui,system-ui);fill:var(--fg2,#333)}

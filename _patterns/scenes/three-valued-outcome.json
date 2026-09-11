@@ -1,0 +1,128 @@
+{
+ "stencil": "join",
+ "interval": 2300,
+ "intro": "Three attempts to intervene, three outcomes, and a rule about the third.",
+ "params": {
+  "station": "intervene",
+  "loci": [
+   {
+    "id": "A1",
+    "label": "1",
+    "tag": "attempt 1",
+    "at": "left"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "Attempt 1 reaches the world and is applied.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "A1",
+     "to": "J",
+     "dx": -100
+    },
+    {
+     "op": "join",
+     "a": "A1",
+     "b": "A1",
+     "result": "composite",
+     "note": "APPLIED"
+    }
+   ]
+  },
+  {
+   "caption": "Attempt 2 is refused, by name. Refusal is an outcome, not an error path.",
+   "takeaway": "APPLIED and REFUSED are both settled facts about an attempt.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "A1",
+     "to": "out",
+     "dx": -30
+    },
+    {
+     "op": "spawn",
+     "id": "A2",
+     "label": "2",
+     "tag": "attempt 2",
+     "at": "left"
+    },
+    {
+     "op": "move",
+     "locus": "A2",
+     "to": "J",
+     "dx": -100
+    },
+    {
+     "op": "join",
+     "a": "A2",
+     "b": "A2",
+     "result": "refused",
+     "reason": "REFUSED · not admissible"
+    }
+   ]
+  },
+  {
+   "caption": "Attempt 3 times out. The request is abandoned — the work is not. Did it apply? Unknown.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "A2",
+     "to": "out",
+     "dx": 30
+    },
+    {
+     "op": "state",
+     "target": "J",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": ""
+    },
+    {
+     "op": "spawn",
+     "id": "A3",
+     "label": "3",
+     "tag": "attempt 3 · timeout",
+     "at": "left"
+    },
+    {
+     "op": "move",
+     "locus": "A3",
+     "to": "J",
+     "dx": -100
+    }
+   ]
+  },
+  {
+   "caption": "INDETERMINATE. It is a fact about an attempt, and it is never rewritten — not when the work later lands, not when it later fails.",
+   "takeaway": "INDETERMINATE is a fact about an attempt. It is never rewritten.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "J",
+     "state": "indeterminate"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": "INDETERMINATE · never rewritten"
+    },
+    {
+     "op": "state",
+     "target": "A3",
+     "state": "dormant"
+    }
+   ]
+  },
+  {
+   "caption": "The same document that specifies this refutes its predecessor's settle-in-place design: the ledger has no update-in-place. A pattern and its own review in one file.",
+   "takeaway": "A timeout is not a death: a witness is sound after a death and unsound after a timeout.",
+   "actions": []
+  }
+ ]
+}

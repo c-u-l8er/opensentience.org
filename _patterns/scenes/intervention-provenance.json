@@ -1,0 +1,105 @@
+{
+ "stencil": "join",
+ "interval": 2300,
+ "intro": "An intervention on the world, and what it must carry to be admissible.",
+ "params": {
+  "station": "intervene",
+  "loci": [
+   {
+    "id": "A",
+    "label": "a",
+    "tag": "action · no worker · no generation",
+    "at": "left"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "An action reaches the world with no record of who made it or what evidence it acted on.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "A",
+     "to": "J",
+     "dx": -100
+    }
+   ]
+  },
+  {
+   "caption": "Refused: an intervention that cannot be attributed is not admissible.",
+   "takeaway": "Attribution is a precondition of admissibility, not an audit afterthought.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "A",
+     "b": "A",
+     "result": "refused",
+     "reason": "REFUSED · unattributable"
+    }
+   ]
+  },
+  {
+   "caption": "Provenance attached: the Worker and generation that made it, and the evidence it acted on. Keyed on Worker + generation, because no cross-peer terminal authority existed.",
+   "actions": [
+    {
+     "op": "spawn",
+     "id": "V",
+     "label": "prov",
+     "tag": "Worker + generation + evidence",
+     "at": "left2"
+    },
+    {
+     "op": "state",
+     "target": "J",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "A",
+     "state": "live"
+    },
+    {
+     "op": "move",
+     "locus": "V",
+     "to": "J",
+     "dx": -100,
+     "dy": -46
+    }
+   ]
+  },
+  {
+   "caption": "APPLIED, with provenance. Or REFUSED, or INDETERMINATE — three values, never rewritten.",
+   "takeaway": "The operator-disclosure policy is keyed on a Worker and a generation; that key is what makes the intervention answerable.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "A",
+     "b": "V",
+     "result": "composite",
+     "note": "APPLIED · attributed"
+    }
+   ]
+  },
+  {
+   "caption": "The honest half of the specification: the re-observation INDETERMINATE was meant to be repaired by does not exist — Pty::winsize() has zero callers. STATED, with its own refutation beside it.",
+   "takeaway": "A specification that names its unimplemented dependency is worth more than one that hides it.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "J",
+     "state": "indeterminate"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": "re-observation: not implemented"
+    }
+   ]
+  }
+ ]
+}

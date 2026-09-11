@@ -1,0 +1,67 @@
+{
+ "stencil": "migrate",
+ "interval": 2300,
+ "intro": "A skill taught on one machine, and the trace that carries it to another.",
+ "params": {
+  "carriers": [
+   "machine A",
+   "machine B"
+  ],
+  "loci": [
+   {
+    "id": "T",
+    "label": "T",
+    "tag": "InteractionTrace",
+    "at": "c0"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "A skill is performed on machine A and recorded as an InteractionTrace — the unit of transfer.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "The trace replays on machine B with the declared fidelity.",
+   "takeaway": "The trace, not the machine, is what is transferred; fidelity is declared, then measured.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "T",
+     "to": "c1"
+    },
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "c1",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "The homepage shows a receipt card for this: 100 % fidelity, OS-011 Embodiment. This build did not open the run behind the card.",
+   "takeaway": "A receipt card is a claim about a receipt; this page reports the card and says the run was not opened.",
+   "actions": [
+    {
+     "op": "tag",
+     "target": "T",
+     "text": "card: 100 % · run not opened here"
+    }
+   ]
+  },
+  {
+   "caption": "Not the same pattern as Exact Replay: that one is about a film of a world; this one is about a skill across bodies.",
+   "actions": []
+  }
+ ]
+}

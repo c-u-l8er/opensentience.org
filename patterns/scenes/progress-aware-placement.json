@@ -1,0 +1,122 @@
+{
+ "stencil": "progress",
+ "interval": 2300,
+ "intro": "Two homes and a locus that could be placed on either. Every bar here is a picture; R7.2.1D stage 2 has not run.",
+ "params": {
+  "carriers": [
+   "home A · fair placement",
+   "home B · progress placement"
+  ],
+  "loci": [
+   {
+    "id": "L",
+    "label": "L",
+    "at": "c0"
+   },
+   {
+    "id": "m1",
+    "label": "",
+    "r": 10,
+    "at": "c0"
+   },
+   {
+    "id": "m2",
+    "label": "",
+    "r": 10,
+    "at": "c1"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "L is placed on home A because A had the fewest loci — fairness among runnable carriers.",
+   "actions": [
+    {
+     "op": "place",
+     "locus": "L",
+     "at": "c0",
+     "dx": -40
+    },
+    {
+     "op": "place",
+     "locus": "m1",
+     "at": "c0",
+     "dx": 30
+    },
+    {
+     "op": "meter",
+     "target": "u0",
+     "value": 90
+    },
+    {
+     "op": "meter",
+     "target": "u1",
+     "value": 40
+    }
+   ]
+  },
+  {
+   "caption": "But what L needs to make progress — its mailbox, its authority working set — is resident on B. On A it spends its commands relocating.",
+   "takeaway": "Placement by fairness optimizes the carriers' view; placement by progress optimizes the loci's.",
+   "actions": [
+    {
+     "op": "meter",
+     "target": "p0",
+     "value": 15
+    },
+    {
+     "op": "meter",
+     "target": "p1",
+     "value": 55
+    }
+   ]
+  },
+  {
+   "caption": "Re-place L where its semantic progress is greatest.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "L",
+     "to": "c1",
+     "dx": -40
+    },
+    {
+     "op": "state",
+     "target": "c1",
+     "state": "held"
+    },
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "idle"
+    }
+   ]
+  },
+  {
+   "caption": "The picture says progress goes up. The battery that would say by how much — placement on the compiled home, R7.2.1D stage 2 — is prespecified and unrun.",
+   "takeaway": "Do not write the number before the battery: this page carries no measurement, and the bars are not one.",
+   "actions": [
+    {
+     "op": "meter",
+     "target": "p1",
+     "value": 80
+    },
+    {
+     "op": "meter",
+     "target": "u1",
+     "value": 65
+    },
+    {
+     "op": "meter",
+     "target": "u0",
+     "value": 60
+    }
+   ]
+  },
+  {
+   "caption": "The oracle for that battery already exists and has a red control of its own (metrics_mutant=); the comparator was built before the thing it compares.",
+   "takeaway": "A comparator without a red control cannot be trusted to have looked.",
+   "actions": []
+  }
+ ]
+}

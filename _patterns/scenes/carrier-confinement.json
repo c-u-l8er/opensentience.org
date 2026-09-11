@@ -1,0 +1,94 @@
+{
+ "stencil": "join",
+ "interval": 2300,
+ "intro": "A Worker asks for a Carrier. What the Carrier may touch is decided before it starts.",
+ "params": {
+  "station": "start_carrier",
+  "loci": [
+   {
+    "id": "R",
+    "label": "req",
+    "tag": "inherits every descriptor · whole filesystem",
+    "at": "left"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "A request to start a Carrier arrives with the parent's whole environment: every open descriptor, the whole filesystem.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "R",
+     "to": "J",
+     "dx": -100
+    }
+   ]
+  },
+  {
+   "caption": "Refused: carrier-confinement-unacceptable. A Carrier that inherits everything can do everything, and nothing about the grant was checked.",
+   "takeaway": "Ambient authority at the OS boundary: one capability needed, the whole environment handed over.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "R",
+     "b": "R",
+     "result": "refused",
+     "reason": "REFUSED · carrier-confinement-unacceptable"
+    }
+   ]
+  },
+  {
+   "caption": "A ruleset arrives: the read-only and writable directories the Worker's grant names, and a descriptor seal — CLOSE_RANGE_CLOEXEC, never a blind close.",
+   "actions": [
+    {
+     "op": "spawn",
+     "id": "G",
+     "label": "rules",
+     "tag": "Landlock ruleset · CLOSE_RANGE_CLOEXEC",
+     "at": "left2"
+    },
+    {
+     "op": "state",
+     "target": "J",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "R",
+     "state": "live"
+    },
+    {
+     "op": "move",
+     "locus": "G",
+     "to": "J",
+     "dx": -100,
+     "dy": -46
+    }
+   ]
+  },
+  {
+   "caption": "Started, confined: exactly the filesystem and descriptor authority the grant names, sealed before the payload runs.",
+   "takeaway": "The descriptor seal is CLOSE_RANGE_CLOEXEC; a blind close leaves a dup'd master in the census.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "R",
+     "b": "G",
+     "result": "composite",
+     "note": "Carrier started · confined · ABI 10 on this host"
+    }
+   ]
+  },
+  {
+   "caption": "The witness lives in super/, a lane this book references and never copies. STATED here; measured there.",
+   "takeaway": "A same-UID battery measures yama, not Landlock, unless it carries a bare control — the floor is only as good as its control arm.",
+   "actions": []
+  }
+ ]
+}

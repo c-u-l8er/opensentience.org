@@ -1,0 +1,78 @@
+{
+ "stencil": "nest",
+ "interval": 2300,
+ "intro": "A world, and the boundary that would make it one. The boundary has no definition in the tree yet.",
+ "params": {
+  "rings": [
+   {
+    "id": "o",
+    "label": "outside"
+   },
+   {
+    "id": "b",
+    "label": "world boundary — undefined (GAP)"
+   },
+   {
+    "id": "i",
+    "label": "authority · state · observation"
+   }
+  ],
+  "loci": [
+   {
+    "id": "L",
+    "label": "L",
+    "tag": "an active locus inside",
+    "at": "i"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "Inside: a coherent domain of authority, state and observation. L acts there.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "i",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "The boundary is what makes 'inside' meaningful — and it need not be an OS process, a VM or a machine.",
+   "takeaway": "Candidate definition (GPT, 2026-09-11): a coherent authority/state/observation domain, not a process, VM or machine. Unruled.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "b",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Three sizes of world have frozen names. The boundary between a world and its outside has none.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "b",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "b",
+     "text": "no canonical definition"
+    }
+   ]
+  },
+  {
+   "caption": "This page is honest by being thin: the invariant field is empty because nothing in the tree states one.",
+   "takeaway": "A GAP is published as a gap; the label vocabulary has no word for it, so it derives as PROPOSED.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "o",
+     "state": "idle"
+    }
+   ]
+  }
+ ]
+}
