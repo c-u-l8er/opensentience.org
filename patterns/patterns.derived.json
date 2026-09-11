@@ -1,15 +1,15 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T23:03:12.083Z",
+  "built": "2026-09-11T23:44:46.480Z",
   "inputs_heads": {
-    ".": "a9e9bfbab6bb4c9d68224cf776fdb397c79b2448",
-    "opensentience.org": "580246f009609744be648978c4494a884206b3cf",
+    ".": "37e07251b88cb3b96d12aabca7c352dd89d0e001",
+    "opensentience.org": "6c213b1fe0d4ae708a8084834ccbf5b29d564e9b",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
     "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
     "computedriven": "3669fe0de4b9ac06d745d2637bdaf2a4f72a755a",
-    "super": "1671d82ffdb4eda34dc4729336c2eec17996b898"
+    "super": "9825e31c4a310352ac8ec265ef0d8723c68713b2"
   },
   "summary": {
     "patterns": 32,
@@ -22,6 +22,10 @@
     "RUNNABLE": 11,
     "EXECUTED": 14,
     "STAGED": 2,
+    "PUBLISHED": 32,
+    "REPRODUCED": 0,
+    "prior_art_works": 67,
+    "prior_art_not_searched": 2,
     "invariant_null": 2,
     "by_family": {
       "locus": 5,
@@ -46,7 +50,10 @@
       "descent-is-not-dependence"
     ]
   },
-  "findings": [],
+  "findings": [
+    "refusing-join: witness is STAGED and the page is served, yet its rung is authored in_tree — the ladder position is understated (rung re-adjudication owed)",
+    "capability-bounded-composition: witness is STAGED and the page is served, yet its rung is authored in_tree — the ladder position is understated (rung re-adjudication owed)"
+  ],
   "patterns": [
     {
       "id": "active-locus",
@@ -57,7 +64,24 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Anthropic PSM 2026 asks whether the Assistant is the 'locus of agency' (alignment.anthropic.com/2026/psm/); Hewitt's Actor model. Not a coinage.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Hewitt, Actor model (1973)",
+            "relation": "antecedent",
+            "overlap": "an addressable entity that holds state and progresses independently of any thread",
+            "difference": "an actor is defined by its mail behaviour; a locus here is defined by an identity that survives its carrier"
+          },
+          {
+            "work": "Anthropic, Project Self-Model 2026 — 'locus of agency' (alignment.anthropic.com/2026/psm/)",
+            "relation": "terminology-precedent",
+            "overlap": "the word locus for the thing that acts",
+            "difference": "PSM asks whether the Assistant is one; this book asks what invariants a locus must satisfy"
+          }
+        ],
+        "novelty_not_claimed": "The word is not a coinage and the concept is not new. What is offered is a definition tight enough to carry invariants, not the observation that identities act.",
+        "prose": "Anthropic PSM 2026 asks whether the Assistant is the 'locus of agency' (alignment.anthropic.com/2026/psm/); Hewitt's Actor model. Not a coinage."
+      },
       "realizations": [
         "AGENCY.md §1"
       ],
@@ -77,7 +101,7 @@
           "quoting one register whole",
           "tracing to AGENCY.md"
         ],
-        "forbidden": [
+        "refused": [
           "paraphrasing the definition into a nearby synonym",
           "asserting by fiat that the locus survives a model swap — the retired formulation the IDENTITY_ASSERTED lint lists",
           "attaching an evidence rung to the definition"
@@ -115,12 +139,24 @@
       "wrl": {
         "note": "A definition; no world."
       },
+      "up": "UP-001",
+      "limit": "A definition. It establishes what the book means by a locus and carries no evidence rung at all (AGENCY.md §6). It does not establish that any system in this tree has one.",
+      "next_rung": "Definitions do not climb the ladder. The nearest thing to progress is that every later chapter's invariant type-checks against this definition without amendment.",
       "derived": {
         "label": null,
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": null,
+            "text": "kind is definition — carries no evidence rung (AGENCY.md §6)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -152,7 +188,24 @@
         "expected": "REFUSED",
         "lint_allow": "lint-allow:RECORD_IS_LOCUS — a lint counterexample must print the retired phrase to be one"
       },
-      "prior_art": "world ≠ world serialization is the same distinction as map ≠ territory; the software form is Parnas's interface/implementation split applied to identity rather than modules.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Parnas, information hiding (1972)",
+            "relation": "antecedent",
+            "overlap": "the split between what a thing is and what it shows at its edge",
+            "difference": "Parnas splits interface from implementation for modules; this splits identity from its serialization"
+          },
+          {
+            "work": "Korzybski, map ≠ territory",
+            "relation": "close-analogue",
+            "overlap": "the representation is not the thing",
+            "difference": "a general semantic caution, not a rule a build can enforce"
+          }
+        ],
+        "novelty_not_claimed": "The distinction is old. The contribution is making it refusable at a specific boundary rather than stating it as advice.",
+        "prose": "world ≠ world serialization is the same distinction as map ≠ territory; the software form is Parnas's interface/implementation split applied to identity rather than modules."
+      },
       "realizations": [
         "AGENCY.md §1 corollary",
         "AmpersandBoxDesign/site/index.html §02"
@@ -174,7 +227,7 @@
           "certifying a locus from its records",
           "re-establishing a locus from records — a continuity question, not an identity assertion"
         ],
-        "forbidden": [
+        "refused": [
           "'X carries the locus fields, therefore X is a locus'",
           "attaching an evidence rung to a definition",
           "letting a record observe or act in prose"
@@ -218,12 +271,48 @@
       "wrl": {
         "note": "No core-role encoding: a record is not a role, and inventing one would need a book profile (WRL-P0), which waits on the WRL lane's ruling."
       },
+      "up": "UP-002",
+      "limit": "States an obligation about one boundary. It does not establish that any boundary in the tree is drawn in the right place, and satisfying it at one boundary implies nothing about the composition of two.",
+      "next_rung": "A check that reads a boundary's declared record and refuses a field that crosses it undeclared. None exists; without one this stays STATED.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (counterexample)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:27:41.066Z",
           "host": "PX13",
@@ -243,7 +332,24 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "M:N scheduling; green threads; BEAM processes are not OS threads. The tree's statement is a standing rule (computedriven/receipts/R7-OPEN.md §0), not a measured result — the measured fact is carrier-multiplexing.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "M:N scheduling; green threads",
+            "relation": "realization",
+            "overlap": "many schedulable entities over fewer OS threads",
+            "difference": "an implementation technique; here it is the invariant the technique happens to satisfy"
+          },
+          {
+            "work": "BEAM processes",
+            "relation": "realization",
+            "overlap": "processes are not OS threads and never were",
+            "difference": "the BEAM asserts it by construction; this pattern asks what must hold for the assertion to survive migration"
+          }
+        ],
+        "novelty_not_claimed": "Nothing about the separation is new. The tree's own statement is a standing rule (computedriven/receipts/R7-OPEN.md §0), not a measured result — the measured fact is carrier-multiplexing, which is a different chapter.",
+        "prose": "M:N scheduling; green threads; BEAM processes are not OS threads. The tree's statement is a standing rule (computedriven/receipts/R7-OPEN.md §0), not a measured result — the measured fact is carrier-multiplexing."
+      },
       "realizations": [
         "computedriven/receipts/R7-OPEN.md:18"
       ],
@@ -265,7 +371,7 @@
           "running the same locus on a thread today and a machine tomorrow",
           "suspending possession with no carrier at all (Dormant But Alive)"
         ],
-        "forbidden": [
+        "refused": [
           "deriving identity, authority or state from the carrier",
           "serializing a context by copying and calling the copy the locus",
           "treating loss of a carrier as loss of the locus"
@@ -309,12 +415,48 @@
       "wrl": {
         "note": "No core-role encoding: WRL has no carrier role by design — the runtime is the carrier — which is the pattern's point, stated by absence."
       },
+      "up": "UP-003",
+      "limit": "The tree's statement is a standing rule (computedriven/receipts/R7-OPEN.md §0), not a measured result. Nothing here measures a locus surviving a carrier change; the measured neighbour is carrier-multiplexing, which is a weaker fact.",
+      "next_rung": "A run in which one locus's identity is observed before and after its carrier is replaced, with both observations receipted. computedriven/ has no git origin (R8), so today nothing could pin that receipt.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -346,7 +488,30 @@
         "expected": "REFUSED",
         "expected_count": 15
       },
-      "prior_art": "Merkle 1979; Nix store paths; Unison identifies every definition by the hash of its syntax tree. 'birth key' appears once in WRL/HANDOFF_D8_PATH_B.md; the invariant's wording is the book's.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Merkle (1979)",
+            "relation": "antecedent",
+            "overlap": "a hash names a structure",
+            "difference": "Merkle authenticates; this uses the hash as the identity itself"
+          },
+          {
+            "work": "Unison — every definition identified by the hash of its syntax tree",
+            "relation": "close-analogue",
+            "overlap": "content-addressed identity for program meaning, not for bytes",
+            "difference": "Unison hashes definitions; WRL seals a topology, and comments do not move the id"
+          },
+          {
+            "work": "Nix store paths",
+            "relation": "realization",
+            "overlap": "identity derived from inputs rather than assigned",
+            "difference": "Nix hashes build inputs; the seal here is over a semantic graph"
+          }
+        ],
+        "novelty_not_claimed": "Content-addressed identity is well-established prior art. The phrase 'birth key' appears once in WRL/HANDOFF_D8_PATH_B.md; the invariant's wording is the book's, and the wording is not the contribution.",
+        "prose": "Merkle 1979; Nix store paths; Unison identifies every definition by the hash of its syntax tree. 'birth key' appears once in WRL/HANDOFF_D8_PATH_B.md; the invariant's wording is the book's."
+      },
       "realizations": [
         "WRL/README.md:17-27"
       ],
@@ -368,7 +533,7 @@
           "renaming a label that points at a seal",
           "re-deriving the seal on any host"
         ],
-        "forbidden": [
+        "refused": [
           "assigning identity from a location",
           "editing in place under a preserved id",
           "trusting an id a record asserts without recomputing it (see Refusable Divergence)"
@@ -412,12 +577,48 @@
       "wrl": {
         "note": "The starter world. Sealed here, in node, at build; the id the page prints was computed from these bytes by WRL's own wrl.js."
       },
+      "up": "UP-004",
+      "limit": "wrl.js seals a topology to an id and the forge agrees with it. That establishes that the seal is a function of the graph and not of the text — it does not establish that the graph captures the meaning anyone cares about.",
+      "next_rung": "live_local: the seal computed in a browser on this site from source the reader supplies, rather than at build time. The build already seals 33 worlds; nothing yet exposes sealWorld to the page.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:25:45.285Z",
           "host": "PX13",
@@ -435,11 +636,20 @@
       "family": "locus",
       "invariant": "A locus continues across a replacement iff a minimal causally established support set sufficient for each declared capability is retained; reconstruction from durable facts is continuity, not creation.",
       "cells": [
-        "30"
+        {
+          "ref": "30",
+          "modality": "necessary"
+        }
       ],
       "claims": [
-        "EMB-SUPPORT-GRAPH",
-        "EMB-KERNEL-LOCATION"
+        {
+          "ref": "EMB-SUPPORT-GRAPH",
+          "modality": "not_sufficient"
+        },
+        {
+          "ref": "EMB-KERNEL-LOCATION",
+          "modality": "not_sufficient"
+        }
       ],
       "witness": {
         "registry": "ledger",
@@ -453,7 +663,30 @@
         "cwd": ".",
         "staged": false
       },
-      "prior_art": "Atkinson & Morrison, orthogonal persistence (persistence independence); Erlang code change; distillation as successor. Never write in the present perfect: stage 5 (Inheritance) has never been reached.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Atkinson & Morrison, orthogonal persistence — persistence independence",
+            "relation": "antecedent",
+            "overlap": "a value's existence does not depend on where it is stored",
+            "difference": "their concern is storage transparency; this one is whether restoration may claim to be continuation"
+          },
+          {
+            "work": "Erlang code change (hot code loading)",
+            "relation": "realization",
+            "overlap": "a process survives the replacement of the code that runs it",
+            "difference": "the process never stops; reconstruction here starts something that had stopped"
+          },
+          {
+            "work": "Distillation as successor",
+            "relation": "contrasting-solution",
+            "overlap": "a later instance stands in for an earlier one",
+            "difference": "a successor is honestly a new thing; the question here is when that honesty is required"
+          }
+        ],
+        "novelty_not_claimed": "Persistence and restoration are both old. Nothing here is written in the present perfect: stage 5 (Inheritance) has never been reached, and the cell this pattern rests on (30, capability heredity) is status missing.",
+        "prose": "Atkinson & Morrison, orthogonal persistence (persistence independence); Erlang code change; distillation as successor. Never write in the present perfect: stage 5 (Inheritance) has never been reached."
+      },
       "realizations": [
         "AGENCY.md §5b",
         "mosaic/embodiment.json"
@@ -476,7 +709,7 @@
           "declaring a weaker replacement contract and testing against that",
           "keeping several sufficient kernels at once"
         ],
-        "forbidden": [
+        "refused": [
           "asserting continuity from a preserved name or a lineage edge",
           "'has continued' / 'has inherited' in the present perfect without an observed kernel",
           "ablating one artifact and concluding about a set"
@@ -520,12 +753,48 @@
       "wrl": {
         "note": "No core-role encoding yet; continuity is a relation between two worlds and a contract, not a topology."
       },
+      "up": "UP-005",
+      "limit": "Rests on cell 30 (capability heredity), whose status is missing — the tree has not established that a reconstructed locus may inherit anything. Stage 5 (Inheritance) has never been reached, and no sentence here is in the present perfect.",
+      "next_rung": "Cell 30 ruled either way. Until then this pattern's basis is a question, and the page says so rather than rounding it up.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": false,
+            "text": "every cited claim is PROVED/KNOWN/MEASURED/CONDITIONAL (OPEN, OPEN)"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:25:45.592Z",
           "host": "PX13",
@@ -539,6 +808,7 @@
         "cell_statuses": [
           {
             "num": "30",
+            "modality": "necessary",
             "status": "missing"
           }
         ]
@@ -573,7 +843,24 @@
         "expected": "REFUSED",
         "note": "v0.4 named the marker narrow-into-ANY-refused, which is CD2's FAILURE string (a refusal that must NOT happen). A marker proves the file mentions a string, not that the string is a refusal — P2 finding; the page runs CD1 live."
       },
-      "prior_art": "Monoid laws (associativity, identity). FACTORY_REVIEW_BUNDLE.md cites 'the 2026 λA literature, Theorem 5.7' from page copy only — NOT SEARCHED for the paper.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Monoid laws (associativity, identity)",
+            "relation": "antecedent",
+            "overlap": "composition with an identity and an annihilator is standard algebra",
+            "difference": "the algebra is standard; treating the annihilator as a reportable outcome with a named cause is the pattern"
+          },
+          {
+            "work": "'the 2026 λA literature, Theorem 5.7'",
+            "relation": "not-searched",
+            "overlap": "cited by FACTORY_REVIEW_BUNDLE.md:507 from page copy only",
+            "difference": "the paper has never been located; this citation establishes nothing and is recorded so that it cannot be quoted as if it did"
+          }
+        ],
+        "novelty_not_claimed": "Algebraic composition with a zero is textbook. The claim is narrower: that an UNDECLARED field is not a wildcard, and that a refusal must name the field — 101 enforced compose laws, not a new algebra.",
+        "prose": "Monoid laws (associativity, identity). FACTORY_REVIEW_BUNDLE.md cites 'the 2026 λA literature, Theorem 5.7' from page copy only — NOT SEARCHED for the paper."
+      },
       "realizations": [
         "FACTORY_REVIEW_BUNDLE.md:460",
         "FACTORY_REVIEW_BUNDLE.md:507",
@@ -596,7 +883,7 @@
           "commuting operands of & (a commutative idempotent monoid)",
           "declaring a contract explicitly where one was absent — this can only turn a refusal into a composite, never the reverse"
         ],
-        "forbidden": [
+        "refused": [
           "defaulting an absent contract field to '*' or any other value",
           "widening a type to make a join succeed",
           "repairing evidence on the way through a join (VALUE laws: defaults complete absence, never repair)",
@@ -647,12 +934,48 @@
         "refused": "refusing-join.refused.wrl",
         "note": "A Door admits exactly one signal wire. Two producers into one join is WRL_CONTROLLER_CONFLICT — the language's own refusing join, named at the port."
       },
+      "up": "UP-006",
+      "limit": "101 compose laws over this algebra's own bricks, 2000 trials each, on the bytes staged on this site. It establishes that THIS composition refuses an undeclared contract. It does not establish that refusal is the right policy for any other join, and it says nothing about joins outside box-and-box.",
+      "next_rung": "live_local: the staged bytes already run from this page, which means the rung recorded on this witness understates where it stands — a re-adjudication is owed. The step that would actually matter is further up: an implementation not written in this tree passing the same law suite. Five ports exist (npm run parity) and all five are ours.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": true,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:25:45.724Z",
           "host": "PX13",
@@ -688,7 +1011,24 @@
         "marker": "Law 6",
         "expected": "REFUSED"
       },
-      "prior_art": "Nerode quotient; PSR sufficient statistic; Markov condition. invariant-r10/package-v2.8/v1-provenance/00_EXECUTIVE_FINDINGS.md:45 says 'known property, new name; P1'. TWO STANDINGS: TRVM/LAWS.md:80 ratifies it for Film bytes ('GLOBAL' = not horizon-scoped); the frontier package finds it too strong lifted to arbitrary observables — a SCOPE hypothesis, unresolved.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Nerode quotient; PSR sufficient statistic",
+            "relation": "antecedent",
+            "overlap": "the minimal state that determines future behaviour",
+            "difference": "none that has been established — invariant-r10/package-v2.8/v1-provenance/00_EXECUTIVE_FINDINGS.md:45 records it as 'known property, new name; P1'"
+          },
+          {
+            "work": "Markov condition",
+            "relation": "close-analogue",
+            "overlap": "the present screens the future from the past",
+            "difference": "stated over probability; here over observable state at a boundary"
+          }
+        ],
+        "novelty_not_claimed": "The tree has already demoted this to P1 as a renaming. Two standings stand unresolved: TRVM/LAWS.md:80 ratifies Law 6 for Film bytes ('GLOBAL' = not horizon-scoped), and the frontier package finds it too strong lifted to arbitrary observables. The axis is scope, and it is a hypothesis.",
+        "prose": "Nerode quotient; PSR sufficient statistic; Markov condition. invariant-r10/package-v2.8/v1-provenance/00_EXECUTIVE_FINDINGS.md:45 says 'known property, new name; P1'. TWO STANDINGS: TRVM/LAWS.md:80 ratifies it for Film bytes ('GLOBAL' = not horizon-scoped); the frontier package finds it too strong lifted to arbitrary observables — a SCOPE hypothesis, unresolved."
+      },
       "realizations": [
         "TRVM/LAWS.md:80"
       ],
@@ -709,7 +1049,7 @@
           "adding a variable to the observable when a witness shows it determines a future",
           "quotienting the observable by an equivariance that provably does not change futures"
         ],
-        "forbidden": [
+        "refused": [
           "a variable outside the observable that changes a future transition (Invisible State)",
           "lifting the law to another observable without its own witness",
           "treating two lanes' standings as one"
@@ -753,12 +1093,48 @@
       "wrl": {
         "note": "The Spinner's rotor is the state Law 6 was first written for: it determines the Orb's pose and must be in the Film."
       },
+      "up": "UP-007",
+      "limit": "Two standings stand unresolved. TRVM/LAWS.md:80 ratifies Law 6 for Film bytes; the frontier package finds it too strong lifted to arbitrary observables. Neither standing is a result about shared observables in general, and the scope axis between them is a hypothesis.",
+      "next_rung": "A ruling on the scope axis — for which class of observables the law holds. Until that ruling the pattern cites a law it cannot fully claim.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": false,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-07-22",
           "note": "the witness is itself an execution record"
@@ -776,7 +1152,18 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Parnas 1972 information hiding; the phrase 'semantic membrane' appears nowhere in the tree — PROPOSED by the book.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Parnas, information hiding (1972)",
+            "relation": "antecedent",
+            "overlap": "a boundary chosen so that what crosses it is the only thing that matters",
+            "difference": "Parnas hides implementation decisions; a membrane is asked to hold under composition, not only under change"
+          }
+        ],
+        "novelty_not_claimed": "The phrase 'semantic membrane' appears nowhere in the tree. It is PROPOSED by the book and has no witness; if it turns out to be Parnas with a new coat, that is the expected outcome, not a surprise.",
+        "prose": "Parnas 1972 information hiding; the phrase 'semantic membrane' appears nowhere in the tree — PROPOSED by the book."
+      },
       "realizations": [],
       "failure_mode": "invisible-state",
       "related": [
@@ -794,7 +1181,7 @@
           "refactoring internals within an equivalence class",
           "widening the membrane when a new variable is shown to determine a future"
         ],
-        "forbidden": [
+        "refused": [
           "exposing a representative where a quotient was meant",
           "hiding a variable that determines a future (Invisible State)"
         ]
@@ -831,12 +1218,48 @@
       "wrl": {
         "note": "No core-role encoding; the membrane is a quotient on state, not a route."
       },
+      "up": "UP-008",
+      "limit": "PROPOSED. The phrase appears nowhere in the tree, there is no check, and no system here is known to implement one. It establishes nothing.",
+      "next_rung": "in_tree: any check that could distinguish a membrane from a boundary that merely happens not to leak today.",
       "derived": {
         "label": "PROPOSED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -849,7 +1272,10 @@
       "family": "composition",
       "invariant": "An action is admissible only if it is feasible AND permitted under an explicit grant; feasibility never implies permission, and the safety floor cannot be weakened by composition.",
       "cells": [
-        "16"
+        {
+          "ref": "16",
+          "modality": "necessary"
+        }
       ],
       "claims": [],
       "witness": {
@@ -871,7 +1297,30 @@
         "marker": "should refuse",
         "expected": "REFUSED"
       },
-      "prior_art": "Object-capability discipline; 'ambient authority' is Mark S. Miller's term (Capability Myths Demolished, 2003); Dennis & Van Horn 1966.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Dennis & Van Horn (1966)",
+            "relation": "antecedent",
+            "overlap": "authority carried by an unforgeable reference",
+            "difference": "none claimed"
+          },
+          {
+            "work": "Miller, Capability Myths Demolished (2003) — 'ambient authority'",
+            "relation": "terminology-precedent",
+            "overlap": "the term for authority available without being passed",
+            "difference": "the term is Miller's and is used here as he defined it"
+          },
+          {
+            "work": "Object-capability discipline",
+            "relation": "antecedent",
+            "overlap": "participation conveys only what was granted",
+            "difference": "applied here to composition of assemblies rather than to object references"
+          }
+        ],
+        "novelty_not_claimed": "This is object-capability discipline. No part of the principle is claimed as new; the contribution, if any, is that it is stated as a composition law with a deny-by-default cell (16) beneath it.",
+        "prose": "Object-capability discipline; 'ambient authority' is Mark S. Miller's term (Capability Myths Demolished, 2003); Dennis & Van Horn 1966."
+      },
       "realizations": [
         "opensentience.org/box-and-box/README.md deontic rung",
         "opensentience.org/deontic-arithmetic.html"
@@ -894,7 +1343,7 @@
           "composing two governed bricks (the floor is the meet)",
           "escalating an unmet obligation back to the deontic rung (ought-implies-can)"
         ],
-        "forbidden": [
+        "refused": [
           "widening authority by composition",
           "consulting the gradient before the floor",
           "granting the environment when one capability is needed (Ambient Authority)"
@@ -939,12 +1388,48 @@
         "refused": "capability-bounded-composition.refused.wrl",
         "note": "The Door is the permitted rung. A signal driven into a pose port is feasible to type and refused by the port table."
       },
+      "up": "UP-009",
+      "limit": "Cell 16 (deny by default) is proved at the impl tier, which makes the floor real. It does not establish that any composition in this tree grants only what it needs — the cell is the floor, not the pattern.",
+      "next_rung": "live_local: a composition on this page that refuses because a participant asked for authority it was not granted. The demo infrastructure exists; this record has no demo.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": true,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:26:16.294Z",
           "host": "PX13",
@@ -955,6 +1440,7 @@
         "cell_statuses": [
           {
             "num": "16",
+            "modality": "necessary",
             "status": "proved"
           }
         ]
@@ -969,7 +1455,30 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Landlock (ABI 10 on this host per super/docs/reviews/D_1_3B_2F.md:114); Capsicum; the E language's confinement. Witness lives in super/, a lane this session does not edit — referenced, not copied.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Landlock",
+            "relation": "realization",
+            "overlap": "a process restricts its own filesystem authority irreversibly",
+            "difference": "ABI 9 on this host, not 10 — the number was measured and corrected (super/docs/reviews/D_1_3B_2F.md)"
+          },
+          {
+            "work": "Capsicum",
+            "relation": "close-analogue",
+            "overlap": "capability-mode confinement of a running process",
+            "difference": "FreeBSD's design reaches it by removing the global namespace rather than by layering rules"
+          },
+          {
+            "work": "The E language's confinement",
+            "relation": "antecedent",
+            "overlap": "a subject cannot exceed the authority it was given",
+            "difference": "E enforces it in the language; here it is enforced by the kernel under the language"
+          }
+        ],
+        "novelty_not_claimed": "Confinement is a solved problem with multiple shipped implementations. The witness lives in super/, a lane this session does not edit — it is referenced, not copied, and the reference is not a claim of authorship.",
+        "prose": "Landlock (ABI 10 on this host per super/docs/reviews/D_1_3B_2F.md:114); Capsicum; the E language's confinement. Witness lives in super/, a lane this session does not edit — referenced, not copied."
+      },
       "realizations": [
         "super/docs/reviews/D_1_3B_2F.md:114"
       ],
@@ -990,7 +1499,7 @@
           "adding a read-only directory the grant names",
           "re-measuring on a host with a different ABI"
         ],
-        "forbidden": [
+        "refused": [
           "inheriting the parent's descriptors by default",
           "a blind close in place of the seal",
           "a battery without a bare control"
@@ -1028,12 +1537,48 @@
       "wrl": {
         "note": "No core-role encoding: confinement is an OS-boundary property."
       },
+      "up": "UP-010",
+      "limit": "Landlock ABI 9 on one host, in one lane (super/) this session does not edit. It establishes confinement for that carrier on that kernel. It does not establish confinement on any other kernel, and a same-UID battery measures yama unless a bare control runs beside it.",
+      "next_rung": "in_tree: the battery referenced here lives in super/, a lane this session does not edit, so this catalog has no witness of its own to run. Copying it in with a receipt is the step. Running it on a kernel nobody in this tree configured is the step above that, and it is the one that would count.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1065,7 +1610,24 @@
         "marker": "does not hold",
         "expected": "REFUSED"
       },
-      "prior_art": "CQRS read models; materialized views; Unison's hash-addressed definitions.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "CQRS read models; materialized views",
+            "relation": "antecedent",
+            "overlap": "many views derived from one authority",
+            "difference": "CQRS permits a read model to drift and reconcile; this pattern refuses a second authority outright"
+          },
+          {
+            "work": "Unison's hash-addressed definitions",
+            "relation": "close-analogue",
+            "overlap": "derivations cannot disagree about what they derive from",
+            "difference": "Unison gets it from naming; this gets it from a projection rule"
+          }
+        ],
+        "novelty_not_claimed": "Derived views are ubiquitous. The narrow claim is about authority, not about caching.",
+        "prose": "CQRS read models; materialized views; Unison's hash-addressed definitions."
+      },
       "realizations": [
         "WRL/HANDOFF_D8_PATH_B.md §D8.18-D8.19",
         "graphonomous/v2/contracts/projection.v1.json"
@@ -1088,7 +1650,7 @@
           "re-deriving after the artifact changes",
           "downgrading a projection in-band so the receiver sees the downgrade as a claim"
         ],
-        "forbidden": [
+        "refused": [
           "a copy presented as the artifact (Replica Theater)",
           "an identity that closes over inputs the projection did not use",
           "a flag that says 'this is current' instead of a recomputation"
@@ -1132,12 +1694,48 @@
       "wrl": {
         "note": "The Orb's pose is derived from the Spinner through a SocketControl edge — a projection, not a copy."
       },
+      "up": "UP-011",
+      "limit": "States that derived views may not become rival authorities. Nothing here checks that any view in the tree is derived rather than maintained; the WRL world for this chapter is sealed, and a sealed topology is not an authority audit.",
+      "next_rung": "live_local: a check on this page that walks a projection back to its source and refuses one that has drifted. The WRL world for this chapter seals, and a sealed topology is not an authority audit.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:26:17.256Z",
           "host": "PX13",
@@ -1174,7 +1772,24 @@
         "expected": "REFUSED",
         "expected_count": 15
       },
-      "prior_art": "Content addressing; Nix; 'refused by BOTH sides' is WRL/PACKET_README.md:109's wording; 'agree on the name of every refusal' is STACK_COMPLETION.md:73's and is not verified by this build. WRL/HANDOFF_D8_PATH_B.md:1424 warns that two refusals can both be drift.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Content addressing; Nix",
+            "relation": "antecedent",
+            "overlap": "divergence is detectable because names are derived from content",
+            "difference": "detection is the antecedent; agreeing on the NAME of the refusal is the part under test"
+          },
+          {
+            "work": "WRL/PACKET_README.md:109 — 'refused by BOTH sides'",
+            "relation": "partial-overlap",
+            "overlap": "the tree's own wording for the two-sided requirement",
+            "difference": "WRL/HANDOFF_D8_PATH_B.md:1424 warns that two refusals can both be drift; two-sidedness is necessary, not sufficient"
+          }
+        ],
+        "novelty_not_claimed": "Detecting divergence by hash is standard. 'Agree on the name of every refusal' is STACK_COMPLETION.md:73's wording and is NOT verified by this build.",
+        "prose": "Content addressing; Nix; 'refused by BOTH sides' is WRL/PACKET_README.md:109's wording; 'agree on the name of every refusal' is STACK_COMPLETION.md:73's and is not verified by this build. WRL/HANDOFF_D8_PATH_B.md:1424 warns that two refusals can both be drift."
+      },
       "realizations": [
         "WRL/relation-v2.js:2363 deriveRuntimeProjection"
       ],
@@ -1197,7 +1812,7 @@
           "adding a tamper to the corpus (with its base named)",
           "downgrading a projection in-band, so the receiver sees the downgrade as a claim"
         ],
-        "forbidden": [
+        "refused": [
           "a flag or a prose note that a receiver is asked to trust",
           "a fixture that is an edit recipe rather than final bytes",
           "collapsing two refusals into one because they agree"
@@ -1242,12 +1857,48 @@
         "refused": "refusable-divergence.refused.wrl",
         "note": "A world that routes a signal out of a Door is refused with a code and a locator, not a warning."
       },
+      "up": "UP-012",
+      "limit": "WRL's conformance suite passes; the 'agree on the name of every refusal' half is STACK_COMPLETION.md:73's wording and is NOT verified by this build. WRL/HANDOFF_D8_PATH_B.md:1424 warns that two refusals can both be drift — two-sidedness is necessary and not sufficient.",
+      "next_rung": "live_local: the WRL playground has no negative corpus, so no tamper can be refused in a browser today. Staging one is the work.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:25:45.285Z",
           "host": "PX13",
@@ -1286,7 +1937,24 @@
         "marker": "fair arm",
         "expected": "REFUSED"
       },
-      "prior_art": "Erlang reductions as the scheduling unit; Little's law; the utilization-vs-throughput distinction in queueing theory. computedriven/docs/progress-model.md is a MODEL (its header: 'never a measurement') and is not this witness.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Erlang reductions as the scheduling unit",
+            "relation": "realization",
+            "overlap": "schedule by work performed, not by time occupied",
+            "difference": "reductions are a fairness device; the pattern asks for progress to be the reported quantity too"
+          },
+          {
+            "work": "Little's law; utilization vs throughput in queueing theory",
+            "relation": "antecedent",
+            "overlap": "utilization is a poor proxy for useful work",
+            "difference": "queueing theory proves the relation; the pattern is about which number a system exposes"
+          }
+        ],
+        "novelty_not_claimed": "Queueing theory has said this since the 1960s. computedriven/docs/progress-model.md is a MODEL — its own header says 'never a measurement' — and is not this witness.",
+        "prose": "Erlang reductions as the scheduling unit; Little's law; the utilization-vs-throughput distinction in queueing theory. computedriven/docs/progress-model.md is a MODEL (its header: 'never a measurement') and is not this witness."
+      },
       "realizations": [
         "computedriven/docs/progress-model.md",
         "computedriven/receipts/KERNELLET-R1.md:33"
@@ -1308,7 +1976,7 @@
           "lowering utilization while raising admitted transitions",
           "re-placing loci to where progress is possible (Progress-Aware Placement)"
         ],
-        "forbidden": [
+        "refused": [
           "reporting utilization as health",
           "scheduling work that admits nothing to keep a carrier busy (Busywork Scheduling)",
           "quoting a model document's number as a measurement"
@@ -1352,12 +2020,48 @@
       "wrl": {
         "note": "No core-role encoding: progress is a property of a Film, and the page cannot reduce one."
       },
+      "up": "UP-013",
+      "limit": "computedriven/docs/progress-model.md is a MODEL and its own header says 'never a measurement'. No run in this tree reports semantic progress as its primary quantity.",
+      "next_rung": "live_local: one workload on this page reporting progress and utilization side by side, so the divergence between them is a number a reader can watch rather than an argument they have to accept.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": false,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (measurement)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-05",
           "note": "the witness is itself an execution record"
@@ -1384,7 +2088,30 @@
         "rung_source": "an OPEN record: the admission rule is specified, the battery is R7.1's",
         "staged": false
       },
-      "prior_art": "BEAM processes; durable execution (Temporal, Restate); delimited continuations.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "BEAM processes",
+            "relation": "realization",
+            "overlap": "a process that is not running is still alive and addressable",
+            "difference": "the BEAM's dormancy is scheduler-local; the pattern wants it across restarts"
+          },
+          {
+            "work": "Durable execution (Temporal, Restate)",
+            "relation": "close-analogue",
+            "overlap": "a workflow survives the death of the worker executing it",
+            "difference": "these replay from a log; the pattern does not require replay to be the mechanism"
+          },
+          {
+            "work": "Delimited continuations",
+            "relation": "antecedent",
+            "overlap": "suspended computation as a first-class value",
+            "difference": "a language mechanism, not a lifecycle claim"
+          }
+        ],
+        "novelty_not_claimed": "Durable execution vendors have shipped this. Nothing here improves on them.",
+        "prose": "BEAM processes; durable execution (Temporal, Restate); delimited continuations."
+      },
       "realizations": [
         "computedriven/receipts/R7.1-OPEN.md:42",
         "FPLA/DESIGN_NOTES_2026-09-06.md design A"
@@ -1407,7 +2134,7 @@
           "events arriving while unplaced",
           "placing a dormant locus on any available carrier"
         ],
-        "forbidden": [
+        "refused": [
           "executing a floor command as a side effect of an event's arrival",
           "inferring 'nothing to do' from 'no carrier busy' (False Quiescence)",
           "growing the mailbox past M"
@@ -1445,12 +2172,48 @@
       "wrl": {
         "note": "Mailbox is the role this scene wants, and Mailbox has no surface spelling (Core 0.1.2 §14b): the runtime honours it, source cannot declare it. Stated by WRL's own limit."
       },
+      "up": "UP-014",
+      "limit": "States a lifecycle obligation. The BEAM satisfies it within a node and durable-execution vendors satisfy it across restarts; neither fact is a measurement made here.",
+      "next_rung": "in_tree: a locus in this tree observed addressable after the process that ran it exited.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above (spec)"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes — shape spec carries no execution"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1481,7 +2244,18 @@
         "marker": "fair arm",
         "expected": "REFUSED"
       },
-      "prior_art": "M:N threading; Go's scheduler; Erlang schedulers.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "M:N threading; Go's scheduler; Erlang schedulers",
+            "relation": "realization",
+            "overlap": "many loci share few carriers",
+            "difference": "none claimed — these are the pattern, working"
+          }
+        ],
+        "novelty_not_claimed": "This is how every modern runtime already works. It is in the catalog because it is the measured half of locus-is-not-its-carrier, not because it is new.",
+        "prose": "M:N threading; Go's scheduler; Erlang schedulers."
+      },
       "realizations": [
         "computedriven/receipts/R7-EXECUTED.md:101"
       ],
@@ -1503,7 +2277,7 @@
           "changing which slot a locus is rotated into",
           "adding a slot (the population is unchanged)"
         ],
-        "forbidden": [
+        "refused": [
           "copying a context to 'move' a locus — that is Replica Theater",
           "deriving any locus property from its current slot",
           "declaring completion because every slot is empty"
@@ -1547,12 +2321,48 @@
       "wrl": {
         "note": "No honest core-role encoding: fan-out from one Pulser to eight Doors is legal WRL but would picture a broadcast, not a multiplexer."
       },
+      "up": "UP-015",
+      "limit": "This is the measured half of locus-is-not-its-carrier and nothing more. That many loci share few carriers is how every modern runtime already works; the pattern claims no improvement on any of them.",
+      "next_rung": "live_local: the multiplexing shown on this page rather than cited. R7.2.1D produced a number (P2 8/8) and it measured multiplexing, not benefit — the benefit is a different measurement and nothing has made it.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": false,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (measurement)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-05",
           "note": "the witness is itself an execution record"
@@ -1570,7 +2380,24 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Work stealing; NUMA-aware placement. R7.2.1D stage 2 (placement battery on the compiled home) is NOT RUN; no number is written before it.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Work stealing",
+            "relation": "antecedent",
+            "overlap": "move work to where it can advance",
+            "difference": "work stealing balances queues; placement here is asked to consider semantic progress"
+          },
+          {
+            "work": "NUMA-aware placement",
+            "relation": "close-analogue",
+            "overlap": "locality changes the rate of advancement",
+            "difference": "hardware locality, not semantic locality"
+          }
+        ],
+        "novelty_not_claimed": "Placement heuristics are a mature field. R7.2.1D stage 2 — the placement battery on the compiled home — is NOT RUN, and no number appears on this page before it is.",
+        "prose": "Work stealing; NUMA-aware placement. R7.2.1D stage 2 (placement battery on the compiled home) is NOT RUN; no number is written before it."
+      },
       "realizations": [
         "computedriven/receipts/R7.2.1D-OPEN.md"
       ],
@@ -1590,7 +2417,7 @@
           "re-placing a locus when its progress signal moves",
           "holding a fairness floor beneath the progress objective"
         ],
-        "forbidden": [
+        "refused": [
           "quoting a placement gain before the battery has run",
           "starving a locus in the name of progress"
         ]
@@ -1627,12 +2454,48 @@
       "wrl": {
         "note": "No core-role encoding: placement is a runtime decision below the topology."
       },
+      "up": "UP-016",
+      "limit": "Prespecified and UNRUN. R7.2.1D stage 2 — the placement battery on the compiled home — has not been executed, so no number appears on this page. P4 measured reached_fraction and it saturates near 1 with no STATIC-vs-STATIC null, which is why it is not a benefit.",
+      "next_rung": "in_tree: run the prespecified battery. The design is written; nothing about it is measured.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1647,7 +2510,30 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Dijkstra–Scholten termination detection (1980); Misra's ring algorithm. Nearest tree relatives: REVISION_REGISTER.md:99 CompletedScan→CompletedSweep with a doesNotAssert field; Super 'a timeout abandons the request but not the work'. The phrase appears nowhere in the tree — PROPOSED.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Dijkstra–Scholten termination detection (1980)",
+            "relation": "antecedent",
+            "overlap": "quiescence must be established, not observed",
+            "difference": "none claimed; this is the canonical result"
+          },
+          {
+            "work": "Misra's ring algorithm",
+            "relation": "antecedent",
+            "overlap": "a second classical detection scheme",
+            "difference": "none claimed"
+          },
+          {
+            "work": "REVISION_REGISTER.md:99 — CompletedScan→CompletedSweep with a doesNotAssert field",
+            "relation": "partial-overlap",
+            "overlap": "the tree's nearest relative: a completion that states what it does not assert",
+            "difference": "one rename in one lane, not a general rule"
+          }
+        ],
+        "novelty_not_claimed": "Termination detection was solved in 1980. The phrase 'proven quiescence' appears nowhere in the tree and is PROPOSED by the book; the classical algorithms are the answer, and the pattern's only job is to stop silence being read as completion.",
+        "prose": "Dijkstra–Scholten termination detection (1980); Misra's ring algorithm. Nearest tree relatives: REVISION_REGISTER.md:99 CompletedScan→CompletedSweep with a doesNotAssert field; Super 'a timeout abandons the request but not the work'. The phrase appears nowhere in the tree — PROPOSED."
+      },
       "realizations": [],
       "failure_mode": "false-quiescence",
       "related": [
@@ -1665,7 +2551,7 @@
           "repeating the sweep",
           "narrowing the claim to the loci actually visited"
         ],
-        "forbidden": [
+        "refused": [
           "inferring quiescence from carrier idleness",
           "a snapshot presented as a sweep",
           "dropping the doesNotAssert field"
@@ -1703,12 +2589,48 @@
       "wrl": {
         "note": "No core-role encoding; a sweep is over a Film, not a topology."
       },
+      "up": "UP-017",
+      "limit": "PROPOSED. The phrase appears nowhere in the tree. Dijkstra–Scholten solved termination detection in 1980 and this chapter adds no algorithm; its only content is that silence must not be read as completion.",
+      "next_rung": "in_tree: a detector in this tree that distinguishes quiescent from merely-silent, and a case where it refuses.",
       "derived": {
         "label": "PROPOSED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1721,11 +2643,37 @@
       "family": "progress",
       "invariant": "Every attempted intervention resolves to exactly one of APPLIED, REFUSED, INDETERMINATE; INDETERMINATE is a fact about an attempt and is never rewritten.",
       "cells": [
-        "17"
+        {
+          "ref": "17",
+          "modality": "necessary"
+        }
       ],
       "claims": [],
       "witness": null,
-      "prior_art": "Two Generals; at-least-once vs at-most-once delivery; Lamport's 'happened before'. Witness lives in super/ (referenced, not copied); the document's §0 refutes the PREDECESSOR round's settle-in-place design.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Two Generals",
+            "relation": "antecedent",
+            "overlap": "there are questions a message exchange cannot settle",
+            "difference": "none claimed"
+          },
+          {
+            "work": "at-least-once vs at-most-once delivery",
+            "relation": "antecedent",
+            "overlap": "the third outcome is the practical consequence of the impossibility",
+            "difference": "delivery semantics name the tradeoff; the pattern names the outcome vocabulary"
+          },
+          {
+            "work": "Lamport, 'happened before'",
+            "relation": "antecedent",
+            "overlap": "partial order as the honest account of distributed time",
+            "difference": "none claimed"
+          }
+        ],
+        "novelty_not_claimed": "Distributed systems have had three-valued outcomes since the field began. The witness lives in super/ (referenced, not copied), and its §0 refutes the predecessor round's settle-in-place design — that refutation, not the trichotomy, is the tree's result.",
+        "prose": "Two Generals; at-least-once vs at-most-once delivery; Lamport's 'happened before'. Witness lives in super/ (referenced, not copied); the document's §0 refutes the PREDECESSOR round's settle-in-place design."
+      },
       "realizations": [
         "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:210",
         "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:723"
@@ -1747,7 +2695,7 @@
           "appending a later observation beside an INDETERMINATE attempt",
           "treating REFUSED as a normal outcome"
         ],
-        "forbidden": [
+        "refused": [
           "rewriting INDETERMINATE to APPLIED or REFUSED",
           "retrying an INDETERMINATE attempt as if it had failed",
           "a settle-in-place that the ledger cannot perform"
@@ -1785,17 +2733,54 @@
       "wrl": {
         "note": "An attempt reaches the world through a carrier; a Door is a sink. The three outcomes are the Film's, and the Film is TRVM's."
       },
+      "up": "UP-018",
+      "limit": "The witness lives in super/ and is referenced, not copied. It establishes that one round's settle-in-place design was refuted — it does not establish that the tree's other components carry the third value. INDETERMINATE has no forge counterpart, because films are total.",
+      "next_rung": "in_tree: the super/ witness is referenced, not copied, so this catalog cannot run it. Staging it here — so the refutation of the predecessor round's settle-in-place design can be re-run rather than quoted — is the step.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": [
           {
             "num": "17",
+            "modality": "necessary",
             "status": "proved"
           }
         ]
@@ -1810,7 +2795,18 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Atkinson & Morrison's term: type orthogonality, persistence by reachability, persistence independence (PS-algol, Napier88; VLDB J. 4, 1995). studbook is at the spec rung; nothing here implements it.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Atkinson & Morrison — type orthogonality, persistence by reachability, persistence independence (PS-algol, Napier88; VLDB J. 4, 1995)",
+            "relation": "terminology-precedent",
+            "overlap": "the name and all three of its principles",
+            "difference": "none. The term is theirs and the content is theirs"
+          }
+        ],
+        "novelty_not_claimed": "Nothing. This chapter exists to cite Atkinson & Morrison correctly and to record that studbook is at the spec rung and nothing here implements it.",
+        "prose": "Atkinson & Morrison's term: type orthogonality, persistence by reachability, persistence independence (PS-algol, Napier88; VLDB J. 4, 1995). studbook is at the spec rung; nothing here implements it."
+      },
       "realizations": [
         "studbook/docs/spec/README.md"
       ],
@@ -1831,7 +2827,7 @@
           "moving state between tiers",
           "garbage-collecting what no root reaches"
         ],
-        "forbidden": [
+        "refused": [
           "a save() the locus must call",
           "a persistent type distinct from a transient one",
           "holding user data before §10.2 is ruled"
@@ -1875,12 +2871,48 @@
       "wrl": {
         "note": "No core-role encoding: persistence is below the semantic level by definition."
       },
+      "up": "UP-019",
+      "limit": "Cites Atkinson & Morrison correctly and implements nothing. studbook is at the spec rung and its §10.2 blocker is open, so no system here has orthogonal persistence.",
+      "next_rung": "in_tree: any implementation at all. studbook §10.2 (where confidentiality comes from) blocks it, and that is a ruling, not a build.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1895,7 +2927,18 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Git's object/ref/worktree split is the same three-way distinction. Frozen vocabulary in CLOUD_V1.md §2 because WORLD_SIZE.md §11 mistook 0.21 % for the whole.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Git's object / ref / worktree split",
+            "relation": "close-analogue",
+            "overlap": "the same three-way distinction between the store, a named root, and the checked-out shape",
+            "difference": "git's three are concrete files; WORLD / WORLD VERSION / WRL GRAPH are scopes of authority"
+          }
+        ],
+        "novelty_not_claimed": "The structure is git's. The vocabulary is frozen in CLOUD_V1.md §2 for one reason: WORLD_SIZE.md §11 mistook 0.21 % of the thing for the whole thing, and a frozen word is cheaper than that mistake.",
+        "prose": "Git's object/ref/worktree split is the same three-way distinction. Frozen vocabulary in CLOUD_V1.md §2 because WORLD_SIZE.md §11 mistook 0.21 % for the whole."
+      },
       "realizations": [
         "CLOUD_V1.md:37"
       ],
@@ -1916,7 +2959,7 @@
           "describing a WORLD by a WORLD VERSION",
           "embedding a WRL GRAPH in a WORLD"
         ],
-        "forbidden": [
+        "refused": [
           "reporting a graph-sized measurement as a machine-sized one",
           "a field called current_head"
         ]
@@ -1959,12 +3002,48 @@
       "wrl": {
         "note": "This world is a WRL GRAPH — the smallest of the three sizes. Its seal is a wrl_head."
       },
+      "up": "UP-020",
+      "limit": "A vocabulary ruling (R11), frozen in CLOUD_V1.md §2. It establishes which word means which size. It does not establish that any system respects the distinction — WORLD_SIZE.md §11 records one occasion where this tree did not.",
+      "next_rung": "in_tree: a lint that refuses a sentence using 'world' where the size is ambiguous, the way IDENTITY_ASSERTED refuses its class.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1979,7 +3058,18 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "GAP: no canonical definition in the tree. Candidate (GPT 2026-09-11): a coherent authority/state/observation domain that need not be an OS process, VM or machine. Unruled.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "GPT, 2026-09-11 — 'a coherent authority/state/observation domain that need not be an OS process, VM or machine'",
+            "relation": "not-searched",
+            "overlap": "a candidate definition offered in conversation",
+            "difference": "unruled, and no canonical definition exists anywhere in the tree"
+          }
+        ],
+        "novelty_not_claimed": "Everything. There is no pattern here yet — this chapter is a GAP with a candidate definition attached, and its invariant field is empty on purpose.",
+        "prose": "GAP: no canonical definition in the tree. Candidate (GPT 2026-09-11): a coherent authority/state/observation domain that need not be an OS process, VM or machine. Unruled."
+      },
       "realizations": [],
       "related": [
         "three-sizes-of-world"
@@ -2023,12 +3113,48 @@
       "wrl": {
         "note": "No encoding — the boundary has no definition to encode."
       },
+      "up": "UP-021",
+      "limit": "A GAP. There is no canonical definition of a world boundary in this tree, the invariant field is empty on purpose, and the candidate definition attached here is unruled conversation.",
+      "next_rung": "A ruling that fixes the definition. Nothing can be witnessed before the thing being witnessed is defined.",
       "derived": {
         "label": "PROPOSED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2060,7 +3186,24 @@
         "expected": "REFUSED",
         "expected_count": 15
       },
-      "prior_art": "Unison (content-addressed definitions); IPFS; Nix. Direct prior art — the book's contribution is the executable topology and the refusal names, not the hashing.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Unison (content-addressed definitions)",
+            "relation": "antecedent",
+            "overlap": "the identity of a meaning is the hash of its structure",
+            "difference": "none at the level of the idea"
+          },
+          {
+            "work": "IPFS; Nix",
+            "relation": "antecedent",
+            "overlap": "content addressing at the storage and build layers",
+            "difference": "these address bytes and build inputs; the seal here addresses a semantic topology"
+          }
+        ],
+        "novelty_not_claimed": "The hashing is not the contribution and this page says so twice. What the tree adds is an executable topology and a fixed set of refusal names — and only the first of those is witnessed.",
+        "prose": "Unison (content-addressed definitions); IPFS; Nix. Direct prior art — the book's contribution is the executable topology and the refusal names, not the hashing."
+      },
       "realizations": [
         "WRL/README.md:1-40"
       ],
@@ -2082,7 +3225,7 @@
           "adding an implementation that reproduces the same ids",
           "editing the world — which makes a new world"
         ],
-        "forbidden": [
+        "refused": [
           "a version flag standing in for the id",
           "an id assigned by a registry rather than derived",
           "two implementations that disagree without one of them refusing"
@@ -2127,12 +3270,48 @@
         "variant": "meaning-is-a-hash.variant.wrl",
         "note": "The same world with one period changed. Two ids; there is no version flag to consult."
       },
+      "up": "UP-022",
+      "limit": "Unison, IPFS and Nix are direct prior art and the hashing is not the contribution. What the build establishes is that this tree's seal is stable under comment changes and moves under a topology change — one property of one sealer.",
+      "next_rung": "live_local: sealWorld exposed to the page, so a reader supplies source and watches the id move under a topology change and hold under a comment change. The build does this 33 times; nothing yet lets the page do it once.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:25:45.285Z",
           "host": "PX13",
@@ -2152,7 +3331,24 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Deterministic replay; event sourcing; rr. TRVM film replay — not verified by this build; no receipt stating a fidelity percentage was located (v0.2 review finding 7).",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Deterministic replay; rr",
+            "relation": "antecedent",
+            "overlap": "re-execution produces the identical trace",
+            "difference": "rr replays a process; the forge replays a reduction"
+          },
+          {
+            "work": "Event sourcing",
+            "relation": "close-analogue",
+            "overlap": "state is a fold over a recorded sequence",
+            "difference": "event sourcing tolerates non-determinism in projections; this does not"
+          }
+        ],
+        "novelty_not_claimed": "Deterministic replay is a shipped, mature technique. TRVM's film replay is not verified by this build, and no receipt stating a fidelity percentage was ever located (v0.2 review, finding 7) — the page carries a '?' where that number would go.",
+        "prose": "Deterministic replay; event sourcing; rr. TRVM film replay — not verified by this build; no receipt stating a fidelity percentage was located (v0.2 review finding 7)."
+      },
       "realizations": [
         "TRVM/LAWS.md Law 4"
       ],
@@ -2173,7 +3369,7 @@
           "replaying on any conforming player",
           "comparing films across players"
         ],
-        "forbidden": [
+        "refused": [
           "a replay claim without a second player",
           "a fidelity number without a receipt"
         ]
@@ -2210,12 +3406,48 @@
       "wrl": {
         "note": "A sealed world whose film TRVM reduces; the page cannot run the film — reduction lives in TRVM, not in wrl.js."
       },
+      "up": "UP-023",
+      "limit": "No receipt stating a fidelity percentage was ever located (v0.2 review, finding 7), which is why this page carries a '?' where that number would go. TRVM's film replay is not verified by this build.",
+      "next_rung": "in_tree: locate or produce the receipt. The claim is older than the search for its evidence, which is the defect this field exists to expose.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2239,7 +3471,24 @@
         "rung_source": "a receipt CARD on the homepage; the run behind it was not opened by this build",
         "staged": false
       },
-      "prior_art": "OS-011 Embodiment; record-and-replay in RPA. v0.1 conflated this with exact-replay.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "OS-011 Embodiment",
+            "relation": "partial-overlap",
+            "overlap": "the tree's own protocol for a skill that crosses bodies",
+            "difference": "OS-011 is a protocol at the spec rung; this pattern is the shape it would need"
+          },
+          {
+            "work": "Record-and-replay in RPA",
+            "relation": "contrasting-solution",
+            "overlap": "a recorded interaction re-performed on another machine",
+            "difference": "RPA replays coordinates and windows; the pattern requires the skill to survive a different body"
+          }
+        ],
+        "novelty_not_claimed": "Nothing is claimed as achieved. v0.1 of this plan conflated this with exact-replay; they are different chapters and the conflation is recorded so it is not repeated.",
+        "prose": "OS-011 Embodiment; record-and-replay in RPA. v0.1 conflated this with exact-replay."
+      },
       "realizations": [
         "opensentience.org/_rebuild/data/receipts.json"
       ],
@@ -2259,7 +3508,7 @@
           "replaying on a body with the same declared affordances",
           "declaring a lower fidelity for a different body"
         ],
-        "forbidden": [
+        "refused": [
           "a fidelity card whose run is not published beside it",
           "replaying pixels and calling it a skill"
         ]
@@ -2296,12 +3545,48 @@
       "wrl": {
         "note": "No core-role encoding: an InteractionTrace is OS-011's artifact, not a WRL world."
       },
+      "up": "UP-024",
+      "limit": "Nothing is achieved. OS-011 Embodiment is at the spec rung; this pattern is the shape that protocol would need, written before any of it exists.",
+      "next_rung": "live_local: one skill recorded on one machine and re-performed on another, played back here, with both bodies described well enough that the difference between them is visible rather than asserted.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": true,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (measurement)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes — shape card carries no execution"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2316,7 +3601,18 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "OPEN BLOCKER (studbook §10): if the key is the hash of the content, knowing the content is knowing the key. Convergent encryption and its known leaks are the prior art. The book publishes the refusal, not a pattern.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Convergent encryption and its known leaks",
+            "relation": "antecedent",
+            "overlap": "the confirmation-of-a-file attack is exactly this tension, already described",
+            "difference": "none — the literature's answer is that the tension is real"
+          }
+        ],
+        "novelty_not_claimed": "Everything. studbook §10.2 is an OPEN BLOCKER: if the key is the hash of the content, knowing the content is knowing the key. The book publishes the refusal, not a pattern.",
+        "prose": "OPEN BLOCKER (studbook §10): if the key is the hash of the content, knowing the content is knowing the key. Convergent encryption and its known leaks are the prior art. The book publishes the refusal, not a pattern."
+      },
       "realizations": [
         "studbook/docs/spec/README.md:260"
       ],
@@ -2362,12 +3658,48 @@
       "wrl": {
         "note": "No encoding; the open ruling is about keys, not topology."
       },
+      "up": "UP-025",
+      "limit": "An OPEN ruling, not a pattern. studbook §10.2: if the key is the hash of the content, knowing the content is knowing the key. The book publishes the refusal.",
+      "next_rung": "A ruling on where confidentiality comes from. Until then studbook cannot hold anything with a user in it, and this page cannot become a pattern.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2382,7 +3714,24 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Byzantine observation: an observation can be stale, forged or partial; 'establish' names what survives that. STALE ≠ UNESTABLISHED (Super bot spec).",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Byzantine observation",
+            "relation": "antecedent",
+            "overlap": "an observation can be stale, forged or partial",
+            "difference": "the Byzantine literature asks what a group can agree; this asks what one locus may say"
+          },
+          {
+            "work": "Super bot spec — STALE ≠ UNESTABLISHED",
+            "relation": "partial-overlap",
+            "overlap": "the tree's own hard-won form of the distinction",
+            "difference": "stated for one runtime; generalized here"
+          }
+        ],
+        "novelty_not_claimed": "Epistemic caution about observation is not new. This is a definition, and definitions carry no rung.",
+        "prose": "Byzantine observation: an observation can be stale, forged or partial; 'establish' names what survives that. STALE ≠ UNESTABLISHED (Super bot spec)."
+      },
       "realizations": [
         "AGENCY.md §4"
       ],
@@ -2402,7 +3751,7 @@
           "marking an established state stale",
           "refusing an observation with no provenance"
         ],
-        "forbidden": [
+        "refused": [
           "know / detect in technical copy",
           "treating stale as unestablished, or the reverse"
         ]
@@ -2439,12 +3788,24 @@
       "wrl": {
         "note": "A definition; no world."
       },
+      "up": "UP-026",
+      "limit": "A definition. It carries no rung (AGENCY.md §6) and establishes only what the book means by 'established'. STALE ≠ UNESTABLISHED is the Super bot spec's, and it is cited, not derived here.",
+      "next_rung": "Definitions do not climb. The test is whether the agency chapters can state their invariants using this word without needing a second one.",
       "derived": {
         "label": null,
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": null,
+            "text": "kind is definition — carries no evidence rung (AGENCY.md §6)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2476,7 +3837,18 @@
         "expected": "REFUSED",
         "lint_allow": "lint-allow:STATE_DOES_NOT_ISSUE_AUTHORITY — a lint counterexample must print the retired phrase to be one"
       },
-      "prior_art": "Object-capability discipline (Miller); 'fact about me ⇒ power is ambient authority with an extra step' (AGENCY.md §4). Under R7's criterion this may belong in the locus family.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Object-capability discipline (Miller)",
+            "relation": "antecedent",
+            "overlap": "a fact about a subject is not a permission",
+            "difference": "none claimed — AGENCY.md §4 states it as 'fact about me ⇒ power is ambient authority with an extra step'"
+          }
+        ],
+        "novelty_not_claimed": "This is Miller's argument restated for loci. Under R7's family criterion it may belong in the locus family rather than agency; that placement is unruled.",
+        "prose": "Object-capability discipline (Miller); 'fact about me ⇒ power is ambient authority with an extra step' (AGENCY.md §4). Under R7's criterion this may belong in the locus family."
+      },
       "realizations": [
         "AGENCY.md §4",
         "scripts/messaging-rules.json STATE_DOES_NOT_ISSUE_AUTHORITY"
@@ -2498,7 +3870,7 @@
           "narrowing a grant's scope",
           "revoking a grant while the state persists"
         ],
-        "forbidden": [
+        "refused": [
           "the sentence that makes a state the source of a grant (retired; the gate lists its paraphrases)",
           "deriving admissibility from state alone",
           "a field named authority read as proof that nothing exceeds it"
@@ -2542,12 +3914,48 @@
       "wrl": {
         "note": "No core-role encoding; a grant is not a role."
       },
+      "up": "UP-027",
+      "limit": "Miller's argument restated for loci. It does not establish that any component in this tree refuses a state-derived authority claim, and under R7's criterion its family placement is itself unruled.",
+      "next_rung": "live_local: a refusal on this page when authority is requested on the strength of a fact about the requester. The invariant is Miller's; what is missing is a place a reader can watch it hold.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (counterexample)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:27:41.066Z",
           "host": "PX13",
@@ -2584,7 +3992,30 @@
         "marker": "witness file does not exist",
         "expected": "REFUSED"
       },
-      "prior_art": "Toulmin's warrant/backing; Pollock defeaters; assurance cases (GSN). The phrase is absent from the tree; the mechanism (DOCTRINE.md rule 4 + the ledger) is not.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Toulmin — warrant and backing",
+            "relation": "antecedent",
+            "overlap": "a claim is admissible only with its warrant",
+            "difference": "Toulmin analyses arguments; this is enforced by a build"
+          },
+          {
+            "work": "Pollock, defeaters",
+            "relation": "antecedent",
+            "overlap": "what would withdraw the claim must be stated",
+            "difference": "none claimed"
+          },
+          {
+            "work": "Assurance cases (GSN)",
+            "relation": "close-analogue",
+            "overlap": "a structured argument tied to its evidence",
+            "difference": "GSN is a notation for a document; here the tie is mechanical and the build refuses without it"
+          }
+        ],
+        "novelty_not_claimed": "The phrase is absent from the tree; the mechanism (DOCTRINE.md rule 4 plus the ledger) is not. Argumentation theory is the prior art and it is older than the stack.",
+        "prose": "Toulmin's warrant/backing; Pollock defeaters; assurance cases (GSN). The phrase is absent from the tree; the mechanism (DOCTRINE.md rule 4 + the ledger) is not."
+      },
       "realizations": [
         "DOCTRINE.md rule 4",
         "CLAIM_LEDGER.json"
@@ -2607,7 +4038,7 @@
           "adding a witness and re-running the gate",
           "answering '?' or 'status unknown'"
         ],
-        "forbidden": [
+        "refused": [
           "a status word outside the vocabulary",
           "a witness that is described but not on disk",
           "a count typed where it is displayed (A Number in Two Places)"
@@ -2651,12 +4082,48 @@
       "wrl": {
         "note": "No core-role encoding; the ledger gate is over claims, not worlds."
       },
+      "up": "UP-028",
+      "limit": "The mechanism exists (DOCTRINE.md rule 4 and the ledger) and the phrase does not. This page establishes that this build refuses an unwarranted claim in its own registry — not that the tree's other surfaces do.",
+      "next_rung": "live_local: the prose gate run from the page over text a reader types, rather than at build time over text we wrote. That the gate refuses our own registry is evidence about us, not about the rule.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:26:22.369Z",
           "host": "PX13",
@@ -2676,7 +4143,24 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Fail-closed defaults; Popperian falsifiability as an admission rule. The Academy refusal log is MOCK (ACADEMY.md:79); alkeyword's refusal rule is the live instance.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Fail-closed defaults",
+            "relation": "antecedent",
+            "overlap": "the safe outcome on missing information is refusal",
+            "difference": "none claimed"
+          },
+          {
+            "work": "Popperian falsifiability as an admission rule",
+            "relation": "close-analogue",
+            "overlap": "admit only what could be refused",
+            "difference": "philosophy of science, applied here to a build gate"
+          }
+        ],
+        "novelty_not_claimed": "Fail-closed is a first principle of security engineering. The Academy refusal log is MOCK (ACADEMY.md:79); alkeyword's refusal rule is the live instance, and only that one counts.",
+        "prose": "Fail-closed defaults; Popperian falsifiability as an admission rule. The Academy refusal log is MOCK (ACADEMY.md:79); alkeyword's refusal rule is the live instance."
+      },
       "realizations": [
         "ACADEMY.md §Read",
         "alkeyword.com/docs/spec/README.md §3.2"
@@ -2698,7 +4182,7 @@
           "holding a page until a contradiction in the corpus is resolved",
           "publishing a refusal where a page was expected"
         ],
-        "forbidden": [
+        "refused": [
           "writing from a single sentence",
           "a refusal log that reads as measured when it is illustrative"
         ]
@@ -2735,12 +4219,48 @@
       "wrl": {
         "note": "No core-role encoding; the gate is on prose sufficiency."
       },
+      "up": "UP-029",
+      "limit": "The Academy refusal log is MOCK (ACADEMY.md:79) and does not count. alkeyword's refusal rule is the live instance, and it is one instance in one lane.",
+      "next_rung": "in_tree: a refusal log in this catalog that can fail. The Academy's is MOCK (ACADEMY.md:79) and does not count; alkeyword's is live and is one instance in one lane, neither of them here.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2753,11 +4273,31 @@
       "family": "agency",
       "invariant": "Every intervention on the world carries the identity of the Worker and generation that made it and the evidence it acted on; an intervention that cannot be attributed is not admissible.",
       "cells": [
-        "17"
+        {
+          "ref": "17",
+          "modality": "necessary"
+        }
       ],
       "claims": [],
       "witness": null,
-      "prior_art": "Audit logs; provenance (W3C PROV). Witness lives in super/; the honest half of the record is that the re-observation it depends on does not exist (Pty::winsize() has zero callers).",
+      "prior_art": {
+        "works": [
+          {
+            "work": "W3C PROV",
+            "relation": "antecedent",
+            "overlap": "a standard vocabulary for who did what to what",
+            "difference": "PROV records provenance; the pattern requires the record to be re-observable"
+          },
+          {
+            "work": "Audit logs",
+            "relation": "realization",
+            "overlap": "append-only record of intervention (cell 17)",
+            "difference": "a log records the request; the pattern wants the effect re-observed"
+          }
+        ],
+        "novelty_not_claimed": "Provenance standards exist and are better developed than this. The witness lives in super/, and the honest half of the record is that the re-observation it depends on does not exist — Pty::winsize() has zero callers.",
+        "prose": "Audit logs; provenance (W3C PROV). Witness lives in super/; the honest half of the record is that the re-observation it depends on does not exist (Pty::winsize() has zero callers)."
+      },
       "realizations": [
         "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md"
       ],
@@ -2777,7 +4317,7 @@
           "revoking a generation and refusing its later interventions",
           "appending observations beside an attempt"
         ],
-        "forbidden": [
+        "refused": [
           "an intervention without a Worker and generation",
           "rewriting an outcome",
           "a repair path with zero callers presented as a property"
@@ -2815,17 +4355,54 @@
       "wrl": {
         "note": "No core-role encoding; provenance is a field on a Film frame, not a route."
       },
+      "up": "UP-030",
+      "limit": "Cell 17 (append-only audit) is proved, which makes the record durable. The pattern asks for the EFFECT to be re-observed, and the honest half of this record is that the re-observation does not exist — Pty::winsize() has zero callers.",
+      "next_rung": "in_tree: a caller for the re-observation, so that an intervention's effect is measured rather than assumed from its request.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": [
           {
             "num": "17",
+            "modality": "necessary",
             "status": "proved"
           }
         ]
@@ -2838,7 +4415,10 @@
       "family": "agency",
       "invariant": "A lineage edge generates a candidate support set and establishes none; support for a capability requires ablation, intervention, runtime dependency or replacement replay, and provenance-only support is refused.",
       "cells": [
-        "44"
+        {
+          "ref": "44",
+          "modality": "stronger_than_needed"
+        }
       ],
       "claims": [],
       "witness": {
@@ -2859,7 +4439,30 @@
         "marker": "REFUSED — support evidence of kind",
         "expected": "REFUSED"
       },
-      "prior_art": "Pearl's ladder of causation; ablation studies; Λ non-laundering (cell 44). Lint class PROVENANCE_AS_SUPPORT enforces the prose form.",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Pearl's ladder of causation",
+            "relation": "antecedent",
+            "overlap": "association is not intervention is not counterfactual",
+            "difference": "Pearl builds a calculus; the pattern takes only the first rung's warning"
+          },
+          {
+            "work": "Ablation studies",
+            "relation": "realization",
+            "overlap": "the way the difference is actually established",
+            "difference": "a method, not an invariant"
+          },
+          {
+            "work": "Λ non-laundering (cell 44)",
+            "relation": "partial-overlap",
+            "overlap": "a derived thing does not inherit authority it never had",
+            "difference": "the cell is about authority; the pattern is about explanatory dependence"
+          }
+        ],
+        "novelty_not_claimed": "Pearl's distinction is the content. Lint class PROVENANCE_AS_SUPPORT enforces the prose form, which is an enforcement mechanism, not a discovery.",
+        "prose": "Pearl's ladder of causation; ablation studies; Λ non-laundering (cell 44). Lint class PROVENANCE_AS_SUPPORT enforces the prose form."
+      },
       "realizations": [
         "mosaic/embodiment.json",
         "scripts/emb-support.mjs"
@@ -2882,7 +4485,7 @@
           "establishing support by ablation of the set under test",
           "revoking a capability by cutting a kernel — when monotone"
         ],
-        "forbidden": [
+        "refused": [
           "lineage as a link in the causal chain (Provenance as Support)",
           "'has inherited' in the present perfect without an observed kernel",
           "ablating one file and concluding about a set"
@@ -2920,12 +4523,48 @@
       "wrl": {
         "note": "No core-role encoding; lineage is a relation between worlds."
       },
+      "up": "UP-031",
+      "limit": "Cell 44 (Λ non-laundering) is proved at the property tier and is about authority, not about explanatory dependence — it is cited as a partial overlap, not as this pattern's proof. Lint class PROVENANCE_AS_SUPPORT enforces the prose form only.",
+      "next_rung": "live_local: an ablation a reader can run — remove the component, watch the dependence fail to appear. Lint class PROVENANCE_AS_SUPPORT enforces the prose form only, and a prose rule is not a measurement.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
         "RUNNABLE": true,
         "EXECUTED": true,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "live_local",
+        "why": [
+          {
+            "ok": true,
+            "text": "a witness is named"
+          },
+          {
+            "ok": true,
+            "text": "its evidence kind is one the ledger already uses (constructive_witness)"
+          },
+          {
+            "ok": true,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": true,
+            "text": "its rung is in_tree or above (in_tree)"
+          },
+          {
+            "ok": true,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": true,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": {
           "at": "2026-09-11T15:25:45.592Z",
           "host": "PX13",
@@ -2936,6 +4575,7 @@
         "cell_statuses": [
           {
             "num": "44",
+            "modality": "stronger_than_needed",
             "status": "proved"
           }
         ]
@@ -2950,7 +4590,30 @@
       "cells": [],
       "claims": [],
       "witness": null,
-      "prior_art": "Epistemic logic (Hintikka); the ladder's epistemic rung. Graphonomous Bot spec: 'a Bot knows its projection, not the world.'",
+      "prior_art": {
+        "works": [
+          {
+            "work": "Hintikka, epistemic logic",
+            "relation": "antecedent",
+            "overlap": "formal treatment of what an agent knows and knows it does not",
+            "difference": "none claimed"
+          },
+          {
+            "work": "The box-and-box ladder's epistemic rung",
+            "relation": "realization",
+            "overlap": "the tree's own place where 'do we know enough' is asked",
+            "difference": "the rung governs one decision; the pattern is about a standing boundary"
+          },
+          {
+            "work": "Graphonomous Bot spec — 'a Bot knows its projection, not the world'",
+            "relation": "partial-overlap",
+            "overlap": "the tree's sharpest statement of the boundary",
+            "difference": "frozen for one component"
+          }
+        ],
+        "novelty_not_claimed": "Epistemic logic has formalized this for sixty years. The chapter's job is to keep the boundary visible, not to advance the logic.",
+        "prose": "Epistemic logic (Hintikka); the ladder's epistemic rung. Graphonomous Bot spec: 'a Bot knows its projection, not the world.'"
+      },
       "realizations": [
         "opensentience.org/epistemic-arithmetic.html"
       ],
@@ -2970,7 +4633,7 @@
           "promoting a claim one register with evidence",
           "demoting a claim when its observation goes stale"
         ],
-        "forbidden": [
+        "refused": [
           "'observed, therefore may alter'",
           "confidence inflated across registers without evidence"
         ]
@@ -3007,12 +4670,48 @@
       "wrl": {
         "note": "No core-role encoding; six registers are not six roles."
       },
+      "up": "UP-032",
+      "limit": "Shows 'later canonical wins', which is not 'disputed'. A disputed outcome needs the SAME event key from two claims, and the scenario for this chapter does not construct one — so the harder case is unshown, not resolved.",
+      "next_rung": "in_tree: a scenario that constructs the same (writer, sequence) twice, so the film has to show a genuine dispute rather than an ordering.",
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
         "RUNNABLE": false,
         "EXECUTED": false,
         "STAGED": false,
+        "REPRODUCED": false,
+        "PUBLISHED": true,
+        "next_rung_name": "in_tree",
+        "why": [
+          {
+            "ok": false,
+            "text": "a witness is named"
+          },
+          {
+            "ok": false,
+            "text": "its evidence kind is one the ledger already uses"
+          },
+          {
+            "ok": false,
+            "text": "the witness path resolves in this tree"
+          },
+          {
+            "ok": false,
+            "text": "its rung is in_tree or above"
+          },
+          {
+            "ok": false,
+            "text": "a run is recorded for these exact bytes"
+          },
+          {
+            "ok": true,
+            "text": "no claim is cited that could be REFUTED"
+          },
+          {
+            "ok": false,
+            "text": "a counterexample is shipped (required once WITNESSED)"
+          }
+        ],
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []

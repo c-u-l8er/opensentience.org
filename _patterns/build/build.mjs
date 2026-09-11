@@ -54,7 +54,14 @@ const CLAIMS = new Map(LEDGER.claims.map((c) => [c.claim_id, c]));
 const CELLNUMS = new Set(CELLS.map((c) => c.num));
 const SUPPORT_OK = new Set(['PROVED', 'KNOWN', 'MEASURED', 'CONDITIONAL']);
 const RUNNABLE = new Set(['suite', 'side-effect', 'lint']);
-const DERIVED_FIELDS = ['label', 'CHECKABLE', 'RUNNABLE', 'EXECUTED', 'WITNESSED', 'STAGED', 'runs_on_page'];
+const DERIVED_FIELDS = ['label', 'CHECKABLE', 'RUNNABLE', 'EXECUTED', 'WITNESSED', 'STAGED', 'runs_on_page', 'REPRODUCED', 'PUBLISHED', 'next_rung_name', 'why'];
+// v0.16 — prior art carries a RELATION, not a bibliography line (GPT review 2026-09-13, adopted).
+// 'not-searched' is the tree's own case: a work named in the tree whose source was never opened.
+const RELATIONS = new Set(['antecedent', 'close-analogue', 'partial-overlap', 'realization', 'contrasting-solution', 'terminology-precedent', 'not-searched']);
+// A cited cell or claim states HOW it bears on the pattern. 'stronger_than_needed' is the fourth value
+// GPT's three did not cover: the basis asserts more than the pattern requires (the Law 6 shape — the
+// frontier package finds it TOO STRONG, which is not the same as 'true but insufficient').
+const MODALITIES = new Set(['necessary', 'sufficient', 'not_sufficient', 'stronger_than_needed']);
 
 const refusals = [];
 const findings = [];
@@ -102,16 +109,61 @@ function checkCounterexample(p) {
   refuse('P8-COUNTEREXAMPLE', `${p.id}: unknown counterexample shape ${c.shape}`);
 }
 
+// PUBLICATION standing, derived and not typed. GPT proposed an editorial draft/review/stable word;
+// this tree already refuses typed status, so the fact is read off the artifact of the LAST build that
+// was committed: a page either was in it or was not. Nothing here asks an author how published a page is.
+const PRIOR_ARTIFACT = (() => {
+  const f = join(SITE, 'patterns/artifact.json');
+  if (!existsSync(f)) return null;
+  try { return readJson(f); } catch { return null; }
+})();
+const PUBLISHED_IDS = new Set(Object.keys((PRIOR_ARTIFACT && PRIOR_ARTIFACT.outputs) || {}).filter((k) => k.endsWith('.html')).map((k) => k.replace(/\.html$/, '')));
+
+// P25 — a lint counterexample must PRINT the retired phrase to be one, so it carries a
+// `lint-allow:<RULE>` marker that the prose gate reads LINE BY LINE. A JSON re-dump that pretty-prints
+// the object splits the marker off the sentence's line and the gate then fails on our own registry.
+// That happened on the v0.16 migration; this refuses it rather than letting the next re-dump repeat it.
+{
+  const raw = readFileSync(join(HERE, '../data/patterns.json'), 'utf8').split('\n');
+  for (const p of DATA.patterns) {
+    const c = p.counterexample;
+    if (!c || !c.lint_allow) continue;
+    const line = raw.find((l) => l.includes(JSON.stringify(c.sentence).slice(1, -1)));
+    if (line && !line.includes(c.lint_allow.split(' ')[0])) refuse('P25-LINT-ALLOW-SPLIT', `${p.id}: the lint-allow marker is not on the same line as the sentence it allows — the prose gate reads lines, so re-dumping this file split the allow from its phrase`);
+  }
+}
+
+const ups = new Map();
 const derived = [];
 for (const p of DATA.patterns) {
   if (!['definition', 'pattern'].includes(p.kind)) refuse('P1-KIND', `${p.id}: ${p.kind}`);
   if (!DATA.families.includes(p.family)) refuse('P1-FAMILY', `${p.id}: ${p.family}`);
-  for (const n of p.cells || []) if (!CELLNUMS.has(n)) refuse('P4-CELL', `${p.id}: cell ${n} not in cells.json`);
+  if (!/^UP-\d{3}$/.test(p.up || '')) refuse('P20-UP-ID', `${p.id}: up must be UP-nnn, got ${JSON.stringify(p.up)}`);
+  if (ups.has(p.up)) refuse('P20-UP-ID', `${p.id}: duplicate ${p.up} (also ${ups.get(p.up)})`); else ups.set(p.up, p.id);
+  if (p.kind === 'pattern' || p.kind === 'definition') {
+    for (const f of ['limit', 'next_rung']) if (!p[f] || !String(p[f]).trim()) refuse('P22-HONESTY', `${p.id}: ${f} is required — a record must state what it does not establish`);
+    const pa = p.prior_art;
+    if (!pa || typeof pa !== 'object' || !Array.isArray(pa.works)) refuse('P21-PRIOR-ART', `${p.id}: prior_art must be {works:[…], novelty_not_claimed}`);
+    else {
+      if (!pa.novelty_not_claimed || !String(pa.novelty_not_claimed).trim()) refuse('P21-PRIOR-ART', `${p.id}: prior_art.novelty_not_claimed is required — it is the field that prevents pseudo-novelty`);
+      for (const wk of pa.works) {
+        if (!RELATIONS.has(wk.relation)) refuse('P21-PRIOR-ART', `${p.id}: relation ${JSON.stringify(wk.relation)} not in [${[...RELATIONS].join(', ')}]`);
+        for (const f of ['work', 'overlap', 'difference']) if (!wk[f]) refuse('P21-PRIOR-ART', `${p.id}: prior art entry missing ${f}`);
+      }
+    }
+  }
+  for (const b of p.cells || []) {
+    if (typeof b === 'string') { refuse('P23-BASIS-MODALITY', `${p.id}: cell ${b} carries no modality — a basis states HOW it bears, never by default`); continue; }
+    if (!CELLNUMS.has(b.ref)) refuse('P4-CELL', `${p.id}: cell ${b.ref} not in cells.json`);
+    if (!MODALITIES.has(b.modality)) refuse('P23-BASIS-MODALITY', `${p.id}: cell ${b.ref} modality ${JSON.stringify(b.modality)} not in [${[...MODALITIES].join(', ')}]`);
+  }
   const claimStatuses = [];
-  for (const id of p.claims || []) {
-    const c = CLAIMS.get(id);
-    if (!c) { refuse('P5-CLAIM', `${p.id}: ${id} not in CLAIM_LEDGER.json`); continue; }
-    if (c.status === 'REFUTED') refuse('P6-REFUTED-SUPPORT', `${p.id} cites ${id}, which is REFUTED`);
+  for (const b of p.claims || []) {
+    if (typeof b === 'string') { refuse('P23-BASIS-MODALITY', `${p.id}: claim ${b} carries no modality`); continue; }
+    if (!MODALITIES.has(b.modality)) refuse('P23-BASIS-MODALITY', `${p.id}: claim ${b.ref} modality ${JSON.stringify(b.modality)} not in [${[...MODALITIES].join(', ')}]`);
+    const c = CLAIMS.get(b.ref);
+    if (!c) { refuse('P5-CLAIM', `${p.id}: ${b.ref} not in CLAIM_LEDGER.json`); continue; }
+    if (c.status === 'REFUTED') refuse('P6-REFUTED-SUPPORT', `${p.id} cites ${b.ref}, which is REFUTED`);
     claimStatuses.push(c.status);
   }
   for (const id of p.claims_related || []) if (!CLAIMS.has(id)) refuse('P5-CLAIM', `${p.id}: related claim ${id} not in ledger`);
@@ -147,7 +199,38 @@ for (const p of DATA.patterns) {
   if (label === 'WITNESSED' && !p.counterexample) refuse('P7-NO-COUNTEREXAMPLE', `${p.id} is WITNESSED and ships no counterexample`);
   checkCounterexample(p);
   if (w && RUNNABLE_ && !EXECUTED) findings.push(`${p.id}: check exists but is not EXECUTED — ${exec.why}`);
-  derived.push({ ...p, derived: { label, CHECKABLE, RUNNABLE: RUNNABLE_, EXECUTED, STAGED, execution: exec && exec.receipt ? { at: exec.receipt.execution_identity.started, host: exec.receipt.execution_identity.host, sha256: exec.receipt.source_identity.sha256, repo_head: exec.receipt.source_identity.repo_head } : (exec && exec.at ? { at: exec.at, note: exec.why } : null), claim_statuses: claimStatuses, cell_statuses: (p.cells || []).map((n) => ({ num: n, status: CELLS.find((c) => c.num === n).status })) } });
+
+  // The label's DERIVATION, printed on the page. GPT's ask, adopted: a page may not simply assert
+  // WITNESSED because a field says so — it shows the conjuncts and which one failed.
+  const why = p.kind !== 'pattern'
+    ? [{ ok: null, text: `kind is ${p.kind} — carries no evidence rung (AGENCY.md §6)` }]
+    : [
+      { ok: !!w, text: 'a witness is named' },
+      { ok: !!(w && w.evidence_kind), text: `its evidence kind is one the ledger already uses${w && w.evidence_kind ? ` (${w.evidence_kind})` : ''}` },
+      { ok: !!(w && w.path && existsSync(join(ROOT, w.path))), text: 'the witness path resolves in this tree' },
+      { ok: rungOk, text: `its rung is in_tree or above${w ? ` (${w.rung})` : ''}` },
+      { ok: EXECUTED, text: `a run is recorded for these exact bytes${exec && !exec.executed ? ` — ${exec.why}` : ''}` },
+      { ok: supportOk, text: claimStatuses.length ? `every cited claim is PROVED/KNOWN/MEASURED/CONDITIONAL (${claimStatuses.join(', ')})` : 'no claim is cited that could be REFUTED' },
+      { ok: !!p.counterexample, text: 'a counterexample is shipped (required once WITNESSED)' },
+    ];
+  // REPRODUCED — the ladder's top rung, and nothing in this tree has reached it. The field exists so
+  // that the absence is visible on every page rather than inferred from the absence of a field.
+  const REPRODUCED = !!(w && w.rung === 'external');
+  const li = w ? LADDER.indexOf(w.rung) : -1;
+  const next_rung_name = li < 0 ? 'in_tree' : (li + 1 < LADDER.length ? LADDER[li + 1] : null);
+  // P24 — the next rung is DERIVED from the ladder; the prose beside it says what would reach it.
+  // If that prose names a rung at all it must name the same one, or the page states the ladder twice
+  // and disagrees with itself. This gate caught three records on the pass that introduced it.
+  if (p.next_rung) {
+    const named = LADDER.filter((r) => new RegExp(`\\b${r}\\b`).test(p.next_rung));
+    for (const r of named) if (r !== next_rung_name) refuse('P24-NEXT-RUNG', `${p.id}: next_rung prose names "${r}" but the ladder derives "${next_rung_name}" from rung "${w ? w.rung : '(none)'}"`);
+  }
+  // Not a refusal, a finding: a witness that is staged AND served already ran from a deployed page,
+  // so an authored rung of in_tree understates where it actually stands. Rungs are authored per
+  // witness and re-adjudicating them is its own pass — this records that the pass is owed.
+  if (w && STAGED && PUBLISHED_IDS.has(p.id) && w.rung === 'in_tree') findings.push(`${p.id}: witness is STAGED and the page is served, yet its rung is authored in_tree — the ladder position is understated (rung re-adjudication owed)`);
+
+  derived.push({ ...p, derived: { label, CHECKABLE, RUNNABLE: RUNNABLE_, EXECUTED, STAGED, REPRODUCED, PUBLISHED: PUBLISHED_IDS.has(p.id), next_rung_name, why, execution: exec && exec.receipt ? { at: exec.receipt.execution_identity.started, host: exec.receipt.execution_identity.host, sha256: exec.receipt.source_identity.sha256, repo_head: exec.receipt.source_identity.repo_head } : (exec && exec.at ? { at: exec.at, note: exec.why } : null), claim_statuses: claimStatuses, cell_statuses: (p.cells || []).map((b) => ({ num: b.ref, modality: b.modality, status: CELLS.find((c) => c.num === b.ref).status })) } });
 }
 for (const a of DATA.anti_patterns) for (const f of ['label']) if (f in a) refuse('P0-TYPED-DERIVED', a.id);
 
@@ -159,6 +242,9 @@ const summary = {
   patterns: DATA.patterns.length, definitions: count((p) => p.kind === 'definition'), anti_patterns: DATA.anti_patterns.length,
   WITNESSED: count((p) => p.derived.label === 'WITNESSED'), STATED: count((p) => p.derived.label === 'STATED'), PROPOSED: count((p) => p.derived.label === 'PROPOSED'),
   CHECKABLE: count((p) => p.derived.CHECKABLE), RUNNABLE: count((p) => p.derived.RUNNABLE), EXECUTED: count((p) => p.derived.EXECUTED), STAGED: count((p) => p.derived.STAGED),
+  PUBLISHED: count((p) => p.derived.PUBLISHED), REPRODUCED: count((p) => p.derived.REPRODUCED),
+  prior_art_works: derived.reduce((n, p) => n + ((p.prior_art && p.prior_art.works) || []).length, 0),
+  prior_art_not_searched: derived.reduce((n, p) => n + ((p.prior_art && p.prior_art.works) || []).filter((w) => w.relation === 'not-searched').length, 0),
   invariant_null: count((p) => p.kind === 'pattern' && !p.invariant),
   by_family: Object.fromEntries(DATA.families.map((f) => [f, count((p) => p.family === f)])),
   witnessed_ids: derived.filter((p) => p.derived.label === 'WITNESSED').map((p) => p.id),
@@ -285,6 +371,17 @@ main h2{font:600 13px var(--ui,system-ui);letter-spacing:.08em;text-transform:up
 pre.syn{font:12.5px/1.5 var(--mono,monospace);background:#1b1a17;color:#eee7d8;padding:.8rem 1rem;border-radius:var(--r,8px);overflow:auto;margin:.3rem 0 1rem;white-space:pre}.syn-label{font:13px var(--ui,system-ui);color:var(--fg2,#333)}.syn-label code{font:12px var(--mono,monospace);color:var(--fg3,#666)}
 .sf-static{cursor:grab;touch-action:none}.sf-static.grabbing{cursor:grabbing}.wrlg{width:100%;height:auto;display:block;color:var(--fg3,#666);background:var(--ink3,#fffdf8);border:1px solid var(--line,#e7e0d2);border-radius:var(--r,8px)}.wrlg .n rect{fill:var(--ink2,#f2ede2);stroke:var(--fg2,#333);stroke-width:1.2}.wrlg .n.Door rect{stroke:var(--rose,#c02a5f)}.wrlg .n.Pulser rect{stroke:var(--acc,#6d3bd4)}.wrlg .n.Orb rect{stroke:var(--data,#0a6e62)}.wrlg .n text{font:12px var(--mono,monospace);fill:var(--fg,#1c1a17)}.wrlg .n text.r{font-size:10px;fill:var(--fg3,#666)}.wrlg .e{stroke:currentColor;stroke-width:1.4}.wrlg .ek{font:10px var(--mono,monospace);fill:var(--fg3,#666)}.semid{font:13px var(--mono,monospace);word-break:break-all}table.claims{border-collapse:collapse;font:13px var(--ui,system-ui);margin:.3rem 0 .8rem}table.claims td,table.claims th{border:1px solid var(--line,#e7e0d2);padding:.2rem .5rem;text-align:left}main h3{font:600 15px var(--ui,system-ui);margin:1.6rem 0 .4rem}.semid.bad{color:var(--rose,#c02a5f)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}.two b{font:600 13px var(--ui,system-ui);text-transform:uppercase;letter-spacing:.06em}.two ul{padding-left:1.2rem;margin:.3rem 0}
+code.up{font:600 11px var(--mono,monospace);background:var(--ink2,#f2ede2);padding:.05rem .3rem;border-radius:3px;color:var(--fg2,#333)}
+dl.honest{display:grid;grid-template-columns:max-content 1fr;gap:.25rem 1rem;font:13.5px/1.55 var(--ui,system-ui);border:1px solid var(--line,#e7e0d2);border-left:3px solid var(--fg3,#999);background:var(--ink3,#fffdf8);padding:.7rem .9rem;border-radius:0 var(--r,8px) var(--r,8px) 0;margin:1rem 0 .4rem}
+dl.honest dt{font:600 11px var(--ui,system-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--fg3,#666);padding-top:.15rem}dl.honest dd{margin:0}dl.honest .warn-i{color:var(--warn,#96600b)}
+details.why{font:13px/1.55 var(--ui,system-ui);margin:0 0 1.4rem}details.why summary{cursor:pointer;color:var(--acc,#6d3bd4);font-weight:600}
+ul.why-l{list-style:none;padding:.4rem 0 0;margin:0;font:13px var(--mono,monospace)}ul.why-l li{padding:.1rem 0}ul.why-l li.y{color:var(--data,#0a7)}ul.why-l li.x{color:var(--rose,#c02a5f)}ul.why-l li.n{color:var(--fg3,#666)}
+table.pa,table.basis{border-collapse:collapse;font:13px/1.5 var(--ui,system-ui);margin:.4rem 0 .6rem;width:100%}table.pa td,table.pa th,table.basis td,table.basis th{border:1px solid var(--line,#e7e0d2);padding:.3rem .5rem;text-align:left;vertical-align:top}table.pa th,table.basis th{font:600 11px var(--ui,system-ui);letter-spacing:.05em;text-transform:uppercase;color:var(--fg3,#666)}
+.rel,.mod{font:600 10.5px var(--ui,system-ui);padding:.05rem .35rem;border-radius:3px;white-space:nowrap;background:var(--ink2,#f2ede2);color:var(--fg2,#333)}
+.rel.not-searched{background:rgba(192,42,95,.10);color:var(--rose,#c02a5f)}.rel.terminology-precedent,.rel.antecedent{background:rgba(150,96,11,.10);color:var(--warn,#96600b)}
+.mod.necessary{background:var(--acc-soft,rgba(109,59,212,.08));color:var(--acc,#6d3bd4)}.mod.not_sufficient,.mod.stronger_than_needed{background:rgba(150,96,11,.10);color:var(--warn,#96600b)}
+p.nonovelty{font:13.5px/1.6 var(--ui,system-ui);border-left:3px solid var(--warn,#96600b);background:rgba(150,96,11,.05);padding:.5rem .8rem;border-radius:0 var(--r,8px) var(--r,8px) 0}
+p.note{font:12.5px/1.55 var(--ui,system-ui);color:var(--fg3,#666)}
 .take{list-style:none;padding:0;margin:0}.take li{padding:.5rem .8rem;margin:.4rem 0;border-left:3px solid var(--line2,#ccc);background:var(--ink3,#fffdf8);font:15px/1.5 var(--display,Georgia,serif)}.take li b{font:600 10px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--fg3,#666)}.take li.animation{border-color:var(--acc,#6d3bd4)}.take li.syntax{border-color:var(--fg,#1c1a17)}.take li.literature{border-color:var(--warn,#96600b)}.take li.witness{border-color:var(--data,#0a7)}
 .sink{font:13px/1.45 var(--mono,monospace);background:#1b1a17;color:#ddd;padding:.8rem;border-radius:var(--r,8px);min-height:1.5rem;max-height:28rem;overflow:auto;margin:.5rem 0;white-space:pre-wrap}.wline.good{color:#7fd}.wline.bad{color:#f88}.wline.warn{color:#fd7}.wline.group{color:#9cf;margin-top:.5rem}.wline.muted{color:#888}.wstatus.running{color:var(--warn)}.wstatus.pass{color:var(--data)}.wstatus.fail{color:var(--rose,#c02a5f)}
 code{font:.85em var(--mono,monospace);background:var(--ink2,#f2ede2);padding:0 .25rem;border-radius:3px}.warn{color:var(--warn,#96600b)}.exec{font:14px var(--ui,system-ui)}.note{font:14px var(--ui,system-ui);color:var(--fg2,#444);background:var(--ink2,#f2ede2);padding:.5rem .8rem;border-radius:var(--r,8px)}
@@ -392,6 +489,39 @@ function wrlSection(p) {
   if (w.refused) { const R = sealed.get(w.refused); out += `<p class="syn-label">Refused world <code>_patterns/wrl/${esc(w.refused)}</code></p><pre class="syn">${esc(R.src.trim())}</pre><p class="semid bad">✗ <code>${esc(R.r.code)}</code> — ${esc(R.r.message)}${R.r.line ? ` <small>(line ${R.r.line})</small>` : ''}</p>`; }
   return out;
 }
+const MOD_WORD = { necessary: 'necessary', sufficient: 'sufficient', not_sufficient: 'not sufficient alone', stronger_than_needed: 'stronger than needed' };
+const REL_WORD = {
+  antecedent: 'antecedent', 'close-analogue': 'close analogue', 'partial-overlap': 'partial overlap',
+  realization: 'realization', 'contrasting-solution': 'contrasting solution',
+  'terminology-precedent': 'terminology precedent', 'not-searched': 'NOT SEARCHED',
+};
+// Prior art with a RELATION on every entry, so the catalog cannot manufacture novelty by omission.
+function priorArtSection(p) {
+  const pa = p.prior_art;
+  if (!pa) return '';
+  if (typeof pa === 'string') return `<h2>Prior art</h2>${para(pa)}`;
+  return `<h2>Prior art — and what is not claimed</h2>
+<table class="pa"><tr><th>work</th><th>relation</th><th>what it shares</th><th>where it differs</th></tr>${pa.works.map((w) => `<tr><td>${esc(w.work)}</td><td><span class="rel ${w.relation}">${REL_WORD[w.relation]}</span></td><td>${esc(w.overlap)}</td><td>${esc(w.difference)}</td></tr>`).join('')}</table>
+<p class="nonovelty"><b>Novelty not claimed.</b> ${esc(pa.novelty_not_claimed)}</p>`;
+}
+// The five-line box the OpenSentience homepage already runs for its research claims, applied per chapter.
+function honestyBox(p) {
+  const d = p.derived, w = p.witness;
+  const src = w ? `<code>${esc(w.path)}</code>${d.execution && d.execution.repo_head ? ` @ <code>${esc((d.execution.repo_head || '').slice(0, 12))}</code>` : ''}${d.execution && d.execution.sha256 ? ` · bytes <code>${esc(d.execution.sha256.slice(0, 16))}…</code>` : ''}` : '<span class="warn-i">none — this record cites no check</span>';
+  const checked = d.execution && d.execution.at ? esc(String(d.execution.at).slice(0, 19).replace('T', ' ')) + ' UTC' : '<span class="warn-i">never run</span>';
+  // the rung NAME is the chip; strip it from the prose so the page does not print it twice
+  const nrProse = String(p.next_rung || '').replace(new RegExp(`^(?:${LADDER.join('|')}):\\s*`), '');
+  const nr = d.next_rung_name ? `<code>${d.next_rung_name}</code> — ${esc(nrProse)}` : `already at the top of the ladder — ${esc(nrProse)}`;
+  return `<dl class="honest">
+<dt>Standing</dt><dd>${chip(p)} ${['CHECKABLE', 'RUNNABLE', 'EXECUTED', 'STAGED', 'PUBLISHED', 'REPRODUCED'].map((k) => `<span class="st ${d[k] ? 'on' : 'off'}">${k}</span>`).join('')}</dd>
+<dt>Last checked</dt><dd>${checked}</dd>
+<dt>Source</dt><dd>${src}</dd>
+<dt>Limit</dt><dd>${esc(p.limit || '')}</dd>
+<dt>Next rung</dt><dd>${nr}</dd>
+</dl>
+<details class="why"><summary>Why this page says ${d.label ?? p.kind}${d.label ? '' : ''} — the derivation, not the word</summary><ul class="why-l">${d.why.map((x) => `<li class="${x.ok === null ? 'n' : x.ok ? 'y' : 'x'}">${x.ok === null ? '·' : x.ok ? '✓' : '✗'} ${esc(x.text)}</li>`).join('')}</ul><p class="note">WITNESSED requires every line above to hold. The label is computed from them by <code>build.mjs</code> and cannot be typed into the registry — the build refuses a record that carries it.</p></details>`;
+}
+
 function pageFor(p, idx) {
   const d = p.derived, w = p.witness, c = p.counterexample, sc = sceneOf(p);
   const stamp = w && d.STAGED ? stampFor(w.staged_path) : null;
@@ -422,13 +552,14 @@ function pageFor(p, idx) {
     const db = document.getElementById('demo');
     if (db) db.addEventListener('click', async () => { db.disabled = true; try { const m = await import('./demos/${p.id}.mjs?v=${stamp}'); await m.run(document.getElementById('dsink'), { stamp: '${stamp}' }); } catch (e) { document.getElementById('dsink').textContent = 'demo failed: ' + e.message; } db.disabled = false; });` : ''}
   </script>`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(p.name)} · Unboxed Patterns</title><meta name="description" content="${esc(p.headline || p.invariant || p.name)}"><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(p.name)} · Unboxed Patterns</title><meta name="description" content="${esc(p.headline || p.invariant || p.name)}"><link rel="canonical" href="https://opensentience.org/patterns/${p.id}"><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
 <script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
 <div class="book">${sidebar(p)}<main>
-<p class="meta">${FAMILY_TITLE[p.family]} · ${chip(p)} ${standings}</p>
+<p class="meta"><code class="up">${p.up}</code> · ${FAMILY_TITLE[p.family]} · ${chip(p)} ${standings}</p>
 <h1>${esc(p.name)}</h1>
 ${p.headline ? `<p class="lede">${esc(p.headline)}</p>` : ''}
 ${p.invariant ? `<div class="invariant">${esc(p.invariant)}</div>` : ''}
+${honestyBox(p)}
 ${p.explanatory ? `<h2>Intent</h2><p>${esc(p.explanatory)}</p>` : ''}${p.technical ? `<details class="tech"><summary>Technical register</summary><p>${esc(p.technical)}</p></details>` : ''}
 ${p.problem ? `<h2>Problem</h2>${para(p.problem)}` : ''}
 ${p.construction ? `<h2>Solution</h2>${para(p.construction)}` : ''}
@@ -438,14 +569,14 @@ ${wrlHtml}
 ${syntax ? `<h2>Syntax — quoted from the tree at build time</h2>${syntax}` : ''}
 ${p.forces ? `<h2>Forces</h2>${para(p.forces)}` : ''}
 ${p.applicability ? `<h2>Applicability</h2>${para(p.applicability)}` : ''}
-${p.transformations ? `<h2>Transformations</h2><div class="two"><div><b>Allowed</b>${list(p.transformations.allowed)}</div><div><b>Forbidden</b>${list(p.transformations.forbidden)}</div></div>` : ''}
+${p.transformations ? `<h2>Transformations</h2><div class="two"><div><b>Preserving</b>${list(p.transformations.allowed)}</div><div><b>Refusing</b>${list(p.transformations.refused)}</div></div><p class="note">A <em>refusing</em> transformation is not one that is discouraged: it is one that, applied, makes the invariant above false. The word is the tree's, and it is the same word the join uses.</p>` : ''}
 ${p.consequences ? `<h2>Consequences</h2>${para(p.consequences)}` : ''}
 ${fm ? `<h2>Failure mode it answers</h2><p><b>${esc(fm.name)}</b> — ${esc(fm.problem)}${fm.paid_for ? ` <small>Paid for at: ${esc(fm.paid_for)}</small>` : ''}</p>` : ''}
 <h2>Witness</h2>${witness}
 <h2>Counterexample</h2>${cex}
 ${takeaways ? `<h2>What to take away</h2>${takeaways}` : ''}
-${(p.cells || []).length || (p.claims || []).length ? `<h2>Cells and claims cited</h2>${d.cell_statuses.map((x) => `<p>cell <code>${x.num}</code> — status <code>${x.status}</code> (from cells.json)</p>`).join('')}${(p.claims || []).map((id, i) => `<p>claim <code>${esc(id)}</code> — <code>${d.claim_statuses[i]}</code> (from CLAIM_LEDGER.json)</p>`).join('')}` : ''}
-${p.prior_art ? `<h2>Prior art</h2>${para(p.prior_art)}` : ''}
+${(p.cells || []).length || (p.claims || []).length ? `<h2>Invariant basis — and how each piece bears</h2><table class="basis"><tr><th>basis</th><th>bears</th><th>status</th></tr>${d.cell_statuses.map((x) => `<tr><td>cell <code>${x.num}</code></td><td><span class="mod ${x.modality}">${MOD_WORD[x.modality]}</span></td><td><code>${x.status}</code> <small>cells.json</small></td></tr>`).join('')}${(p.claims || []).map((b, i) => `<tr><td>claim <code>${esc(b.ref)}</code></td><td><span class="mod ${b.modality}">${MOD_WORD[b.modality]}</span></td><td><code>${d.claim_statuses[i]}</code> <small>CLAIM_LEDGER.json</small></td></tr>`).join('')}</table><p class="note">Satisfying a basis is local. Nothing here implies global adequacy unless a theorem or a composition rule says so.</p>` : ''}
+${priorArtSection(p)}
 ${(p.realizations || []).length ? `<h2>Realizations in the tree</h2>${list(p.realizations)}` : ''}
 ${(p.related || []).length ? `<h2>Relations with other patterns</h2><p>${p.related.map((id) => byId.has(id) ? `<a href="${id}.html">${esc(byId.get(id).name)}</a> ${chip(byId.get(id))}` : esc(id)).join(' · ')}</p>` : ''}
 <div class="pn"><span>${prev ? `<a href="${prev.id}.html">← ${esc(prev.name)}</a><small>${FAMILY_TITLE[prev.family]}</small>` : ''}</span><span style="text-align:right">${next ? `<a href="${next.id}.html">${esc(next.name)} →</a><small>${FAMILY_TITLE[next.family]}</small>` : ''}</span></div>
@@ -475,6 +606,7 @@ ${conclusionFilm ? `<p>Reduced whole by TRVM's forge in ${conclusionFilm.executi
 ${conclusionFilm ? `<h2>The same film, chapter by chapter</h2><div class="sf" id="film"><div class="sf-stage">${SF.svg(SF.computeState(filmSceneFrom(conclusionFilm, conclusionSeal.graph, 'Every chapter\'s world at once, before epoch 1.'), 0), { caption: false })}</div></div>` : ''}
 <details class="tech"><summary>The whole world, as WRL (${conclusionSrc ? conclusionSrc.split('\n').length : 0} lines)</summary><pre class="syn">${esc((conclusionSrc || '').trim())}</pre></details>
 <h2>The numbers this page is allowed to quote</h2><p>${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns · ${[...sealed.values()].filter((x) => x.r.ok).length} WRL worlds sealed at build and ${[...sealed.values()].filter((x) => !x.r.ok).length} refused by design · ${films.size} worlds with a Film reduced by TRVM's forge (${[...films.values()].reduce((n, r) => n + r.epochs.length, 0)} epochs) — every one derived by <code>build.mjs</code>, none typed.</p>
+<p>${summary.prior_art_works} prior-art relations are recorded, each with what it shares and where it differs, and ${summary.prior_art_not_searched} of them are marked <span class="rel not-searched">NOT SEARCHED</span> — named in this tree by someone who never opened the source. Every record also states what it does <em>not</em> establish. <b>${summary.REPRODUCED} of ${summary.patterns} have been reproduced outside this tree</b>, which is the rung above everything on this page and the one nothing here has reached.</p>
 <div class="pn"><span><a href="${last.id}.html">← ${esc(last.name)}</a><small>${FAMILY_TITLE[last.family]}</small></span><span style="text-align:right"><a href="./">Catalog →</a></span></div>
 <footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>.</footer></main></div><script type="module">import { mount, panZoom } from '/patterns/surface/surface.mjs?v=${SF_STAMP}'; for (const el of document.querySelectorAll('.sf-static')) panZoom(el, () => el.querySelector('svg'));${conclusionFilm ? ` mount(document.getElementById('board'), ${JSON.stringify(boardScene(conclusionFilm, conclusionSeal.graph, 'The board before epoch 1.'))}); mount(document.getElementById('film'), ${JSON.stringify(filmSceneFrom(conclusionFilm, conclusionSeal.graph, 'Every chapter\'s world at once, before epoch 1.'))});` : ''}</script></body></html>`;
 const card = (p) => `<a class="card" href="${p.id}.html">${p.scene ? `<div class="thumb">${thumb(p)}</div>` : ''}<h3>${esc(p.name)} ${chip(p)}</h3><p>${esc(p.headline || p.invariant || (p.kind === 'definition' ? 'A definition.' : p.prior_art || ''))}</p></a>`;
@@ -495,7 +627,19 @@ const derivedJson = JSON.stringify({ kind: 'UNBOXED_PATTERNS_DERIVED', built: ne
 
 
 const DIST = join(SITE, 'patterns');   // SERVED at opensentience.org/patterns/ — ruling R4, 2026-09-11
-const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms, ...pageOutputs };
+// A section sitemap. Pages redirects <id>.html to the clean URL with a 308, so the CANONICAL url —
+// the one listed here and the one every page now declares — has no extension. Without this file the
+// 33 chapters are reachable only by following two links from the homepage, which is why an external
+// crawler asked for /patterns on 2026-09-13 and was handed the OpenSentience root instead.
+const SITE_URL = 'https://opensentience.org';
+const canonicalOf = (k) => SITE_URL + '/patterns/' + (k === 'index.html' ? '' : k.replace(/\.html$/, ''));
+const sitemapKeys = ['index.html', ...ORDER.map((p) => `${p.id}.html`), 'conclusion.html'];
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapKeys.map((k) => `  <url><loc>${canonicalOf(k)}</loc><lastmod>${new Date().toISOString()}</lastmod><priority>${k === 'index.html' ? '1.0' : '0.7'}</priority></url>`).join('\n')}
+</urlset>
+`;
+const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms, 'sitemap.xml': sitemap, ...pageOutputs };
 const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])), chain: Object.fromEntries([...chain.entries()].map(([id, c]) => [id, c.cum.semanticId])), chain_films: Object.fromEntries([...chain.entries()].filter(([, c]) => c.film).map(([id, c]) => [id, c.film.source_identity.world_sha256.slice(0, 16) + ':' + c.film.epochs.length])), conclusion_film: conclusionFilm ? conclusionFilm.source_identity.world_sha256.slice(0, 16) + ':' + conclusionFilm.epochs.length : null, conclusion: conclusionSeal && conclusionSeal.ok ? conclusionSeal.semanticId : null, films: Object.fromEntries([...films.entries()].map(([f, r]) => [f, r.source_identity.world_sha256.slice(0, 16) + ':' + r.epochs.length])), 'WRL/wrl.js': WRLJS_SHA, wrl_worlds: Object.fromEntries([...sealed.entries()].map(([f, x]) => [f, x.r.ok ? x.r.semanticId : x.r.code])) };
 // the artifact excludes the timestamps so --verify compares content, not clock
 const stable = (s) => s.replace(/\d{4}-\d\d-\d\dT[\d:.]+Z/g, 'T');
