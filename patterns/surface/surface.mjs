@@ -78,14 +78,20 @@ const STENCILS = {
     const st = base(); const nodes = (p.nodes || []).filter((n) => n[0] !== 'Ledger'), edges = p.edges || [];
     const names = nodes.map((n) => n[1]); const depth = Object.fromEntries(names.map((n) => [n, 0]));
     for (let k = 0; k < names.length; k++) for (const [, a, b] of edges) if (depth[b] !== undefined && depth[a] !== undefined) depth[b] = Math.max(depth[b], depth[a] + 1);
-    /* one row per chapter (the id prefix before the first underscore), in order of first appearance */
+    /* one row per chapter (the id prefix before the first underscore); rows in params.rowOrder if given, else
+       first appearance. Within a row, objects that share a depth stack vertically so replicated members never overlap. */
     const rowOf = (n) => (n.includes('_') ? n.split('_')[0] : '·'); const rows = []; const rowIdx = {};
+    for (const r of p.rowOrder || []) if (rowIdx[r] === undefined && names.some((n) => rowOf(n) === r)) { rowIdx[r] = rows.length; rows.push(r); }
     for (const n of names) { const r = rowOf(n); if (rowIdx[r] === undefined) { rowIdx[r] = rows.length; rows.push(r); } }
-    const PITCH = 180, ROWH = 104, X0 = 110, Y0 = 64;
+    const PITCH = 180, X0 = 110, Y0 = 64, STACK = 74, ROWGAP = 104;
     const maxCol = Math.max(0, ...names.map((n) => depth[n]));
-    st.W = Math.max(640, X0 + (maxCol + 1) * PITCH + 40); st.H = Y0 + Math.max(1, rows.length) * ROWH + 44;
+    const stackIdx = {}, stackSize = {};
+    for (const n of names) { const k = rowOf(n) + '/' + depth[n]; stackIdx[n] = stackSize[k] = (stackSize[k] || 0); stackSize[k]++; }
+    const rowHeight = rows.map((r) => ROWGAP + (Math.max(1, ...names.filter((n) => rowOf(n) === r).map((n) => stackSize[rowOf(n) + '/' + depth[n]])) - 1) * STACK);
+    const rowY = []; let y = Y0; for (let i = 0; i < rows.length; i++) { rowY.push(y); y += rowHeight[i]; }
+    st.W = Math.max(640, X0 + (maxCol + 1) * PITCH + 40); st.H = y + 44;
     const role = Object.fromEntries(nodes.map((n) => [n[1], n[0]])); const pos = {};
-    for (const n of names) pos[n] = { x: X0 + depth[n] * PITCH, y: Y0 + rowIdx[rowOf(n)] * ROWH };
+    for (const n of names) pos[n] = { x: X0 + depth[n] * PITCH, y: rowY[rowIdx[rowOf(n)]] + stackIdx[n] * STACK };
     for (const n of names) st.stations.push({ id: n, x: pos[n].x, y: pos[n].y, label: n, state: 'idle', note: '', role: role[n], box: true, sub: role[n].toLowerCase() });
     if ((p.nodes || []).some((n) => n[0] === 'Ledger')) st.stations.push({ id: 'ledger', x: st.W - 120, y: 30, label: 'ledger · receipts', state: 'idle', note: '', role: 'Ledger', box: true, count: 0 });
     for (const [kind, a, b] of edges) if (pos[a] && pos[b]) st.wires.push({ id: `${a}->${b}`, x1: pos[a].x + 62, y1: pos[a].y, x2: pos[b].x - 62, y2: pos[b].y, label: kind === 'SignalWire' ? 'sig' : 'socket', note: '', thin: true });

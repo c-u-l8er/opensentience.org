@@ -232,6 +232,7 @@ for (const p of derived) {
 // refuses a chapter whose determinism run disagreed with itself. Missing films are findings, not refusals.
 const CH = await import(join(HERE, 'chain.mjs'));
 const chainIds = CH.order().filter((id) => CH.fragment(id));
+const chainRowOrder = chainIds.map((id) => { const m = (CH.fragment(id) || '').match(/\[[a-z]+:([a-z0-9]+)_/); return m ? m[1] : null; }).filter(Boolean);
 const chain = new Map();   // id → { delta, cum, prevCum, links, scenario, film, deltaSrc, index }
 { let prev = null;
   for (let i = 0; i < chainIds.length; i++) {
@@ -312,7 +313,7 @@ function filmSceneFrom(rc, g, intro) {
     prev = cur;
     steps.push({ caption: `epoch ${ep.t} · Film v0.7 ${ep.film_hash.slice(7, 23)}… — every line below is the forge's; the picture only colours what changed`, actions, takeaway: i === rc.epochs.length - 1 ? `${rc.epochs.length} epochs reduced by TRVM's forge; ${new Set(rc.epochs.map((e) => e.film_hash)).size} distinct film hashes; this replay is of a sealed world, not of scene data.` : undefined });
   });
-  return { stencil: 'world', interval: 2200, intro: intro || `The sealed world, before epoch 1. Reduced by TRVM's forge (${rc.execution_identity.reducer}) in ${rc.execution_identity.seconds}s on ${rc.execution_identity.host}.`, params: { nodes, edges: g.edges }, steps };
+  return { stencil: 'world', interval: 2200, intro: intro || `The sealed world, before epoch 1. Reduced by TRVM's forge (${rc.execution_identity.reducer}) in ${rc.execution_identity.seconds}s on ${rc.execution_identity.host}.`, params: { nodes, edges: g.edges, rowOrder: chainRowOrder }, steps };
 }
 function filmScene(p) { const w = p.wrl; if (!w || !w.world) return null; const rc = films.get(w.world); if (!rc) return null; return filmSceneFrom(rc, sealed.get(w.world).r.graph); }
 function filmSection(p) {
@@ -350,7 +351,7 @@ function chapterWrlSection(p) {
   out += `<h3>${c.index === 0 ? 'The chain begins here' : `Composes with the ${c.index} chapter${c.index === 1 ? '' : 's'} before it`}</h3>
   <p>The chain through this chapter — every earlier fragment, this one, and the links — seals to <code>${esc(c.cum.semanticId)}</code>: ${g.nodes.length} objects, ${g.edges.length} edges${pg ? ` (was ${pg.nodes.length} / ${pg.edges.length}; every earlier object and edge is still present — checked, or the build refuses)` : ''}.${c.prevCum && c.prevCum.semanticId === c.cum.semanticId ? ' <b>The id did not move</b>: this fragment adds nothing but a comment, and a comment is not meaning.' : ''}</p>
   ${c.links ? `<p class="syn-label">Links only the chain carries</p><pre class="syn">${esc(c.links.trim())}</pre>` : ''}
-  <div class="sf-static">${SF.svg(SF.computeState({ stencil: 'world', params: { nodes: g.nodes.map(([r, n]) => [r, n, {}]), edges: g.edges }, steps: [] }, 0), { caption: false })}</div><p class="illus">wheel zooms · drag pans · double-click fits</p>`;
+  <div class="sf-static">${SF.svg(SF.computeState({ stencil: 'world', params: { nodes: g.nodes.map(([r, n]) => [r, n, {}]), edges: g.edges, rowOrder: chainRowOrder }, steps: [] }, 0), { caption: false })}</div><p class="illus">wheel zooms · drag pans · double-click fits</p>`;
   return out;
 }
 const pageFilmScenes = new Map();
