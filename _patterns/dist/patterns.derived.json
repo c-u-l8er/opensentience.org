@@ -1,9 +1,9 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T15:27:41.308Z",
+  "built": "2026-09-11T15:42:49.045Z",
   "inputs_heads": {
-    ".": "92d99bf0f69f23bafb2dad7b1312ed2f3beb2164",
-    "opensentience.org": "8d55219d114b56f3a58a73042905c3be6abb13fa",
+    ".": "02365e68b280c38bde580d43169c593a6093f09c",
+    "opensentience.org": "14e9917bceaf64acc58217f1383e51a38a677d91",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
@@ -290,8 +290,10 @@
       "counterexample": {
         "shape": "refusal",
         "path": "AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
-        "marker": "narrow-into-ANY-refused",
-        "expected": "REFUSED"
+        "marker": "undeclared |> narrow ⇒ 0̲",
+        "law": "CD1",
+        "expected": "REFUSED",
+        "note": "v0.4 named the marker narrow-into-ANY-refused, which is CD2's FAILURE string (a refusal that must NOT happen). A marker proves the file mentions a string, not that the string is a refusal — P2 finding; the page runs CD1 live."
       },
       "prior_art": "Monoid laws (associativity, identity). FACTORY_REVIEW_BUNDLE.md cites 'the 2026 λA literature, Theorem 5.7' from page copy only — NOT SEARCHED for the paper.",
       "realizations": [
@@ -304,6 +306,26 @@
         "three-valued-outcome",
         "capability-bounded-composition"
       ],
+      "headline": "A join that cannot be made is refused, and the refusal names the field.",
+      "explanatory": "Two assemblies built in ignorance of each other are brought to a join. Either the composite satisfies every compose law the algebra states, or the join returns the annihilator and says which contract field made it impossible. Nothing is coerced, defaulted or repaired on the way through. A refusal is a first-class outcome of composition, not an error path around it.",
+      "technical": "For bricks a, b with declared contracts, composePipe(a, b) is either an admitted composite or 0̲ (ZERO, annihilated). An UNDECLARED contract field is not a wildcard: undeclared |> narrow ⇒ 0̲ (CD1). An explicit ANY is directional: a narrow producer composes into an ANY consumer, an ANY producer does not compose into a narrow consumer (CD2). & does not launder undeclaredness into a declared interface (CD3). The identities none() and idBrick() DECLARE '*' so the identity laws survive without the fix degenerating into refuse-everything (CD2/CD4). 101 enforced compose laws, 2000 trials each, totals derived by the suite.",
+      "problem": "Systems built from independently produced parts need a place where parts meet. The conventional join coerces: an absent interface defaults to the most permissive one, a mismatched type is widened, a missing field is repaired. On 2026-08-22 exactly that bug was found in this algebra — Brick() defaulted an absent contract field to '*', so an assembly that declared no interface at all received the most permissive interface in the algebra, and every hand-off passed a check that had nothing to check. Five falsifiers were written against the unfixed code and all five failed.",
+      "forces": "Refusing is cheap to implement and expensive to live with: every refusal is work someone must redo, so the pressure is always toward 'just compose it'. The identity laws must still hold, or the fix degenerates into refuse-everything (CD2 and CD4a exist for that). MISSING ≠ UNIVERSAL has to have content in both directions. And a refusal must NAME what it refused, or the producer cannot repair its side — a silent 0̲ is only marginally better than a silent coercion.",
+      "construction": "Represent contracts as terms with an explicit UNDECLARED kind distinct from ANY. Normalize before comparing (norm). Make composition total: it always returns a brick, and the annihilator ZERO is a brick with annihilated === true. Preserve the identities by having none() and idBrick() declare '*'. State the narrowed domain as its own law (CD4b) rather than leaving it implicit. Derive every printed total from the suite; hand-typed totals drifted three times before this rule.",
+      "transformations": {
+        "allowed": [
+          "re-associating a chain of joins (|> is a phase-graded monoid)",
+          "commuting operands of & (a commutative idempotent monoid)",
+          "declaring a contract explicitly where one was absent — this can only turn a refusal into a composite, never the reverse"
+        ],
+        "forbidden": [
+          "defaulting an absent contract field to '*' or any other value",
+          "widening a type to make a join succeed",
+          "repairing evidence on the way through a join (VALUE laws: defaults complete absence, never repair)",
+          "treating the annihilator as an exception or a crash"
+        ]
+      },
+      "consequences": "Composition becomes something a receiver can check, not something it must trust. The cost is that an under-declared assembly is unusable until it declares, which is the point. Refusal ≠ failure: the three-valued outcome vocabulary (APPLIED · REFUSED · INDETERMINATE) in three-valued-outcome is this principle for interventions.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,

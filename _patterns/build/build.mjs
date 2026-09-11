@@ -167,7 +167,7 @@ const heads = Object.fromEntries(['.', 'opensentience.org', 'WRL', 'TRVM', 'Ampe
 
 // ── emit ───────────────────────────────────────────────────────────────────────
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
-const row = (p) => `<tr><td><code>${p.id}</code></td><td>${esc(p.name)}</td><td>${p.family}</td><td class="l ${p.derived.label || 'none'}">${p.derived.label ?? '—'}</td><td>${['CHECKABLE', 'RUNNABLE', 'EXECUTED', 'STAGED'].filter((k) => p.derived[k]).join(' ') || '—'}</td><td>${p.witness ? `<code>${esc(p.witness.path)}</code> <small>${p.witness.shape} · ${p.witness.rung}</small>` : '—'}</td><td>${esc(p.invariant ?? (p.kind === 'definition' ? '(definition)' : '(no invariant — gap/open)'))}</td></tr>`;
+const row = (p) => `<tr><td><a href="patterns/${p.id}.html"><code>${p.id}</code></a></td><td>${esc(p.name)}</td><td>${p.family}</td><td class="l ${p.derived.label || 'none'}">${p.derived.label ?? '—'}</td><td>${['CHECKABLE', 'RUNNABLE', 'EXECUTED', 'STAGED'].filter((k) => p.derived[k]).join(' ') || '—'}</td><td>${p.witness ? `<code>${esc(p.witness.path)}</code> <small>${p.witness.shape} · ${p.witness.rung}</small>` : '—'}</td><td>${esc(p.invariant ?? (p.kind === 'definition' ? '(definition)' : '(no invariant — gap/open)'))}</td></tr>`;
 const html = `<!doctype html><meta charset="utf-8"><title>Unboxed Patterns — P1 derived index</title>
 <style>body{font:14px/1.45 system-ui;margin:2rem;max-width:1400px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.3rem .5rem;vertical-align:top}th{text-align:left;background:#f3f3f3}.WITNESSED{color:#0a7;font-weight:600}.STATED{color:#a60}.PROPOSED{color:#c00}.none{color:#888}small{color:#666}code{font-size:12px}.note{background:#fff8e1;padding:.6rem 1rem;border-left:4px solid #e0a800}</style>
 <h1>Unboxed Patterns — P1 derived index</h1>
@@ -179,8 +179,72 @@ ${findings.length ? `<h2>Findings</h2><ul>${findings.map((f) => `<li>${esc(f)}</
 const llms = [`# Unboxed Patterns — registry (P1, derived ${new Date().toISOString().slice(0, 10)})`, `# ${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns. Labels are derived by build.mjs, never typed. WITNESSED = a recorded run of a check on these exact bytes exists at rung ≥ in_tree.`, '', ...derived.map((p) => `- ${p.id} [${p.derived.label ?? p.kind}] (${p.family}) — ${p.invariant ?? '(no invariant)'}${p.witness ? ` — witness: ${p.witness.path} (${p.witness.shape}, ${p.witness.rung}${p.derived.EXECUTED ? ', executed' : ', NOT executed'})` : ''}`), '', '## anti-patterns', ...DATA.anti_patterns.map((a) => `- ${a.id} — ${a.problem}`)].join('\n') + '\n';
 const derivedJson = JSON.stringify({ kind: 'UNBOXED_PATTERNS_DERIVED', built: new Date().toISOString(), inputs_heads: heads, summary, findings, patterns: derived, anti_patterns: DATA.anti_patterns }, null, 2) + '\n';
 
+
+// ── pattern pages (P2) ─────────────────────────────────────────────────────────
+// A RUN BUTTON MAY NOT OUTRUN ITS EVIDENCE (the invariants build's R28, extended): a page offers a run
+// button only when the witness is STAGED byte-identical under /witness/src/; a demo module for a pattern
+// whose witness is not staged is refused (P12) — an illustration with no evidence beside it on the page.
+const DEMOS = join(HERE, '../demos');
+const stampFor = (p) => shaFile(join(ROOT, p)).slice(0, 16);
+const RUNJS_STAMP = shaFile(join(SITE, 'witness/run.js')).slice(0, 16);
+for (const p of derived) {
+  const demo = join(DEMOS, p.id + '.mjs');
+  if (existsSync(demo) && !p.derived.STAGED) refuse('P12-DEMO-WITHOUT-STAGED-WITNESS', `${p.id} has a demo module but its witness is not staged on this site`);
+}
+if (refusals.length) { console.error(`\n✗ ${refusals.length} refusal(s):\n  ` + refusals.join('\n  ')); process.exit(1); }
+const byId = new Map(derived.map((p) => [p.id, p]));
+const antiById = new Map(DATA.anti_patterns.map((a) => [a.id, a]));
+const para = (t) => t ? `<p>${esc(t)}</p>` : '';
+const section = (title, body) => body ? `<section><h2>${title}</h2>${body}</section>` : '';
+const list = (xs) => xs && xs.length ? `<ul>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
+const link = (id) => byId.has(id) ? `<a href="${id}.html">${esc(byId.get(id).name)}</a> <small class="l ${byId.get(id).derived.label || 'none'}">${byId.get(id).derived.label ?? byId.get(id).kind}</small>` : esc(id);
+function pageFor(p) {
+  const d = p.derived, w = p.witness, c = p.counterexample;
+  const stamp = w && d.STAGED ? stampFor(w.staged_path) : null;
+  const demo = existsSync(join(DEMOS, p.id + '.mjs'));
+  const standings = ['CHECKABLE', 'RUNNABLE', 'EXECUTED', 'STAGED'].map((k) => `<span class="st ${d[k] ? 'on' : 'off'}">${k}</span>`).join(' ');
+  const exec = d.execution ? `<p class="exec">Execution identity: ${esc(d.execution.at)}${d.execution.host ? ` on <code>${esc(d.execution.host)}</code>` : ''}${d.execution.sha256 ? ` · bytes <code>${d.execution.sha256.slice(0, 16)}…</code> · repo HEAD <code>${(d.execution.repo_head || '?').slice(0, 12)}</code>` : d.execution.note ? ` — ${esc(d.execution.note)}` : ''}</p>` : `<p class="exec warn">No execution record: this check has not been run for the bytes on disk. WITNESSED requires one.</p>`;
+  const witness = w ? `<p>Source identity: <code>${esc(w.path)}</code> · shape <code>${w.shape}</code>${w.evidence_kind ? ` · evidence kind <code>${w.evidence_kind}</code>` : ''} · rung <code>${w.rung}</code> <small>(${esc(w.rung_source)})</small></p>${exec}
+    ${d.STAGED ? `<p>Staged byte-identical at <code>${esc(w.staged_path)}</code> (stamp <code>${stamp}</code>). <button id="run">Run the witness here</button> <span id="wstatus" class="wstatus"></span></p><div id="wsink" class="sink"></div>`
+               : `<p class="warn">Not staged on this site: the page cannot run this witness. ${d.RUNNABLE ? 'It runs from the command line: <code>' + esc(w.cmd) + '</code> in <code>' + esc(w.cwd) + '</code>.' : 'Its shape (' + w.shape + ') is a document, not a run.'}</p>`}`
+    : `<p class="warn">No witness. ${p.kind === 'definition' ? 'A definition carries no evidence rung (AGENCY.md §6).' : 'This pattern is ' + (d.label || 'unlabelled') + ' — the tree has no check for its invariant.'}</p>`;
+  const cex = c ? `<p>${c.shape === 'lint' ? `A sentence the ontology gate rejects: <q>${esc(c.sentence)}</q> — expected <code>REFUSED</code>.` : c.shape === 'fixture' ? `Fixture <code>${esc(c.path)}</code>: ${c.expected_count} vectors, each expected <code>REFUSED</code>.` : `<code>${esc(c.path)}</code> — ${c.law ? `law <code>${esc(c.law)}</code>, ` : ''}marker <q>${esc(c.marker)}</q>, expected <code>${c.expected}</code>.`}</p>${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}${demo && d.STAGED ? `<p><button id="demo">Show the refusal</button> <small>illustration — imports the same staged modules; the suite above is the evidence</small></p><div id="dsink" class="sink"></div>` : ''}`
+    : `<p class="warn">No counterexample shipped${d.label === 'WITNESSED' ? ' — the build would have refused this' : ' (required only when WITNESSED)'}.</p>`;
+  const script = (d.STAGED || demo) ? `<script type="module">
+    import { runWitness } from '/witness/run.js?v=${RUNJS_STAMP}';
+    const spec = ${JSON.stringify({ entry: '/witness/src/' + (w ? w.path : ''), mode: w ? (w.shape === 'suite' ? 'suite' : 'side-effect') : 'suite', stamp, argv: [], trials: 200 })};
+    const b = document.getElementById('run');
+    if (b) b.addEventListener('click', () => runWitness({ spec, sink: document.getElementById('wsink'), status: document.getElementById('wstatus'), button: b }));
+    const db = document.getElementById('demo');
+    if (db) db.addEventListener('click', async () => { db.disabled = true; try { const m = await import('./demos/${p.id}.mjs?v=${stamp}'); await m.run(document.getElementById('dsink'), { stamp: '${stamp}' }); } catch (e) { document.getElementById('dsink').textContent = 'demo failed: ' + e.message; } db.disabled = false; });
+  </script>` : '';
+  return `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(p.name)} · Unboxed Patterns (P2 slice)</title>
+<style>body{font:16px/1.55 Georgia,serif;margin:0;color:#1b1b1b;background:#fff}main{max-width:820px;margin:0 auto;padding:1.5rem 1.2rem 4rem}.banner{background:#fff8e1;border-left:4px solid #e0a800;padding:.6rem 1rem;font:14px system-ui}h1{font-size:2rem;margin:.6rem 0 .2rem}h2{font:600 15px system-ui;letter-spacing:.06em;text-transform:uppercase;color:#555;margin:2rem 0 .4rem}.meta{font:14px system-ui;color:#444}.l{font:600 12px system-ui;padding:.1rem .4rem;border-radius:3px}.WITNESSED{background:#e6f7ef;color:#0a7}.STATED{background:#fff3e0;color:#a60}.PROPOSED{background:#fde8e8;color:#c00}.none{background:#eee;color:#666}.st{font:12px system-ui;padding:.05rem .35rem;border:1px solid #ccc;border-radius:3px}.st.on{border-color:#0a7;color:#0a7}.st.off{color:#aaa;text-decoration:line-through}.invariant{font:18px/1.5 Georgia,serif;border-left:3px solid #1b1b1b;padding:.4rem 1rem;margin:1rem 0;background:#fafafa}.reg{margin:.4rem 0}.reg b{font:600 12px system-ui;color:#777;text-transform:uppercase;letter-spacing:.06em;display:block}.sink{font:13px/1.45 ui-monospace,monospace;background:#111;color:#ddd;padding:.8rem;border-radius:4px;min-height:1.5rem;max-height:28rem;overflow:auto;margin:.5rem 0;white-space:pre-wrap}.wline.good{color:#7fd}.wline.bad{color:#f88}.wline.warn{color:#fd7}.wline.group{color:#9cf;margin-top:.5rem}.wline.muted{color:#888}.wstatus.running{color:#a60}.wstatus.pass{color:#0a7}.wstatus.fail{color:#c00}code{font:13px ui-monospace,monospace;background:#f3f3f3;padding:0 .2rem}.warn{color:#a60}.exec{font:14px system-ui}.note{font:14px system-ui;color:#555;background:#f7f7f7;padding:.4rem .8rem}button{font:600 14px system-ui;padding:.35rem .8rem;border:1px solid #1b1b1b;background:#fff;cursor:pointer}button:disabled{opacity:.5}q{font-style:italic}.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:640px){.two{grid-template-columns:1fr}}footer{font:13px system-ui;color:#666;margin-top:3rem;border-top:1px solid #ddd;padding-top:1rem}</style>
+<main>
+<div class="banner"><strong>Unboxed Patterns</strong> — working title, ruling R1 open · this page is an unserved P2 slice under <code>_patterns/dist/</code>, venue ruling R4 open · every label and count is derived by <code>build.mjs</code>; nothing here is typed.</div>
+<h1>${esc(p.name)}</h1>
+<p class="meta">family <code>${p.family}</code> · <span class="l ${d.label || 'none'}">${d.label ?? p.kind}</span> · ${standings}</p>
+${p.invariant ? `<div class="invariant">${esc(p.invariant)}</div>` : ''}
+${p.headline ? `<div class="reg"><b>headline</b>${esc(p.headline)}</div>` : ''}${p.explanatory ? `<div class="reg"><b>explanatory</b>${esc(p.explanatory)}</div>` : ''}${p.technical ? `<div class="reg"><b>technical</b>${esc(p.technical)}</div>` : ''}
+${section('Problem', para(p.problem))}${section('Forces', para(p.forces))}${section('Construction', para(p.construction))}
+${p.transformations ? section('Transformations', `<div class="two"><div><b>Allowed</b>${list(p.transformations.allowed)}</div><div><b>Forbidden</b>${list(p.transformations.forbidden)}</div></div>`) : ''}
+${p.failure_mode ? section('Failure mode it answers', `<p><b>${esc(antiById.get(p.failure_mode).name)}</b> — ${esc(antiById.get(p.failure_mode).problem)}${antiById.get(p.failure_mode).paid_for ? ` <small>Paid for at: ${esc(antiById.get(p.failure_mode).paid_for)}</small>` : ''}</p>`) : ''}
+${section('Consequences', para(p.consequences))}
+${section('Witness', witness)}
+${section('Counterexample', cex)}
+${(p.cells || []).length || (p.claims || []).length ? section('Cells and claims cited', `${d.cell_statuses.map((x) => `<p>cell <code>${x.num}</code> — status <code>${x.status}</code> (from cells.json)</p>`).join('')}${(p.claims || []).map((id, i) => `<p>claim <code>${esc(id)}</code> — <code>${d.claim_statuses[i]}</code> (from CLAIM_LEDGER.json)</p>`).join('')}`) : ''}
+${section('Prior art', para(p.prior_art))}
+${section('Realizations in the tree', list(p.realizations))}
+${section('Related', (p.related || []).length ? `<p>${p.related.map(link).join(' · ')}</p>` : '')}
+<footer>Derived ${new Date().toISOString()} by <code>opensentience.org/_patterns/build/build.mjs</code> from <code>data/patterns.json</code>, <code>_invariants/data/cells.json</code>, <code>CLAIM_LEDGER.json</code> and <code>_patterns/receipts/</code>. ${p.kind === 'pattern' && !(p.problem) ? 'Thin record: prose not yet authored; the invariant, witness and prior art are the record.' : ''}</footer>
+</main>${script}`;
+}
+const pageOutputs = {};
+for (const p of derived) pageOutputs[`patterns/${p.id}.html`] = pageFor(p);
+for (const f of existsSync(DEMOS) ? readdirSync(DEMOS) : []) pageOutputs[`patterns/demos/${f}`] = readFileSync(join(DEMOS, f), 'utf8');
+
 const DIST = join(HERE, '../dist');
-const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms };
+const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms, ...pageOutputs };
 const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])) };
 // the artifact excludes the timestamps so --verify compares content, not clock
 const stable = (s) => s.replace(/\d{4}-\d\d-\d\dT[\d:.]+Z/g, 'T');
@@ -197,6 +261,7 @@ if (VERIFY) {
   console.log(`✓ --verify: dist/ is what data + cells + ledger + ${receipts.length} receipt(s) derive.`); console.log(JSON.stringify(summary, null, 1)); process.exit(0);
 }
 mkdirSync(DIST, { recursive: true });
+mkdirSync(join(DIST, 'patterns/demos'), { recursive: true });
 for (const [k, v] of Object.entries(outputs)) writeFileSync(join(DIST, k), v);
 writeFileSync(join(DIST, 'artifact.json'), JSON.stringify(artifact, null, 2) + '\n');
 console.log(`✓ built ${Object.keys(outputs).length} file(s) into ${rel(DIST)}\n`);
