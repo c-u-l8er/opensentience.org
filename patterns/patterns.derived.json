@@ -1,0 +1,1426 @@
+{
+  "kind": "UNBOXED_PATTERNS_DERIVED",
+  "built": "2026-09-11T15:48:51.987Z",
+  "inputs_heads": {
+    ".": "07ecf79b3d15e12e9309050e0636bc41f4dd93e7",
+    "opensentience.org": "118b022865a2b2e321d75b6745d27ba5857d7407",
+    "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
+    "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
+    "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
+    "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
+    "computedriven": "ba2ee455624fd456b1a603590d17f25a1faf5bdf",
+    "super": "1671d82ffdb4eda34dc4729336c2eec17996b898"
+  },
+  "summary": {
+    "patterns": 32,
+    "definitions": 2,
+    "anti_patterns": 12,
+    "WITNESSED": 13,
+    "STATED": 14,
+    "PROPOSED": 3,
+    "CHECKABLE": 15,
+    "RUNNABLE": 11,
+    "EXECUTED": 14,
+    "STAGED": 2,
+    "invariant_null": 2,
+    "by_family": {
+      "locus": 5,
+      "composition": 7,
+      "progress": 6,
+      "world": 7,
+      "agency": 7
+    },
+    "witnessed_ids": [
+      "record-at-a-boundary",
+      "identity-is-a-seal",
+      "refusing-join",
+      "shared-observable",
+      "capability-bounded-composition",
+      "projection-not-duplication",
+      "refusable-divergence",
+      "progress-over-utilization",
+      "carrier-multiplexing",
+      "meaning-is-a-hash",
+      "state-does-not-grant-authority",
+      "evidence-before-claim",
+      "descent-is-not-dependence"
+    ]
+  },
+  "findings": [],
+  "patterns": [
+    {
+      "id": "active-locus",
+      "kind": "definition",
+      "name": "Active Locus",
+      "family": "locus",
+      "invariant": null,
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Anthropic PSM 2026 asks whether the Assistant is the 'locus of agency' (alignment.anthropic.com/2026/psm/); Hewitt's Actor model. Not a coinage.",
+      "realizations": [
+        "AGENCY.md §1"
+      ],
+      "related": [
+        "record-at-a-boundary",
+        "locus-is-not-its-carrier"
+      ],
+      "derived": {
+        "label": null,
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "record-at-a-boundary",
+      "kind": "pattern",
+      "name": "Record at a Boundary",
+      "family": "locus",
+      "invariant": "A record that carries a locus's fields describes, certifies or bounds the locus at a named boundary; it does not observe, act, or participate in the transition relation.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "lint",
+        "repo": ".",
+        "path": "scripts/check-messaging-language.mjs",
+        "shape": "lint",
+        "evidence_kind": "counterexample",
+        "rung": "in_tree",
+        "rung_source": "the gate runs over 8 declared targets and exits non-zero on a hit",
+        "cmd": "node scripts/check-messaging-language.mjs",
+        "cwd": ".",
+        "staged": false
+      },
+      "counterexample": {
+        "shape": "lint",
+        "sentence": "an assembly is a locus",
+        "expected": "REFUSED",
+        "lint_allow": "lint-allow:RECORD_IS_LOCUS — a lint counterexample must print the retired phrase to be one"
+      },
+      "prior_art": "world ≠ world serialization is the same distinction as map ≠ territory; the software form is Parnas's interface/implementation split applied to identity rather than modules.",
+      "realizations": [
+        "AGENCY.md §1 corollary",
+        "AmpersandBoxDesign/site/index.html §02"
+      ],
+      "failure_mode": "record-is-locus",
+      "related": [
+        "active-locus"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-11T15:27:41.066Z",
+          "host": "PX13",
+          "sha256": "4c1baac1ee7b0a3985fc5d8bc206009f42b5b114bf378797059ecdf873ec0d04",
+          "repo_head": "92d99bf0f69f23bafb2dad7b1312ed2f3beb2164"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "locus-is-not-its-carrier",
+      "kind": "pattern",
+      "name": "Locus Is Not Its Carrier",
+      "family": "locus",
+      "invariant": "A Carrier is a replaceable execution embodiment; no property of the locus is defined in terms of the thread, core or process currently carrying it.",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "M:N scheduling; green threads; BEAM processes are not OS threads. The tree's statement is a standing rule (computedriven/receipts/R7-OPEN.md §0), not a measured result — the measured fact is carrier-multiplexing.",
+      "realizations": [
+        "computedriven/receipts/R7-OPEN.md:18"
+      ],
+      "failure_mode": "carrier-identity",
+      "related": [
+        "carrier-multiplexing",
+        "dormant-but-alive"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "identity-is-a-seal",
+      "kind": "pattern",
+      "name": "Identity Is a Seal",
+      "family": "locus",
+      "invariant": "The identity of a semantic artifact is the hash of its canonical form, computed identically on every host; two artifacts with different futures have different seals.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "wrl",
+        "repo": "WRL",
+        "path": "WRL/test/conformance.mjs",
+        "shape": "side-effect",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "STACK_COMPLETION.md:73 (890 checks then; run today)",
+        "cmd": "node test/conformance.mjs",
+        "cwd": "WRL",
+        "staged": false
+      },
+      "counterexample": {
+        "shape": "fixture",
+        "path": "WRL/test/projection-negative-vectors.json",
+        "expected": "REFUSED",
+        "expected_count": 15
+      },
+      "prior_art": "Merkle 1979; Nix store paths; Unison identifies every definition by the hash of its syntax tree. 'birth key' appears once in WRL/HANDOFF_D8_PATH_B.md; the invariant's wording is the book's.",
+      "realizations": [
+        "WRL/README.md:17-27"
+      ],
+      "failure_mode": "location-leak",
+      "related": [
+        "meaning-is-a-hash",
+        "refusable-divergence"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-11T15:25:45.285Z",
+          "host": "PX13",
+          "sha256": "e1f1e313eefe0001dc23d95da90011a36596924915d185ce6b1171219ef1925c",
+          "repo_head": "32160fec77a13ad152176fed3001b0afbdebee42"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "continuity-through-reconstruction",
+      "kind": "pattern",
+      "name": "Continuity Through Reconstruction",
+      "family": "locus",
+      "invariant": "A locus continues across a replacement iff a minimal causally established support set sufficient for each declared capability is retained; reconstruction from durable facts is continuity, not creation.",
+      "cells": [
+        "30"
+      ],
+      "claims": [
+        "EMB-SUPPORT-GRAPH",
+        "EMB-KERNEL-LOCATION"
+      ],
+      "witness": {
+        "registry": "ledger",
+        "repo": ".",
+        "path": "scripts/emb-support.mjs",
+        "shape": "side-effect",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "engine runs; 4 capabilities, 4 synthetic, 0 observed (AGENCY.md §5b)",
+        "cmd": "node scripts/emb-support.mjs",
+        "cwd": ".",
+        "staged": false
+      },
+      "prior_art": "Atkinson & Morrison, orthogonal persistence (persistence independence); Erlang code change; distillation as successor. Never write in the present perfect: stage 5 (Inheritance) has never been reached.",
+      "realizations": [
+        "AGENCY.md §5b",
+        "mosaic/embodiment.json"
+      ],
+      "failure_mode": "replica-theater",
+      "related": [
+        "descent-is-not-dependence",
+        "orthogonal-persistence"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-11T15:25:45.592Z",
+          "host": "PX13",
+          "sha256": "7a8b6a2f444c397075557f0210684171de3b8fc03a59a564cd5fd0347f3c456b",
+          "repo_head": "92d99bf0f69f23bafb2dad7b1312ed2f3beb2164"
+        },
+        "claim_statuses": [
+          "OPEN",
+          "OPEN"
+        ],
+        "cell_statuses": [
+          {
+            "num": "30",
+            "status": "missing"
+          }
+        ]
+      }
+    },
+    {
+      "id": "refusing-join",
+      "kind": "pattern",
+      "name": "Refusing Join",
+      "family": "composition",
+      "invariant": "Composition of two independently produced assemblies either yields a composite that satisfies the compose laws or is refused naming the field that made it impossible; refusal is a valid outcome, not a failure.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "box-and-box",
+        "repo": "AmpersandBoxDesign",
+        "path": "AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
+        "shape": "suite",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "STACK_COMPLETION.md corrections §1: 101 compose laws, 2000 trials, derived totals",
+        "cmd": "node test/compose-laws.mjs",
+        "cwd": "AmpersandBoxDesign/box-and-box",
+        "staged": true,
+        "staged_path": "opensentience.org/witness/src/AmpersandBoxDesign/box-and-box/test/compose-laws.mjs"
+      },
+      "counterexample": {
+        "shape": "refusal",
+        "path": "AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
+        "marker": "undeclared |> narrow ⇒ 0̲",
+        "law": "CD1",
+        "expected": "REFUSED",
+        "note": "v0.4 named the marker narrow-into-ANY-refused, which is CD2's FAILURE string (a refusal that must NOT happen). A marker proves the file mentions a string, not that the string is a refusal — P2 finding; the page runs CD1 live."
+      },
+      "prior_art": "Monoid laws (associativity, identity). FACTORY_REVIEW_BUNDLE.md cites 'the 2026 λA literature, Theorem 5.7' from page copy only — NOT SEARCHED for the paper.",
+      "realizations": [
+        "FACTORY_REVIEW_BUNDLE.md:460",
+        "FACTORY_REVIEW_BUNDLE.md:507",
+        "amp-nav.js:297"
+      ],
+      "failure_mode": "invisible-state",
+      "related": [
+        "three-valued-outcome",
+        "capability-bounded-composition"
+      ],
+      "headline": "A join that cannot be made is refused, and the refusal names the field.",
+      "explanatory": "Two assemblies built in ignorance of each other are brought to a join. Either the composite satisfies every compose law the algebra states, or the join returns the annihilator and says which contract field made it impossible. Nothing is coerced, defaulted or repaired on the way through. A refusal is a first-class outcome of composition, not an error path around it.",
+      "technical": "For bricks a, b with declared contracts, composePipe(a, b) is either an admitted composite or 0̲ (ZERO, annihilated). An UNDECLARED contract field is not a wildcard: undeclared |> narrow ⇒ 0̲ (CD1). An explicit ANY is directional: a narrow producer composes into an ANY consumer, an ANY producer does not compose into a narrow consumer (CD2). & does not launder undeclaredness into a declared interface (CD3). The identities none() and idBrick() DECLARE '*' so the identity laws survive without the fix degenerating into refuse-everything (CD2/CD4). 101 enforced compose laws, 2000 trials each, totals derived by the suite.",
+      "problem": "Systems built from independently produced parts need a place where parts meet. The conventional join coerces: an absent interface defaults to the most permissive one, a mismatched type is widened, a missing field is repaired. On 2026-08-22 exactly that bug was found in this algebra — Brick() defaulted an absent contract field to '*', so an assembly that declared no interface at all received the most permissive interface in the algebra, and every hand-off passed a check that had nothing to check. Five falsifiers were written against the unfixed code and all five failed.",
+      "forces": "Refusing is cheap to implement and expensive to live with: every refusal is work someone must redo, so the pressure is always toward 'just compose it'. The identity laws must still hold, or the fix degenerates into refuse-everything (CD2 and CD4a exist for that). MISSING ≠ UNIVERSAL has to have content in both directions. And a refusal must NAME what it refused, or the producer cannot repair its side — a silent 0̲ is only marginally better than a silent coercion.",
+      "construction": "Represent contracts as terms with an explicit UNDECLARED kind distinct from ANY. Normalize before comparing (norm). Make composition total: it always returns a brick, and the annihilator ZERO is a brick with annihilated === true. Preserve the identities by having none() and idBrick() declare '*'. State the narrowed domain as its own law (CD4b) rather than leaving it implicit. Derive every printed total from the suite; hand-typed totals drifted three times before this rule.",
+      "transformations": {
+        "allowed": [
+          "re-associating a chain of joins (|> is a phase-graded monoid)",
+          "commuting operands of & (a commutative idempotent monoid)",
+          "declaring a contract explicitly where one was absent — this can only turn a refusal into a composite, never the reverse"
+        ],
+        "forbidden": [
+          "defaulting an absent contract field to '*' or any other value",
+          "widening a type to make a join succeed",
+          "repairing evidence on the way through a join (VALUE laws: defaults complete absence, never repair)",
+          "treating the annihilator as an exception or a crash"
+        ]
+      },
+      "consequences": "Composition becomes something a receiver can check, not something it must trust. The cost is that an under-declared assembly is unusable until it declares, which is the point. Refusal ≠ failure: the three-valued outcome vocabulary (APPLIED · REFUSED · INDETERMINATE) in three-valued-outcome is this principle for interventions.",
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": true,
+        "execution": {
+          "at": "2026-09-11T15:25:45.724Z",
+          "host": "PX13",
+          "sha256": "06726c3fb022f31e7b27eb7159c731fd9ecd349405dbc698e84090914856a19b",
+          "repo_head": "e41e5fab63c19a3671bf417a6949e10a27782830"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "shared-observable",
+      "kind": "pattern",
+      "name": "Shared Observable",
+      "family": "composition",
+      "invariant": "A canonical shared observable carries every state variable that can determine future behaviour within its declared domain; two states with different futures have different observable bytes.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "trvm",
+        "repo": "TRVM",
+        "path": "TRVM/forge/FORGE_BINDING_RESULTS.md",
+        "shape": "receipt",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "TRVM/LAWS.md:80-95 Law 6 witnesses list",
+        "staged": false,
+        "receipt_at": "2026-07-22"
+      },
+      "counterexample": {
+        "shape": "refusal",
+        "path": "TRVM/forge/binding_run3k.py",
+        "marker": "Law 6",
+        "expected": "REFUSED"
+      },
+      "prior_art": "Nerode quotient; PSR sufficient statistic; Markov condition. invariant-r10/package-v2.8/v1-provenance/00_EXECUTIVE_FINDINGS.md:45 says 'known property, new name; P1'. TWO STANDINGS: TRVM/LAWS.md:80 ratifies it for Film bytes ('GLOBAL' = not horizon-scoped); the frontier package finds it too strong lifted to arbitrary observables — a SCOPE hypothesis, unresolved.",
+      "realizations": [
+        "TRVM/LAWS.md:80"
+      ],
+      "failure_mode": "invisible-state",
+      "related": [
+        "semantic-membrane",
+        "projection-not-duplication"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": false,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-07-22",
+          "note": "the witness is itself an execution record"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "semantic-membrane",
+      "kind": "pattern",
+      "name": "Semantic Membrane",
+      "family": "composition",
+      "invariant": "A composed subsystem exposes exactly the state that affects externally observable future behaviour and no more (the ADEQUACY half of shared-observable, quotiented by EQUIVARIANCE).",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Parnas 1972 information hiding; the phrase 'semantic membrane' appears nowhere in the tree — PROPOSED by the book.",
+      "realizations": [],
+      "failure_mode": "invisible-state",
+      "related": [
+        "shared-observable"
+      ],
+      "derived": {
+        "label": "PROPOSED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "capability-bounded-composition",
+      "kind": "pattern",
+      "name": "Capability-Bounded Composition",
+      "family": "composition",
+      "invariant": "An action is admissible only if it is feasible AND permitted under an explicit grant; feasibility never implies permission, and the safety floor cannot be weakened by composition.",
+      "cells": [
+        "16"
+      ],
+      "claims": [],
+      "witness": {
+        "registry": "box-and-box",
+        "repo": "AmpersandBoxDesign",
+        "path": "AmpersandBoxDesign/box-and-box/test/laws.mjs",
+        "shape": "suite",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "109 kernel laws × 2000 trials; playground re-measured 2026-08-24 (CLAUDE.md)",
+        "cmd": "node test/laws.mjs",
+        "cwd": "AmpersandBoxDesign/box-and-box",
+        "staged": true,
+        "staged_path": "opensentience.org/witness/src/AmpersandBoxDesign/box-and-box/test/laws.mjs"
+      },
+      "counterexample": {
+        "shape": "refusal",
+        "path": "AmpersandBoxDesign/box-and-box/test/laws.mjs",
+        "marker": "should refuse",
+        "expected": "REFUSED"
+      },
+      "prior_art": "Object-capability discipline; 'ambient authority' is Mark S. Miller's term (Capability Myths Demolished, 2003); Dennis & Van Horn 1966.",
+      "realizations": [
+        "opensentience.org/box-and-box/README.md deontic rung",
+        "opensentience.org/deontic-arithmetic.html"
+      ],
+      "failure_mode": "ambient-authority",
+      "related": [
+        "carrier-confinement",
+        "state-does-not-grant-authority"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": true,
+        "execution": {
+          "at": "2026-09-11T15:26:16.294Z",
+          "host": "PX13",
+          "sha256": "51ffdf3aa3658f1858bae427772f4f776140c3539c2347d0fb847aea2d13c22d",
+          "repo_head": "e41e5fab63c19a3671bf417a6949e10a27782830"
+        },
+        "claim_statuses": [],
+        "cell_statuses": [
+          {
+            "num": "16",
+            "status": "proved"
+          }
+        ]
+      }
+    },
+    {
+      "id": "carrier-confinement",
+      "kind": "pattern",
+      "name": "Carrier Confinement",
+      "family": "composition",
+      "invariant": "A Carrier is started with exactly the filesystem and descriptor authority its Worker's grant names; the descriptor seal is CLOSE_RANGE_CLOEXEC, never a blind close.",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Landlock (ABI 10 on this host per super/docs/reviews/D_1_3B_2F.md:114); Capsicum; the E language's confinement. Witness lives in super/, a lane this session does not edit — referenced, not copied.",
+      "realizations": [
+        "super/docs/reviews/D_1_3B_2F.md:114"
+      ],
+      "failure_mode": "ambient-authority",
+      "related": [
+        "capability-bounded-composition"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "projection-not-duplication",
+      "kind": "pattern",
+      "name": "Projection, Not Duplication",
+      "family": "composition",
+      "invariant": "Every view of a semantic artifact is derived from it by a declared, recomputable projection; a receiver recomputes the claims on the wire rather than trusting flags or prose.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "graphonomous",
+        "repo": "graphonomous",
+        "path": "graphonomous/v2/test/projection_v1.test.mjs",
+        "shape": "side-effect",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "graphonomous/v2/handoff/STATUS.md:113 — TESTED, 15 tests over eleven laws",
+        "cmd": "node test/projection_v1.test.mjs",
+        "cwd": "graphonomous/v2",
+        "staged": false
+      },
+      "counterexample": {
+        "shape": "refusal",
+        "path": "graphonomous/v2/test/projection_v1.test.mjs",
+        "marker": "does not hold",
+        "expected": "REFUSED"
+      },
+      "prior_art": "CQRS read models; materialized views; Unison's hash-addressed definitions.",
+      "realizations": [
+        "WRL/HANDOFF_D8_PATH_B.md §D8.18-D8.19",
+        "graphonomous/v2/contracts/projection.v1.json"
+      ],
+      "failure_mode": "replica-theater",
+      "related": [
+        "refusable-divergence",
+        "shared-observable"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-11T15:26:17.256Z",
+          "host": "PX13",
+          "sha256": "957b52a20a403381ee112cba83c4167cb01b62e3ef3910472eeb2c59b9f49699",
+          "repo_head": "61adec2d548408589372d4321da0cd96257bb230"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "refusable-divergence",
+      "kind": "pattern",
+      "name": "Refusable Divergence",
+      "family": "composition",
+      "invariant": "An implementation divergence between two verifiers of the same artifact is refused by name rather than passing silently: no flags, no prose, only claims a receiver recomputes.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "wrl",
+        "repo": "WRL",
+        "path": "WRL/test/conformance.mjs",
+        "shape": "side-effect",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "STACK_COMPLETION.md:73; two verifiers in two languages (WRL js, TRVM Forge python)",
+        "cmd": "node test/conformance.mjs",
+        "cwd": "WRL",
+        "staged": false
+      },
+      "counterexample": {
+        "shape": "fixture",
+        "path": "WRL/test/projection-negative-vectors.json",
+        "expected": "REFUSED",
+        "expected_count": 15
+      },
+      "prior_art": "Content addressing; Nix; 'refused by BOTH sides' is WRL/PACKET_README.md:109's wording; 'agree on the name of every refusal' is STACK_COMPLETION.md:73's and is not verified by this build. WRL/HANDOFF_D8_PATH_B.md:1424 warns that two refusals can both be drift.",
+      "realizations": [
+        "WRL/relation-v2.js:2363 deriveRuntimeProjection"
+      ],
+      "failure_mode": "replica-theater",
+      "related": [
+        "identity-is-a-seal",
+        "meaning-is-a-hash",
+        "projection-not-duplication"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-11T15:25:45.285Z",
+          "host": "PX13",
+          "sha256": "e1f1e313eefe0001dc23d95da90011a36596924915d185ce6b1171219ef1925c",
+          "repo_head": "32160fec77a13ad152176fed3001b0afbdebee42"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "progress-over-utilization",
+      "kind": "pattern",
+      "name": "Progress Over Utilization",
+      "family": "progress",
+      "invariant": "System health is measured by admitted semantic transitions per unit cost, never by carrier busyness; a Carrier may be fully busy while the loci it carries make no progress.",
+      "cells": [],
+      "claims": [],
+      "claims_related": [
+        "FAC-PROGRESS"
+      ],
+      "witness": {
+        "registry": "computedriven",
+        "repo": "computedriven",
+        "path": "computedriven/receipts/R7-EXECUTED.md",
+        "shape": "receipt",
+        "evidence_kind": "measurement",
+        "rung": "in_tree",
+        "rung_source": "R7-EXECUTED.md header: battery receipt R7-BATTERY-20260905T172007Z from a clean tree; 'the busiest Carrier is the one making the least progress'",
+        "staged": false,
+        "receipt_at": "2026-09-05"
+      },
+      "counterexample": {
+        "shape": "receipt",
+        "path": "computedriven/receipts/R7-EXECUTED.md",
+        "marker": "fair arm",
+        "expected": "REFUSED"
+      },
+      "prior_art": "Erlang reductions as the scheduling unit; Little's law; the utilization-vs-throughput distinction in queueing theory. computedriven/docs/progress-model.md is a MODEL (its header: 'never a measurement') and is not this witness.",
+      "realizations": [
+        "computedriven/docs/progress-model.md",
+        "computedriven/receipts/KERNELLET-R1.md:33"
+      ],
+      "failure_mode": "busywork-scheduling",
+      "related": [
+        "carrier-multiplexing",
+        "dormant-but-alive"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": false,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-05",
+          "note": "the witness is itself an execution record"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "dormant-but-alive",
+      "kind": "pattern",
+      "name": "Dormant But Alive",
+      "family": "progress",
+      "invariant": "A locus with no Carrier and pending mailbox depth is fully live: its admissibility and future transitions are defined, and readiness changes without executing a floor command.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "computedriven",
+        "repo": "computedriven",
+        "path": "computedriven/receipts/R7.1-OPEN.md",
+        "shape": "spec",
+        "evidence_kind": null,
+        "rung": "spec",
+        "rung_source": "an OPEN record: the admission rule is specified, the battery is R7.1's",
+        "staged": false
+      },
+      "prior_art": "BEAM processes; durable execution (Temporal, Restate); delimited continuations.",
+      "realizations": [
+        "computedriven/receipts/R7.1-OPEN.md:42",
+        "FPLA/DESIGN_NOTES_2026-09-06.md design A"
+      ],
+      "failure_mode": "busywork-scheduling",
+      "related": [
+        "carrier-multiplexing",
+        "locus-is-not-its-carrier"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "carrier-multiplexing",
+      "kind": "pattern",
+      "name": "Carrier Multiplexing",
+      "family": "progress",
+      "invariant": "A population of loci larger than a floor's slot count is carried by rotating loci through slots; the slot is not the unit of identity and no locus is lost by not currently holding one.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "computedriven",
+        "repo": "computedriven",
+        "path": "computedriven/receipts/R7-EXECUTED.md",
+        "shape": "receipt",
+        "evidence_kind": "measurement",
+        "rung": "in_tree",
+        "rung_source": "R7-EXECUTED.md:101 'Eight slots multiplex 64 Loci at 97.4 B'",
+        "staged": false,
+        "receipt_at": "2026-09-05"
+      },
+      "counterexample": {
+        "shape": "receipt",
+        "path": "computedriven/receipts/R7-EXECUTED.md",
+        "marker": "fair arm",
+        "expected": "REFUSED"
+      },
+      "prior_art": "M:N threading; Go's scheduler; Erlang schedulers.",
+      "realizations": [
+        "computedriven/receipts/R7-EXECUTED.md:101"
+      ],
+      "failure_mode": "carrier-identity",
+      "related": [
+        "locus-is-not-its-carrier",
+        "progress-aware-placement"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": false,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-05",
+          "note": "the witness is itself an execution record"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "progress-aware-placement",
+      "kind": "pattern",
+      "name": "Progress-Aware Placement",
+      "family": "progress",
+      "invariant": "A locus is placed on the home where the semantic progress it can make is greatest, not where fairness among runnable carriers is greatest.",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Work stealing; NUMA-aware placement. R7.2.1D stage 2 (placement battery on the compiled home) is NOT RUN; no number is written before it.",
+      "realizations": [
+        "computedriven/receipts/R7.2.1D-OPEN.md"
+      ],
+      "failure_mode": "busywork-scheduling",
+      "related": [
+        "carrier-multiplexing"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "proven-quiescence",
+      "kind": "pattern",
+      "name": "Proven Quiescence",
+      "family": "progress",
+      "invariant": "A system is quiescent only when a sweep establishes that no locus has admissible pending work; silence of the currently observed carriers is not completion.",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Dijkstra–Scholten termination detection (1980); Misra's ring algorithm. Nearest tree relatives: REVISION_REGISTER.md:99 CompletedScan→CompletedSweep with a doesNotAssert field; Super 'a timeout abandons the request but not the work'. The phrase appears nowhere in the tree — PROPOSED.",
+      "realizations": [],
+      "failure_mode": "false-quiescence",
+      "related": [
+        "three-valued-outcome"
+      ],
+      "derived": {
+        "label": "PROPOSED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "three-valued-outcome",
+      "kind": "pattern",
+      "name": "Three-Valued Outcome",
+      "family": "progress",
+      "invariant": "Every attempted intervention resolves to exactly one of APPLIED, REFUSED, INDETERMINATE; INDETERMINATE is a fact about an attempt and is never rewritten.",
+      "cells": [
+        "17"
+      ],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Two Generals; at-least-once vs at-most-once delivery; Lamport's 'happened before'. Witness lives in super/ (referenced, not copied); the document's §0 refutes the PREDECESSOR round's settle-in-place design.",
+      "realizations": [
+        "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:210",
+        "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:723"
+      ],
+      "failure_mode": "false-quiescence",
+      "related": [
+        "refusing-join",
+        "intervention-provenance"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": [
+          {
+            "num": "17",
+            "status": "proved"
+          }
+        ]
+      }
+    },
+    {
+      "id": "orthogonal-persistence",
+      "kind": "pattern",
+      "name": "Orthogonal Persistence",
+      "family": "world",
+      "invariant": "Whether a locus's state is in cache, RAM, disk or a remote node is an implementation choice below its semantic level; code is identical for short-lived and long-lived state.",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Atkinson & Morrison's term: type orthogonality, persistence by reachability, persistence independence (PS-algol, Napier88; VLDB J. 4, 1995). studbook is at the spec rung; nothing here implements it.",
+      "realizations": [
+        "studbook/docs/spec/README.md"
+      ],
+      "failure_mode": "location-leak",
+      "related": [
+        "continuity-through-reconstruction",
+        "three-sizes-of-world"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "three-sizes-of-world",
+      "kind": "pattern",
+      "name": "Three Sizes of World",
+      "family": "world",
+      "invariant": "WORLD (the machine, 10 GB–10 TB), WORLD VERSION (a content-addressed root, KB) and WRL GRAPH (the semantic layer inside, KB–MB) are three sizes with three names; no field is called current_head — a head is always qualified.",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Git's object/ref/worktree split is the same three-way distinction. Frozen vocabulary in CLOUD_V1.md §2 because WORLD_SIZE.md §11 mistook 0.21 % for the whole.",
+      "realizations": [
+        "CLOUD_V1.md:37"
+      ],
+      "failure_mode": "number-in-two-places",
+      "related": [
+        "world-boundary",
+        "orthogonal-persistence"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "world-boundary",
+      "kind": "pattern",
+      "name": "World Boundary",
+      "family": "world",
+      "invariant": null,
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "GAP: no canonical definition in the tree. Candidate (GPT 2026-09-11): a coherent authority/state/observation domain that need not be an OS process, VM or machine. Unruled.",
+      "realizations": [],
+      "related": [
+        "three-sizes-of-world"
+      ],
+      "derived": {
+        "label": "PROPOSED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "meaning-is-a-hash",
+      "kind": "pattern",
+      "name": "Meaning Is a Hash",
+      "family": "world",
+      "invariant": "The semantics of a WRL world is its SemanticArtifactID; a change of meaning is a change of hash and a preserved hash is a preserved meaning on every host, forever.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "wrl",
+        "repo": "WRL",
+        "path": "WRL/test/conformance.mjs",
+        "shape": "side-effect",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "WRL/README.md: the starter world seals to sem-67e954cf… on every host",
+        "cmd": "node test/conformance.mjs",
+        "cwd": "WRL",
+        "staged": false
+      },
+      "counterexample": {
+        "shape": "fixture",
+        "path": "WRL/test/projection-negative-vectors.json",
+        "expected": "REFUSED",
+        "expected_count": 15
+      },
+      "prior_art": "Unison (content-addressed definitions); IPFS; Nix. Direct prior art — the book's contribution is the executable topology and the refusal names, not the hashing.",
+      "realizations": [
+        "WRL/README.md:1-40"
+      ],
+      "failure_mode": "replica-theater",
+      "related": [
+        "identity-is-a-seal",
+        "refusable-divergence"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-11T15:25:45.285Z",
+          "host": "PX13",
+          "sha256": "e1f1e313eefe0001dc23d95da90011a36596924915d185ce6b1171219ef1925c",
+          "repo_head": "32160fec77a13ad152176fed3001b0afbdebee42"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "exact-replay",
+      "kind": "pattern",
+      "name": "Exact Replay",
+      "family": "world",
+      "invariant": "A run of a sealed world is a film that replays byte-identically; any divergence on replay is a divergence of the world, not of the player.",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Deterministic replay; event sourcing; rr. TRVM film replay — not verified by this build; no receipt stating a fidelity percentage was located (v0.2 review finding 7).",
+      "realizations": [
+        "TRVM/LAWS.md Law 4"
+      ],
+      "failure_mode": "replica-theater",
+      "related": [
+        "cross-machine-skill-replay",
+        "meaning-is-a-hash"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "cross-machine-skill-replay",
+      "kind": "pattern",
+      "name": "Cross-Machine Skill Replay",
+      "family": "world",
+      "invariant": "A skill taught on machine A replays on machine B with the declared fidelity; the InteractionTrace is the unit of transfer.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "site",
+        "repo": "opensentience.org",
+        "path": "opensentience.org/_rebuild/data/receipts.json",
+        "shape": "card",
+        "evidence_kind": "measurement",
+        "rung": "in_tree",
+        "rung_source": "a receipt CARD on the homepage; the run behind it was not opened by this build",
+        "staged": false
+      },
+      "prior_art": "OS-011 Embodiment; record-and-replay in RPA. v0.1 conflated this with exact-replay.",
+      "realizations": [
+        "opensentience.org/_rebuild/data/receipts.json"
+      ],
+      "failure_mode": "replica-theater",
+      "related": [
+        "exact-replay"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": true,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "confidentiality-under-content-addressing",
+      "kind": "pattern",
+      "name": "Confidentiality Under Content Addressing",
+      "family": "world",
+      "invariant": null,
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "OPEN BLOCKER (studbook §10): if the key is the hash of the content, knowing the content is knowing the key. Convergent encryption and its known leaks are the prior art. The book publishes the refusal, not a pattern.",
+      "realizations": [
+        "studbook/docs/spec/README.md:260"
+      ],
+      "related": [
+        "meaning-is-a-hash"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "established-not-known",
+      "kind": "definition",
+      "name": "Established, Not Known",
+      "family": "agency",
+      "invariant": null,
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Byzantine observation: an observation can be stale, forged or partial; 'establish' names what survives that. STALE ≠ UNESTABLISHED (Super bot spec).",
+      "realizations": [
+        "AGENCY.md §4"
+      ],
+      "related": [
+        "active-locus",
+        "understanding-boundary"
+      ],
+      "derived": {
+        "label": null,
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "state-does-not-grant-authority",
+      "kind": "pattern",
+      "name": "State Does Not Grant Authority",
+      "family": "agency",
+      "invariant": "Admissible action = f(established state, explicit grant, policy, contracts), never f(established state) alone; a fact about a locus never constitutes a power.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "lint",
+        "repo": ".",
+        "path": "scripts/check-messaging-language.mjs",
+        "shape": "lint",
+        "evidence_kind": "counterexample",
+        "rung": "in_tree",
+        "rung_source": "rule class STATE_DOES_NOT_ISSUE_AUTHORITY",
+        "cmd": "node scripts/check-messaging-language.mjs",
+        "cwd": ".",
+        "staged": false
+      },
+      "counterexample": {
+        "shape": "lint",
+        "sentence": "the authority that state grants",
+        "expected": "REFUSED",
+        "lint_allow": "lint-allow:STATE_DOES_NOT_ISSUE_AUTHORITY — a lint counterexample must print the retired phrase to be one"
+      },
+      "prior_art": "Object-capability discipline (Miller); 'fact about me ⇒ power is ambient authority with an extra step' (AGENCY.md §4). Under R7's criterion this may belong in the locus family.",
+      "realizations": [
+        "AGENCY.md §4",
+        "scripts/messaging-rules.json STATE_DOES_NOT_ISSUE_AUTHORITY"
+      ],
+      "failure_mode": "ambient-authority",
+      "related": [
+        "capability-bounded-composition"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-11T15:27:41.066Z",
+          "host": "PX13",
+          "sha256": "4c1baac1ee7b0a3985fc5d8bc206009f42b5b114bf378797059ecdf873ec0d04",
+          "repo_head": "92d99bf0f69f23bafb2dad7b1312ed2f3beb2164"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "evidence-before-claim",
+      "kind": "pattern",
+      "name": "Evidence Before Claim",
+      "family": "agency",
+      "invariant": "A public proposition is admitted only with a named witness that exists; a claim whose witness is absent, whose antecedent is missing, or whose cell binding contradicts the table is refused.",
+      "cells": [],
+      "claims": [],
+      "witness": {
+        "registry": "ledger",
+        "repo": ".",
+        "path": "scripts/check-claim-ledger.mjs",
+        "shape": "side-effect",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "runs over CLAIM_LEDGER.json (190 claims) and refuses; exit code is the verdict",
+        "cmd": "node scripts/check-claim-ledger.mjs",
+        "cwd": ".",
+        "staged": false
+      },
+      "counterexample": {
+        "shape": "refusal",
+        "path": "scripts/check-claim-ledger.mjs",
+        "marker": "witness file does not exist",
+        "expected": "REFUSED"
+      },
+      "prior_art": "Toulmin's warrant/backing; Pollock defeaters; assurance cases (GSN). The phrase is absent from the tree; the mechanism (DOCTRINE.md rule 4 + the ledger) is not.",
+      "realizations": [
+        "DOCTRINE.md rule 4",
+        "CLAIM_LEDGER.json"
+      ],
+      "failure_mode": "agent-omniscience",
+      "related": [
+        "refusal-gate",
+        "descent-is-not-dependence"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-11T15:26:22.369Z",
+          "host": "PX13",
+          "sha256": "33e6af41713b45bee9d581fc069dd614a0ca831f985cb3ee51f84f0bdee88064",
+          "repo_head": "92d99bf0f69f23bafb2dad7b1312ed2f3beb2164"
+        },
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "refusal-gate",
+      "kind": "pattern",
+      "name": "Refusal Gate",
+      "family": "agency",
+      "invariant": "Below material sufficiency the page is not written and the reason is published; a check that can be satisfied by constructing its own argument is not a check.",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Fail-closed defaults; Popperian falsifiability as an admission rule. The Academy refusal log is MOCK (ACADEMY.md:79); alkeyword's refusal rule is the live instance.",
+      "realizations": [
+        "ACADEMY.md §Read",
+        "alkeyword.com/docs/spec/README.md §3.2"
+      ],
+      "failure_mode": "agent-omniscience",
+      "related": [
+        "evidence-before-claim",
+        "refusing-join"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    },
+    {
+      "id": "intervention-provenance",
+      "kind": "pattern",
+      "name": "Intervention Provenance",
+      "family": "agency",
+      "invariant": "Every intervention on the world carries the identity of the Worker and generation that made it and the evidence it acted on; an intervention that cannot be attributed is not admissible.",
+      "cells": [
+        "17"
+      ],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Audit logs; provenance (W3C PROV). Witness lives in super/; the honest half of the record is that the re-observation it depends on does not exist (Pty::winsize() has zero callers).",
+      "realizations": [
+        "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md"
+      ],
+      "failure_mode": "agent-omniscience",
+      "related": [
+        "three-valued-outcome"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": [
+          {
+            "num": "17",
+            "status": "proved"
+          }
+        ]
+      }
+    },
+    {
+      "id": "descent-is-not-dependence",
+      "kind": "pattern",
+      "name": "Descent Is Not Dependence",
+      "family": "agency",
+      "invariant": "A lineage edge generates a candidate support set and establishes none; support for a capability requires ablation, intervention, runtime dependency or replacement replay, and provenance-only support is refused.",
+      "cells": [
+        "44"
+      ],
+      "claims": [],
+      "witness": {
+        "registry": "ledger",
+        "repo": ".",
+        "path": "scripts/emb-support.mjs",
+        "shape": "side-effect",
+        "evidence_kind": "constructive_witness",
+        "rung": "in_tree",
+        "rung_source": "both refusals fire on the synthetic corpus; 0 observed capabilities",
+        "cmd": "node scripts/emb-support.mjs",
+        "cwd": ".",
+        "staged": false
+      },
+      "counterexample": {
+        "shape": "refusal",
+        "path": "scripts/emb-support.mjs",
+        "marker": "REFUSED — support evidence of kind",
+        "expected": "REFUSED"
+      },
+      "prior_art": "Pearl's ladder of causation; ablation studies; Λ non-laundering (cell 44). Lint class PROVENANCE_AS_SUPPORT enforces the prose form.",
+      "realizations": [
+        "mosaic/embodiment.json",
+        "scripts/emb-support.mjs"
+      ],
+      "failure_mode": "provenance-as-support",
+      "related": [
+        "continuity-through-reconstruction",
+        "evidence-before-claim"
+      ],
+      "derived": {
+        "label": "WITNESSED",
+        "CHECKABLE": true,
+        "RUNNABLE": true,
+        "EXECUTED": true,
+        "STAGED": false,
+        "execution": {
+          "at": "2026-09-11T15:25:45.592Z",
+          "host": "PX13",
+          "sha256": "7a8b6a2f444c397075557f0210684171de3b8fc03a59a564cd5fd0347f3c456b",
+          "repo_head": "92d99bf0f69f23bafb2dad7b1312ed2f3beb2164"
+        },
+        "claim_statuses": [],
+        "cell_statuses": [
+          {
+            "num": "44",
+            "status": "proved"
+          }
+        ]
+      }
+    },
+    {
+      "id": "understanding-boundary",
+      "kind": "pattern",
+      "name": "Understanding Boundary",
+      "family": "agency",
+      "invariant": "A locus distinguishes what exists, what it can observe, what it believes, what it understands, what it intends and what it may alter; a claim in one register is never promoted to another without evidence.",
+      "cells": [],
+      "claims": [],
+      "witness": null,
+      "prior_art": "Epistemic logic (Hintikka); the ladder's epistemic rung. Graphonomous Bot spec: 'a Bot knows its projection, not the world.'",
+      "realizations": [
+        "opensentience.org/epistemic-arithmetic.html"
+      ],
+      "failure_mode": "agent-omniscience",
+      "related": [
+        "established-not-known"
+      ],
+      "derived": {
+        "label": "STATED",
+        "CHECKABLE": false,
+        "RUNNABLE": false,
+        "EXECUTED": false,
+        "STAGED": false,
+        "execution": null,
+        "claim_statuses": [],
+        "cell_statuses": []
+      }
+    }
+  ],
+  "anti_patterns": [
+    {
+      "id": "carrier-identity",
+      "name": "Carrier Identity",
+      "problem": "Treating a thing as the process, thread or container currently executing it.",
+      "paid_for": null
+    },
+    {
+      "id": "location-leak",
+      "name": "Location Leak",
+      "problem": "Encoding physical placement into identity when placement is not semantic.",
+      "paid_for": null
+    },
+    {
+      "id": "false-quiescence",
+      "name": "False Quiescence",
+      "problem": "Declaring completion because no currently observed worker has work.",
+      "paid_for": "REVISION_REGISTER.md:99 (CompletedScan renamed CompletedSweep; doesNotAssert added)"
+    },
+    {
+      "id": "invisible-state",
+      "name": "Invisible State",
+      "problem": "Allowing state that affects future behaviour to remain outside the shared observable.",
+      "paid_for": "TRVM/LAWS.md:80 (Law 6 witnesses: rotor, receipt, once-latch)"
+    },
+    {
+      "id": "ambient-authority",
+      "name": "Ambient Authority",
+      "problem": "Granting access to an environment because some part of it needs one capability.",
+      "paid_for": "AGENCY.md §4 (the phrasing that walks into it); Miller 2003 is the term's source"
+    },
+    {
+      "id": "replica-theater",
+      "name": "Replica Theater",
+      "problem": "Calling independent mutable copies 'the same thing'.",
+      "paid_for": "CLAUDE.md: the served box-and-box copy is a MANUAL COPY and nothing syncs it"
+    },
+    {
+      "id": "busywork-scheduling",
+      "name": "Busywork Scheduling",
+      "problem": "Maximizing resource utilization while semantic progress stalls.",
+      "paid_for": "computedriven/receipts/R7-EXECUTED.md title: the busiest Carrier makes the least progress"
+    },
+    {
+      "id": "agent-omniscience",
+      "name": "Agent Omniscience",
+      "problem": "Letting an agent's claims exceed its evidence boundary.",
+      "paid_for": "AGENCY.md §6 (what is established vs a reading)"
+    },
+    {
+      "id": "number-in-two-places",
+      "name": "A Number in Two Places",
+      "problem": "A count or definition typed where it is displayed instead of derived from its source; the two drift.",
+      "paid_for": "STACK_COMPLETION.md corrections §1 (law counts 129→116→118); UNBOXED_PATTERNS.md v0.1 (32 labels over 30 rows; 890 vs 924)"
+    },
+    {
+      "id": "record-is-locus",
+      "name": "Record Is Locus",
+      "problem": "Inferring that X is a locus because X carries the locus fields.",
+      "paid_for": "AGENCY.md §1 corollary; caught on review of the factory page"
+    },
+    {
+      "id": "provenance-as-support",
+      "name": "Provenance as Support",
+      "problem": "Treating a lineage edge as causal support for a capability.",
+      "paid_for": "mosaic/embodiment.json; scripts/emb-support.mjs refuses it"
+    },
+    {
+      "id": "quiet-correction",
+      "name": "The Quiet Correction",
+      "problem": "Fixing a published error without retracting it by name where it was published.",
+      "paid_for": "DOCTRINE.md rule 5"
+    }
+  ]
+}
