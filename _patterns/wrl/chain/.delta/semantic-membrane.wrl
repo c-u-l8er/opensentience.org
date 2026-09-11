@@ -1,0 +1,11 @@
+profile forge.world.core.v1
+
+; SEMANTIC MEMBRANE — one rotor, two projections. The membrane exposes the pose (what determines the
+; future outside) and nothing of the rotor's representation. Fan-out from a socket is unrestricted.
+[pulser:sm_clock](every 1){sig_out}
+[spinner:sm_inside](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:sm_outside_a]{pose}
+[orb:sm_outside_b]{pose}
+
+[sm_clock] --sig--> [sm_inside]
+[sm_inside] --socket--> {[sm_outside_a], [sm_outside_b]}

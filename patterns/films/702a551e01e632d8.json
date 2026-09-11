@@ -1,0 +1,78 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/three-sizes-of-world.wrl"
+ ],
+ "for_patterns": [
+  "three-sizes-of-world (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "702a551e01e632d8be14eaa918c7c087c776ffb6026604f2f82447ca240446dc",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:55:33.774Z",
+  "finished": "2026-09-11T17:55:33.862Z",
+  "host": "PX13",
+  "seconds": 0.003,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-2ca883ccac604098eb7e4a10da1ad4fa41a1260a95105351f87453e76716ba84",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:ff3991dabbb08a77f06fa199617a4dd3c9befd1d1628a596c1713219c16de350",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "pulser:ts_version:mode=once,p=3,phase=3,armed=0,done=0,nf=1",
+    "door:ts_root:open=0,next_open=0",
+    "wire:w__ts_version__ts_root:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:530edbfb61be7640c69b4c35b10efaa7d5609e6db1c18871f615bdf82964670d",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "pulser:ts_version:mode=once,p=3,phase=3,armed=0,done=1,nf=-1",
+    "door:ts_root:open=0,next_open=0",
+    "wire:w__ts_version__ts_root:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:b6737e5404cab878e4488c3ce5ac12d21839edf7b51c7198a48df40395193c40",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "pulser:ts_version:mode=once,p=3,phase=3,armed=0,done=1,nf=-1",
+    "door:ts_root:open=0,next_open=1",
+    "wire:w__ts_version__ts_root:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:3a64e6bf93d5c5406d6b9b59c1c972209a29b40f8c44b64b9621b3e82afbb1aa",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "pulser:ts_version:mode=once,p=3,phase=3,armed=0,done=1,nf=-1",
+    "door:ts_root:open=1,next_open=0",
+    "wire:w__ts_version__ts_root:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

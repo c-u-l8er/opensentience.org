@@ -1,0 +1,10 @@
+profile forge.world.core.v1
+
+; CONTINUITY THROUGH RECONSTRUCTION — a configurable locus whose state is RE-ESTABLISHED by a claim at
+; epoch 2 (SetRotor, receipt Applied). Reconstruction from a durable fact, with a receipt, is continuity.
+[pulser:ct_clock](every 1){sig_out}
+[spinner:ct_locus](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ct_view]{pose}
+
+[ct_clock] --sig--> [ct_locus]
+[ct_locus] --socket--> [ct_view]

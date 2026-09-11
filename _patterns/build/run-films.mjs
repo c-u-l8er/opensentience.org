@@ -35,18 +35,31 @@ for (const p of DATA.patterns) {
   if (!jobs.has(key)) jobs.set(key, { files: [], ids: [], epochs: w.film.epochs || 4, file: w.world });
   jobs.get(key).files.push(w.world); jobs.get(key).ids.push(p.id);
 }
+/* the chain: every chapter's delta world (with its scenario sidecar), plus the conclusion world */
+const CH = await import(join(HERE, 'chain.mjs'));
+for (const id of CH.order()) {
+  if (!CH.fragment(id)) continue;
+  if (only.size && !only.has(id) && !only.has('chain')) continue;
+  const file = `chain/${id}.wrl`; const src = Buffer.from(CH.deltaSource(id)); const key = sha(src);
+  const sc = CH.scenario(id); const epochs = sc && sc.epochs ? sc.epochs : 4;
+  if (!jobs.has(key)) jobs.set(key, { files: [], ids: [], epochs, file, chain: true });
+  jobs.get(key).files.push(file); jobs.get(key).ids.push(id + ' (chain delta)');
+}
+if (!only.size || only.has('conclusion')) { const file = 'chain/_conclusion.wrl'; const src = readFileSync(join(HERE, '../wrl', file)); const key = sha(src); jobs.set(key, { files: [file], ids: ['conclusion (the whole chain)'], epochs: 4, file, chain: true }); }
 const env = { ...process.env, PYTHONDONTWRITEBYTECODE: '1', TMPDIR: join(process.env.HOME, '.cache/tmp') };
 let fail = 0;
 for (const [key, j] of jobs) {
   process.stdout.write(`▸ ${j.file} (${j.epochs} epochs) for ${j.ids.join(', ')} … `);
   const started = new Date().toISOString();
-  const r = spawnSync('python3', [FILM_PY, join(HERE, '../wrl', j.file), String(j.epochs)], { env, encoding: 'utf8', timeout: 600_000, maxBuffer: 64 << 20 });
+  let target = join(HERE, '../wrl', j.file);
+  if (j.chain && !j.file.endsWith('_conclusion.wrl')) { const id = j.file.replace(/^chain\//, '').replace(/\.wrl$/, ''); const stage = join(HERE, '../wrl/chain/.delta'); mkdirSync(stage, { recursive: true }); target = join(stage, id + '.wrl'); writeFileSync(target, CH.deltaSource(id)); const sc = CH.scenario(id); if (sc) writeFileSync(join(stage, id + '.scenario.json'), JSON.stringify(sc)); }
+  const r = spawnSync('python3', [FILM_PY, target, String(j.epochs)], { env, encoding: 'utf8', timeout: 1_800_000, maxBuffer: 64 << 20 });
   if (r.status !== 0) { console.log(`EXIT ${r.status}\n${(r.stderr || '').trim().split('\n').slice(-3).join('\n')}`); fail++; continue; }
   const out = JSON.parse(r.stdout);
   const receipt = { kind: 'PATTERN_FILM_RECEIPT', version: 1, world_files: j.files, for_patterns: j.ids,
     source_identity: { world_sha256: key, trvm_head: head(join(ROOT, 'TRVM')), film_py_sha256: sha(readFileSync(FILM_PY)) },
     execution_identity: { started, finished: new Date().toISOString(), host: hostname(), seconds: out.seconds, reducer: out.reducer },
-    forge: { semantic_artifact_id: out.semantic_artifact_id, policy_id: out.policy_id }, epochs: out.epochs };
+    forge: { semantic_artifact_id: out.semantic_artifact_id, policy_id: out.policy_id }, scenario: out.scenario || null, determinism: out.determinism || null, epochs: out.epochs };
   writeFileSync(join(OUT, key.slice(0, 16) + '.json'), JSON.stringify(receipt, null, 1) + '\n');
   console.log(`${out.seconds}s → ${out.semantic_artifact_id.slice(0, 20)}… · ${out.epochs.length} epochs`);
 }

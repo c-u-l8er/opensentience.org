@@ -18,18 +18,36 @@ os.chdir(os.path.abspath(FORGE))
 import wrl_ir as W, wrl_sugar as SG, wrl_plan as P, compiler as C, admit as AD, forge_runtime as O, wrl_fold as FD
 from forge_state import init_state_v6, state_to_film_args_v6
 
+def load_scenario(path):
+    """Optional sidecar <world>.scenario.json: {"epochs": N, "numeric_faults": [orb ids],
+    "batches": [[{"writer": w, "seq": s, "op": "SetRotor"|"ResetFault", "target": id, "rotor": [4 ints]}], ...]}.
+    Claims are RUN INPUTS (D3): they bind to the world's id and never enter it. Built with admit.mk_claim, the
+    same envelope the forge's scenario module builds."""
+    sp = path[:-4] + ".scenario.json" if path.endswith(".wrl") else path + ".scenario.json"
+    if not os.path.exists(sp): return None
+    return json.load(open(sp, encoding="utf-8"))
+
 def main(path, epochs):
     src = open(path, encoding="utf-8").read()
+    scen = load_scenario(path)
+    if scen and scen.get("epochs"): epochs = int(scen["epochs"])
     t0 = time.time()
     prog = W.lower_program(SG.desugar_core(src), W.parse_wrl_core)
     view = P.plan_view(P.artifact_to_compile_plan_v1(prog.sealed_artifact))
     seams = FD.runtime_seams(view, view)
     world = init_state_v6(view)
+    for o in (scen or {}).get("numeric_faults", []):
+        if ("fault_" + o) in world: world["fault_" + o] = 1
     claim = AD.init_claimstate(view)
     step, _ = C.compile_step_v6(view)
-    batches = FD.fold_batches(prog.artifact, [[] for _ in range(epochs)], epoch0=1)
+    raw = [[] for _ in range(epochs)]
+    for i, b in enumerate((scen or {}).get("batches", [])[:epochs]):
+        for c in b:
+            payload = ("SetRotor", c["target"], tuple(int(v) for v in c["rotor"])) if c["op"] == "SetRotor" else ("ResetFault", c["target"])
+            raw[i].append(AD.mk_claim(c["writer"], c["seq"], payload))
+    batches = FD.fold_batches(prog.artifact, raw, epoch0=1)
     out = {"semantic_artifact_id": prog.semantic_artifact_id, "policy_id": seams.admit_policy_id,
-           "reducer": "ref_reduce", "epochs": []}
+           "reducer": "ref_reduce", "scenario": scen, "epochs": []}
     for e, batch in enumerate(batches):
         ep = 1 + e
         claim, cfg_map, resets = FD.admit_step_sealed(claim, batch, ep, view, seams)
@@ -40,6 +58,19 @@ def main(path, epochs):
         out["epochs"].append({"t": ep, "film_hash": "sha256:" + hashlib.sha256(film).hexdigest(),
                               "film": text.rstrip("\n").split("\n")})
     out["seconds"] = round(time.time() - t0, 3)
+    if (scen or {}).get("determinism"):
+        # EXACT REPLAY: reduce the same sealed world a second time, from a fresh state, and record whether
+        # every epoch's film hash is identical. The build refuses the chapter otherwise.
+        world2 = init_state_v6(view); claim2 = AD.init_claimstate(view); hashes2 = []
+        for o in (scen or {}).get("numeric_faults", []):
+            if ("fault_" + o) in world2: world2["fault_" + o] = 1
+        for e, batch in enumerate(batches):
+            ep = 1 + e
+            claim2, cfg_map, resets = FD.admit_step_sealed(claim2, batch, ep, view, seams)
+            ec = C.enc_config_bundle(view, cfg_map, resets)
+            world2 = C.dec_state_v6(view, O.ref_reduce("((%s %s) %s)" % (step, ec, C.enc_state_v6(view, world2))))
+            hashes2.append("sha256:" + hashlib.sha256(FD.film_sealed(seams, *state_to_film_args_v6(view, world2, ep), state=claim2)).hexdigest())
+        out["determinism"] = {"second_run_hashes": hashes2, "identical": hashes2 == [e["film_hash"] for e in out["epochs"]]}
     json.dump(out, sys.stdout)
 
 if __name__ == "__main__":

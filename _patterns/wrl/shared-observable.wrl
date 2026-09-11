@@ -1,9 +1,0 @@
-profile forge.world.core.v1
-
-; the rotor is state that determines the pose: it must be in the Film, and it is
-[pulser:clock](every 1){sig_out}
-[spinner:rotor](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
-[orb:pose]{pose}
-
-[clock] --sig--> [rotor]
-[rotor] --socket--> [pose]

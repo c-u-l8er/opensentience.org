@@ -1,0 +1,13 @@
+profile forge.world.core.v1
+
+; DESCENT IS NOT DEPENDENCE — dd_child is fed by the same clock as dd_parent (it descended from the same
+; world). A claim sets the parent's rotor at epoch 2; the child's rotor does not move. Lineage ≠ support.
+[pulser:dd_clock](every 1){sig_out}
+[spinner:dd_parent](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[spinner:dd_child](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:dd_pv]{pose}
+[orb:dd_cv]{pose}
+
+[dd_clock] --sig--> {[dd_parent], [dd_child]}
+[dd_parent] --socket--> [dd_pv]
+[dd_child] --socket--> [dd_cv]

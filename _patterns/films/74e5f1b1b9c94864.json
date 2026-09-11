@@ -1,0 +1,116 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/evidence-before-claim.wrl"
+ ],
+ "for_patterns": [
+  "evidence-before-claim (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "74e5f1b1b9c94864496a377e8065c6e9d55e47042011bb274544421b5a99045b",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:55:55.859Z",
+  "finished": "2026-09-11T17:56:21.280Z",
+  "host": "PX13",
+  "seconds": 23.767,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-c90db25f03bc917783dd379df4ccf7ca63242e39671308eb4969dc8312026392",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 4,
+  "batches": [
+   [],
+   [
+    {
+     "writer": 1,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "ec_subject",
+     "rotor": [
+      0,
+      255,
+      0,
+      0
+     ]
+    }
+   ],
+   [],
+   []
+  ]
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:8ee0e018984922e7ba80f03bc88186505fb0324484f36bcc8546226631b97909",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=ec_subject,fault=0",
+    "pulser:ec_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "wire:w__ec_clock__ec_subject:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:7ff69cb487689648380402b36021cb07ad6668b48f92d87fb29c533f0cff1330",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,00b4,ff4c,0000,controller=ec_subject,fault=0",
+    "pulser:ec_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "wire:w__ec_clock__ec_subject:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=bc,pkey=0.0.0.255.0.0,payload=SetRotor:ec_subject:0.255.0.0",
+    "receipt:w=1,s=1,accepted=bc,apkey=0.0.0.255.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:7e5e6ec52c3d5334949594ce050cfa2eb55c427981e0d5b962f8a90be33e5f99",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff4d,0000,0000,ff4d,controller=ec_subject,fault=0",
+    "pulser:ec_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "wire:w__ec_clock__ec_subject:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=bc,pkey=0.0.0.255.0.0,payload=SetRotor:ec_subject:0.255.0.0",
+    "receipt:w=1,s=1,accepted=bc,apkey=0.0.0.255.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:4679467a344bf6bd495871085b2b4ab23c30609158877d2f8a13c5bd80f57cf9",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:ec_subject:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ec_witness,config=configurable",
+    "orb:ec_witness:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,ff4e,00b2,0000,controller=ec_subject,fault=0",
+    "pulser:ec_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:ec_ledger:open=0,next_open=0",
+    "wire:w__ec_clock__ec_subject:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=bc,pkey=0.0.0.255.0.0,payload=SetRotor:ec_subject:0.255.0.0",
+    "receipt:w=1,s=1,accepted=bc,apkey=0.0.0.255.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  }
+ ]
+}

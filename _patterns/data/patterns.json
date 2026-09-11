@@ -331,11 +331,7 @@
         }
       ],
       "wrl": {
-        "world": "identity-is-a-seal.wrl",
-        "note": "The starter world. Sealed here, in node, at build; the id the page prints was computed from these bytes by WRL's own wrl.js.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The starter world. Sealed here, in node, at build; the id the page prints was computed from these bytes by WRL's own wrl.js."
       }
     },
     {
@@ -531,12 +527,8 @@
         }
       ],
       "wrl": {
-        "world": "refusing-join.wrl",
         "refused": "refusing-join.refused.wrl",
-        "note": "A Door admits exactly one signal wire. Two producers into one join is WRL_CONTROLLER_CONFLICT — the language's own refusing join, named at the port.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "A Door admits exactly one signal wire. Two producers into one join is WRL_CONTROLLER_CONFLICT — the language's own refusing join, named at the port."
       }
     },
     {
@@ -627,11 +619,7 @@
         }
       ],
       "wrl": {
-        "world": "shared-observable.wrl",
-        "note": "The Spinner's rotor is the state Law 6 was first written for: it determines the Orb's pose and must be in the Film.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The Spinner's rotor is the state Law 6 was first written for: it determines the Orb's pose and must be in the Film."
       }
     },
     {
@@ -793,12 +781,8 @@
         }
       ],
       "wrl": {
-        "world": "capability-bounded-composition.wrl",
         "refused": "capability-bounded-composition.refused.wrl",
-        "note": "The Door is the permitted rung. A signal driven into a pose port is feasible to type and refused by the port table.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The Door is the permitted rung. A signal driven into a pose port is feasible to type and refused by the port table."
       }
     },
     {
@@ -961,11 +945,7 @@
         }
       ],
       "wrl": {
-        "world": "projection-not-duplication.wrl",
-        "note": "The Orb's pose is derived from the Spinner through a SocketControl edge — a projection, not a copy.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The Orb's pose is derived from the Spinner through a SocketControl edge — a projection, not a copy."
       }
     },
     {
@@ -1059,12 +1039,8 @@
         }
       ],
       "wrl": {
-        "world": "refusable-divergence.wrl",
         "refused": "refusable-divergence.refused.wrl",
-        "note": "A world that routes a signal out of a Door is refused with a code and a locator, not a warning.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "A world that routes a signal out of a Door is refused with a code and a locator, not a warning."
       }
     },
     {
@@ -1536,11 +1512,7 @@
         }
       ],
       "wrl": {
-        "world": "three-valued-outcome.wrl",
-        "note": "An attempt reaches the world through a carrier; a Door is a sink. The three outcomes are the Film's, and the Film is TRVM's.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "An attempt reaches the world through a carrier; a Door is a sink. The three outcomes are the Film's, and the Film is TRVM's."
       }
     },
     {
@@ -1689,11 +1661,7 @@
         }
       ],
       "wrl": {
-        "world": "three-sizes-of-world.wrl",
-        "note": "This world is a WRL GRAPH — the smallest of the three sizes. Its seal is a wrl_head.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "This world is a WRL GRAPH — the smallest of the three sizes. Its seal is a wrl_head."
       }
     },
     {
@@ -1840,12 +1808,8 @@
         }
       ],
       "wrl": {
-        "world": "meaning-is-a-hash.wrl",
         "variant": "meaning-is-a-hash.variant.wrl",
-        "note": "The same world with one period changed. Two ids; there is no version flag to consult.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The same world with one period changed. Two ids; there is no version flag to consult."
       }
     },
     {
@@ -1913,11 +1877,7 @@
         }
       ],
       "wrl": {
-        "world": "exact-replay.wrl",
-        "note": "A sealed world whose film TRVM reduces; the page cannot run the film — reduction lives in TRVM, not in wrl.js.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "A sealed world whose film TRVM reduces; the page cannot run the film — reduction lives in TRVM, not in wrl.js."
       }
     },
     {

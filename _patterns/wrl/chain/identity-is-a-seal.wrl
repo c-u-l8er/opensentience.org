@@ -1,0 +1,8 @@
+; IDENTITY IS A SEAL — the named rotor `identity` is the unit; the world's id is the hash of this text's
+; canonical form. Change a lane and the seal moves; move the file and it does not.
+[pulser:is_clock](every 2){sig_out}
+[spinner:is_seal](w=16, n=8, rotor=identity){sig_in, socket}
+[orb:is_id]{pose}
+
+[is_clock] --sig--> [is_seal]
+[is_seal] --socket--> [is_id]

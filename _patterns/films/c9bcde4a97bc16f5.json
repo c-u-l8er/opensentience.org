@@ -1,0 +1,86 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/semantic-membrane.wrl"
+ ],
+ "for_patterns": [
+  "semantic-membrane (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "c9bcde4a97bc16f58be5afc99f75376bcaf1f43c0c51aba509eb7ae1e6f4aa3a",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:50:25.714Z",
+  "finished": "2026-09-11T17:51:26.755Z",
+  "host": "PX13",
+  "seconds": 57.129,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-a4c1db532de6f5fd7f015015f50dd59d9ae36917597433a772e91f0676727ad6",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:5cbe22fd8a7debf041bd963b59a30a9f5f6312d42c3ed694dbc77357b9b83ea2",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:sm_inside:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=sm_outside_a,config=fixed",
+    "orb:sm_outside_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=sm_inside,fault=0",
+    "orb:sm_outside_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=sm_inside,fault=0",
+    "pulser:sm_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__sm_clock__sm_inside:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:be0782160df53b7b63068460d6c727fa16c76446e3e23dcfbc0e24b30f2dfddb",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:sm_inside:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=sm_outside_a,config=fixed",
+    "orb:sm_outside_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=sm_inside,fault=0",
+    "orb:sm_outside_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=sm_inside,fault=0",
+    "pulser:sm_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__sm_clock__sm_inside:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:521fd2dc0d35601b31efdc4eb461823558421f0b4d80bf35e9dadba6739a73fd",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:sm_inside:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=sm_outside_a,config=fixed",
+    "orb:sm_outside_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff4c,0000,0000,00b4,controller=sm_inside,fault=0",
+    "orb:sm_outside_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff4c,0000,0000,00b4,controller=sm_inside,fault=0",
+    "pulser:sm_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__sm_clock__sm_inside:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:13382a1c8b835413828ea6bfe0c8d1267159b18267a0abd5d4ce8fa1713aa7f1",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:sm_inside:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=sm_outside_a,config=fixed",
+    "orb:sm_outside_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff02,0000,0000,0000,controller=sm_inside,fault=0",
+    "orb:sm_outside_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff02,0000,0000,0000,controller=sm_inside,fault=0",
+    "pulser:sm_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__sm_clock__sm_inside:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

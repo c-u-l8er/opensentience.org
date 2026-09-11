@@ -1,0 +1,117 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/refusable-divergence.wrl"
+ ],
+ "for_patterns": [
+  "refusable-divergence (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "37a0f74aaf5c4a70e5402d5fdc8394a8e5ee230881268cd9b8fed05c474d3f58",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:52:51.385Z",
+  "finished": "2026-09-11T17:53:10.595Z",
+  "host": "PX13",
+  "seconds": 17.621,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-4fb6185dbc5a6e0daedd93496cb03a72b4c3471210989bda526ebf51a6e2eefa",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 3,
+  "batches": [
+   [
+    {
+     "writer": 1,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "rd_ghost",
+     "rotor": [
+      1,
+      2,
+      3,
+      4
+     ]
+    }
+   ],
+   [
+    {
+     "writer": 1,
+     "seq": 2,
+     "op": "SetRotor",
+     "target": "rd_real",
+     "rotor": [
+      255,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   []
+  ]
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:c9726e297ffb4d9eba2e3306e9dd3647ea5bd9eebe3832ec484fdc8f23ec1427",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:rd_real:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=rd_view,config=configurable",
+    "orb:rd_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=rd_real,fault=0",
+    "pulser:rd_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__rd_clock__rd_real:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=ee,pkey=0.1.1.2.3.4,payload=SetRotor:#?:1.2.3.4",
+    "receipt:w=1,s=1,accepted=ee,apkey=0.1.1.2.3.4,epoch=1,outcome=Rejected(unknown_spinner)",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:158685b14aaeed5de1ecf44c7743fa5bd5fec263a67e9f6209e0664724be3439",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:rd_real:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=rd_view,config=configurable",
+    "orb:rd_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b4,0000,0000,00b4,controller=rd_real,fault=0",
+    "pulser:rd_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__rd_clock__rd_real:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=ee,pkey=0.1.1.2.3.4,payload=SetRotor:#?:1.2.3.4",
+    "claim:w=1,s=2,digest=3f,pkey=0.0.255.0.0.0,payload=SetRotor:rd_real:255.0.0.0",
+    "receipt:w=1,s=1,accepted=ee,apkey=0.1.1.2.3.4,epoch=1,outcome=Rejected(unknown_spinner)",
+    "receipt:w=1,s=2,accepted=3f,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:aa7493364cd3397df78962e4d366c1c8a3c48a4253fb95233301e988d9b53c26",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:rd_real:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00ff,0000,0000,0000,socket=rd_view,config=configurable",
+    "orb:rd_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b3,0000,0000,00b3,controller=rd_real,fault=0",
+    "pulser:rd_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__rd_clock__rd_real:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=ee,pkey=0.1.1.2.3.4,payload=SetRotor:#?:1.2.3.4",
+    "claim:w=1,s=2,digest=3f,pkey=0.0.255.0.0.0,payload=SetRotor:rd_real:255.0.0.0",
+    "receipt:w=1,s=1,accepted=ee,apkey=0.1.1.2.3.4,epoch=1,outcome=Rejected(unknown_spinner)",
+    "receipt:w=1,s=2,accepted=3f,apkey=0.0.255.0.0.0,epoch=2,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=1,s=2,state=unambiguous"
+   ]
+  }
+ ]
+}

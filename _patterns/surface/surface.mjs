@@ -75,14 +75,20 @@ const STENCILS = {
      forge reduced. Objects are stations laid out in columns by longest incoming path; edges are wires. A film
      epoch is applied with generic `state` / `note` actions the build derives from the Film's lines. */
   world(p = {}) {
-    const st = base(); const nodes = p.nodes || [], edges = p.edges || [];
+    const st = base(); const nodes = (p.nodes || []).filter((n) => n[0] !== 'Ledger'), edges = p.edges || [];
     const names = nodes.map((n) => n[1]); const depth = Object.fromEntries(names.map((n) => [n, 0]));
-    for (let k = 0; k < names.length; k++) for (const [, a, b] of edges) depth[b] = Math.max(depth[b], depth[a] + 1);
-    const cols = {}; for (const n of names) (cols[depth[n]] ||= []).push(n);
-    const nc = Object.keys(cols).length; const pos = {};
-    Object.entries(cols).forEach(([d, ns]) => ns.forEach((n, i) => { pos[n] = { x: nc === 1 ? W / 2 : 120 + (+d) * ((W - 240) / (nc - 1)), y: 200 - (ns.length - 1) * 40 + i * 80 }; }));
-    for (const [role, name] of nodes) st.stations.push({ id: name, x: pos[name].x, y: pos[name].y, label: `${name} · ${role.toLowerCase()}`, state: 'idle', note: '', role });
-    for (const [kind, a, b] of edges) st.wires.push({ id: `${a}->${b}`, x1: pos[a].x + 60, y1: pos[a].y, x2: pos[b].x - 60, y2: pos[b].y, label: kind === 'SignalWire' ? 'sig' : 'socket', note: '' });
+    for (let k = 0; k < names.length; k++) for (const [, a, b] of edges) if (depth[b] !== undefined && depth[a] !== undefined) depth[b] = Math.max(depth[b], depth[a] + 1);
+    /* one row per chapter (the id prefix before the first underscore), in order of first appearance */
+    const rowOf = (n) => (n.includes('_') ? n.split('_')[0] : '·'); const rows = []; const rowIdx = {};
+    for (const n of names) { const r = rowOf(n); if (rowIdx[r] === undefined) { rowIdx[r] = rows.length; rows.push(r); } }
+    const PITCH = 180, ROWH = 104, X0 = 110, Y0 = 64;
+    const maxCol = Math.max(0, ...names.map((n) => depth[n]));
+    st.W = Math.max(640, X0 + (maxCol + 1) * PITCH + 40); st.H = Y0 + Math.max(1, rows.length) * ROWH + 44;
+    const role = Object.fromEntries(nodes.map((n) => [n[1], n[0]])); const pos = {};
+    for (const n of names) pos[n] = { x: X0 + depth[n] * PITCH, y: Y0 + rowIdx[rowOf(n)] * ROWH };
+    for (const n of names) st.stations.push({ id: n, x: pos[n].x, y: pos[n].y, label: n, state: 'idle', note: '', role: role[n], box: true, sub: role[n].toLowerCase() });
+    if ((p.nodes || []).some((n) => n[0] === 'Ledger')) st.stations.push({ id: 'ledger', x: st.W - 120, y: 30, label: 'ledger · receipts', state: 'idle', note: '', role: 'Ledger', box: true, count: 0 });
+    for (const [kind, a, b] of edges) if (pos[a] && pos[b]) st.wires.push({ id: `${a}->${b}`, x1: pos[a].x + 62, y1: pos[a].y, x2: pos[b].x - 62, y2: pos[b].y, label: kind === 'SignalWire' ? 'sig' : 'socket', note: '', thin: true });
     st.anchors = Object.fromEntries(names.map((n) => [n, pos[n]])); st.anchors.off = { x: -80, y: 200 };
     return st;
   },
@@ -134,31 +140,48 @@ export function computeState(scene, upto) {
 /* ── pure svg ───────────────────────────────────────────────────────────────────────────────────── */
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 export function svg(st, { thumb = false, caption = true } = {}) {
+  const W = st.W || 840, H = st.H || 380;
   const o = [];
   o.push(`<svg class="surface" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(st.caption)}">`);
-  o.push(`<rect class="sf-floor" x="0" y="336" width="${W}" height="44"/>`);
-  o.push(`<text class="sf-floorlabel" x="12" y="366">compute surface</text>`);
+  o.push(`<rect class="sf-floor" x="0" y="${H - 44}" width="${W}" height="44"/>`);
+  o.push(`<text class="sf-floorlabel" x="12" y="${H - 14}">compute surface</text>`);
   for (const r of st.rings) o.push(`<g class="sf-ring ${r.state}"><rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="14"/><text x="${r.x + 12}" y="${r.y + 18}">${esc(r.label)}</text>${r.note ? `<text class="sf-note ${r.state}" x="${r.x + r.w - 12}" y="${r.y + r.h - 10}" text-anchor="end">${esc(r.note)}</text>` : ''}</g>`);
-  for (const w of st.wires) o.push(`<line class="sf-wire ${w.state || ''}" x1="${w.x1}" y1="${w.y1}" x2="${w.x2}" y2="${w.y2}"/><text class="sf-label" x="${(w.x1 + w.x2) / 2}" y="${w.y1 - 14}" text-anchor="middle">${esc(w.label)}</text>${w.note ? `<text class="sf-note" x="${(w.x1 + w.x2) / 2}" y="${w.y1 + 26}" text-anchor="middle">${esc(w.note)}</text>` : ''}`);
+  for (const w of st.wires) o.push(`<line class="sf-wire ${w.state || ''} ${w.thin ? 'thin' : ''}" x1="${w.x1}" y1="${w.y1}" x2="${w.x2}" y2="${w.y2}"/><text class="sf-label ${w.thin ? 'small' : ''}" x="${(w.x1 + w.x2) / 2}" y="${(w.y1 + w.y2) / 2 - 8}" text-anchor="middle">${esc(w.label)}</text>${w.note ? `<text class="sf-note" x="${(w.x1 + w.x2) / 2}" y="${w.y1 + 26}" text-anchor="middle">${esc(w.note)}</text>` : ''}`);
   for (const s of st.slots) { const w = s.wide ? 150 : 60; o.push(`<g class="sf-slot ${s.state}"><rect x="${s.x - w / 2}" y="${s.y - 16}" width="${w}" height="32" rx="6"/><text x="${s.x}" y="${s.y + 5}" text-anchor="middle">${esc(s.label)}</text></g>`); }
   for (const m of st.meters) { const pct = Math.max(0, Math.min(1, m.value / m.max)); o.push(`<g class="sf-meter ${m.kind}"><text class="sf-label" x="${m.x}" y="${m.y - 6}">${esc(m.label)} · ${Math.round(pct * 100)}%</text><rect class="sf-track" x="${m.x}" y="${m.y}" width="${m.w}" height="10" rx="5"/><rect class="sf-fill" x="${m.x}" y="${m.y}" width="${(m.w * pct).toFixed(1)}" height="10" rx="5"/></g>`); }
-  for (const s of st.stations) { o.push(s.box ? `<g class="sf-station ${s.state}"><rect x="${s.x - 40}" y="${s.y - 22}" width="80" height="44" rx="6"/><text x="${s.x}" y="${s.y - 2}" text-anchor="middle">${esc(s.label)}</text><text class="sf-count" x="${s.x}" y="${s.y + 15}" text-anchor="middle">${s.count ? s.count + ' pending' : 'empty'}</text></g>` : `<g class="sf-station ${s.state}"><path d="M${s.x} ${s.y - 34} L${s.x + Math.max(44, s.label.length * 5 + 22)} ${s.y} L${s.x} ${s.y + 34} L${s.x - Math.max(44, s.label.length * 5 + 22)} ${s.y} Z"/><text x="${s.x}" y="${s.y + 5}" text-anchor="middle">${esc(s.label)}</text></g>`); if (s.note) o.push(`<text class="sf-note ${s.state}" x="${s.x}" y="${s.y + (s.box ? 40 : 56)}" text-anchor="middle">${esc(s.note)}</text>`); }
+  for (const s of st.stations) { const bw = Math.max(80, (s.label || '').length * 7 + 16); o.push(s.box ? `<g class="sf-station ${s.state} ${s.role || ''}"><rect x="${s.x - bw / 2}" y="${s.y - 22}" width="${bw}" height="44" rx="6"/><text x="${s.x}" y="${s.y - 2}" text-anchor="middle">${esc(s.label)}</text><text class="sf-count" x="${s.x}" y="${s.y + 15}" text-anchor="middle">${s.sub ? esc(s.sub) : s.role === 'Ledger' ? (s.count ? s.count + ' receipt(s)' : 'no receipts') : (s.count ? s.count + ' pending' : 'empty')}</text></g>` : `<g class="sf-station ${s.state}"><path d="M${s.x} ${s.y - 34} L${s.x + Math.max(44, s.label.length * 5 + 22)} ${s.y} L${s.x} ${s.y + 34} L${s.x - Math.max(44, s.label.length * 5 + 22)} ${s.y} Z"/><text x="${s.x}" y="${s.y + 5}" text-anchor="middle">${esc(s.label)}</text></g>`); if (s.note) o.push(`<text class="sf-note ${s.state} ${s.box ? 'small' : ''}" x="${s.x}" y="${s.y + (s.box ? 38 : 56)}" text-anchor="middle">${esc(s.note)}</text>`); }
   for (const l of st.loci) o.push(`<g class="sf-locus ${l.state}" data-id="${esc(l.id)}" transform="translate(${l.x.toFixed(1)} ${l.y.toFixed(1)})"><circle r="${l.r}"/>${l.label ? `<text class="sf-id" y="5" text-anchor="middle">${esc(l.label)}</text>` : ''}${l.tag ? (l.tagAbove ? `<text class="sf-tag" y="-${l.r + 8}" text-anchor="middle">${esc(l.tag)}</text>` : `<text class="sf-tag" x="${l.x < W / 2 ? -(l.r + 8) : l.r + 8}" y="4" text-anchor="${l.x < W / 2 ? 'end' : 'start'}">${esc(l.tag)}</text>`) : ''}</g>`);
   if (!thumb && caption && st.caption) o.push(`<text class="sf-caption" x="${W / 2}" y="30" text-anchor="middle">${esc(st.caption)}</text>`);
   o.push('</svg>');
   return o.join('');
 }
 
+/* ── browser: pan / zoom for any svg with a viewBox ────────────────────────────────────────────── */
+export function panZoom(host, getSvg) {
+  let view = null; const base = () => { const s = getSvg(); const [x, y, w, h] = s.getAttribute('viewBox').split(/\s+/).map(Number); return { x, y, w, h }; };
+  const apply = () => { const s = getSvg(); if (!s) return; if (!view) view = base(); s.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`); };
+  const pt = (ev) => { const s = getSvg(); const r = s.getBoundingClientRect(); return { px: view.x + (ev.clientX - r.left) / r.width * view.w, py: view.y + (ev.clientY - r.top) / r.height * view.h }; };
+  host.addEventListener('wheel', (ev) => { if (!view) view = base(); ev.preventDefault(); const { px, py } = pt(ev); const f = ev.deltaY > 0 ? 1.15 : 1 / 1.15; view = { x: px - (px - view.x) * f, y: py - (py - view.y) * f, w: view.w * f, h: view.h * f }; apply(); }, { passive: false });
+  let drag = null;
+  host.addEventListener('pointerdown', (ev) => { if (!view) view = base(); drag = { x: ev.clientX, y: ev.clientY, v: { ...view } }; host.setPointerCapture(ev.pointerId); host.classList.add('grabbing'); });
+  host.addEventListener('pointermove', (ev) => { if (!drag) return; const s = getSvg(); const r = s.getBoundingClientRect(); view = { ...view, x: drag.v.x - (ev.clientX - drag.x) / r.width * view.w, y: drag.v.y - (ev.clientY - drag.y) / r.height * view.h }; apply(); });
+  const up = () => { drag = null; host.classList.remove('grabbing'); }; host.addEventListener('pointerup', up); host.addEventListener('pointercancel', up);
+  host.addEventListener('dblclick', () => { view = null; apply(); });
+  return { reapply: apply, reset: () => { view = null; apply(); }, zoom: (f) => { if (!view) view = base(); const cx = view.x + view.w / 2, cy = view.y + view.h / 2; view = { x: cx - view.w * f / 2, y: cy - view.h * f / 2, w: view.w * f, h: view.h * f }; apply(); } };
+}
+
 /* ── browser: mount with controls, tweening, takeaways ─────────────────────────────────────────── */
 export function mount(root, scene) {
   const total = scene.steps.length; let i = 0, timer = null;
   root.innerHTML = `<div class="sf-stage"></div>
-    <div class="sf-controls"><button class="sf-play">▶ Play</button><button class="sf-step">Step ▸</button><button class="sf-reset">↺ Reset</button><span class="sf-pos"></span></div>
+    <div class="sf-controls"><button class="sf-play">▶ Play</button><button class="sf-step">Step ▸</button><button class="sf-reset">↺ Reset</button><span class="sf-zoom"><button class="sf-zin" title="zoom in">＋</button><button class="sf-zout" title="zoom out">－</button><button class="sf-fit" title="fit (or double-click the picture)">⤢</button></span><span class="sf-hint">wheel zooms · drag pans · double-click fits</span><span class="sf-pos"></span></div>
     <p class="sf-cap"></p>
     <ol class="sf-take">${scene.steps.map((s, k) => s.takeaway ? `<li data-step="${k + 1}"><span class="sf-tk">${esc(s.takeaway)}</span></li>` : '').join('')}</ol>`;
   const stage = root.querySelector('.sf-stage'), cap = root.querySelector('.sf-cap'), pos = root.querySelector('.sf-pos');
   let prev = computeState(scene, 0);
   stage.innerHTML = svg(prev, { caption: false });
+  const pz = panZoom(stage, () => stage.querySelector('svg'));
+  root.querySelector('.sf-zin').addEventListener('click', () => pz.zoom(1 / 1.3)); root.querySelector('.sf-zout').addEventListener('click', () => pz.zoom(1.3)); root.querySelector('.sf-fit').addEventListener('click', () => pz.reset());
   const paint = () => { cap.textContent = prev.caption; pos.textContent = `${i} / ${total}`; root.querySelectorAll('.sf-take li').forEach((li) => li.classList.toggle('got', +li.dataset.step <= i)); };
   paint();
   function show(k) {
@@ -168,7 +191,7 @@ export function mount(root, scene) {
     const fresh = tmp.firstElementChild;
     /* tween: start every locus that existed before at its OLD position, then transition to the new one */
     for (const g of fresh.querySelectorAll('.sf-locus')) { const o = old.get(g.dataset.id); if (o) { g.setAttribute('transform', `translate(${o.x} ${o.y})`); } }
-    stage.replaceChildren(fresh);
+    stage.replaceChildren(fresh); pz.reapply();
     requestAnimationFrame(() => { for (const g of fresh.querySelectorAll('.sf-locus')) { const l = next.loci.find((x) => x.id === g.dataset.id); if (l) g.setAttribute('transform', `translate(${l.x} ${l.y})`); } });
     prev = next; i = k; paint();
   }
@@ -195,9 +218,9 @@ export const CSS = `
 .sf-station.admitted path,.sf-station.admitted rect{stroke:var(--data,#0a6e62);fill:var(--data-soft,rgba(10,110,98,.09))}.sf-station.refused path,.sf-station.refused rect{stroke:var(--rose,#c02a5f);fill:rgba(192,42,95,.08)}
 .sf-station.indeterminate path,.sf-station.indeterminate rect{stroke:var(--warn,#96600b);fill:rgba(150,96,11,.10);stroke-dasharray:5 3}.sf-note.indeterminate{fill:var(--warn,#96600b)}
 .sf-ring rect{fill:none;stroke:var(--line2,#d8cfba);stroke-width:1.5}.sf-ring text{font:11px var(--mono,monospace);fill:var(--fg3,#666);letter-spacing:.06em;text-transform:uppercase}.sf-ring.held rect{stroke:var(--acc,#6d3bd4);fill:var(--acc-soft,rgba(109,59,212,.05))}.sf-ring.held text{fill:var(--acc,#6d3bd4)}.sf-ring.refused rect{stroke:var(--rose,#c02a5f)}.sf-ring.refused text{fill:var(--rose,#c02a5f)}.sf-ring.admitted rect{stroke:var(--data,#0a6e62)}.sf-ring.admitted text{fill:var(--data,#0a6e62)}
-.sf-station .sf-count{font:10px var(--mono,monospace);fill:var(--fg3,#555)}
+.sf-station .sf-count{font:10px var(--mono,monospace);fill:var(--fg3,#555)}.sf-station.Pulser rect,.sf-station.Relay rect,.sf-station.Door rect,.sf-station.Spinner rect,.sf-station.Orb rect{stroke-width:1.2}.sf-station.Pulser rect{stroke:var(--acc,#6d3bd4)}.sf-station.Door rect{stroke:var(--rose,#c02a5f)}.sf-station.Orb rect{stroke:var(--data,#0a6e62)}
 .sf-note{font:12px var(--mono,monospace);fill:var(--fg2,#333)}.sf-note.refused{fill:var(--rose,#c02a5f)}.sf-note.admitted{fill:var(--data,#0a6e62)}
-.sf-wire{stroke:var(--fg3,#555);stroke-width:2;stroke-dasharray:6 4}.sf-wire.on{stroke:var(--acc,#6d3bd4);stroke-width:3;stroke-dasharray:none}.sf-label{font:12px var(--ui,system-ui);fill:var(--fg2,#333)}
+.sf-wire{stroke:var(--fg3,#555);stroke-width:2;stroke-dasharray:6 4}.sf-wire.thin{stroke-width:1.4;stroke-dasharray:4 3}.sf-label.small{font-size:10px}.sf-note.small{font-size:10.5px}.sf-stage{cursor:grab;touch-action:none}.sf-stage.grabbing{cursor:grabbing}.sf-zoom{display:inline-flex;gap:.2rem;margin-left:.4rem}.sf-zoom button{padding:.2rem .5rem}.sf-hint{font:11px var(--ui,system-ui);color:var(--fg3,#777);margin-left:.4rem}.sf-wire.on{stroke:var(--acc,#6d3bd4);stroke-width:3;stroke-dasharray:none}.sf-label{font:12px var(--ui,system-ui);fill:var(--fg2,#333)}
 .sf-meter .sf-track{fill:var(--ink3,#fff);stroke:var(--line2,#d8cfba)}.sf-meter.util .sf-fill{fill:var(--warn,#96600b);transition:width .7s}.sf-meter.prog .sf-fill{fill:var(--data,#0a6e62);transition:width .7s}
 .sf-caption{font:15px var(--display,Georgia,serif);fill:var(--fg,#1c1a17)}
 .sf-controls{display:flex;gap:.5rem;align-items:center;margin:.6rem 0 .3rem;font:13px var(--ui,system-ui)}.sf-controls button{font:600 13px var(--ui,system-ui);padding:.3rem .7rem;border:1px solid var(--fg,#1c1a17);background:var(--ink3,#fff);border-radius:6px;cursor:pointer}.sf-pos{color:var(--fg3,#555);margin-left:auto;font-family:var(--mono,monospace)}

@@ -1,14 +1,14 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T17:08:01.678Z",
+  "built": "2026-09-11T18:11:50.885Z",
   "inputs_heads": {
-    ".": "5c7cf310542a3aa4bba84714ef09d5b84d5047fc",
-    "opensentience.org": "9d208a39a5ae1f94cb480789dc98069df0d05ad8",
+    ".": "52244c9d2eba4f0fc4556dfbffa8287c65074999",
+    "opensentience.org": "4cb0425add4a6765760b7e14c5bf53a95be4ef31",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
     "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
-    "computedriven": "ba2ee455624fd456b1a603590d17f25a1faf5bdf",
+    "computedriven": "19f95846e7484ccc8f7cebc713aa33164ef7b42a",
     "super": "1671d82ffdb4eda34dc4729336c2eec17996b898"
   },
   "summary": {
@@ -410,11 +410,7 @@
         }
       ],
       "wrl": {
-        "world": "identity-is-a-seal.wrl",
-        "note": "The starter world. Sealed here, in node, at build; the id the page prints was computed from these bytes by WRL's own wrl.js.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The starter world. Sealed here, in node, at build; the id the page prints was computed from these bytes by WRL's own wrl.js."
       },
       "derived": {
         "label": "WITNESSED",
@@ -648,12 +644,8 @@
         }
       ],
       "wrl": {
-        "world": "refusing-join.wrl",
         "refused": "refusing-join.refused.wrl",
-        "note": "A Door admits exactly one signal wire. Two producers into one join is WRL_CONTROLLER_CONFLICT — the language's own refusing join, named at the port.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "A Door admits exactly one signal wire. Two producers into one join is WRL_CONTROLLER_CONFLICT — the language's own refusing join, named at the port."
       },
       "derived": {
         "label": "WITNESSED",
@@ -759,11 +751,7 @@
         }
       ],
       "wrl": {
-        "world": "shared-observable.wrl",
-        "note": "The Spinner's rotor is the state Law 6 was first written for: it determines the Orb's pose and must be in the Film.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The Spinner's rotor is the state Law 6 was first written for: it determines the Orb's pose and must be in the Film."
       },
       "derived": {
         "label": "WITNESSED",
@@ -948,12 +936,8 @@
         }
       ],
       "wrl": {
-        "world": "capability-bounded-composition.wrl",
         "refused": "capability-bounded-composition.refused.wrl",
-        "note": "The Door is the permitted rung. A signal driven into a pose port is feasible to type and refused by the port table.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The Door is the permitted rung. A signal driven into a pose port is feasible to type and refused by the port table."
       },
       "derived": {
         "label": "WITNESSED",
@@ -1146,11 +1130,7 @@
         }
       ],
       "wrl": {
-        "world": "projection-not-duplication.wrl",
-        "note": "The Orb's pose is derived from the Spinner through a SocketControl edge — a projection, not a copy.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The Orb's pose is derived from the Spinner through a SocketControl edge — a projection, not a copy."
       },
       "derived": {
         "label": "WITNESSED",
@@ -1259,12 +1239,8 @@
         }
       ],
       "wrl": {
-        "world": "refusable-divergence.wrl",
         "refused": "refusable-divergence.refused.wrl",
-        "note": "A world that routes a signal out of a Door is refused with a code and a locator, not a warning.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "A world that routes a signal out of a Door is refused with a code and a locator, not a warning."
       },
       "derived": {
         "label": "WITNESSED",
@@ -1807,11 +1783,7 @@
         }
       ],
       "wrl": {
-        "world": "three-valued-outcome.wrl",
-        "note": "An attempt reaches the world through a carrier; a Door is a sink. The three outcomes are the Film's, and the Film is TRVM's.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "An attempt reaches the world through a carrier; a Door is a sink. The three outcomes are the Film's, and the Film is TRVM's."
       },
       "derived": {
         "label": "STATED",
@@ -1985,11 +1957,7 @@
         }
       ],
       "wrl": {
-        "world": "three-sizes-of-world.wrl",
-        "note": "This world is a WRL GRAPH — the smallest of the three sizes. Its seal is a wrl_head.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "This world is a WRL GRAPH — the smallest of the three sizes. Its seal is a wrl_head."
       },
       "derived": {
         "label": "STATED",
@@ -2156,12 +2124,8 @@
         }
       ],
       "wrl": {
-        "world": "meaning-is-a-hash.wrl",
         "variant": "meaning-is-a-hash.variant.wrl",
-        "note": "The same world with one period changed. Two ids; there is no version flag to consult.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "The same world with one period changed. Two ids; there is no version flag to consult."
       },
       "derived": {
         "label": "WITNESSED",
@@ -2244,11 +2208,7 @@
         }
       ],
       "wrl": {
-        "world": "exact-replay.wrl",
-        "note": "A sealed world whose film TRVM reduces; the page cannot run the film — reduction lives in TRVM, not in wrl.js.",
-        "film": {
-          "epochs": 4
-        }
+        "note": "A sealed world whose film TRVM reduces; the page cannot run the film — reduction lives in TRVM, not in wrl.js."
       },
       "derived": {
         "label": "STATED",

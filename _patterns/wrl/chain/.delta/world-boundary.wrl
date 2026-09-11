@@ -1,0 +1,5 @@
+profile forge.world.core.v1
+
+; WORLD BOUNDARY — GAP. Nothing in the tree defines the boundary, so this fragment declares nothing:
+; the EMPTY WORLD, which WRL seals. The chain's id still moves here, because this comment is not meaning
+; and the fragment adds no object — the seal of the chain at this chapter equals the seal before it.

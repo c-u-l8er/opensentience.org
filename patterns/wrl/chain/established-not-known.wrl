@@ -1,0 +1,8 @@
+; ESTABLISHED, NOT KNOWN — an observation passes through en_established before it can act on the
+; Door. A reading that skipped the relay would have to reach the Door's one port directly — and cannot.
+[pulser:en_observation](every 1){sig_out}
+[relay:en_established]{sig_in, sig_out}
+[door:en_act]{sig_in}
+
+[en_observation] --sig--> [en_established]
+[en_established] --sig--> [en_act]

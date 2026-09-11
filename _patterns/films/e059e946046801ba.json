@@ -1,0 +1,86 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/carrier-confinement.wrl"
+ ],
+ "for_patterns": [
+  "carrier-confinement (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "e059e946046801baefbb07f6aeec484d24202ad7df1cfc67ea174fe4cf6d5217",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:51:54.428Z",
+  "finished": "2026-09-11T17:51:54.557Z",
+  "host": "PX13",
+  "seconds": 0.004,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-e9ff2d9e0d0d9715e5b974d909ae9cad47ad69b7a2b200616f19385ac6bdf3c7",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:e75afae717c0a8322ce1be869fc672ddcef9d789a27ef81bb1ece14134304bc5",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "pulser:cc_worker:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cc_carrier:open=0,next_open=0",
+    "relay:cc_grant:cur_out=0,next_out=1",
+    "wire:w__cc_grant__cc_carrier:cur=0,nxt=0",
+    "wire:w__cc_worker__cc_grant:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:c13fe6dddaea0dd50bdcc6b9f4e3eb05c09a11ab15597aacc9fea72bb4c6c0c9",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "pulser:cc_worker:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cc_carrier:open=0,next_open=0",
+    "relay:cc_grant:cur_out=1,next_out=1",
+    "wire:w__cc_grant__cc_carrier:cur=0,nxt=1",
+    "wire:w__cc_worker__cc_grant:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:c17012ab069b92d8ef0e582eadc1d040871bf5c42261757c69a28dd7f46a3397",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "pulser:cc_worker:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cc_carrier:open=0,next_open=1",
+    "relay:cc_grant:cur_out=1,next_out=1",
+    "wire:w__cc_grant__cc_carrier:cur=1,nxt=1",
+    "wire:w__cc_worker__cc_grant:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:af1d56e2e80701c784105ab10d7d8e5dbfdf0593b2a308459ed0162e61d71c8d",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "pulser:cc_worker:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cc_carrier:open=1,next_open=1",
+    "relay:cc_grant:cur_out=1,next_out=1",
+    "wire:w__cc_grant__cc_carrier:cur=1,nxt=1",
+    "wire:w__cc_worker__cc_grant:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

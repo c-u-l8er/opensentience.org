@@ -1,0 +1,106 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/shared-observable.wrl"
+ ],
+ "for_patterns": [
+  "shared-observable (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "f09c6596145d415d2eb354324df5990bff49ac3d10e19aa325b82f48e88c210e",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:49:59.158Z",
+  "finished": "2026-09-11T17:50:25.713Z",
+  "host": "PX13",
+  "seconds": 24.807,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-9fc5451a25c1357080f5e8ec49f4a6491d325ae9e4c41819de8fa8cb41e94f7d",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 4,
+  "numeric_faults": [
+   "so_pose"
+  ],
+  "batches": [
+   [],
+   [],
+   [
+    {
+     "writer": 1,
+     "seq": 1,
+     "op": "ResetFault",
+     "target": "so_pose"
+    }
+   ],
+   []
+  ]
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:4ccfbd2004e2a20e6a040bc6087323b35e4b317dfd69146c50bf7ffc60a36d18",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:so_rotor:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=so_pose,config=configurable",
+    "orb:so_pose:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=so_rotor,fault=1",
+    "pulser:so_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__so_clock__so_rotor:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:68d8123d62ef2e512208d8aac9a5c8a1f921f6852c817709ed09db72ebaf0fdc",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:so_rotor:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=so_pose,config=configurable",
+    "orb:so_pose:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=so_rotor,fault=1",
+    "pulser:so_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__so_clock__so_rotor:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:f9c545c9e28e55192b7ca2b08d78732c1a281ad02653dadffa6fda6303219a49",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:so_rotor:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=so_pose,config=configurable",
+    "orb:so_pose:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff4c,0000,0000,00b4,controller=so_rotor,fault=0",
+    "pulser:so_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__so_clock__so_rotor:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=c8,pkey=1.0.0.0.0.0,payload=ResetFault:so_pose",
+    "receipt:w=1,s=1,accepted=c8,apkey=1.0.0.0.0.0,epoch=3,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:2fce4ba013385df2881fee7d893072817ef22562592e5d3e7ada2de80d54ae94",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:so_rotor:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=so_pose,config=configurable",
+    "orb:so_pose:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff02,0000,0000,0000,controller=so_rotor,fault=0",
+    "pulser:so_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__so_clock__so_rotor:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=c8,pkey=1.0.0.0.0.0,payload=ResetFault:so_pose",
+    "receipt:w=1,s=1,accepted=c8,apkey=1.0.0.0.0.0,epoch=3,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1 @@
+{"epochs":4,"batches":[[],[{"writer":1,"seq":1,"op":"SetRotor","target":"ec_subject","rotor":[0,255,0,0]}],[],[]]}

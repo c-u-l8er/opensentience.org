@@ -1,0 +1,119 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/understanding-boundary.wrl"
+ ],
+ "for_patterns": [
+  "understanding-boundary (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "2e0c528076fea0a7b049f6c11af695cd4477b0d064674df9936619e116a3d951",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:57:42.083Z",
+  "finished": "2026-09-11T17:58:00.832Z",
+  "host": "PX13",
+  "seconds": 17.133,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-5806dcbdc5f030464c86233cc938d6ed35001e933531ad7783d4da9e435e411e",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": {
+  "epochs": 3,
+  "batches": [
+   [
+    {
+     "writer": 1,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "ub_locus",
+     "rotor": [
+      255,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "writer": 2,
+     "seq": 1,
+     "op": "SetRotor",
+     "target": "ub_locus",
+     "rotor": [
+      0,
+      255,
+      0,
+      0
+     ]
+    }
+   ],
+   [],
+   []
+  ]
+ },
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:351e0520d231e309d089635ee5ec0f7593dd3049863b50ba227e7d4bd835d87f",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:ub_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ub_view,config=configurable",
+    "orb:ub_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,00ff,0000,0000,controller=ub_locus,fault=0",
+    "pulser:ub_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__ub_clock__ub_locus:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=43,pkey=0.0.255.0.0.0,payload=SetRotor:ub_locus:255.0.0.0",
+    "claim:w=2,s=1,digest=24,pkey=0.0.0.255.0.0,payload=SetRotor:ub_locus:0.255.0.0",
+    "receipt:w=1,s=1,accepted=43,apkey=0.0.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=2,s=1,accepted=24,apkey=0.0.0.255.0.0,epoch=1,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=2,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:de7295c312802b6873da2fc51524e6c418b93b490d81804093b1c9e7bc11b6a6",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:ub_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ub_view,config=configurable",
+    "orb:ub_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=ff02,0000,0000,0000,controller=ub_locus,fault=0",
+    "pulser:ub_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__ub_clock__ub_locus:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=43,pkey=0.0.255.0.0.0,payload=SetRotor:ub_locus:255.0.0.0",
+    "claim:w=2,s=1,digest=24,pkey=0.0.0.255.0.0,payload=SetRotor:ub_locus:0.255.0.0",
+    "receipt:w=1,s=1,accepted=43,apkey=0.0.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=2,s=1,accepted=24,apkey=0.0.0.255.0.0,epoch=1,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=2,s=1,state=unambiguous"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:b27006e5e5684471191dfbc4403d4e499e9b3af3640cc4707126d79f4f23d04f",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:ub_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=0000,00ff,0000,0000,socket=ub_view,config=configurable",
+    "orb:ub_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,ff03,0000,0000,controller=ub_locus,fault=0",
+    "pulser:ub_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "wire:w__ub_clock__ub_locus:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0",
+    "claim:w=1,s=1,digest=43,pkey=0.0.255.0.0.0,payload=SetRotor:ub_locus:255.0.0.0",
+    "claim:w=2,s=1,digest=24,pkey=0.0.0.255.0.0,payload=SetRotor:ub_locus:0.255.0.0",
+    "receipt:w=1,s=1,accepted=43,apkey=0.0.255.0.0.0,epoch=1,outcome=Applied",
+    "receipt:w=2,s=1,accepted=24,apkey=0.0.0.255.0.0,epoch=1,outcome=Applied",
+    "recognition:w=1,s=1,state=unambiguous",
+    "recognition:w=2,s=1,state=unambiguous"
+   ]
+  }
+ ]
+}

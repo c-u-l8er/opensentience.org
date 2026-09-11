@@ -1,9 +1,0 @@
-profile forge.world.core.v1
-
-; the orb's pose is a projection of the spinner's rotor — derived, never a second copy
-[pulser:clock](every 2){sig_out}
-[spinner:artifact](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
-[orb:view]{pose}
-
-[clock] --sig--> [artifact]
-[artifact] --socket--> [view]

@@ -1,0 +1,17 @@
+profile forge.world.core.v1
+
+; PROGRESS OVER UTILIZATION — pu_busy fires every epoch into three relays that only relocate the
+; signal; pu_progress fires every 2 and turns a rotor. Busy is not the same as admitted.
+[pulser:pu_busy](every 1){sig_out}
+[relay:pu_hop*3]{sig_in, sig_out}
+[door:pu_sink]{sig_in}
+[pulser:pu_progress](every 2){sig_out}
+[spinner:pu_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:pu_admitted]{pose}
+
+[pu_busy] --sig--> [pu_hop0]
+[pu_hop0] --sig--> [pu_hop1]
+[pu_hop1] --sig--> [pu_hop2]
+[pu_hop2] --sig--> [pu_sink]
+[pu_progress] --sig--> [pu_locus]
+[pu_locus] --socket--> [pu_admitted]

@@ -226,6 +226,33 @@ for (const p of derived) {
   if (S && S.r.ok && rc.forge.semantic_artifact_id !== S.r.semanticId) { refuse('P15-FILM-ID-MISMATCH', `${p.id}: forge sealed ${rc.forge.semantic_artifact_id}, wrl.js sealed ${S.r.semanticId}`); continue; }
   films.set(w.world, rc);
 }
+// ── The chain (P10 stage D): every chapter a fragment, the cumulative world sealed step by step ─────
+// A chapter's WRL is its fragment (self-contained: it seals and reduces alone) plus links that only the
+// cumulative world carries. P17 refuses a cumulative step that is not a superset of the one before it; P18
+// refuses a chapter whose determinism run disagreed with itself. Missing films are findings, not refusals.
+const CH = await import(join(HERE, 'chain.mjs'));
+const chainIds = CH.order().filter((id) => CH.fragment(id));
+const chain = new Map();   // id → { delta, cum, prevCum, links, scenario, film, deltaSrc, index }
+{ let prev = null;
+  for (let i = 0; i < chainIds.length; i++) {
+    const id = chainIds[i];
+    const deltaSrc = CH.deltaSource(id); const delta = await WRL.sealWorld(deltaSrc);
+    if (!delta.ok) refuse('P14-WRL-REFUSED', `chain/${id}.wrl: ${delta.code} — ${delta.message}`);
+    const cum = await WRL.sealWorld(CH.cumulativeSource(chainIds.slice(0, i + 1)));
+    if (!cum.ok) refuse('P14-WRL-REFUSED', `chain through ${id}: ${cum.code} — ${cum.message}`);
+    if (prev && cum.ok) { const N = new Set(cum.graph.nodes.map((n) => n[1])), E = new Set(cum.graph.edges.map((e) => e.join('>'))); if (!prev.graph.nodes.every((n) => N.has(n[1])) || !prev.graph.edges.every((e) => E.has(e.join('>')))) refuse('P17-CHAIN-NOT-SUPERSET', `${id}: the cumulative world drops something the chapter before it had`); }
+    const key = sha(Buffer.from(deltaSrc)); const rc = filmReceipts.find((r) => r.source_identity.world_sha256 === key);
+    if (rc && delta.ok && rc.forge.semantic_artifact_id !== delta.semanticId) refuse('P15-FILM-ID-MISMATCH', `chain/${id}: forge ${rc.forge.semantic_artifact_id} ≠ wrl.js ${delta.semanticId}`);
+    if (rc && rc.determinism && !rc.determinism.identical) refuse('P18-REPLAY-DIVERGED', `chain/${id}: the second reduction did not reproduce the first`);
+    if (!rc && delta.ok && delta.graph.nodes.length) findings.push(`chain/${id}: no film receipt for these bytes — run run-films.mjs chain`);
+    chain.set(id, { index: i, delta, cum, prevCum: prev, links: CH.links(id), scenario: CH.scenario(id), film: rc || null, deltaSrc, fragment: CH.fragment(id) });
+    if (cum.ok) prev = cum;
+  } }
+const conclusionSrc = existsSync(join(CH.CHAIN, '_conclusion.wrl')) ? readFileSync(join(CH.CHAIN, '_conclusion.wrl'), 'utf8') : null;
+const conclusionSeal = conclusionSrc ? await WRL.sealWorld(conclusionSrc) : null;
+const conclusionFilm = conclusionSrc ? filmReceipts.find((r) => r.source_identity.world_sha256 === sha(Buffer.from(conclusionSrc))) || null : null;
+if (conclusionSeal && conclusionFilm && conclusionSeal.ok && conclusionFilm.forge.semantic_artifact_id !== conclusionSeal.semanticId) refuse('P15-FILM-ID-MISMATCH', `conclusion: forge ≠ wrl.js`);
+if (conclusionSrc && !conclusionFilm) findings.push('conclusion: no film receipt for the whole chain — run run-films.mjs conclusion');
 if (refusals.length) { console.error(`\n✗ ${refusals.length} refusal(s):\n  ` + refusals.join('\n  ')); process.exit(1); }
 const byId = new Map(derived.map((p) => [p.id, p]));
 const antiById = new Map(DATA.anti_patterns.map((a) => [a.id, a]));
@@ -239,18 +266,18 @@ const list = (xs) => xs && xs.length ? `<ul>${xs.map((x) => `<li>${esc(x)}</li>`
 const chip = (p) => `<span class="chip ${p.derived.label || 'none'}">${p.derived.label ?? p.kind}</span>`;
 const sidebar = (cur) => `<aside class="side" role="navigation" aria-label="catalog"><a class="side-home" href="./">Unboxed Patterns</a><div class="side-fam">Front</div><ul><li><a href="./">Catalog</a></li><li class="${cur === 'conclusion' ? 'cur' : ''}"><a href="conclusion.html">Conclusion</a></li></ul>${DATA.families.map((f) => `<div class="side-fam">${FAMILY_TITLE[f]}</div><ul>${ORDER.filter((p) => p.family === f).map((p) => `<li class="${cur && p.id === cur.id ? 'cur' : ''}"><a href="${p.id}.html">${esc(p.name)}</a> ${chip(p)}</li>`).join('')}</ul>`).join('')}<div class="side-fam">Anti-patterns</div><ul>${DATA.anti_patterns.map((a) => `<li><a href="./#anti-${a.id}">${esc(a.name)}</a></li>`).join('')}</ul></aside>`;
 const SHELL_CSS = `body{margin:0;background:var(--ink,#faf8f3);color:var(--fg,#1c1a17);font:17px/1.6 var(--display,Georgia,serif)}
-.book{display:grid;grid-template-columns:270px minmax(0,1fr);gap:2.5rem;max-width:1180px;margin:0 auto;padding:76px var(--gutter,1.5rem) 4rem}
+.book{display:grid;grid-template-columns:250px minmax(0,1fr);gap:2.2rem;max-width:1460px;margin:0 auto;padding:76px var(--gutter,1.5rem) 4rem}
 .side{position:sticky!important;top:76px;height:auto;width:auto;background:transparent;box-shadow:none;align-self:start;max-height:calc(100vh - 90px);overflow:auto;font:13px/1.5 var(--ui,system-ui);padding-right:.5rem;border-right:1px solid var(--line,#e7e0d2)}
 .side-home{display:block;font:700 15px var(--ui,system-ui);color:var(--acc,#6d3bd4);text-decoration:none;margin:.2rem 0 .8rem}.side-fam{font:600 11px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--fg3,#666);margin:.9rem 0 .2rem}
 .side ul{list-style:none;margin:0;padding:0}.side li{padding:.15rem 0;display:flex;gap:.4rem;align-items:baseline}.side li a{color:var(--fg,#1c1a17);text-decoration:none}.side li.cur a{color:var(--acc,#6d3bd4);font-weight:600}
 .chip{font:600 10px var(--ui,system-ui);padding:.05rem .35rem;border-radius:3px;white-space:nowrap}.chip.WITNESSED{background:var(--data-soft,#e6f7ef);color:var(--data,#0a7)}.chip.STATED{background:rgba(150,96,11,.10);color:var(--warn,#96600b)}.chip.PROPOSED{background:rgba(192,42,95,.08);color:var(--rose,#c02a5f)}.chip.none{background:var(--ink2,#eee);color:var(--fg3,#666)}
-main h1{font:700 2.4rem/1.15 var(--display,Georgia,serif);margin:.2rem 0 .3rem}.meta{font:13px var(--ui,system-ui);color:var(--fg3,#666)}.st{font:11px var(--ui,system-ui);padding:.02rem .3rem;border:1px solid var(--line2,#ccc);border-radius:3px;margin-left:.2rem}.st.on{border-color:var(--data,#0a7);color:var(--data,#0a7)}.st.off{color:var(--fg3,#aaa);text-decoration:line-through}
+main{max-width:1080px}main h1{font:700 2.4rem/1.15 var(--display,Georgia,serif);margin:.2rem 0 .3rem}.meta{font:13px var(--ui,system-ui);color:var(--fg3,#666)}.st{font:11px var(--ui,system-ui);padding:.02rem .3rem;border:1px solid var(--line2,#ccc);border-radius:3px;margin-left:.2rem}.st.on{border-color:var(--data,#0a7);color:var(--data,#0a7)}.st.off{color:var(--fg3,#aaa);text-decoration:line-through}
 main h2{font:600 13px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--acc,#6d3bd4);margin:2.4rem 0 .5rem;padding-top:.6rem;border-top:1px solid var(--line,#e7e0d2)}
 .invariant{font:1.15rem/1.5 var(--display,Georgia,serif);border-left:3px solid var(--acc,#6d3bd4);background:var(--acc-soft,rgba(109,59,212,.06));padding:.6rem 1rem;margin:1rem 0;border-radius:0 var(--r,8px) var(--r,8px) 0}
 .lede{font-size:1.15rem}.tech{font:14px/1.55 var(--ui,system-ui);color:var(--fg2,#333)}.tech summary{cursor:pointer;font-weight:600;color:var(--acc,#6d3bd4)}
 .sf{margin:.5rem 0 1rem}.illus{font:12px var(--ui,system-ui);color:var(--fg3,#666);margin:-.2rem 0 .6rem}
 pre.syn{font:12.5px/1.5 var(--mono,monospace);background:#1b1a17;color:#eee7d8;padding:.8rem 1rem;border-radius:var(--r,8px);overflow:auto;margin:.3rem 0 1rem;white-space:pre}.syn-label{font:13px var(--ui,system-ui);color:var(--fg2,#333)}.syn-label code{font:12px var(--mono,monospace);color:var(--fg3,#666)}
-.wrlg{width:100%;height:auto;display:block;color:var(--fg3,#666);background:var(--ink3,#fffdf8);border:1px solid var(--line,#e7e0d2);border-radius:var(--r,8px)}.wrlg .n rect{fill:var(--ink2,#f2ede2);stroke:var(--fg2,#333);stroke-width:1.2}.wrlg .n.Door rect{stroke:var(--rose,#c02a5f)}.wrlg .n.Pulser rect{stroke:var(--acc,#6d3bd4)}.wrlg .n.Orb rect{stroke:var(--data,#0a6e62)}.wrlg .n text{font:12px var(--mono,monospace);fill:var(--fg,#1c1a17)}.wrlg .n text.r{font-size:10px;fill:var(--fg3,#666)}.wrlg .e{stroke:currentColor;stroke-width:1.4}.wrlg .ek{font:10px var(--mono,monospace);fill:var(--fg3,#666)}.semid{font:13px var(--mono,monospace);word-break:break-all}.semid.bad{color:var(--rose,#c02a5f)}
+.sf-static{cursor:grab;touch-action:none}.sf-static.grabbing{cursor:grabbing}.wrlg{width:100%;height:auto;display:block;color:var(--fg3,#666);background:var(--ink3,#fffdf8);border:1px solid var(--line,#e7e0d2);border-radius:var(--r,8px)}.wrlg .n rect{fill:var(--ink2,#f2ede2);stroke:var(--fg2,#333);stroke-width:1.2}.wrlg .n.Door rect{stroke:var(--rose,#c02a5f)}.wrlg .n.Pulser rect{stroke:var(--acc,#6d3bd4)}.wrlg .n.Orb rect{stroke:var(--data,#0a6e62)}.wrlg .n text{font:12px var(--mono,monospace);fill:var(--fg,#1c1a17)}.wrlg .n text.r{font-size:10px;fill:var(--fg3,#666)}.wrlg .e{stroke:currentColor;stroke-width:1.4}.wrlg .ek{font:10px var(--mono,monospace);fill:var(--fg3,#666)}.semid{font:13px var(--mono,monospace);word-break:break-all}table.claims{border-collapse:collapse;font:13px var(--ui,system-ui);margin:.3rem 0 .8rem}table.claims td,table.claims th{border:1px solid var(--line,#e7e0d2);padding:.2rem .5rem;text-align:left}main h3{font:600 15px var(--ui,system-ui);margin:1.6rem 0 .4rem}.semid.bad{color:var(--rose,#c02a5f)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}.two b{font:600 13px var(--ui,system-ui);text-transform:uppercase;letter-spacing:.06em}.two ul{padding-left:1.2rem;margin:.3rem 0}
 .take{list-style:none;padding:0;margin:0}.take li{padding:.5rem .8rem;margin:.4rem 0;border-left:3px solid var(--line2,#ccc);background:var(--ink3,#fffdf8);font:15px/1.5 var(--display,Georgia,serif)}.take li b{font:600 10px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--fg3,#666)}.take li.animation{border-color:var(--acc,#6d3bd4)}.take li.syntax{border-color:var(--fg,#1c1a17)}.take li.literature{border-color:var(--warn,#96600b)}.take li.witness{border-color:var(--data,#0a7)}
 .sink{font:13px/1.45 var(--mono,monospace);background:#1b1a17;color:#ddd;padding:.8rem;border-radius:var(--r,8px);min-height:1.5rem;max-height:28rem;overflow:auto;margin:.5rem 0;white-space:pre-wrap}.wline.good{color:#7fd}.wline.bad{color:#f88}.wline.warn{color:#fd7}.wline.group{color:#9cf;margin-top:.5rem}.wline.muted{color:#888}.wstatus.running{color:var(--warn)}.wstatus.pass{color:var(--data)}.wstatus.fail{color:var(--rose,#c02a5f)}
@@ -262,8 +289,9 @@ footer.fin{font:12.5px var(--ui,system-ui);color:var(--fg3,#666);margin-top:2rem
 @media(max-width:900px){.book{grid-template-columns:1fr}.side{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line,#e7e0d2);padding-bottom:.8rem}.two{grid-template-columns:1fr}}
 ` + SF.CSS;
 function parseFilmLine(l) { const [role, name, rest] = l.split(':'); const kv = Object.fromEntries((rest || '').split(',').map((x) => x.split('=')).filter((x) => x.length === 2)); for (const k of ['rotor', 'pose']) { const m = (rest || '').match(new RegExp(k + '=([0-9a-f]+(?:,[0-9a-f]+){3})')); if (m) kv[k] = m[1]; } return { role, name, kv, raw: l }; }
-function filmScene(p) {
-  const w = p.wrl; const rc = films.get(w.world); if (!rc) return null; const g = sealed.get(w.world).r.graph;
+function filmSceneFrom(rc, g, intro) {
+  const hasLedger = rc.epochs.some((ep) => ep.film.some((l) => l.startsWith('receipt:')));
+  const nodes = g.nodes.map(([r, n]) => [r, n, {}]).concat(hasLedger ? [['Ledger', 'ledger', {}]] : []);
   const steps = []; let prev = {};
   rc.epochs.forEach((ep, i) => {
     const actions = []; const cur = {};
@@ -275,11 +303,18 @@ function filmScene(p) {
       const changed = prev[f.name] && prev[f.name].raw !== f.raw;
       actions.push({ op: 'note', target: f.name, text: note }, { op: 'state', target: f.name, state: changed ? 'admitted' : (f.role === 'orb' && f.kv.fault === '1' ? 'refused' : 'idle') });
     }
+    if (hasLedger) {
+      const rs = ep.film.filter((l) => l.startsWith('receipt:')).map((l) => { const m = l.match(/w=(\d+),s=(\d+).*epoch=(\d+),outcome=([^\s]+)/); return m ? { w: m[1], s: m[2], ep: +m[3], out: m[4] } : null; }).filter(Boolean);
+      const fresh = rs.filter((r) => r.ep === ep.t);
+      const cap = ep.film.find((l) => l.startsWith('admit:')) || '';
+      actions.push({ op: 'count', target: 'ledger', value: rs.length }, { op: 'note', target: 'ledger', text: fresh.length ? fresh.map((r) => `w${r.w}s${r.s} ${r.out}`).join(' · ') : (/capacity_fault=1/.test(cap) ? 'CAPACITY FAULT' : '') }, { op: 'state', target: 'ledger', state: fresh.some((r) => /Rejected/.test(r.out)) ? 'refused' : fresh.length ? 'admitted' : 'idle' });
+    }
     prev = cur;
     steps.push({ caption: `epoch ${ep.t} · Film v0.7 ${ep.film_hash.slice(7, 23)}… — every line below is the forge's; the picture only colours what changed`, actions, takeaway: i === rc.epochs.length - 1 ? `${rc.epochs.length} epochs reduced by TRVM's forge; ${new Set(rc.epochs.map((e) => e.film_hash)).size} distinct film hashes; this replay is of a sealed world, not of scene data.` : undefined });
   });
-  return { stencil: 'world', interval: 2200, intro: `The sealed world, before epoch 1. Reduced by TRVM's forge (${rc.execution_identity.reducer}) in ${rc.execution_identity.seconds}s on ${rc.execution_identity.host}.`, params: { nodes: g.nodes.map(([r, n]) => [r, n, {}]), edges: g.edges }, steps };
+  return { stencil: 'world', interval: 2200, intro: intro || `The sealed world, before epoch 1. Reduced by TRVM's forge (${rc.execution_identity.reducer}) in ${rc.execution_identity.seconds}s on ${rc.execution_identity.host}.`, params: { nodes, edges: g.edges }, steps };
 }
+function filmScene(p) { const w = p.wrl; if (!w || !w.world) return null; const rc = films.get(w.world); if (!rc) return null; return filmSceneFrom(rc, sealed.get(w.world).r.graph); }
 function filmSection(p) {
   const w = p.wrl; if (!w || !w.world) return '';
   const rc = films.get(w.world);
@@ -290,6 +325,35 @@ function filmSection(p) {
   <div class="sf" id="film"><div class="sf-stage">${SF.svg(SF.computeState(sc, 0))}</div></div>
   <details class="tech"><summary>The Film, epoch by epoch (${rc.epochs.length})</summary>${rc.epochs.map((e) => `<p class="syn-label">epoch ${e.t} · <code>${esc(e.film_hash)}</code></p><pre class="syn">${esc(e.film.join('\n'))}</pre>`).join('')}</details>`;
 }
+function claimsTable(sc) {
+  if (!sc) return '';
+  const rows = (sc.batches || []).flatMap((b, i) => b.map((c) => `<tr><td>${i + 1}</td><td>w${c.writer} s${c.seq}</td><td><code>${esc(c.op)}</code></td><td><code>${esc(c.target)}</code></td><td>${c.rotor ? `<code>${c.rotor.join('.')}</code>` : '—'}</td></tr>`));
+  return `<p class="syn-label">Run inputs — claims bound to this world's id, never part of it (D3)${sc.numeric_faults && sc.numeric_faults.length ? ` · initial numeric fault on <code>${sc.numeric_faults.map(esc).join(', ')}</code>` : ''}${sc.determinism ? ' · reduced twice, hashes compared' : ''}</p>${rows.length ? `<table class="claims"><tr><th>epoch</th><th>writer · seq</th><th>op</th><th>target</th><th>rotor</th></tr>${rows.join('')}</table>` : '<p class="exec">No claims: the world runs on its clocks alone.</p>'}`;
+}
+function chapterWrlSection(p) {
+  const c = chain.get(p.id); if (!c) return '';
+  const w = p.wrl || {};
+  const receipts = c.film ? c.film.epochs.at(-1).film.filter((l) => l.startsWith('receipt:')) : [];
+  let out = `<p class="syn-label">Chapter ${c.index + 1} of ${chainIds.length} — the fragment <code>_patterns/wrl/chain/${esc(p.id)}.wrl</code>, sealed alone by <code>wrl.js</code></p><pre class="syn">${esc(c.fragment.trim())}</pre><p class="semid">seals alone to → <code>${esc(c.delta.semanticId)}</code></p>
+  ${claimsTable(c.scenario)}`;
+  if (c.film) {
+    const sc = filmSceneFrom(c.film, c.delta.graph, `This chapter's world alone, before epoch 1. Reduced by TRVM's forge in ${c.film.execution_identity.seconds}s (${c.film.execution_identity.reducer}); the forge's id equals the seal above.`);
+    out += `<div class="sf" id="film"><div class="sf-stage">${SF.svg(SF.computeState(sc, 0))}</div></div>
+    ${c.film.determinism ? `<p class="exec">Reduced twice from a fresh state: ${c.film.determinism.identical ? '<b>every epoch\'s film hash identical</b> — exact replay, witnessed on one host' : 'DIVERGED'}.</p>` : ''}
+    ${receipts.length ? `<p class="syn-label">Receipts in the last epoch's Film</p><pre class="syn">${esc(receipts.join('\n'))}</pre>` : ''}
+    <details class="tech"><summary>The Film, epoch by epoch (${c.film.epochs.length})</summary>${c.film.epochs.map((e) => `<p class="syn-label">epoch ${e.t} · <code>${esc(e.film_hash)}</code></p><pre class="syn">${esc(e.film.join('\n'))}</pre>`).join('')}</details>`;
+    pageFilmScenes.set(p.id, sc);
+  } else out += c.delta.graph.nodes.length ? `<p class="warn">No film receipt for this fragment's bytes yet — <code>run-films.mjs chain</code>.</p>` : `<p class="exec">The empty world has no Film: there is nothing for the forge to reduce, and it says so. The seal above is the seal of nothing declared.</p>`;
+  if (w.refused) { const R = sealed.get(w.refused); out += `<p class="syn-label">A refused world beside it <code>_patterns/wrl/${esc(w.refused)}</code></p><pre class="syn">${esc(R.src.trim())}</pre><p class="semid bad">✗ <code>${esc(R.r.code)}</code> — ${esc(R.r.message)}</p>`; }
+  if (w.variant) { const V = sealed.get(w.variant); out += `<p class="syn-label">A variant beside it <code>_patterns/wrl/${esc(w.variant)}</code></p><pre class="syn">${esc(V.src.trim())}</pre><p class="semid">→ <code>${esc(V.r.semanticId)}</code></p>`; }
+  const g = c.cum.graph, pg = c.prevCum ? c.prevCum.graph : null;
+  out += `<h3>${c.index === 0 ? 'The chain begins here' : `Composes with the ${c.index} chapter${c.index === 1 ? '' : 's'} before it`}</h3>
+  <p>The chain through this chapter — every earlier fragment, this one, and the links — seals to <code>${esc(c.cum.semanticId)}</code>: ${g.nodes.length} objects, ${g.edges.length} edges${pg ? ` (was ${pg.nodes.length} / ${pg.edges.length}; every earlier object and edge is still present — checked, or the build refuses)` : ''}.${c.prevCum && c.prevCum.semanticId === c.cum.semanticId ? ' <b>The id did not move</b>: this fragment adds nothing but a comment, and a comment is not meaning.' : ''}</p>
+  ${c.links ? `<p class="syn-label">Links only the chain carries</p><pre class="syn">${esc(c.links.trim())}</pre>` : ''}
+  <div class="sf-static">${SF.svg(SF.computeState({ stencil: 'world', params: { nodes: g.nodes.map(([r, n]) => [r, n, {}]), edges: g.edges }, steps: [] }, 0), { caption: false })}</div><p class="illus">wheel zooms · drag pans · double-click fits</p>`;
+  return out;
+}
+const pageFilmScenes = new Map();
 function graphSvg(g) {
   // columns by longest incoming path; boxes; arrows. Small on purpose: the text listing is the authority.
   const names = g.nodes.map((n) => n[1]); const depth = Object.fromEntries(names.map((n) => [n, 0]));
@@ -331,10 +395,12 @@ function pageFor(p, idx) {
   const syntax = (p.syntax || []).map((x) => { const e = excerpt(x); return `<p class="syn-label">${esc(x.label)} <code>${esc(x.path)}:${e.from}</code></p><pre class="syn">${esc(e.text)}</pre>`; }).join('');
   const takeaways = (p.takeaways || []).length ? `<ol class="take">${p.takeaways.map((t) => `<li class="${t.from}"><b>from the ${t.from}</b>${esc(t.text)}</li>`).join('')}</ol>` : '';
   const fm = p.failure_mode ? antiById.get(p.failure_mode) : null;
+  const wrlHtml = chain.has(p.id) ? `<h2>The chapter in WRL — and the chain so far</h2>${chapterWrlSection(p)}` : (p.wrl ? `<h2>The scene as a WRL world</h2>${wrlSection(p)}` : '');
   const script = `<script type="module">
-    ${sc || (p.wrl && p.wrl.world && films.get(p.wrl.world)) ? `import { mount } from '/patterns/surface/surface.mjs?v=${SF_STAMP}';` : ''}
+    import { mount, panZoom } from '/patterns/surface/surface.mjs?v=${SF_STAMP}';
+    for (const el of document.querySelectorAll('.sf-static')) panZoom(el, () => el.querySelector('svg'));
     ${sc ? `mount(document.getElementById('sf'), ${JSON.stringify(sc)});` : ''}
-    ${p.wrl && p.wrl.world && films.get(p.wrl.world) ? `mount(document.getElementById('film'), ${JSON.stringify(filmScene(p))});` : ''}
+    ${pageFilmScenes.has(p.id) ? `mount(document.getElementById('film'), ${JSON.stringify(pageFilmScenes.get(p.id))});` : ''}
     ${(d.STAGED || demo) ? `import { runWitness } from '/witness/run.js?v=${RUNJS_STAMP}';
     const spec = ${JSON.stringify({ entry: '/witness/src/' + (w ? w.path : ''), mode: w ? (w.shape === 'suite' ? 'suite' : 'side-effect') : 'suite', stamp, argv: [], trials: 200 })};
     const b = document.getElementById('run');
@@ -354,8 +420,7 @@ ${p.problem ? `<h2>Problem</h2>${para(p.problem)}` : ''}
 ${p.construction ? `<h2>Solution</h2>${para(p.construction)}` : ''}
 ${p.analogy ? `<h2>Real-world analogy</h2>${para(p.analogy)}` : ''}
 ${structure ? `<h2>Structure — on the surface</h2>${structure}` : ''}
-${p.wrl ? `<h2>The scene as a WRL world</h2>${wrlSection(p)}` : ''}
-${p.wrl && p.wrl.world ? `<h2>The Film — reduced by TRVM's forge</h2>${filmSection(p)}` : ''}
+${wrlHtml}
 ${syntax ? `<h2>Syntax — quoted from the tree at build time</h2>${syntax}` : ''}
 ${p.forces ? `<h2>Forces</h2>${para(p.forces)}` : ''}
 ${p.applicability ? `<h2>Applicability</h2>${para(p.applicability)}` : ''}
@@ -378,7 +443,8 @@ ORDER.forEach((p, i) => { pageOutputs[`${p.id}.html`] = pageFor(p, i); });
 for (const f of existsSync(DEMOS) ? readdirSync(DEMOS) : []) pageOutputs[`demos/${f}`] = readFileSync(join(DEMOS, f), 'utf8');
 for (const f of existsSync(SCENES) ? readdirSync(SCENES) : []) pageOutputs[`scenes/${f}`] = readFileSync(join(SCENES, f), 'utf8');
 pageOutputs['surface/surface.mjs'] = readFileSync(SURFACE, 'utf8');
-for (const f of existsSync(WRL_DIR) ? readdirSync(WRL_DIR) : []) pageOutputs[`wrl/${f}`] = readFileSync(join(WRL_DIR, f), 'utf8');
+for (const f of existsSync(WRL_DIR) ? readdirSync(WRL_DIR) : []) if (f.endsWith('.wrl')) pageOutputs[`wrl/${f}`] = readFileSync(join(WRL_DIR, f), 'utf8');
+for (const f of existsSync(CH.CHAIN) ? readdirSync(CH.CHAIN) : []) if (!f.startsWith('.')) pageOutputs[`wrl/chain/${f}`] = readFileSync(join(CH.CHAIN, f), 'utf8');
 for (const f of existsSync(FILMS_DIR) ? readdirSync(FILMS_DIR) : []) pageOutputs[`films/${f}`] = readFileSync(join(FILMS_DIR, f), 'utf8');
 const CONC = readJson(join(HERE, '../data/conclusion.json'));
 const last = ORDER[ORDER.length - 1];
@@ -386,9 +452,14 @@ pageOutputs['conclusion.html'] = `<!doctype html><html lang="en"><head><meta cha
 <script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
 <div class="book">${sidebar('conclusion')}<main><p class="meta">Front matter, at the back</p><h1>${esc(CONC.title)}</h1><p class="lede">${esc(CONC.lede)}</p>
 ${CONC.sections.map((sec) => `<h2>${esc(sec.h)}</h2>${sec.p.map((t) => `<p>${esc(t)}</p>`).join('')}`).join('')}
+<h2>The chain — thirty-two fragments, one world</h2>
+<p>Each chapter contributed a fragment; the cumulative world was sealed after every one and checked to contain everything before it. Two chapters contributed the empty world and moved no id. The whole chain seals to <code>${conclusionSeal && conclusionSeal.ok ? esc(conclusionSeal.semanticId) : '?'}</code>: ${conclusionSeal && conclusionSeal.ok ? conclusionSeal.graph.nodes.length : '?'} objects, ${conclusionSeal && conclusionSeal.ok ? conclusionSeal.graph.edges.length : '?'} edges.</p>
+<table class="claims"><tr><th>#</th><th>chapter</th><th>fragment seals to</th><th>chain seals to</th><th>objects / edges</th></tr>${chainIds.map((id) => { const c = chain.get(id); return `<tr><td>${c.index + 1}</td><td><a href="${id}.html">${esc(byId.get(id).name)}</a></td><td><code>${c.delta.semanticId.slice(0, 20)}…</code></td><td><code>${c.cum.semanticId.slice(0, 20)}…</code></td><td>${c.cum.graph.nodes.length} / ${c.cum.graph.edges.length}</td></tr>`; }).join('')}</table>
+${conclusionFilm ? `<p>The whole chain, reduced by TRVM's forge in ${conclusionFilm.execution_identity.seconds}s on ${esc(conclusionFilm.execution_identity.host)} — ${conclusionFilm.epochs.length} epochs, ${new Set(conclusionFilm.epochs.map((e) => e.film_hash)).size} distinct film hashes; the forge's id equals the seal above.</p><div class="sf" id="film"><div class="sf-stage">${SF.svg(SF.computeState(filmSceneFrom(conclusionFilm, conclusionSeal.graph, 'Every chapter\'s world at once, before epoch 1.'), 0))}</div></div>` : `<p class="warn">The whole-chain film has not been reduced yet (<code>run-films.mjs conclusion</code>).</p>`}
+<details class="tech"><summary>The whole world, as WRL (${conclusionSrc ? conclusionSrc.split('\n').length : 0} lines)</summary><pre class="syn">${esc((conclusionSrc || '').trim())}</pre></details>
 <h2>The numbers this page is allowed to quote</h2><p>${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns · ${[...sealed.values()].filter((x) => x.r.ok).length} WRL worlds sealed at build and ${[...sealed.values()].filter((x) => !x.r.ok).length} refused by design · ${films.size} worlds with a Film reduced by TRVM's forge (${[...films.values()].reduce((n, r) => n + r.epochs.length, 0)} epochs) — every one derived by <code>build.mjs</code>, none typed.</p>
 <div class="pn"><span><a href="${last.id}.html">← ${esc(last.name)}</a><small>${FAMILY_TITLE[last.family]}</small></span><span style="text-align:right"><a href="./">Catalog →</a></span></div>
-<footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>.</footer></main></div></body></html>`;
+<footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>.</footer></main></div>${conclusionFilm ? `<script type="module">import { mount } from '/patterns/surface/surface.mjs?v=${SF_STAMP}'; mount(document.getElementById('film'), ${JSON.stringify(filmSceneFrom(conclusionFilm, conclusionSeal.graph, 'Every chapter\'s world at once, before epoch 1.'))});</script>` : ''}</body></html>`;
 const card = (p) => `<a class="card" href="${p.id}.html">${p.scene ? `<div class="thumb">${thumb(p)}</div>` : ''}<h3>${esc(p.name)} ${chip(p)}</h3><p>${esc(p.headline || p.invariant || (p.kind === 'definition' ? 'A definition.' : p.prior_art || ''))}</p></a>`;
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unboxed Patterns</title><meta name="description" content="Elements of Composable Locus-Oriented Software — a pattern catalog generated from a registry, with runnable witnesses."><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
 <script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
@@ -408,7 +479,7 @@ const derivedJson = JSON.stringify({ kind: 'UNBOXED_PATTERNS_DERIVED', built: ne
 
 const DIST = join(SITE, 'patterns');   // SERVED at opensentience.org/patterns/ — ruling R4, 2026-09-11
 const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms, ...pageOutputs };
-const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])), films: Object.fromEntries([...films.entries()].map(([f, r]) => [f, r.source_identity.world_sha256.slice(0, 16) + ':' + r.epochs.length])), 'WRL/wrl.js': WRLJS_SHA, wrl_worlds: Object.fromEntries([...sealed.entries()].map(([f, x]) => [f, x.r.ok ? x.r.semanticId : x.r.code])) };
+const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])), chain: Object.fromEntries([...chain.entries()].map(([id, c]) => [id, c.cum.semanticId])), chain_films: Object.fromEntries([...chain.entries()].filter(([, c]) => c.film).map(([id, c]) => [id, c.film.source_identity.world_sha256.slice(0, 16) + ':' + c.film.epochs.length])), conclusion_film: conclusionFilm ? conclusionFilm.source_identity.world_sha256.slice(0, 16) + ':' + conclusionFilm.epochs.length : null, conclusion: conclusionSeal && conclusionSeal.ok ? conclusionSeal.semanticId : null, films: Object.fromEntries([...films.entries()].map(([f, r]) => [f, r.source_identity.world_sha256.slice(0, 16) + ':' + r.epochs.length])), 'WRL/wrl.js': WRLJS_SHA, wrl_worlds: Object.fromEntries([...sealed.entries()].map(([f, x]) => [f, x.r.ok ? x.r.semanticId : x.r.code])) };
 // the artifact excludes the timestamps so --verify compares content, not clock
 const stable = (s) => s.replace(/\d{4}-\d\d-\d\dT[\d:.]+Z/g, 'T');
 const artifact = { kind: 'UNBOXED_PATTERNS_ARTIFACT', inputs, inputs_heads: heads, summary, outputs: Object.fromEntries(Object.entries(outputs).map(([k, v]) => [k, sha(stable(v))])) };
@@ -424,7 +495,7 @@ if (VERIFY) {
   console.log(`✓ --verify: patterns/ is what data + cells + ledger + ${receipts.length} receipt(s) derive.`); console.log(JSON.stringify(summary, null, 1)); process.exit(0);
 }
 mkdirSync(DIST, { recursive: true });
-for (const sub of ['demos', 'scenes', 'surface', 'wrl', 'films']) mkdirSync(join(DIST, sub), { recursive: true });
+for (const sub of ['demos', 'scenes', 'surface', 'wrl', 'wrl/chain', 'films']) mkdirSync(join(DIST, sub), { recursive: true });
 for (const [k, v] of Object.entries(outputs)) writeFileSync(join(DIST, k), v);
 writeFileSync(join(DIST, 'artifact.json'), JSON.stringify(artifact, null, 2) + '\n');
 console.log(`✓ built ${Object.keys(outputs).length} file(s) into ${rel(DIST)}\n`);

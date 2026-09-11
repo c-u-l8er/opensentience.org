@@ -1,0 +1,21 @@
+{
+ "epochs": 3,
+ "batches": [
+  [
+   {
+    "writer": 1,
+    "seq": 1,
+    "op": "SetRotor",
+    "target": "sd_state",
+    "rotor": [
+     255,
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  [],
+  []
+ ]
+}

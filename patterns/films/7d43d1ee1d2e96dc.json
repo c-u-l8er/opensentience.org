@@ -1,0 +1,102 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/cross-machine-skill-replay.wrl"
+ ],
+ "for_patterns": [
+  "cross-machine-skill-replay (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "7d43d1ee1d2e96dc912c1427349160e2fdcb0a1834e8e433312c3e11d7ae130e",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:55:34.148Z",
+  "finished": "2026-09-11T17:55:34.240Z",
+  "host": "PX13",
+  "seconds": 0.003,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-43099a7d552e98d4acfff526748df27c141fd15bfe7c4fa7f0d607fd27b89451",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:6bcc9e712672f6a62b58ff47d0a583024af877e24e4d831a111d25d7ba7b3bc3",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "pulser:cx_skill:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cx_replay0:open=0,next_open=0",
+    "door:cx_replay1:open=0,next_open=0",
+    "relay:cx_machine0:cur_out=0,next_out=1",
+    "relay:cx_machine1:cur_out=0,next_out=1",
+    "wire:w__cx_machine0__cx_replay0:cur=0,nxt=0",
+    "wire:w__cx_machine1__cx_replay1:cur=0,nxt=0",
+    "wire:w__cx_skill__cx_machine0:cur=1,nxt=1",
+    "wire:w__cx_skill__cx_machine1:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:7deb68102db4844c562e01df130df3f7075dd83ab559d8ed570b14ec61ff045a",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "pulser:cx_skill:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cx_replay0:open=0,next_open=0",
+    "door:cx_replay1:open=0,next_open=0",
+    "relay:cx_machine0:cur_out=1,next_out=1",
+    "relay:cx_machine1:cur_out=1,next_out=1",
+    "wire:w__cx_machine0__cx_replay0:cur=0,nxt=1",
+    "wire:w__cx_machine1__cx_replay1:cur=0,nxt=1",
+    "wire:w__cx_skill__cx_machine0:cur=1,nxt=1",
+    "wire:w__cx_skill__cx_machine1:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:dc4f8df8daa70711dd05d661ceeab399f7edff7b18536c426c1b0fb4b64c5e4c",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "pulser:cx_skill:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cx_replay0:open=0,next_open=1",
+    "door:cx_replay1:open=0,next_open=1",
+    "relay:cx_machine0:cur_out=1,next_out=1",
+    "relay:cx_machine1:cur_out=1,next_out=1",
+    "wire:w__cx_machine0__cx_replay0:cur=1,nxt=1",
+    "wire:w__cx_machine1__cx_replay1:cur=1,nxt=1",
+    "wire:w__cx_skill__cx_machine0:cur=1,nxt=1",
+    "wire:w__cx_skill__cx_machine1:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:92a51d41d3e20fe034da0519b4a07aa13df73bdfdb42281035a957412cafa2e9",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "pulser:cx_skill:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:cx_replay0:open=1,next_open=1",
+    "door:cx_replay1:open=1,next_open=1",
+    "relay:cx_machine0:cur_out=1,next_out=1",
+    "relay:cx_machine1:cur_out=1,next_out=1",
+    "wire:w__cx_machine0__cx_replay0:cur=1,nxt=1",
+    "wire:w__cx_machine1__cx_replay1:cur=1,nxt=1",
+    "wire:w__cx_skill__cx_machine0:cur=1,nxt=1",
+    "wire:w__cx_skill__cx_machine1:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

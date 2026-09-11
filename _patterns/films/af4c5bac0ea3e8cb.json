@@ -1,0 +1,70 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/record-at-a-boundary.wrl"
+ ],
+ "for_patterns": [
+  "record-at-a-boundary (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "af4c5bac0ea3e8cb92c3e5a0998709b8b9af6bcc75938b58b3b1bd74648f650d",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:48:43.669Z",
+  "finished": "2026-09-11T17:48:43.762Z",
+  "host": "PX13",
+  "seconds": 0.003,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-49b97d6fb3786d8d6045e7155a5863a17df830a31fc919aed9d660d0ff30d7ca",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:1b856e45be36971931031faae813b639c983fbe3944a0e87b5d3d31d8d5e92fc",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "orb:rb_record:policy=forge_motor_widemac_tz_sat_v1,quat4,w=8,n=4,pose=10,00,00,00,controller=,fault=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:8af5534f16c9199114492a7148a33d2711b530126575e699d8b6d90bcb452536",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "orb:rb_record:policy=forge_motor_widemac_tz_sat_v1,quat4,w=8,n=4,pose=10,00,00,00,controller=,fault=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:2a57aa3f8ddf3b9ee450dd595e0c9b6afacfa8925cd0cec5e48f481ac345925a",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "orb:rb_record:policy=forge_motor_widemac_tz_sat_v1,quat4,w=8,n=4,pose=10,00,00,00,controller=,fault=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:7791076640459cc965c58b8bd133f00743fd0b9f2e7c565e687e9667ba1e77b3",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "orb:rb_record:policy=forge_motor_widemac_tz_sat_v1,quat4,w=8,n=4,pose=10,00,00,00,controller=,fault=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

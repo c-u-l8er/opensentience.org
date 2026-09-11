@@ -1,0 +1,8 @@
+; UNDERSTANDING BOUNDARY — two writers claim the same locus in one batch; both are Applied and the
+; later canonical wins; the Film's `recognition:` lines are the register between observed and believed.
+[pulser:ub_clock](every 1){sig_out}
+[spinner:ub_locus](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ub_view]{pose}
+
+[ub_clock] --sig--> [ub_locus]
+[ub_locus] --socket--> [ub_view]

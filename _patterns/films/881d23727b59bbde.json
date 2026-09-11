@@ -1,0 +1,86 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/projection-not-duplication.wrl"
+ ],
+ "for_patterns": [
+  "projection-not-duplication (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "881d23727b59bbdece641ca65878615dda16d08d387dd154e819580cfc9a582f",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:51:54.558Z",
+  "finished": "2026-09-11T17:52:51.385Z",
+  "host": "PX13",
+  "seconds": 52.961,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-b5a1252da3013ba70c523e559701476e7bcb4a35fdd5122e468e3e458be495ed",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:75fc5460185fdfd9be09d28acc64c6218551e97dc9a3448bed6e772fc621f27e",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:pj_artifact:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pj_view_a,config=fixed",
+    "orb:pj_view_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=pj_artifact,fault=0",
+    "orb:pj_view_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=pj_artifact,fault=0",
+    "pulser:pj_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "wire:w__pj_clock__pj_artifact:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:e23e0723a20b78d25cf1ac7be393d2c84caa86b06d3b94a7767744447b1085c3",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:pj_artifact:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pj_view_a,config=fixed",
+    "orb:pj_view_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=pj_artifact,fault=0",
+    "orb:pj_view_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=pj_artifact,fault=0",
+    "pulser:pj_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "wire:w__pj_clock__pj_artifact:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:804858b42d09440a8367cdbbd6b402a52361c4bef622253ef8a87775add7d600",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:pj_artifact:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pj_view_a,config=fixed",
+    "orb:pj_view_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=pj_artifact,fault=0",
+    "orb:pj_view_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=pj_artifact,fault=0",
+    "pulser:pj_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "wire:w__pj_clock__pj_artifact:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:7b876d1153cd30dc9d91cd5001bb7b4746e33d7e747459580fa783d0224db015",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:pj_artifact:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pj_view_a,config=fixed",
+    "orb:pj_view_a:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=pj_artifact,fault=0",
+    "orb:pj_view_b:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=pj_artifact,fault=0",
+    "pulser:pj_clock:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "wire:w__pj_clock__pj_artifact:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

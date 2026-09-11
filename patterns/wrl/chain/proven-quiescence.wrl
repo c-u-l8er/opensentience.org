@@ -1,0 +1,10 @@
+; PROVEN QUIESCENCE — pq_clock fires ONCE at epoch 2 and is then done; the signal is still travelling
+; through two relays and opens the Door at epoch 5. The pulser's silence is not the world's completion.
+[pulser:pq_clock](once at 2){sig_out}
+[relay:pq_a]{sig_in, sig_out}
+[relay:pq_b]{sig_in, sig_out}
+[door:pq_done]{sig_in}
+
+[pq_clock] --sig--> [pq_a]
+[pq_a] --sig--> [pq_b]
+[pq_b] --sig--> [pq_done]

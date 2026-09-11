@@ -1,0 +1,311 @@
+profile forge.world.core.v1
+
+; ACTIVE LOCUS — where state, authority, observation and continuity couple.
+; al_world is the world's transition relation (a clock). al_locus carries state (a rotor),
+; holds authority (configurable: it ACCEPTS runtime writes), and al_view is what can be observed of it.
+[pulser:al_world](every 1){sig_out}
+[spinner:al_locus](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:al_view]{pose}
+
+[al_world] --sig--> [al_locus]
+[al_locus] --socket--> [al_view]
+
+; RECORD AT A BOUNDARY — a record is a projection taken at a boundary; it never acts.
+; rb_record has NO controller here: in the chain it is fed by chapter 1's locus (see links).
+; A pose is a record of a rotor at the socket boundary. It does not observe, does not act.
+[orb:rb_record]{pose}
+
+; the record records chapter 1's locus, at the socket boundary — fan-out from one socket is unrestricted
+[al_locus] --socket--> [rb_record]
+
+; LOCUS IS NOT ITS CARRIER — the same signal through three carriers; the locus's state is unchanged
+; by which relay carried it. thread → core → machine are relays: replaceable embodiments.
+[pulser:lc_clock](every 1){sig_out}
+[relay:lc_thread]{sig_in, sig_out}
+[relay:lc_core]{sig_in, sig_out}
+[relay:lc_machine]{sig_in, sig_out}
+[spinner:lc_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:lc_view]{pose}
+
+[lc_clock] --sig--> [lc_thread]
+[lc_thread] --sig--> [lc_core]
+[lc_core] --sig--> [lc_machine]
+[lc_machine] --sig--> [lc_locus]
+[lc_locus] --socket--> [lc_view]
+
+; IDENTITY IS A SEAL — the named rotor `identity` is the unit; the world's id is the hash of this text's
+; canonical form. Change a lane and the seal moves; move the file and it does not.
+[pulser:is_clock](every 2){sig_out}
+[spinner:is_seal](w=16, n=8, rotor=identity){sig_in, socket}
+[orb:is_id]{pose}
+
+[is_clock] --sig--> [is_seal]
+[is_seal] --socket--> [is_id]
+
+; CONTINUITY THROUGH RECONSTRUCTION — a configurable locus whose state is RE-ESTABLISHED by a claim at
+; epoch 2 (SetRotor, receipt Applied). Reconstruction from a durable fact, with a receipt, is continuity.
+[pulser:ct_clock](every 1){sig_out}
+[spinner:ct_locus](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ct_view]{pose}
+
+[ct_clock] --sig--> [ct_locus]
+[ct_locus] --socket--> [ct_view]
+
+; REFUSING JOIN — a Door admits exactly one signal wire. The refused variant (two producers into one
+; Door, WRL_CONTROLLER_CONFLICT) is beside this on the page; this is the admitted join.
+[pulser:rj_a](every 1){sig_out}
+[relay:rj_r]{sig_in, sig_out}
+[door:rj_join]{sig_in}
+
+[rj_a] --sig--> [rj_r]
+[rj_r] --sig--> [rj_join]
+
+; SHARED OBSERVABLE — the rotor determines the pose and is in the Film; a numeric fault on the orb is
+; seeded as INITIAL runtime state (hidden until read) and healed by ResetFault at epoch 3, with a receipt.
+[pulser:so_clock](every 1){sig_out}
+[spinner:so_rotor](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:so_pose]{pose}
+
+[so_clock] --sig--> [so_rotor]
+[so_rotor] --socket--> [so_pose]
+
+; SEMANTIC MEMBRANE — one rotor, two projections. The membrane exposes the pose (what determines the
+; future outside) and nothing of the rotor's representation. Fan-out from a socket is unrestricted.
+[pulser:sm_clock](every 1){sig_out}
+[spinner:sm_inside](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:sm_outside_a]{pose}
+[orb:sm_outside_b]{pose}
+
+[sm_clock] --sig--> [sm_inside]
+[sm_inside] --socket--> {[sm_outside_a], [sm_outside_b]}
+
+; CAPABILITY-BOUNDED COMPOSITION — cb_fixed is feasible to write to and NOT permitted (no `configurable`):
+; the claim at epoch 1 is Rejected(not_configurable). cb_gate is the Door the same signal must pass.
+[pulser:cb_clock](every 1){sig_out}
+[spinner:cb_fixed](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:cb_view]{pose}
+[door:cb_gate]{sig_in}
+
+[cb_clock] --sig--> {[cb_fixed], [cb_gate]}
+[cb_fixed] --socket--> [cb_view]
+
+; CARRIER CONFINEMENT — the carrier (a Door) opens only through the grant (a Relay); nothing else can
+; reach its one input port. Confinement is the topology, not a promise.
+[pulser:cc_worker](every 1){sig_out}
+[relay:cc_grant]{sig_in, sig_out}
+[door:cc_carrier]{sig_in}
+
+[cc_worker] --sig--> [cc_grant]
+[cc_grant] --sig--> [cc_carrier]
+
+; PROJECTION, NOT DUPLICATION — pj_view_a and pj_view_b are both derived from pj_artifact through
+; SocketControl; neither is a copy. pj_replica has NO controller: it is a copy of nothing (see links).
+[pulser:pj_clock](every 2){sig_out}
+[spinner:pj_artifact](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:pj_view_a]{pose}
+[orb:pj_view_b]{pose}
+
+[pj_clock] --sig--> [pj_artifact]
+[pj_artifact] --socket--> {[pj_view_a], [pj_view_b]}
+
+; REFUSABLE DIVERGENCE — a claim that names a target the world does not have is Rejected(unknown_spinner)
+; by name, with a receipt; the world's own seal is what the receiver recomputes.
+[pulser:rd_clock](every 1){sig_out}
+[spinner:rd_real](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:rd_view]{pose}
+
+[rd_clock] --sig--> [rd_real]
+[rd_real] --socket--> [rd_view]
+
+; PROGRESS OVER UTILIZATION — pu_busy fires every epoch into three relays that only relocate the
+; signal; pu_progress fires every 2 and turns a rotor. Busy is not the same as admitted.
+[pulser:pu_busy](every 1){sig_out}
+[relay:pu_hop*3]{sig_in, sig_out}
+[door:pu_sink]{sig_in}
+[pulser:pu_progress](every 2){sig_out}
+[spinner:pu_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:pu_admitted]{pose}
+
+[pu_busy] --sig--> [pu_hop0]
+[pu_hop0] --sig--> [pu_hop1]
+[pu_hop1] --sig--> [pu_hop2]
+[pu_hop2] --sig--> [pu_sink]
+[pu_progress] --sig--> [pu_locus]
+[pu_locus] --socket--> [pu_admitted]
+
+; DORMANT BUT ALIVE — a clock with phase 3: the locus receives nothing for three epochs and is fully
+; defined the whole time; at epoch 4 it turns. Dormant is a placement fact, not a liveness fact.
+[pulser:db_clock](every 4, phase 3){sig_out}
+[spinner:db_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:db_view]{pose}
+
+[db_clock] --sig--> [db_locus]
+[db_locus] --socket--> [db_view]
+
+; CARRIER MULTIPLEXING — one floor clock fans out to four slots (relays); each slot carries to a
+; locus (a Door that opens when its signal arrives). Replication `*4` is the language's own fan-out.
+[pulser:cm_floor](every 1){sig_out}
+[relay:cm_slot*4]{sig_in, sig_out}
+[door:cm_locus*4]{sig_in}
+
+[cm_floor] --sig--> {[cm_slot0], [cm_slot1], [cm_slot2], [cm_slot3]}
+[cm_slot0] --sig--> [cm_locus0]
+[cm_slot1] --sig--> [cm_locus1]
+[cm_slot2] --sig--> [cm_locus2]
+[cm_slot3] --sig--> [cm_locus3]
+
+; PROGRESS-AWARE PLACEMENT — two homes (relays); the locus is placed on pp_homeB, where the clock
+; reaches it. pp_homeA has nothing resident and nothing arrives there: the fair home, idle.
+[pulser:pp_clock](every 1){sig_out}
+[relay:pp_homeA]{sig_in, sig_out}
+[relay:pp_homeB]{sig_in, sig_out}
+[spinner:pp_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:pp_view]{pose}
+
+[pp_clock] --sig--> [pp_homeB]
+[pp_homeB] --sig--> [pp_locus]
+[pp_locus] --socket--> [pp_view]
+
+; PROVEN QUIESCENCE — pq_clock fires ONCE at epoch 2 and is then done; the signal is still travelling
+; through two relays and opens the Door at epoch 5. The pulser's silence is not the world's completion.
+[pulser:pq_clock](once at 2){sig_out}
+[relay:pq_a]{sig_in, sig_out}
+[relay:pq_b]{sig_in, sig_out}
+[door:pq_done]{sig_in}
+
+[pq_clock] --sig--> [pq_a]
+[pq_a] --sig--> [pq_b]
+[pq_b] --sig--> [pq_done]
+
+; THREE-VALUED OUTCOME — two claims in one batch: one Applied (tv_open is configurable), one Rejected
+; (tv_fixed is not). The third value has no forge counterpart: a Film is total, and the page says so.
+[pulser:tv_clock](every 1){sig_out}
+[spinner:tv_open](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[spinner:tv_fixed](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:tv_a]{pose}
+[orb:tv_b]{pose}
+
+[tv_clock] --sig--> {[tv_open], [tv_fixed]}
+[tv_open] --socket--> [tv_a]
+[tv_fixed] --socket--> [tv_b]
+
+; ORTHOGONAL PERSISTENCE — the rotor persists between ticks (every 3) without the locus asking to be
+; saved; where the state physically lives between epochs is the runtime's business, not the world's.
+[pulser:op_clock](every 3){sig_out}
+[spinner:op_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:op_view]{pose}
+
+[op_clock] --sig--> [op_locus]
+[op_locus] --socket--> [op_view]
+
+; THREE SIZES OF WORLD — this fragment is a WRL GRAPH (the smallest size). ts_version fires ONCE at
+; epoch 3: a version is a root taken at an instant. The chain so far is the graph; its seal is a wrl_head.
+[pulser:ts_version](once at 3){sig_out}
+[door:ts_root]{sig_in}
+
+[ts_version] --sig--> [ts_root]
+
+; WORLD BOUNDARY — GAP. Nothing in the tree defines the boundary, so this fragment declares nothing:
+; the EMPTY WORLD, which WRL seals. The chain's id still moves here, because this comment is not meaning
+; and the fragment adds no object — the seal of the chain at this chapter equals the seal before it.
+
+; MEANING IS A HASH — a clock and a door; the variant beside this on the page changes `every 3` to
+; `every 4` and seals to a different id. There is no version number to consult.
+[pulser:mh_clock](every 3){sig_out}
+[door:mh_gate]{sig_in}
+
+[mh_clock] --sig--> [mh_gate]
+
+; EXACT REPLAY — a relay chain into a Door. The film runner reduces this world TWICE and the build
+; refuses unless both runs produce identical Film hashes epoch for epoch.
+[pulser:er_clock](every 2){sig_out}
+[relay:er_a]{sig_in, sig_out}
+[relay:er_b]{sig_in, sig_out}
+[door:er_player]{sig_in}
+
+[er_clock] --sig--> [er_a]
+[er_a] --sig--> [er_b]
+[er_b] --sig--> [er_player]
+
+; CROSS-MACHINE SKILL REPLAY — one signal, two machines (replicated relays), two doors that open at
+; the same epoch. The trace is what crosses; the machines are `*2`.
+[pulser:cx_skill](every 1){sig_out}
+[relay:cx_machine*2]{sig_in, sig_out}
+[door:cx_replay*2]{sig_in}
+
+[cx_skill] --sig--> {[cx_machine0], [cx_machine1]}
+[cx_machine0] --sig--> [cx_replay0]
+[cx_machine1] --sig--> [cx_replay1]
+
+; CONFIDENTIALITY UNDER CONTENT ADDRESSING — OPEN. The ruling is about keys, not topology. This
+; fragment is the empty world: nothing is declared until studbook §10.2 is ruled.
+
+; ESTABLISHED, NOT KNOWN — an observation passes through en_established before it can act on the
+; Door. A reading that skipped the relay would have to reach the Door's one port directly — and cannot.
+[pulser:en_observation](every 1){sig_out}
+[relay:en_established]{sig_in, sig_out}
+[door:en_act]{sig_in}
+
+[en_observation] --sig--> [en_established]
+[en_established] --sig--> [en_act]
+
+; STATE DOES NOT GRANT AUTHORITY — sd_state has state (a rotor) and no grant (not configurable). The
+; claim at epoch 1 is Rejected(not_configurable): the fact about the locus never became a power.
+[pulser:sd_clock](every 1){sig_out}
+[spinner:sd_state](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:sd_view]{pose}
+
+[sd_clock] --sig--> [sd_state]
+[sd_state] --socket--> [sd_view]
+
+; EVIDENCE BEFORE CLAIM — a claim at epoch 2 becomes a receipt with an outcome, in the Film, before
+; anything downstream may cite it. ec_ledger is a Door with an open port: the chain feeds it (links).
+[pulser:ec_clock](every 1){sig_out}
+[spinner:ec_subject](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ec_witness]{pose}
+[door:ec_ledger]{sig_in}
+
+[ec_clock] --sig--> [ec_subject]
+[ec_subject] --socket--> [ec_witness]
+
+; the ledger is fed by chapter 1's world clock: the same transition relation, one wire, one port
+[al_world] --sig--> [ec_ledger]
+
+; REFUSAL GATE — the page is a Door; material must pass rg_sufficiency (a relay) to open it. A Door
+; with nothing sufficient behind it stays shut, and stays shut is a state the Film prints.
+[pulser:rg_request](every 2){sig_out}
+[relay:rg_sufficiency]{sig_in, sig_out}
+[door:rg_page]{sig_in}
+
+[rg_request] --sig--> [rg_sufficiency]
+[rg_sufficiency] --sig--> [rg_page]
+
+; INTERVENTION PROVENANCE — two writers (w=7, w=9) intervene on the same locus; every receipt names
+; its writer and sequence. Attribution is in the Film, not in a log beside it.
+[pulser:ip_clock](every 1){sig_out}
+[spinner:ip_world](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ip_view]{pose}
+
+[ip_clock] --sig--> [ip_world]
+[ip_world] --socket--> [ip_view]
+
+; DESCENT IS NOT DEPENDENCE — dd_child is fed by the same clock as dd_parent (it descended from the same
+; world). A claim sets the parent's rotor at epoch 2; the child's rotor does not move. Lineage ≠ support.
+[pulser:dd_clock](every 1){sig_out}
+[spinner:dd_parent](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[spinner:dd_child](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:dd_pv]{pose}
+[orb:dd_cv]{pose}
+
+[dd_clock] --sig--> {[dd_parent], [dd_child]}
+[dd_parent] --socket--> [dd_pv]
+[dd_child] --socket--> [dd_cv]
+
+; UNDERSTANDING BOUNDARY — two writers claim the same locus in one batch; both are Applied and the
+; later canonical wins; the Film's `recognition:` lines are the register between observed and believed.
+[pulser:ub_clock](every 1){sig_out}
+[spinner:ub_locus](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ub_view]{pose}
+
+[ub_clock] --sig--> [ub_locus]
+[ub_locus] --socket--> [ub_view]

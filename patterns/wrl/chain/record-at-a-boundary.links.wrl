@@ -1,0 +1,2 @@
+; the record records chapter 1's locus, at the socket boundary — fan-out from one socket is unrestricted
+[al_locus] --socket--> [rb_record]

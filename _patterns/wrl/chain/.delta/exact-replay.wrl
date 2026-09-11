@@ -1,0 +1,12 @@
+profile forge.world.core.v1
+
+; EXACT REPLAY — a relay chain into a Door. The film runner reduces this world TWICE and the build
+; refuses unless both runs produce identical Film hashes epoch for epoch.
+[pulser:er_clock](every 2){sig_out}
+[relay:er_a]{sig_in, sig_out}
+[relay:er_b]{sig_in, sig_out}
+[door:er_player]{sig_in}
+
+[er_clock] --sig--> [er_a]
+[er_a] --sig--> [er_b]
+[er_b] --sig--> [er_player]

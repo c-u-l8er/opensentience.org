@@ -1,0 +1,11 @@
+profile forge.world.core.v1
+
+; EVIDENCE BEFORE CLAIM — a claim at epoch 2 becomes a receipt with an outcome, in the Film, before
+; anything downstream may cite it. ec_ledger is a Door with an open port: the chain feeds it (links).
+[pulser:ec_clock](every 1){sig_out}
+[spinner:ec_subject](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ec_witness]{pose}
+[door:ec_ledger]{sig_in}
+
+[ec_clock] --sig--> [ec_subject]
+[ec_subject] --socket--> [ec_witness]

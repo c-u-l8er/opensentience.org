@@ -1,0 +1,34 @@
+{
+ "epochs": 3,
+ "batches": [
+  [
+   {
+    "writer": 1,
+    "seq": 1,
+    "op": "SetRotor",
+    "target": "rd_ghost",
+    "rotor": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  ],
+  [
+   {
+    "writer": 1,
+    "seq": 2,
+    "op": "SetRotor",
+    "target": "rd_real",
+    "rotor": [
+     255,
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  []
+ ]
+}

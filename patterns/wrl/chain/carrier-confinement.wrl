@@ -1,0 +1,8 @@
+; CARRIER CONFINEMENT — the carrier (a Door) opens only through the grant (a Relay); nothing else can
+; reach its one input port. Confinement is the topology, not a promise.
+[pulser:cc_worker](every 1){sig_out}
+[relay:cc_grant]{sig_in, sig_out}
+[door:cc_carrier]{sig_in}
+
+[cc_worker] --sig--> [cc_grant]
+[cc_grant] --sig--> [cc_carrier]

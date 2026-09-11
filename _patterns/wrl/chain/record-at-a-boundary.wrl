@@ -1,0 +1,4 @@
+; RECORD AT A BOUNDARY — a record is a projection taken at a boundary; it never acts.
+; rb_record has NO controller here: in the chain it is fed by chapter 1's locus (see links).
+; A pose is a record of a rotor at the socket boundary. It does not observe, does not act.
+[orb:rb_record]{pose}

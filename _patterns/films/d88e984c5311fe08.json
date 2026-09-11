@@ -1,0 +1,86 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/refusal-gate.wrl"
+ ],
+ "for_patterns": [
+  "refusal-gate (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "d88e984c5311fe087f0c921874779792e26603a20e31f4e78904cf214f260df1",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:56:21.280Z",
+  "finished": "2026-09-11T17:56:21.370Z",
+  "host": "PX13",
+  "seconds": 0.003,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-9ac70b88730e664b01d580d75fe38e7e80d15b32f5ff7ae493353e9e981fed77",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:1413459105421bfb4843847502e406ab224efd58945c066df49094d0a65651b3",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "pulser:rg_request:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:rg_page:open=0,next_open=0",
+    "relay:rg_sufficiency:cur_out=0,next_out=0",
+    "wire:w__rg_request__rg_sufficiency:cur=0,nxt=1",
+    "wire:w__rg_sufficiency__rg_page:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:959aed0a29a210de72c8b71be7907b3d4f8437b669934ac1e0b13c437f3d6569",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "pulser:rg_request:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:rg_page:open=0,next_open=0",
+    "relay:rg_sufficiency:cur_out=0,next_out=1",
+    "wire:w__rg_request__rg_sufficiency:cur=1,nxt=0",
+    "wire:w__rg_sufficiency__rg_page:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:e6ad8add02273b06727febdda2c4658ea9d5d44353268d31230a04b1c07387f7",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "pulser:rg_request:mode=periodic,p=2,phase=0,armed=0,done=0,nf=2",
+    "door:rg_page:open=0,next_open=0",
+    "relay:rg_sufficiency:cur_out=1,next_out=0",
+    "wire:w__rg_request__rg_sufficiency:cur=0,nxt=1",
+    "wire:w__rg_sufficiency__rg_page:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:864747281d7db247a336d1a2b78333fa08a84ebe989b68f5fb1a9bab50a38429",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "pulser:rg_request:mode=periodic,p=2,phase=0,armed=0,done=0,nf=1",
+    "door:rg_page:open=0,next_open=1",
+    "relay:rg_sufficiency:cur_out=0,next_out=1",
+    "wire:w__rg_request__rg_sufficiency:cur=1,nxt=0",
+    "wire:w__rg_sufficiency__rg_page:cur=1,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

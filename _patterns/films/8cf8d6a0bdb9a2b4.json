@@ -1,0 +1,86 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/established-not-known.wrl"
+ ],
+ "for_patterns": [
+  "established-not-known (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "8cf8d6a0bdb9a2b44642ceeb8d274468121ef52990f93d180fff044339b983a4",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:55:34.340Z",
+  "finished": "2026-09-11T17:55:34.429Z",
+  "host": "PX13",
+  "seconds": 0.003,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-2b4cd7bb9fea8072aa69957f893650424cf9d62ec8826add44e0593f8ee56db0",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:7184c944ede315cc2f5d642aa6e56613ace3e6aea8919437f18961e3d62fa904",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "pulser:en_observation:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:en_act:open=0,next_open=0",
+    "relay:en_established:cur_out=0,next_out=1",
+    "wire:w__en_established__en_act:cur=0,nxt=0",
+    "wire:w__en_observation__en_established:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:73d1c3a50b4817e3d3129fe98f657e36adffb5ee2dabf479c3fd04f357a025c6",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "pulser:en_observation:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:en_act:open=0,next_open=0",
+    "relay:en_established:cur_out=1,next_out=1",
+    "wire:w__en_established__en_act:cur=0,nxt=1",
+    "wire:w__en_observation__en_established:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:4237322f833cf691e0557106a5bceffcaa7bfbe36d9190c541a8a2ea1c39a4f0",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "pulser:en_observation:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:en_act:open=0,next_open=1",
+    "relay:en_established:cur_out=1,next_out=1",
+    "wire:w__en_established__en_act:cur=1,nxt=1",
+    "wire:w__en_observation__en_established:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:a0fd766b3f2dbe291529d8e8a62117ffb11a4067fc955509e3f17397cac81b65",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "pulser:en_observation:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "door:en_act:open=1,next_open=1",
+    "relay:en_established:cur_out=1,next_out=1",
+    "wire:w__en_established__en_act:cur=1,nxt=1",
+    "wire:w__en_observation__en_established:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

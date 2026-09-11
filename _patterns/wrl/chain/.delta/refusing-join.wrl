@@ -1,0 +1,10 @@
+profile forge.world.core.v1
+
+; REFUSING JOIN — a Door admits exactly one signal wire. The refused variant (two producers into one
+; Door, WRL_CONTROLLER_CONFLICT) is beside this on the page; this is the admitted join.
+[pulser:rj_a](every 1){sig_out}
+[relay:rj_r]{sig_in, sig_out}
+[door:rj_join]{sig_in}
+
+[rj_a] --sig--> [rj_r]
+[rj_r] --sig--> [rj_join]

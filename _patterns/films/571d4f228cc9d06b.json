@@ -1,0 +1,106 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/locus-is-not-its-carrier.wrl"
+ ],
+ "for_patterns": [
+  "locus-is-not-its-carrier (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "571d4f228cc9d06b1e9a8fe0baa5da5d7860ba2dc775740746103121be9ee65f",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:48:43.763Z",
+  "finished": "2026-09-11T17:49:01.093Z",
+  "host": "PX13",
+  "seconds": 16.004,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-037f264ff64ef68946ca1bfb823264d69245de395747ea6ef0b70f9ac871366e",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:356774e7477f0533c5c92d0b72952a01c418445a330a1cafdc131afaacad9647",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:lc_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=lc_view,config=fixed",
+    "orb:lc_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=lc_locus,fault=0",
+    "pulser:lc_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:lc_core:cur_out=0,next_out=0",
+    "relay:lc_machine:cur_out=0,next_out=0",
+    "relay:lc_thread:cur_out=0,next_out=1",
+    "wire:w__lc_clock__lc_thread:cur=1,nxt=1",
+    "wire:w__lc_core__lc_machine:cur=0,nxt=0",
+    "wire:w__lc_machine__lc_locus:cur=0,nxt=0",
+    "wire:w__lc_thread__lc_core:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:3986fef046a61c1d37e710d3200fce6569e1f1666ee26f024300cc04e7101692",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:lc_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=lc_view,config=fixed",
+    "orb:lc_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=lc_locus,fault=0",
+    "pulser:lc_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:lc_core:cur_out=0,next_out=0",
+    "relay:lc_machine:cur_out=0,next_out=0",
+    "relay:lc_thread:cur_out=1,next_out=1",
+    "wire:w__lc_clock__lc_thread:cur=1,nxt=1",
+    "wire:w__lc_core__lc_machine:cur=0,nxt=0",
+    "wire:w__lc_machine__lc_locus:cur=0,nxt=0",
+    "wire:w__lc_thread__lc_core:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:49d42dabdfffb5197fe8af478953b93074e443184aa28a4c5173718c59550a42",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:lc_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=lc_view,config=fixed",
+    "orb:lc_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=lc_locus,fault=0",
+    "pulser:lc_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:lc_core:cur_out=0,next_out=1",
+    "relay:lc_machine:cur_out=0,next_out=0",
+    "relay:lc_thread:cur_out=1,next_out=1",
+    "wire:w__lc_clock__lc_thread:cur=1,nxt=1",
+    "wire:w__lc_core__lc_machine:cur=0,nxt=0",
+    "wire:w__lc_machine__lc_locus:cur=0,nxt=0",
+    "wire:w__lc_thread__lc_core:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:ea0bebee5d71976321b908bb4e5e52dd16000a6a53cc98ff5be57032c38b78a1",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:lc_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=lc_view,config=fixed",
+    "orb:lc_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=lc_locus,fault=0",
+    "pulser:lc_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:lc_core:cur_out=1,next_out=1",
+    "relay:lc_machine:cur_out=0,next_out=0",
+    "relay:lc_thread:cur_out=1,next_out=1",
+    "wire:w__lc_clock__lc_thread:cur=1,nxt=1",
+    "wire:w__lc_core__lc_machine:cur=0,nxt=1",
+    "wire:w__lc_machine__lc_locus:cur=0,nxt=0",
+    "wire:w__lc_thread__lc_core:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}

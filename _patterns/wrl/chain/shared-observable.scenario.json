@@ -1,0 +1,19 @@
+{
+ "epochs": 4,
+ "numeric_faults": [
+  "so_pose"
+ ],
+ "batches": [
+  [],
+  [],
+  [
+   {
+    "writer": 1,
+    "seq": 1,
+    "op": "ResetFault",
+    "target": "so_pose"
+   }
+  ],
+  []
+ ]
+}

@@ -1,0 +1,2 @@
+; the ledger is fed by chapter 1's world clock: the same transition relation, one wire, one port
+[al_world] --sig--> [ec_ledger]

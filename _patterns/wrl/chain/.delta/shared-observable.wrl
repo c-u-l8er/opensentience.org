@@ -1,0 +1,10 @@
+profile forge.world.core.v1
+
+; SHARED OBSERVABLE — the rotor determines the pose and is in the Film; a numeric fault on the orb is
+; seeded as INITIAL runtime state (hidden until read) and healed by ResetFault at epoch 3, with a receipt.
+[pulser:so_clock](every 1){sig_out}
+[spinner:so_rotor](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:so_pose]{pose}
+
+[so_clock] --sig--> [so_rotor]
+[so_rotor] --socket--> [so_pose]

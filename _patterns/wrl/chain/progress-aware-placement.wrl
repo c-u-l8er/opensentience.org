@@ -1,0 +1,11 @@
+; PROGRESS-AWARE PLACEMENT — two homes (relays); the locus is placed on pp_homeB, where the clock
+; reaches it. pp_homeA has nothing resident and nothing arrives there: the fair home, idle.
+[pulser:pp_clock](every 1){sig_out}
+[relay:pp_homeA]{sig_in, sig_out}
+[relay:pp_homeB]{sig_in, sig_out}
+[spinner:pp_locus](w=16, n=8, rotor=quarter_turn_z){sig_in, socket}
+[orb:pp_view]{pose}
+
+[pp_clock] --sig--> [pp_homeB]
+[pp_homeB] --sig--> [pp_locus]
+[pp_locus] --socket--> [pp_view]

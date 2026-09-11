@@ -1,0 +1,5 @@
+{
+ "epochs": 5,
+ "batches": [],
+ "determinism": true
+}

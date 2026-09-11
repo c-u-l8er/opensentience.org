@@ -1,0 +1,10 @@
+profile forge.world.core.v1
+
+; REFUSABLE DIVERGENCE — a claim that names a target the world does not have is Rejected(unknown_spinner)
+; by name, with a receipt; the world's own seal is what the receiver recomputes.
+[pulser:rd_clock](every 1){sig_out}
+[spinner:rd_real](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:rd_view]{pose}
+
+[rd_clock] --sig--> [rd_real]
+[rd_real] --socket--> [rd_view]

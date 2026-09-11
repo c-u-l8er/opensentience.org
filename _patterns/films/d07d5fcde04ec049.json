@@ -1,0 +1,94 @@
+{
+ "kind": "PATTERN_FILM_RECEIPT",
+ "version": 1,
+ "world_files": [
+  "chain/progress-aware-placement.wrl"
+ ],
+ "for_patterns": [
+  "progress-aware-placement (chain delta)"
+ ],
+ "source_identity": {
+  "world_sha256": "d07d5fcde04ec049b9bc109436d9da0fc77fa4c0fc28c1e99a8fc042c4dad331",
+  "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
+  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+ },
+ "execution_identity": {
+  "started": "2026-09-11T17:53:56.543Z",
+  "finished": "2026-09-11T17:54:17.423Z",
+  "host": "PX13",
+  "seconds": 19.27,
+  "reducer": "ref_reduce"
+ },
+ "forge": {
+  "semantic_artifact_id": "sem-e2836663a53b8281c90c436773ae9b63cddf95480fed6074e51bbf17d56b6533",
+  "policy_id": "admit_candidate_min_firstreceipt_v1"
+ },
+ "scenario": null,
+ "determinism": null,
+ "epochs": [
+  {
+   "t": 1,
+   "film_hash": "sha256:f69ad05c6ae6efddacf9dfcb85fbb4b566010d16afee240a2cc38ffe89290923",
+   "film": [
+    "FILM v0.7",
+    "t=1",
+    "spinner:pp_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pp_view,config=fixed",
+    "orb:pp_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=pp_locus,fault=0",
+    "pulser:pp_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:pp_homeA:cur_out=0,next_out=0",
+    "relay:pp_homeB:cur_out=0,next_out=1",
+    "wire:w__pp_clock__pp_homeB:cur=1,nxt=1",
+    "wire:w__pp_homeB__pp_locus:cur=0,nxt=0",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 2,
+   "film_hash": "sha256:3699d9a77be20964c1ea010ac3b7bf8942bb5f955f11145a85b8b17ca7c8f501",
+   "film": [
+    "FILM v0.7",
+    "t=2",
+    "spinner:pp_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pp_view,config=fixed",
+    "orb:pp_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0100,0000,0000,0000,controller=pp_locus,fault=0",
+    "pulser:pp_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:pp_homeA:cur_out=0,next_out=0",
+    "relay:pp_homeB:cur_out=1,next_out=1",
+    "wire:w__pp_clock__pp_homeB:cur=1,nxt=1",
+    "wire:w__pp_homeB__pp_locus:cur=0,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 3,
+   "film_hash": "sha256:d6c58c55c268f3a6bd92a54b5b9a7da371493e12da7b4e4b51b0fc41e1f0f32f",
+   "film": [
+    "FILM v0.7",
+    "t=3",
+    "spinner:pp_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pp_view,config=fixed",
+    "orb:pp_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=00b5,0000,0000,00b5,controller=pp_locus,fault=0",
+    "pulser:pp_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:pp_homeA:cur_out=0,next_out=0",
+    "relay:pp_homeB:cur_out=1,next_out=1",
+    "wire:w__pp_clock__pp_homeB:cur=1,nxt=1",
+    "wire:w__pp_homeB__pp_locus:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  },
+  {
+   "t": 4,
+   "film_hash": "sha256:08c089e7754a61e89ad550754daaf42c34bc80ab82ab2c68adaf9c201f829522",
+   "film": [
+    "FILM v0.7",
+    "t=4",
+    "spinner:pp_locus:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,rotor=00b5,0000,0000,00b5,socket=pp_view,config=fixed",
+    "orb:pp_view:policy=forge_motor_widemac_tz_sat_v1,quat4,w=16,n=8,pose=0000,0000,0000,00ff,controller=pp_locus,fault=0",
+    "pulser:pp_clock:mode=periodic,p=1,phase=0,armed=0,done=0,nf=1",
+    "relay:pp_homeA:cur_out=0,next_out=0",
+    "relay:pp_homeB:cur_out=1,next_out=1",
+    "wire:w__pp_clock__pp_homeB:cur=1,nxt=1",
+    "wire:w__pp_homeB__pp_locus:cur=1,nxt=1",
+    "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
+   ]
+  }
+ ]
+}
