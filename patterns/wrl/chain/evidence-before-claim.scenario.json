@@ -1,25 +1,54 @@
 {
- "epochs": 6,
- "batches": [
-  [],
-  [
-   {
-    "writer": 1,
-    "seq": 1,
-    "op": "SetRotor",
-    "target": "ec_subject",
-    "rotor": [
-     0,
-     255,
-     0,
-     0
-    ]
-   }
-  ],
-  [],
-  []
- ],
- "expect_idle": {
-  "ec_ledger": "an open port alone: in the chain it is fed by chapter 1's world clock (see links)"
- }
+ "scenario_version": "scenario.v1",
+ "world_semantic_id": "sem-b1b88c7dbc3335cde087329fe36756733499f64164c1c3aef8c0d477a2406a7d",
+ "initial_runtime": {
+  "numeric_faults": []
+ },
+ "epochs": [
+  {
+   "epoch": 1,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 2,
+   "label": "SetRotor ec_subject 0.255.0.0",
+   "claims": [
+    {
+     "writer_id": 1,
+     "sequence": 1,
+     "operation": "SetRotor",
+     "target": "ec_subject",
+     "payload": {
+      "rotor": [
+       0,
+       255,
+       0,
+       0
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "epoch": 3,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 4,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 5,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 6,
+   "label": "idle pulse tick",
+   "claims": []
+  }
+ ]
 }

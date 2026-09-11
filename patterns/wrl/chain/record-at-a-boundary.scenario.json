@@ -1,7 +1,39 @@
 {
- "batches": [],
- "epochs": 6,
- "expect_idle": {
-  "rb_record": "has no controller alone: in the chain it is fed by chapter 1's locus (see links)"
- }
+ "scenario_version": "scenario.v1",
+ "world_semantic_id": "sem-49b97d6fb3786d8d6045e7155a5863a17df830a31fc919aed9d660d0ff30d7ca",
+ "initial_runtime": {
+  "numeric_faults": []
+ },
+ "epochs": [
+  {
+   "epoch": 1,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 2,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 3,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 4,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 5,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 6,
+   "label": "idle pulse tick",
+   "claims": []
+  }
+ ]
 }

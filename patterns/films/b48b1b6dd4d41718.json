@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "b48b1b6dd4d417189fb682c591106f7ab600bee0c685074630807032d6095c4a",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:54:29.234Z",
-  "finished": "2026-09-11T20:55:23.882Z",
+  "started": "2026-09-11T22:00:40.823Z",
+  "finished": "2026-09-11T22:01:26.579Z",
   "host": "PX13",
-  "seconds": 3.334,
+  "seconds": 4.118,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,31 +24,63 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "epochs": 6,
-  "batches": [
-   [],
-   [
-    {
-     "writer": 1,
-     "seq": 1,
-     "op": "SetRotor",
-     "target": "ct_locus",
-     "rotor": [
-      255,
-      0,
-      0,
-      0
-     ]
-    }
-   ],
-   [],
-   []
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-bf7bdf27dbc86cfc315f9db25aacfdb8b2cbe8d81848844038e7761203013e61",
+  "initial_runtime": {
+   "numeric_faults": []
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 2,
+    "label": "SetRotor ct_locus 255.0.0.0",
+    "claims": [
+     {
+      "writer_id": 1,
+      "sequence": 1,
+      "operation": "SetRotor",
+      "target": "ct_locus",
+      "payload": {
+       "rotor": [
+        255,
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "epoch": 3,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   }
   ]
  },
  "determinism": null,
  "parity": {
   "other_reducer": "ref_reduce",
-  "seconds": 49.234,
+  "seconds": 39.472,
   "identical": true,
   "semantic_artifact_id": "sem-bf7bdf27dbc86cfc315f9db25aacfdb8b2cbe8d81848844038e7761203013e61"
  },
@@ -158,5 +190,6 @@
     "recognition:w=1,s=1,state=unambiguous"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-f7d7fbc248e7595038222275a942b94c77b01a6964c032f06d6253cf9202e1e5"
 }

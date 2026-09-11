@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "af8f6d8165948a3e41aa74591c59131574c388f482f66cd8812df29055f69fbc",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:52:37.393Z",
-  "finished": "2026-09-11T20:53:39.592Z",
+  "started": "2026-09-11T21:58:44.260Z",
+  "finished": "2026-09-11T21:59:48.847Z",
   "host": "PX13",
-  "seconds": 3.365,
+  "seconds": 3.892,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,13 +24,63 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "batches": [],
-  "epochs": 9
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-e0d0aa48334d29ba521a834eb134c2d93d9b89124a2ee51bf2769f5a3a466639",
+  "initial_runtime": {
+   "numeric_faults": []
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 2,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 3,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 7,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 8,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 9,
+    "label": "idle pulse tick",
+    "claims": []
+   }
+  ]
  },
  "determinism": null,
  "parity": {
   "other_reducer": "ref_reduce",
-  "seconds": 56.488,
+  "seconds": 58.814,
   "identical": true,
   "semantic_artifact_id": "sem-e0d0aa48334d29ba521a834eb134c2d93d9b89124a2ee51bf2769f5a3a466639"
  },
@@ -206,5 +256,6 @@
     "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-593d7a01fdf3418bb761500c87b47024bc7d0d19a30342b8b15d17b4fd6e008a"
 }

@@ -1,19 +1,49 @@
 {
- "epochs": 6,
- "numeric_faults": [
-  "so_pose"
- ],
- "batches": [
-  [],
-  [],
-  [
-   {
-    "writer": 1,
-    "seq": 1,
-    "op": "ResetFault",
-    "target": "so_pose"
-   }
-  ],
-  []
+ "scenario_version": "scenario.v1",
+ "world_semantic_id": "sem-b1c7c86b1852789452673cdaa06eb1f02cee6b99a52857776935b68d7fce306c",
+ "initial_runtime": {
+  "numeric_faults": [
+   "so_pose"
+  ]
+ },
+ "epochs": [
+  {
+   "epoch": 1,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 2,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 3,
+   "label": "ResetFault so_pose",
+   "claims": [
+    {
+     "writer_id": 1,
+     "sequence": 1,
+     "operation": "ResetFault",
+     "target": "so_pose",
+     "payload": {}
+    }
+   ]
+  },
+  {
+   "epoch": 4,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 5,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 6,
+   "label": "idle pulse tick",
+   "claims": []
+  }
  ]
 }

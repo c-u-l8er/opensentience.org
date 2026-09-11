@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "19c322c96d94c488359eaee2a4099afaf0784dfd7c8d30a1c05aed3fa31176b5",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "aeb41c18060305f1f27e986d605441e0e7f119507a93146d87af1954213b68a1"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:10:00.912Z",
-  "finished": "2026-09-11T20:10:51.817Z",
+  "started": "2026-09-11T22:11:20.318Z",
+  "finished": "2026-09-11T22:12:18.505Z",
   "host": "PX13",
-  "seconds": 46.331,
+  "seconds": 53.244,
   "reducer": "ref_reduce"
  },
  "forge": {
@@ -24,7 +24,9 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": null,
+ "scenario_digest": null,
  "determinism": null,
+ "parity": null,
  "epochs": [
   {
    "t": 1,

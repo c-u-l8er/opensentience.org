@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "eda0fe8ac4b5a489ed8084d116c97f985176bbb7a851b52d0de542710df5dd01",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:57:01.635Z",
-  "finished": "2026-09-11T20:57:01.861Z",
+  "started": "2026-09-11T22:02:57.032Z",
+  "finished": "2026-09-11T22:02:57.263Z",
   "host": "PX13",
-  "seconds": 0.005,
+  "seconds": 0.004,
   "reducer": "native_reduce"
  },
  "forge": {

@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "763c288d3cd4d111fe9952e1e1aae84ac83bfaf94fd534b25efa1370f4b3e97a",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T21:00:37.935Z",
-  "finished": "2026-09-11T21:00:38.150Z",
+  "started": "2026-09-11T22:06:14.989Z",
+  "finished": "2026-09-11T22:06:15.221Z",
   "host": "PX13",
-  "seconds": 0.007,
+  "seconds": 0.008,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,9 +24,53 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "epochs": 8,
-  "batches": [],
-  "determinism": true
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-bccd2ab7d2bba016be4313f2d890cc2bf6299327626dce84454a14cbf7c3bb36",
+  "initial_runtime": {
+   "numeric_faults": []
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 2,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 3,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 7,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 8,
+    "label": "idle pulse tick",
+    "claims": []
+   }
+  ]
  },
  "determinism": {
   "second_run_hashes": [
@@ -43,7 +87,7 @@
  },
  "parity": {
   "other_reducer": "ref_reduce",
-  "seconds": 0.005,
+  "seconds": 0.007,
   "identical": true,
   "semantic_artifact_id": "sem-bccd2ab7d2bba016be4313f2d890cc2bf6299327626dce84454a14cbf7c3bb36"
  },
@@ -176,5 +220,6 @@
     "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-d1c7ffa2c480644c1d6c95c5dd774e731edddf02165dbc3c57b6f1a0ee2c46cb"
 }

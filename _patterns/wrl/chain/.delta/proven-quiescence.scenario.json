@@ -1,1 +1,1 @@
-{"epochs":6,"batches":[]}
+{"scenario_version":"scenario.v1","world_semantic_id":"sem-3f0d499f7e69fc20f10dad37ccb88861c6c007fa0f62a482b82ca7df42bcdf70","initial_runtime":{"numeric_faults":[]},"epochs":[{"epoch":1,"label":"idle pulse tick","claims":[]},{"epoch":2,"label":"idle pulse tick","claims":[]},{"epoch":3,"label":"idle pulse tick","claims":[]},{"epoch":4,"label":"idle pulse tick","claims":[]},{"epoch":5,"label":"idle pulse tick","claims":[]},{"epoch":6,"label":"idle pulse tick","claims":[]}]}

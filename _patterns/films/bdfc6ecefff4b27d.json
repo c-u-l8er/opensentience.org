@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "bdfc6ecefff4b27d0be16b695dc26a9b882d66f6d32a70c53872ca3bf2f162c7",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:59:13.403Z",
-  "finished": "2026-09-11T20:59:50.622Z",
+  "started": "2026-09-11T22:05:05.024Z",
+  "finished": "2026-09-11T22:05:39.772Z",
   "host": "PX13",
-  "seconds": 2.733,
+  "seconds": 3.651,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,16 +24,48 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "batches": [],
-  "epochs": 6,
-  "expect_idle": {
-   "pp_homeA": "the fair home: nothing is resident and nothing arrives — that is the point"
-  }
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-d9c7da8547beecaf20527520235d2a888180f0ed4d64d5e1c772711106257a57",
+  "initial_runtime": {
+   "numeric_faults": []
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 2,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 3,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   }
+  ]
  },
  "determinism": null,
  "parity": {
   "other_reducer": "ref_reduce",
-  "seconds": 32.332,
+  "seconds": 29.253,
   "identical": true,
   "semantic_artifact_id": "sem-d9c7da8547beecaf20527520235d2a888180f0ed4d64d5e1c772711106257a57"
  },
@@ -146,5 +178,6 @@
     "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-66ce95db624331b0364d1504ca62298fae9a495f6e7fcf1cd8d0084a8307ec8f"
 }

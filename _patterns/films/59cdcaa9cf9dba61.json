@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "59cdcaa9cf9dba61620677cc517a6357e748d73bcbf9609c9bc234bdf8716852",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:52:37.171Z",
-  "finished": "2026-09-11T20:52:37.393Z",
+  "started": "2026-09-11T21:58:44.035Z",
+  "finished": "2026-09-11T21:58:44.260Z",
   "host": "PX13",
-  "seconds": 0.007,
+  "seconds": 0.008,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,11 +24,43 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "batches": [],
-  "epochs": 6,
-  "expect_idle": {
-   "rb_record": "has no controller alone: in the chain it is fed by chapter 1's locus (see links)"
-  }
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-49b97d6fb3786d8d6045e7155a5863a17df830a31fc919aed9d660d0ff30d7ca",
+  "initial_runtime": {
+   "numeric_faults": []
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 2,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 3,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   }
+  ]
  },
  "determinism": null,
  "parity": {
@@ -98,5 +130,6 @@
     "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-66ce95db624331b0364d1504ca62298fae9a495f6e7fcf1cd8d0084a8307ec8f"
 }

@@ -1,33 +1,68 @@
 {
- "epochs": 6,
- "batches": [
-  [
-   {
-    "writer": 1,
-    "seq": 1,
-    "op": "SetRotor",
-    "target": "ub_locus",
-    "rotor": [
-     255,
-     0,
-     0,
-     0
-    ]
-   },
-   {
-    "writer": 2,
-    "seq": 1,
-    "op": "SetRotor",
-    "target": "ub_locus",
-    "rotor": [
-     0,
-     255,
-     0,
-     0
-    ]
-   }
-  ],
-  [],
-  []
+ "scenario_version": "scenario.v1",
+ "world_semantic_id": "sem-d55eddde7b7de757e9ddf1d4e848e042591cd4342d84eff2b9cbbae1f1844262",
+ "initial_runtime": {
+  "numeric_faults": []
+ },
+ "epochs": [
+  {
+   "epoch": 1,
+   "label": "SetRotor ub_locus 255.0.0.0; SetRotor ub_locus 0.255.0.0",
+   "claims": [
+    {
+     "writer_id": 1,
+     "sequence": 1,
+     "operation": "SetRotor",
+     "target": "ub_locus",
+     "payload": {
+      "rotor": [
+       255,
+       0,
+       0,
+       0
+      ]
+     }
+    },
+    {
+     "writer_id": 2,
+     "sequence": 1,
+     "operation": "SetRotor",
+     "target": "ub_locus",
+     "payload": {
+      "rotor": [
+       0,
+       255,
+       0,
+       0
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "epoch": 2,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 3,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 4,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 5,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 6,
+   "label": "idle pulse tick",
+   "claims": []
+  }
  ]
 }

@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "33344a9094a4ef0d00eb4b75fe2bc70bd05c0fb8168bcdf4839d20ffbd9264c8",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:55:24.119Z",
-  "finished": "2026-09-11T20:56:08.169Z",
+  "started": "2026-09-11T22:01:26.796Z",
+  "finished": "2026-09-11T22:02:14.388Z",
   "host": "PX13",
-  "seconds": 2.775,
+  "seconds": 2.338,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,28 +24,58 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "epochs": 6,
-  "numeric_faults": [
-   "so_pose"
-  ],
-  "batches": [
-   [],
-   [],
-   [
-    {
-     "writer": 1,
-     "seq": 1,
-     "op": "ResetFault",
-     "target": "so_pose"
-    }
-   ],
-   []
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-b1c7c86b1852789452673cdaa06eb1f02cee6b99a52857776935b68d7fce306c",
+  "initial_runtime": {
+   "numeric_faults": [
+    "so_pose"
+   ]
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 2,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 3,
+    "label": "ResetFault so_pose",
+    "claims": [
+     {
+      "writer_id": 1,
+      "sequence": 1,
+      "operation": "ResetFault",
+      "target": "so_pose",
+      "payload": {}
+     }
+    ]
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   }
   ]
  },
  "determinism": null,
  "parity": {
   "other_reducer": "ref_reduce",
-  "seconds": 38.93,
+  "seconds": 43.115,
   "identical": true,
   "semantic_artifact_id": "sem-b1c7c86b1852789452673cdaa06eb1f02cee6b99a52857776935b68d7fce306c"
  },
@@ -152,5 +182,6 @@
     "recognition:w=1,s=1,state=unambiguous"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-3051b13b6cf8c9c61979ba72a0a7de7ea3b1d23e749a5d9b87ce3eb24c27ebca"
 }

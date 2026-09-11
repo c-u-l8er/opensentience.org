@@ -77,7 +77,7 @@ for (const [key, j] of jobs) {
   const receipt = { kind: 'PATTERN_FILM_RECEIPT', version: 1, world_files: j.files, for_patterns: j.ids,
     source_identity: { world_sha256: key, trvm_head: head(join(ROOT, 'TRVM')), film_py_sha256: sha(readFileSync(FILM_PY)) },
     execution_identity: { started, finished: new Date().toISOString(), host: hostname(), seconds: out.seconds, reducer: out.reducer },
-    forge: { semantic_artifact_id: out.semantic_artifact_id, policy_id: out.policy_id }, scenario: out.scenario || null, determinism: out.determinism || null, parity, epochs: out.epochs };
+    forge: { semantic_artifact_id: out.semantic_artifact_id, policy_id: out.policy_id }, scenario: out.scenario || null, scenario_digest: out.scenario_digest || null, determinism: out.determinism || null, parity, epochs: out.epochs };
   writeFileSync(join(OUT, key.slice(0, 16) + '.json'), JSON.stringify(receipt, null, 1) + '\n');
   console.log(`${out.seconds}s (${REDUCER}) → ${out.semantic_artifact_id.slice(0, 20)}… · ${out.epochs.length} epochs${parity ? (parity.failed ? ' · parity run FAILED' : ` · ${parity.other_reducer} ${parity.identical ? 'agrees' : 'DISAGREES'} (${parity.seconds}s)`) : ''}`);
 }

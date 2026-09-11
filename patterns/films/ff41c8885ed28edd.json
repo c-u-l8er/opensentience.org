@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "ff41c8885ed28eddcb1194ee660ed6180cd5a334c20a5e43c1cdba8ea6f0a3da",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T21:00:38.718Z",
-  "finished": "2026-09-11T21:01:17.060Z",
+  "started": "2026-09-11T22:06:15.754Z",
+  "finished": "2026-09-11T22:07:06.263Z",
   "host": "PX13",
-  "seconds": 2.593,
+  "seconds": 2.469,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,30 +24,63 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "epochs": 6,
-  "batches": [
-   [
-    {
-     "writer": 1,
-     "seq": 1,
-     "op": "SetRotor",
-     "target": "sd_state",
-     "rotor": [
-      255,
-      0,
-      0,
-      0
-     ]
-    }
-   ],
-   [],
-   []
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-0ab417c00718d1f43f30db9db1edf8a84b2e934f090672a74092941e3de55120",
+  "initial_runtime": {
+   "numeric_faults": []
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "SetRotor sd_state 255.0.0.0",
+    "claims": [
+     {
+      "writer_id": 1,
+      "sequence": 1,
+      "operation": "SetRotor",
+      "target": "sd_state",
+      "payload": {
+       "rotor": [
+        255,
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "epoch": 2,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 3,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   }
   ]
  },
  "determinism": null,
  "parity": {
   "other_reducer": "ref_reduce",
-  "seconds": 33.975,
+  "seconds": 45.52,
   "identical": true,
   "semantic_artifact_id": "sem-0ab417c00718d1f43f30db9db1edf8a84b2e934f090672a74092941e3de55120"
  },
@@ -160,5 +193,6 @@
     "recognition:w=1,s=1,state=unambiguous"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-878c56a31ba154bc7e1fc5803cbf816f6829026856bfaedd995e3f1d22d264d0"
 }

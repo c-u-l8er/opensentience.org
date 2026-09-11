@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "81589fcfe3d709699315ad9686fe6f2bd6cf0bd736233c4ce45ad78643d24d32",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:57:04.197Z",
-  "finished": "2026-09-11T20:57:41.951Z",
+  "started": "2026-09-11T22:02:59.438Z",
+  "finished": "2026-09-11T22:03:36.803Z",
   "host": "PX13",
-  "seconds": 2.277,
+  "seconds": 2.526,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,43 +24,78 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "epochs": 6,
-  "batches": [
-   [
-    {
-     "writer": 1,
-     "seq": 1,
-     "op": "SetRotor",
-     "target": "rd_ghost",
-     "rotor": [
-      1,
-      2,
-      3,
-      4
-     ]
-    }
-   ],
-   [
-    {
-     "writer": 1,
-     "seq": 2,
-     "op": "SetRotor",
-     "target": "rd_real",
-     "rotor": [
-      255,
-      0,
-      0,
-      0
-     ]
-    }
-   ],
-   []
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-a2734400042b9cdbd440169056b0bd05d0523aad1438197cec5b60aae9533dd5",
+  "initial_runtime": {
+   "numeric_faults": []
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "SetRotor rd_ghost 1.2.3.4",
+    "claims": [
+     {
+      "writer_id": 1,
+      "sequence": 1,
+      "operation": "SetRotor",
+      "target": "rd_ghost",
+      "payload": {
+       "rotor": [
+        1,
+        2,
+        3,
+        4
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "epoch": 2,
+    "label": "SetRotor rd_real 255.0.0.0",
+    "claims": [
+     {
+      "writer_id": 1,
+      "sequence": 2,
+      "operation": "SetRotor",
+      "target": "rd_real",
+      "payload": {
+       "rotor": [
+        255,
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "epoch": 3,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   }
   ]
  },
  "determinism": null,
  "parity": {
   "other_reducer": "ref_reduce",
-  "seconds": 33.58,
+  "seconds": 33.047,
   "identical": true,
   "semantic_artifact_id": "sem-a2734400042b9cdbd440169056b0bd05d0523aad1438197cec5b60aae9533dd5"
  },
@@ -188,5 +223,6 @@
     "recognition:w=1,s=2,state=unambiguous"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-9298d883d98dceb07340417077306188e410526e029581965fa9b806d68a72f4"
 }

@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "95ea249cd2e2fb3f473b3df09ee824521936e4bde5f41d84a7fbdf18566ba24a",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:58:43.223Z",
-  "finished": "2026-09-11T20:59:13.164Z",
+  "started": "2026-09-11T22:04:24.538Z",
+  "finished": "2026-09-11T22:05:04.705Z",
   "host": "PX13",
-  "seconds": 2.29,
+  "seconds": 2.453,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,13 +24,48 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "epochs": 6,
-  "batches": []
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-f0998ba567e37b23cdb32c13de64336803983d73926aa3ab04d4e06d04305851",
+  "initial_runtime": {
+   "numeric_faults": []
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 2,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 3,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   }
+  ]
  },
  "determinism": null,
  "parity": {
   "other_reducer": "ref_reduce",
-  "seconds": 26.162,
+  "seconds": 36.057,
   "identical": true,
   "semantic_artifact_id": "sem-f0998ba567e37b23cdb32c13de64336803983d73926aa3ab04d4e06d04305851"
  },
@@ -113,5 +148,6 @@
     "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-66ce95db624331b0364d1504ca62298fae9a495f6e7fcf1cd8d0084a8307ec8f"
 }

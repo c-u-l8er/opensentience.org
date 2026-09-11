@@ -1,7 +1,39 @@
 {
- "batches": [],
- "epochs": 6,
- "expect_idle": {
-  "pp_homeA": "the fair home: nothing is resident and nothing arrives \u2014 that is the point"
- }
+ "scenario_version": "scenario.v1",
+ "world_semantic_id": "sem-d9c7da8547beecaf20527520235d2a888180f0ed4d64d5e1c772711106257a57",
+ "initial_runtime": {
+  "numeric_faults": []
+ },
+ "epochs": [
+  {
+   "epoch": 1,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 2,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 3,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 4,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 5,
+   "label": "idle pulse tick",
+   "claims": []
+  },
+  {
+   "epoch": 6,
+   "label": "idle pulse tick",
+   "claims": []
+  }
+ ]
 }

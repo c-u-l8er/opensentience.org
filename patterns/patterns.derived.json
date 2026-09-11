@@ -1,14 +1,14 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T21:33:37.124Z",
+  "built": "2026-09-11T23:03:12.083Z",
   "inputs_heads": {
-    ".": "7e91d2d01c57527b39a963deb789237fb13e969e",
-    "opensentience.org": "2a7d8d5f71aa2eae60602cb6cb81a7b4c24fd749",
+    ".": "a9e9bfbab6bb4c9d68224cf776fdb397c79b2448",
+    "opensentience.org": "580246f009609744be648978c4494a884206b3cf",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
     "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
-    "computedriven": "52240a38848abfeeb9d6a62289055a0735749807",
+    "computedriven": "3669fe0de4b9ac06d745d2637bdaf2a4f72a755a",
     "super": "1671d82ffdb4eda34dc4729336c2eec17996b898"
   },
   "summary": {

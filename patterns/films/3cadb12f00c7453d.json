@@ -10,13 +10,13 @@
  "source_identity": {
   "world_sha256": "3cadb12f00c7453d54b0ff59e3f8832a2389676e90b499bb5feca898a74a2e81",
   "trvm_head": "bf8670d5734729403114048b2e2a424726a01720",
-  "film_py_sha256": "7b27103c74d9df428e869562d2619bec7924395ef7b8afe4c7d917a8b22f09dd"
+  "film_py_sha256": "f7888b0bdc15d73a0c8032e5f28c700af31eb330878fd2aeba1cc131f896cac5"
  },
  "execution_identity": {
-  "started": "2026-09-11T20:53:39.592Z",
-  "finished": "2026-09-11T20:54:29.234Z",
+  "started": "2026-09-11T21:59:48.847Z",
+  "finished": "2026-09-11T22:00:40.823Z",
   "host": "PX13",
-  "seconds": 3.755,
+  "seconds": 3.348,
   "reducer": "native_reduce"
  },
  "forge": {
@@ -24,16 +24,53 @@
   "policy_id": "admit_candidate_min_firstreceipt_v1"
  },
  "scenario": {
-  "batches": [],
-  "epochs": 7,
-  "expect_idle": {
-   "is_id": "the rotor is `identity`, the unit: the pose does not move, by construction — that is what a unit is"
-  }
+  "scenario_version": "scenario.v1",
+  "world_semantic_id": "sem-0738b04e54f4544857dcf62b4508f1bf70e9b80ad494e4a3b60efff620faa15d",
+  "initial_runtime": {
+   "numeric_faults": []
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 2,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 3,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 4,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 5,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 6,
+    "label": "idle pulse tick",
+    "claims": []
+   },
+   {
+    "epoch": 7,
+    "label": "idle pulse tick",
+    "claims": []
+   }
+  ]
  },
  "determinism": null,
  "parity": {
   "other_reducer": "ref_reduce",
-  "seconds": 43.669,
+  "seconds": 46.346,
   "identical": true,
   "semantic_artifact_id": "sem-0738b04e54f4544857dcf62b4508f1bf70e9b80ad494e4a3b60efff620faa15d"
  },
@@ -143,5 +180,6 @@
     "admit:policy=admit_candidate_min_firstreceipt_v1,fact_capacity_fault=0,receipt_capacity_fault=0,capacity_fault=0"
    ]
   }
- ]
+ ],
+ "scenario_digest": "scen-886cdaf007dc64a8089fe67173c0e86ca1a1d8a24bffe72976dbead28f0515d4"
 }
