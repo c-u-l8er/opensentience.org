@@ -1,40 +1,30 @@
 {
   "schema": "computedriven-surface-v1",
   "_comment": "The frozen record the placement band, the status block and the calls to action are generated from. build/build.mjs validates it, DERIVES the surface rung from the protocol statuses rather than reading one from here, and refuses the build on drift. Page-level treatment: ProjectAmp2/agents/SHELL.md.",
-
   "version": "0.3.0",
   "origin": "https://opensentience.org",
   "surface": "OpenSentience",
   "layer": "research",
   "parent": "ComputeDriven",
-
   "shell_revision": "shell-r10",
   "_shell_revision_comment": "r10 is the highest revision this page meets IN FULL, and the string is deliberately not r13. r11 has two halves and only one is done here: its gate soundness stage exists (build/prove-gate.mjs asserts the gate PERMITS six legitimate inputs as well as refusing twenty-seven breaks), but r11 ALSO requires the nav breakpoint to be bisected in a browser and bound to nav_labels_at_measure, and this record carries no such measurement — that is the nav lane's work and claiming it here would be the exact kind of copied number this file exists to prevent. What IS implemented past r10: r12's text-node extraction (the retraction blocklist counts over text nodes joined by newline, so a phrase can no longer be welded together across an element boundary; measured on this artifact, all four counts were unchanged, so the fix closed a hole rather than reviving a dead check), r12's element-scoped structural checks (the _gotcha check already read the extracted <form>, not the raw html, and a deliberate break proves it refuses), and r13's crop rule (animRight minus heroRight is 0 at every width from 390 to 1920; it was 22.5px at 390 because the mobile rule set right:-6%). r10: the retraction bounds are min/max per string and both live strings are bounded 1-1, so unlimited repetition inside the retraction paragraph is already refused. r9: contact is a real Formspree <form action method=POST novalidate> that works with scripting off, upgraded by proof.js to an inline reply that prints success only on an actual 2xx. r8, this surface's own finding: the artifact TEXT extraction strips HTML comments FIRST, because `<[^>]+>` leaves behind a comment containing its own `>` and the hero's build comment says \"κ > 0\". r6: both gate holes are closed here — the blocklist COUNTS and bounds at both ends, and the artifact is hashed before it is written, read back and re-hashed, staged then renamed.",
-
   "tier": 2,
   "_tier_comment": "ampersand-nav/src/amp-nav.js records opensentience as { place: 2, layer: \"research\", rung: null } and the null is deliberate: 'Plan §5: mixed across OS-001…OS-011. There is no single rung for eleven protocols, so there is no rung here.' Place 2 is inside the story, so this is the STANDARD band WITH the layer sentence, not the tier-4 variant. Read-only check against ampersand-nav; lane N owns that file.",
-
   "question": "Does the shape of a knowledge graph tell you when to think harder?",
-
   "surface_rung_covers": "nothing, on purpose — the 12 protocols on this page run from one shipped to five drafts, so a single chip would be an average and an average would be a lie. Each protocol card carries its own status. The one artifact that would carry a rung on its own is the κ proof below, which runs in your browser",
   "_surface_rung_comment": "There is NO surface_rung field here, and that is the point. build.mjs derives it: unanimous protocol statuses would produce a rung, and a mixed set produces `?`. Writing one in by hand would be exactly the drift the derivation exists to prevent.",
-
   "verified_at": "2026-08-16",
-
   "rung_witness": null,
   "_rung_witness_comment": "SHELL.md r5 asks the record to name the gate that WITNESSES the rung, because \"any pending gate blocks the rung\" is too blunt — independent_result is pending forever by construction. Here the derived rung is `?`, and a `?` has no witness BY DEFINITION: that is what the question mark says. build.mjs enforces the pair — a real rung must name an approved gate, and a `?` must name none. Filling this in would be claiming a witness for a status that exists precisely because there is not one.",
-
   "status": {
     "statement": "The κ proof is exhaustive and runs client-side: 1,052,740 directed graphs on 2–5 nodes and 873,611 finite maps on 2–7 nodes, with 0 counterexamples. The governance floor below it is property-tested — 109 kernel laws and 101 compose laws, at 2,000 trials each. Everything else on this page is a specification, and each card says which.",
     "source": "The proof is in /kappa_proof.js and runs in the reader's own browser with no server. The law counts were re-derived on 2026-08-23 by running node test/laws.mjs and node test/compose-laws.mjs against the box-and-box package; both suites derive their own printed totals, and scripts/law-manifest.mjs writes them to LAW_MANIFEST.json, which every published count in the tree is checked against.",
     "limit": "Exhaustive verification of an equivalence over finite structures is not evidence that routing on it helps. κ > 0 ⟺ a nontrivial strongly connected component is a theorem about graphs; that deliberating when κ > 0 produces better answers than not is an empirical claim, and nothing on this page tests it. Nine of the twelve protocols have no implementation at all, and the one benchmark figure quoted here was produced by us, on our own system."
   },
-
   "advance": {
     "next_rung": "external",
     "requires": "Someone who is not us runs the κ proof and reports the result, or benchmarks a memory system through PRISM and publishes a number we did not produce. Every figure on this page today has one author."
   },
-
   "cta": {
     "_comment": "One group per rung, never one blended group. build.mjs refuses a verb the rung has not earned (SITES.md §0.7 / SHELL.md §3). The verbs are fixed; the copy under each is this site's own.",
     "_labels": {
@@ -47,6 +37,11 @@
         "verb": "Use the deployed artifact",
         "href": "#proof",
         "what": "Run the κ proof. It is exhaustive, it is client-side, and it takes no argument from us — if it finds a counterexample it will say so on your machine before it says so on ours."
+      },
+      {
+        "verb": "Use the deployed artifact",
+        "href": "/patterns/refusing-join",
+        "what": "Read Unboxed Patterns, the pattern catalog for locus-oriented software, and run a pattern's witness on its own page: the Refusing Join page executes the compose-law suite, byte-identical to what CI runs, and shows a join refuse with its reason named. Every label in the catalog is derived, never typed."
       }
     ],
     "in_tree": [
@@ -79,7 +74,6 @@
       }
     ]
   },
-
   "contact": {
     "kind": "formspree",
     "endpoint": "https://formspree.io/f/xaewoadr",
@@ -88,7 +82,6 @@
     "_comment": "SHELL.md r9, ruled by Travis 2026-08-17. This record used to say `kind: github_issues` with a note that it was 'deliberately not another surface's Formspree endpoint' — that was the [TRAVIS] blocker fourteen surfaces reported, and it is now answered: this IS the ComputeDriven endpoint, and sharing it is the ruling rather than a shortcut. Still not a mailto:, and build.mjs still refuses one. The issues `url` stays as the SECOND route — a correction that wants to be public should be able to be public.",
     "_endpoint_comment": "Declared ONCE, here. The template reads it and the artifact gate re-reads the emitted form's action and refuses if the two disagree, so no page can invent its own endpoint or quietly keep a stale one through a refactor."
   },
-
   "gates": {
     "_comment": "A gate may not read approved without its evidence, reviewer and date fields, and build.mjs enforces that.",
     "law_counts_measured": {

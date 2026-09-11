@@ -1,0 +1,163 @@
+{
+ "stencil": "join",
+ "interval": 2200,
+ "intro": "Two assemblies, built in ignorance of each other, and one join station.",
+ "params": {
+  "station": "join",
+  "loci": [
+   {
+    "id": "A",
+    "label": "A",
+    "tag": "feeds_into=[T1]",
+    "at": "left"
+   },
+   {
+    "id": "C",
+    "label": "C",
+    "tag": "accepts_from=[T1]",
+    "at": "right"
+   },
+   {
+    "id": "B",
+    "label": "B",
+    "tag": "feeds_into = (undeclared)",
+    "state": "undeclared",
+    "at": "left2"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "A declares what it feeds into; C declares what it accepts. Both come to the join.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "A",
+     "to": "J",
+     "dx": -64
+    },
+    {
+     "op": "move",
+     "locus": "C",
+     "to": "J",
+     "dx": 64
+    }
+   ]
+  },
+  {
+   "caption": "The join checks the declared contracts: [T1] into [T1]. Admitted — and the composite is itself a brick that can be composed again.",
+   "takeaway": "A join is a check on declared contracts, not a merge of whatever arrived.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "A",
+     "b": "C",
+     "result": "composite",
+     "note": "A |> C  admitted"
+    },
+    {
+     "op": "move",
+     "locus": "A",
+     "to": "out",
+     "dx": -14
+    },
+    {
+     "op": "move",
+     "locus": "C",
+     "to": "out",
+     "dx": 14
+    }
+   ]
+  },
+  {
+   "caption": "B declares nothing. Under MISSING ≠ UNIVERSAL, declaring nothing is not the same as accepting anything.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "J",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": ""
+    },
+    {
+     "op": "move",
+     "locus": "B",
+     "to": "J",
+     "dx": -64
+    },
+    {
+     "op": "spawn",
+     "id": "C2",
+     "label": "C",
+     "tag": "accepts_from=[T1]",
+     "at": "right"
+    }
+   ]
+  },
+  {
+   "caption": "The join refuses. The result is 0̲ — a returned value — and the refusal names the field: contract-undeclared.",
+   "takeaway": "A refusal is a returned value with a reason: not an exception, not a crash, not a coerced default.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "C2",
+     "to": "J",
+     "dx": 64
+    },
+    {
+     "op": "join",
+     "a": "B",
+     "b": "C2",
+     "result": "refused",
+     "reason": "0̲ · refusal: contract-undeclared"
+    }
+   ]
+  },
+  {
+   "caption": "B declares its output. Declaring can only turn a refusal into a composite; nothing can go the other way.",
+   "actions": [
+    {
+     "op": "tag",
+     "target": "B",
+     "text": "feeds_into=[T1]"
+    },
+    {
+     "op": "state",
+     "target": "B",
+     "state": "live"
+    },
+    {
+     "op": "state",
+     "target": "J",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": ""
+    }
+   ]
+  },
+  {
+   "caption": "Same join, same consumer, one declaration later: admitted.",
+   "takeaway": "Missing ≠ universal has content in both directions: a declared narrow type passes where an undeclared one does not, at the same call site.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "B",
+     "b": "C2",
+     "result": "composite",
+     "note": "B |> C  admitted"
+    }
+   ]
+  },
+  {
+   "caption": "The 101 compose laws further down this page check exactly this, 2000 trials per law. The suite is the evidence; this was a picture.",
+   "takeaway": "Correct composition includes the ability to refuse invalid composition.",
+   "actions": []
+  }
+ ]
+}

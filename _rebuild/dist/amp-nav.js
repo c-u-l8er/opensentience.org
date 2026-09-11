@@ -36,7 +36,16 @@
  * License: MIT (Ampersand Box Design)
  */
 
-const VERSION = "0.11.0";
+// 0.12.0 — 2026-08-25. T&R registered as a property: a LINKS row, a PROPERTY_MAP
+// entry, and the Stack menu's first feature banner. Deliberately NO PLACEMENT
+// entry — see the note in that table for why the band was removed. Bumped
+// rather than left at 0.11.0 because this constant is published as
+// `window.__ampNavVersion` and is the ONLY way to tell, from outside, which nav
+// a deployed site is actually serving. Several targets live in their own
+// repositories and deploy on their own schedule, so "does this site know about
+// T&R yet" is a question that gets asked from a browser console, and a stale
+// version number is the one thing that makes it unanswerable.
+const VERSION = "0.12.1";
 
 // The wordmark in the bar's brand link. Named rather than typed inline because
 // the placement band suppresses itself against it (see `renderPlacement`), and
@@ -67,6 +76,21 @@ const LINKS = {
     status: "in dev",
     tier: "alpha",
   },
+  // The operating system, and the only artifact in this table you can download and boot. It got
+  // its own domain and repository on 2026-08-25: it had been `computedriven.com` itself, where it
+  // was ~80% of the root page's body copy on a domain with three products. The root is now a
+  // product index and this is the product.
+  //
+  // No `tr` key existed here before that date, which is why the Stack menu's banner could not be
+  // written until now — `renderBanner` resolves `LINKS[banner.key]` and returns "" for a miss, so
+  // a banner naming an absent key renders as silence rather than an error.
+  tr: {
+    label: "T&R",
+    tagline: "The operating system — FreeBSD 15 from pkgbase, carrying its own verifier",
+    href: "https://tr.computedriven.com",
+    status: "v0.3",
+    tier: "shipped",
+  },
   // The paid funnel. It is a real deployed site (index / pricing / architecture / security /
   // status) being built in a parallel session, which is why it is listed but carries no rung
   // claim here: this file records where a thing is, and that file records how far along it is.
@@ -79,12 +103,16 @@ const LINKS = {
   },
 
   // Cognitive Primitives — memory / knowledge / reasoning / time / space
+  // 2026-09-05: graphonomous.com now describes the semantic/evidence graph at graphonomous/v2 —
+  // in the tree, tested, unpublished — and no longer the v0.4 memory engine (whose page, demos
+  // and benchmarks moved to old_scrap/). The npm package of that name is the OLD engine; "v0.4.3"
+  // and "shipped" here described it, and disagreed with the band the page itself renders.
   graphonomous: {
     label: "Graphonomous",
-    tagline: "Agent memory substrate",
+    tagline: "The semantic self-model — an autonomous semantic/evidence graph",
     href: "https://graphonomous.com",
-    status: "v0.4.3",
-    tier: "shipped",
+    status: "in tree",
+    tier: "alpha",
   },
   bendscript: {
     label: "BendScript",
@@ -710,6 +738,9 @@ const PROPERTY_MAP = {
   computedriven: { category: "factory", item: "computedriven_room" },
 
   // ---- Stack: the installed machines (was Products + Protocols) ------------------------------
+  // T&R resolves to the Stack BANNER, not a column row — `renderBanner` compares `banner.key`
+  // against `currentItem` exactly as a column item does, so "you are here" lights the banner.
+  tr: { category: "stack", item: "tr" },
   super: { category: "stack", item: "super" },
   cloud: { category: "factory", item: "cloud" },
   graphonomous: { category: "stack", item: "graphonomous" },
@@ -765,10 +796,13 @@ const PROPERTY_MAP = {
   // The five masterclasses used to resolve to Factory while the `masterclass` key fed Academy's
   // promo band — two roots claiming one curriculum. Learn ends that: every masterclass page
   // highlights Learn, and Factory keeps one of them as a contextual promo without owning it.
+  // Listed in curriculum order (01–05) to match the Learn column. Order carries no behaviour
+  // here — this is a lookup keyed by `property=` — but the two lists were written together and
+  // drifted together, so keeping them in the same sequence is what makes a mismatch visible.
   masterclasses: { category: "learn", item: "masterclasses" },
-  factory_masterclass: { category: "learn", item: "factory_masterclass" },
   masterclass: { category: "learn", item: "masterclass" },
   compose_masterclass: { category: "learn", item: "compose_masterclass" },
+  factory_masterclass: { category: "learn", item: "factory_masterclass" },
   verification_masterclass: { category: "learn", item: "verification_masterclass" },
   world_masterclass: { category: "learn", item: "world_masterclass" },
   // The Academy prototype identifies as `academy`. It has no nav item of its own yet — the
@@ -833,7 +867,13 @@ const PLACEMENT = {
     // Doctrine: when in doubt, downgrade.
     rung: "in_tree",
   },
-  graphonomous: { name: "Graphonomous", place: 2, layer: "memory", rung: "live_deployed" },
+  // NO `tr` ENTRY, ON PURPOSE. One was added on 2026-08-25 (place 2, layer "operating system",
+  // rung live_local) and removed the same day on Travis's call: the band it produced sat above the
+  // T&R page's own header reading "the operating system layer of ComputeDriven · live_local", and
+  // that page is a product page whose first screen is a download, not a position statement.
+  // Without an entry the property renders the portfolio bar alone, which is the documented
+  // degradation path and is what is wanted here. Do not "fix" its absence.
+  graphonomous: { name: "Graphonomous", place: 2, layer: "memory", rung: "in_tree" },
   opensentience: {
     name: "OpenSentience",
     place: 2,
@@ -1165,6 +1205,23 @@ const CATEGORIES = [
         items: ["wrl", "trvm", "wrlm", "traaviis", "webhost"],
       },
     ],
+    // Third banner, same argument as Factory's and Compose's applied to this menu. Factory leads
+    // with the thing you pay for, Compose with the thing you operate from — Stack is the
+    // installed-machine inventory, and every other row in it is a library, a protocol or a
+    // service. T&R is the only entry a visitor can download and run, which makes it exactly the
+    // row that should not be the sixth item in a column of six.
+    //
+    // Note it is NOT also listed in "Machines & surfaces" below. cloud and super are each a
+    // banner in one menu and a column row in another, which the file calls reuse rather than
+    // duplication — but banner and column in the SAME menu is the duplication that comment is
+    // distinguishing itself from.
+    banner: {
+      key: "tr",
+      mark: "T&R",
+      title: "The one machine here you can boot",
+      body: "Everything else in this menu is a library, a protocol or a service. T&R is the one you boot — FreeBSD 15 assembled from pkgbase, no installer, no first-boot download, carrying the verifier that re-derives its own claims.",
+      cta: "Download T&R",
+    },
     // The obvious promo line here was "18 factory cells · view the floor →". It does not say 18.
     // The nav is a standalone bundle with no access to the CELLS arrays the number comes from, so
     // it would be a hand-typed count in the one file of the portfolio that has already shipped
@@ -1228,13 +1285,23 @@ const CATEGORIES = [
     mega: true,
     columns: [
       {
-        // All five exist as pages. Ordered as the curriculum orders them.
+        // All five exist as pages. Ordered as the curriculum orders them — and the curriculum
+        // numbers itself, on /masterclasses, whose cards are 01–05 in this sequence:
+        //   01 masterclass · 02 compose_masterclass · 03 factory_masterclass
+        //   04 verification_masterclass · 05 world_masterclass
+        // That numbering is the authority; this list follows it. It did not until 2026-08-25:
+        // `factory_masterclass` (03) sat in slot 2, so the menu opened on 03 · 01 · 02 · 04 · 05
+        // while the comment above it claimed curriculum order. The pages themselves say the order
+        // is cumulative ("Five machines, and the order that makes them cumulative"), which makes a
+        // reader following the menu top-to-bottom meet the arrangement before the two things
+        // being arranged. If a masterclass is added or renumbered, re-derive from the card
+        // numbers on /masterclasses rather than from this list.
         label: "Masterclasses",
         items: [
           "masterclasses",
-          "factory_masterclass",
           "masterclass",
           "compose_masterclass",
+          "factory_masterclass",
           "verification_masterclass",
           "world_masterclass",
         ],

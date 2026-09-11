@@ -75,6 +75,60 @@
       "related": [
         "carrier-multiplexing",
         "dormant-but-alive"
+      ],
+      "scene": "locus-is-not-its-carrier",
+      "headline": "A locus is not the thread running it; the thread is a replaceable embodiment.",
+      "explanatory": "Everything a locus is — its seal, its state, its admissible transitions — is defined without reference to the carrier currently executing it. Swap the thread for a core, the core for a machine, and nothing the locus is has changed. This is a standing rule in ComputeDriven, and the measured fact beside it is Carrier Multiplexing.",
+      "technical": "R7-OPEN §0, permanent standing rules from R2.1 and the R6 freeze: 'A Locus is not a thread; a Carrier is a replaceable embodiment.' There is no THREAD in the progress model's §4. A locus's context (KERNELLET-R1: admission + finality warden + possession) is the locus's; possession is a field that says which carrier, if any, holds it now.",
+      "problem": "Most runtimes define the unit of computation as the thing that executes: a thread, a process, a container. Identity then dies with the carrier: a restart is a death, a migration is a copy, and 'the same agent' has to be re-asserted by convention rather than established by a seal.",
+      "forces": "It is convenient to store a locus's state on its thread's stack. It is fast. It also makes every carrier replacement a serialization problem and every serialization a chance to make a Replica. The rule costs a level of indirection on every access to the context and buys carrier independence as a property rather than a promise.",
+      "construction": "Give every locus a seal (Identity Is a Seal) and a context that lives outside any carrier. Model possession as a field with three states — vacant, attached, suspended — on the context, not as the carrier's opinion. Make carrier replacement a floor command that moves possession, and forbid every read of the context from asking which carrier holds it.",
+      "transformations": {
+        "allowed": [
+          "replacing the carrier while possession moves atomically",
+          "running the same locus on a thread today and a machine tomorrow",
+          "suspending possession with no carrier at all (Dormant But Alive)"
+        ],
+        "forbidden": [
+          "deriving identity, authority or state from the carrier",
+          "serializing a context by copying and calling the copy the locus",
+          "treating loss of a carrier as loss of the locus"
+        ]
+      },
+      "consequences": "The system stops asking 'is the thread alive?' and starts asking 'is the locus established?'. That is the whole shift of Part I, and it is why the agency definition on this site says models and harnesses are components a locus reasons through, not identity criteria.",
+      "analogy": "A chess game is not the board it is played on. Move the pieces to a new board, or play by post, and it is the same game at the same position; the board never had an opinion about which game it was.",
+      "applicability": "Any system that must survive its own restarts, migrations or hardware: agent runtimes, durable workflows, the T&R shell's windows, FPLA elements. It is a rule to adopt at design time; retrofitting it means finding every place a thread-local was used as identity.",
+      "syntax": [
+        {
+          "label": "The standing rule, verbatim (R7-OPEN §0, permanent)",
+          "path": "computedriven/receipts/R7-OPEN.md",
+          "start": "2. A Locus is not a thread",
+          "count": 1
+        },
+        {
+          "label": "What a context holds — and note that possession is a field, not a thread",
+          "path": "computedriven/receipts/KERNELLET-R1.md",
+          "start": "A context is one Locus Core Context",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Across three carriers the seal never changed, because nothing about the locus was defined by a carrier."
+        },
+        {
+          "from": "syntax",
+          "text": "Possession is a field on the context — vacant / attached / suspended — so 'which carrier' is data the locus owns, not a fact the carrier asserts."
+        },
+        {
+          "from": "literature",
+          "text": "BEAM got here first for processes; what the rule adds is that identity is a seal, so continuity is checkable rather than conventional."
+        },
+        {
+          "from": "witness",
+          "text": "This is STATED: a standing rule, not a measurement. The measured neighbour is Carrier Multiplexing."
+        }
       ]
     },
     {
@@ -208,7 +262,46 @@
           "treating the annihilator as an exception or a crash"
         ]
       },
-      "consequences": "Composition becomes something a receiver can check, not something it must trust. The cost is that an under-declared assembly is unusable until it declares, which is the point. Refusal ≠ failure: the three-valued outcome vocabulary (APPLIED · REFUSED · INDETERMINATE) in three-valued-outcome is this principle for interventions."
+      "consequences": "Composition becomes something a receiver can check, not something it must trust. The cost is that an under-declared assembly is unusable until it declares, which is the point. Refusal ≠ failure: the three-valued outcome vocabulary (APPLIED · REFUSED · INDETERMINATE) in three-valued-outcome is this principle for interventions.",
+      "scene": "refusing-join",
+      "analogy": "Customs at a border between two factories. A crate with a declared manifest that matches the receiving line goes through. A crate with no manifest is not waved through as 'could be anything' — it is turned back with a slip that says which field was missing. The slip is the product of that transaction, and it is worth more than a crate that was let through on a guess.",
+      "applicability": "Use it wherever two things built separately must meet: assemblies at a factory join, capability bricks in a governance ladder, records from two verifiers, agents handing work to agents. Do not use it where the join is the identity operation on one thing — an identity must DECLARE '*', or the pattern degenerates into refuse-everything.",
+      "syntax": [
+        {
+          "label": "CD1 — the falsifier, verbatim from the suite this page runs",
+          "path": "AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
+          "start": "  ['CD1', 'an UNDECLARED feeds_into is NOT a wildcard",
+          "count": 6
+        },
+        {
+          "label": "How a refusal carries its reason — the annihilator is a brick",
+          "path": "AmpersandBoxDesign/box-and-box/compose.mjs",
+          "start": "const zeroBecause = (reason)",
+          "count": 5
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "A join is a check on declared contracts; a refusal is a returned value that names the field."
+        },
+        {
+          "from": "syntax",
+          "text": "0̲ is a Brick with annihilated: true and a refusal string — composition is total, and the failure case is data."
+        },
+        {
+          "from": "syntax",
+          "text": "MISSING ≠ UNIVERSAL: an absent contract field normalizes to {kind:'undeclared'}, never to '*'. The identity elements declare '*' explicitly so the identity laws survive."
+        },
+        {
+          "from": "literature",
+          "text": "The two laws a refusing join must keep — associativity and identity — are the monoid laws; the factory page notes the λA literature derived the same pair independently (paper not yet located: prior_art says so)."
+        },
+        {
+          "from": "witness",
+          "text": "This is not an argument: 101 laws × 2000 trials ran in your browser above, on the same bytes CI runs."
+        }
+      ]
     },
     {
       "id": "shared-observable",
@@ -391,6 +484,60 @@
         "identity-is-a-seal",
         "meaning-is-a-hash",
         "projection-not-duplication"
+      ],
+      "scene": "refusable-divergence",
+      "headline": "A divergence between two implementations is refused by name, not passed in silence.",
+      "explanatory": "Put only claims on the wire — no flags, no prose. Every receiver recomputes the claims from the bytes. Two verifiers in two languages then either agree or refuse, and a refusal names what it refused. A negative corpus of tampered records is part of the artifact, so 'refuses' is something you can run.",
+      "technical": "WRL §D8.19, the projection on the wire. deriveRuntimeProjection makes the V1→V2 downgrade in-band. Conformance: 924 checks passing today (STACK_COMPLETION recorded 890 in August). Negative corpus: 15 tampered records stored as final bytes, refused by both verifiers; a consumer must check the wire differs from its base before trusting a refusal, and whether refusal codes are normative is an open question the corpus states itself.",
+      "problem": "Two implementations of one format drift. The usual defence is a version flag and a prose note, and both are things a receiver is asked to believe. When the implementations disagree, the disagreement passes silently and shows up later as data that two systems read differently.",
+      "forces": "Recomputing claims costs a receiver work it could skip by trusting a flag. A negative corpus is only evidence if each tamper actually differs from its base — a recipe that matches nothing is a fixture that passes while asserting nothing. And two refusals can both be drift: agreement on a refusal is weaker than agreement on the bytes.",
+      "construction": "Seal the artifact (Meaning Is a Hash). Put the recomputable claims on the wire and nothing else. Keep a negative corpus as final bytes beside the positive vectors. Run two independent verifiers and require both to refuse every tamper; report code disagreement separately from the refusal.",
+      "transformations": {
+        "allowed": [
+          "adding a verifier in a third language",
+          "adding a tamper to the corpus (with its base named)",
+          "downgrading a projection in-band, so the receiver sees the downgrade as a claim"
+        ],
+        "forbidden": [
+          "a flag or a prose note that a receiver is asked to trust",
+          "a fixture that is an edit recipe rather than final bytes",
+          "collapsing two refusals into one because they agree"
+        ]
+      },
+      "consequences": "Interoperability becomes a property with a witness: two repos, two languages, one corpus. The remaining honesty is in the corpus's own note — code normativity is open — and in WRL's handoff warning that two implementations can both have drifted.",
+      "analogy": "Two auditors who each recompute the total from the receipts rather than reading the number at the bottom of the page. If the page lies, both say so, and each says which line.",
+      "applicability": "Any format with more than one implementation: wire protocols, certificate formats, manifests, the projection vectors between WRL and TRVM Forge. Not for a single implementation that can only agree with itself.",
+      "syntax": [
+        {
+          "label": "The first tamper in the negative corpus — the record lies about its own world id",
+          "path": "WRL/test/projection-negative-vectors.json",
+          "start": "   \"name\": \"a-lying-semantic-world-id\"",
+          "count": 3
+        },
+        {
+          "label": "The corpus's own rule for consumers (verbatim from the fixture's note)",
+          "path": "WRL/test/projection-negative-vectors.json",
+          "start": " \"note\":",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "A tampered record is refused by both verifiers, and each names what it refused."
+        },
+        {
+          "from": "syntax",
+          "text": "Tampers are stored as final bytes, not edit recipes, because a recipe that matches nothing passes while asserting nothing."
+        },
+        {
+          "from": "literature",
+          "text": "Content addressing (Merkle, Nix) makes the seal; the contribution here is the refusal name on the wire and the shared negative corpus across two implementations."
+        },
+        {
+          "from": "witness",
+          "text": "924 conformance checks ran today; this page cannot run them yet (the suite is not staged), and says so under Witness."
+        }
       ]
     },
     {
@@ -430,6 +577,59 @@
       "related": [
         "carrier-multiplexing",
         "dormant-but-alive"
+      ],
+      "scene": "progress-over-utilization",
+      "headline": "Measure admitted transitions per cost, never carrier busyness.",
+      "explanatory": "Utilization is a fact about carriers. Progress is a fact about loci. A carrier can be fully busy relocating loci for fairness while nothing is admitted. R7's first executed pass found exactly that: the busiest carrier was the one making the least progress.",
+      "technical": "Unit: instructions per admitted transition (the receipts' unit). The progress floor profile (commit 684aad3) and the multiplexer battery (cff8a3d) compare a progress arm against fair arms; the fair arms spend most of their commands relocating. computedriven/docs/progress-model.md defines the terms and says of itself: every numeral is a definition or a prediction, never a measurement.",
+      "problem": "Every dashboard shows CPU %. Schedulers optimize fairness among runnable threads. Both measure the carrier. A system can run at 100 % and admit nothing, and the metrics will call it healthy.",
+      "forces": "Progress needs a definition before it can be counted — an admitted semantic transition — and a definition is a commitment the model document has to make ahead of the receipt. Fairness is a real value; starving a locus forever is not progress either. The pattern does not say ignore fairness; it says do not mistake it for the goal.",
+      "construction": "Define the unit (admitted transition), instrument it at the floor, and report it per cost. Keep utilization as a diagnostic, never as the health signal. Run a fair arm beside the progress arm so the comparison is measured, not argued.",
+      "transformations": {
+        "allowed": [
+          "lowering utilization while raising admitted transitions",
+          "re-placing loci to where progress is possible (Progress-Aware Placement)"
+        ],
+        "forbidden": [
+          "reporting utilization as health",
+          "scheduling work that admits nothing to keep a carrier busy (Busywork Scheduling)",
+          "quoting a model document's number as a measurement"
+        ]
+      },
+      "consequences": "The health question moves from the carrier to the loci, which is where the semantics are. It also makes the next pattern possible: placement can be chosen for progress only once progress is what is measured.",
+      "analogy": "A kitchen where every cook is moving constantly and no plates leave the pass. The manager who counts moving cooks sees a busy kitchen; the one who counts plates sees the problem.",
+      "applicability": "Schedulers, agent runtimes, benchmark harnesses, anything with a dashboard. Especially where a fairness policy already exists and has never been measured against what it admitted.",
+      "syntax": [
+        {
+          "label": "The receipt's own title line",
+          "path": "computedriven/receipts/R7-EXECUTED.md",
+          "start": "# R7 — EXECUTED",
+          "count": 1
+        },
+        {
+          "label": "Where the fair arms spent their commands",
+          "path": "computedriven/receipts/R7-EXECUTED.md",
+          "start": "   the fair arms spend most",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Equal utilization, unequal progress — the meters that matter are the lower ones."
+        },
+        {
+          "from": "syntax",
+          "text": "The receipt's title is the finding: the busiest Carrier is the one making the least progress."
+        },
+        {
+          "from": "literature",
+          "text": "Queueing theory separated utilization from throughput long ago; Erlang counts reductions, not busy schedulers. The pattern is the old distinction applied to loci."
+        },
+        {
+          "from": "witness",
+          "text": "The witness is a receipt with instruction counts; the model document beside it is a prediction and is not cited as evidence."
+        }
       ]
     },
     {
@@ -459,6 +659,54 @@
       "related": [
         "carrier-multiplexing",
         "locus-is-not-its-carrier"
+      ],
+      "scene": "dormant-but-alive",
+      "headline": "A locus that consumes no compute can be fully live.",
+      "explanatory": "Liveness is a semantic property: does the locus have a defined state and admissible next transitions? Placement is a resource property: does a carrier hold it right now? A locus can be live and unplaced. Its mailbox accumulates events that change its readiness, and none of them executes anything until a carrier takes it.",
+      "technical": "R7.1 admission: a per-Locus mailbox of depth M in the multiplexer. An event changes readiness but executes no floor command by itself (FPLA design A restates the same separation). Placement moves possession from vacant to attached; the pending work is exactly the mailbox contents.",
+      "problem": "Runtimes conflate 'idle' with 'done' and 'unscheduled' with 'dead'. A garbage collector, a supervisor or a human reads an empty carrier and concludes there is nothing to do, while a locus with a full mailbox waits above the floor.",
+      "forces": "A dormant locus costs memory for its context and its mailbox, so the depth bound M is real: past it, the multiplexer must refuse admission rather than grow. The temptation is to let the scheduler treat the mailbox as advisory. The pattern says it is an admission rule.",
+      "construction": "Separate readiness from execution: an event arriving updates a ready-set and nothing else. Make placement an explicit floor command. Keep the mailbox on the locus's context, bounded by M, and refuse the (M+1)th event at admission with a named refusal rather than dropping it silently.",
+      "transformations": {
+        "allowed": [
+          "a locus holding no carrier for any length of time",
+          "events arriving while unplaced",
+          "placing a dormant locus on any available carrier"
+        ],
+        "forbidden": [
+          "executing a floor command as a side effect of an event's arrival",
+          "inferring 'nothing to do' from 'no carrier busy' (False Quiescence)",
+          "growing the mailbox past M"
+        ]
+      },
+      "consequences": "'Is the system quiet?' stops being answerable from the carriers. That is the gap Proven Quiescence names — and that pattern is still PROPOSED, which this page says plainly.",
+      "analogy": "A doctor on call. Not in the building, not being paid by the hour, and still on the roster with a pager that changes what happens next. The hospital being quiet says nothing about the pager.",
+      "applicability": "Actor systems, agent runtimes with many more agents than cores, durable-execution engines, and any system that must answer 'is there pending work?' honestly.",
+      "syntax": [
+        {
+          "label": "The admission rule (R7.1-OPEN — an OPEN record; specified, its battery not yet run)",
+          "path": "computedriven/receipts/R7.1-OPEN.md",
+          "start": "- **Admission**",
+          "count": 2
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Readiness changed three times while nothing executed; placement is what made the pending work run."
+        },
+        {
+          "from": "syntax",
+          "text": "Mailbox depth M is an admission rule: the (M+1)th event is refused, not queued forever."
+        },
+        {
+          "from": "literature",
+          "text": "BEAM processes and durable-execution engines embody this; continuations are the older form."
+        },
+        {
+          "from": "witness",
+          "text": "STATED, not witnessed: the source is an OPEN record, and the label on this page derives from that."
+        }
       ]
     },
     {
@@ -494,6 +742,60 @@
       "related": [
         "locus-is-not-its-carrier",
         "progress-aware-placement"
+      ],
+      "scene": "carrier-multiplexing",
+      "headline": "More loci than slots, carried by rotation, and no locus is lost by not holding one.",
+      "explanatory": "A floor has a fixed number of slots. A population of loci may be far larger. Multiplexing rotates loci through slots; the slot is a temporary embodiment and the locus's identity, state and admissible transitions are unchanged by leaving it. R7 measured eight slots carrying sixty-four loci.",
+      "technical": "Per-Locus mailbox of depth M in the multiplexer (R7.1 admission); a slot holds one Locus Core Context (309 B production profile, KERNELLET-R1); rotation is a floor command, not a copy. Instruction counts per admitted transition are the receipt's unit.",
+      "problem": "Threads are expensive and identity is cheap. A system that gives every locus its own thread, core or process runs out of carriers long before it runs out of things worth being; and a system that then says 'the locus IS the thread' has to kill loci to free carriers.",
+      "forces": "Rotation costs commands, and a fair rotation spends most of them relocating. The per-locus mailbox bounds what a waiting locus can accumulate, and that bound is an admission rule the multiplexer must enforce, not a scheduler hint. The picture is easy; the receipt is what says whether the rotation left any progress behind.",
+      "construction": "Give the floor N slots and the population K > N loci. Keep every locus's context outside the slot (the 309-byte context is the locus's, not the slot's). Rotate by floor command; never copy a context to move it. Measure instructions per admitted transition, not slot occupancy.",
+      "transformations": {
+        "allowed": [
+          "growing the population without growing the floor",
+          "changing which slot a locus is rotated into",
+          "adding a slot (the population is unchanged)"
+        ],
+        "forbidden": [
+          "copying a context to 'move' a locus — that is Replica Theater",
+          "deriving any locus property from its current slot",
+          "declaring completion because every slot is empty"
+        ]
+      },
+      "consequences": "Capacity becomes a question about admitted transitions per cost rather than about carrier count. The trap is that the utilization meters look wonderful while nothing is admitted; Progress Over Utilization is the measuring pattern this one needs beside it.",
+      "analogy": "A hotel with eight beds and sixty-four guests on a night shift roster. A guest who is not in a bed has not ceased to exist, and the hotel does not photocopy guests to move them.",
+      "applicability": "Any floor whose population exceeds its carriers: agent runtimes, actor systems, cooperative schedulers, the FPLA's array elements. Not for systems where the carrier is the identity by design (a physical device with one owner).",
+      "syntax": [
+        {
+          "label": "The measured line in R7-EXECUTED — the receipt this page cites as its witness",
+          "path": "computedriven/receipts/R7-EXECUTED.md",
+          "start": "   than any fair arm. Eight slots",
+          "count": 3
+        },
+        {
+          "label": "The admission rule (R7.1, an OPEN record — specified, not yet a battery)",
+          "path": "computedriven/receipts/R7.1-OPEN.md",
+          "start": "- **Admission**",
+          "count": 2
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The slot is not the unit of identity; a locus without a slot is the same locus."
+        },
+        {
+          "from": "syntax",
+          "text": "Eight slots, sixty-four loci, 97.4 B — a receipt line, not a design goal."
+        },
+        {
+          "from": "literature",
+          "text": "M:N scheduling and BEAM processes are the prior art; what is new here is measuring the rotation by admitted transitions rather than by fairness."
+        },
+        {
+          "from": "witness",
+          "text": "The witness is a receipt document; this page cannot re-run it, and says so under Witness."
+        }
       ]
     },
     {

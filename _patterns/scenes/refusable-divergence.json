@@ -1,0 +1,149 @@
+{
+ "stencil": "wire",
+ "interval": 2400,
+ "intro": "A producer, a wire, and two verifiers written in two languages in two repositories.",
+ "params": {
+  "producer": "producer",
+  "v1": "verifier · JS",
+  "v2": "verifier · Python",
+  "wire": "the wire: claims only",
+  "loci": [
+   {
+    "id": "R",
+    "label": "R",
+    "tag": "sem-8ae91fe9…",
+    "state": "record",
+    "at": "P",
+    "tagAbove": true
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "The producer seals a record and puts only claims on the wire — no flags, no prose, nothing a receiver is asked to trust.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "R",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "Two verifiers recompute the claims from the bytes. Both arrive at the same id the record asserts.",
+   "takeaway": "A receiver recomputes claims; it never trusts a flag.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "R",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "recomputed · matches"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "recomputed · matches"
+    }
+   ]
+  },
+  {
+   "caption": "A tampered record: it asserts a world id its own artifact does not hash to.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": ""
+    },
+    {
+     "op": "remove",
+     "locus": "R"
+    },
+    {
+     "op": "spawn",
+     "id": "T",
+     "label": "R′",
+     "tag": "lying world id",
+     "state": "tampered",
+     "at": "P",
+     "tagAbove": true
+    },
+    {
+     "op": "move",
+     "locus": "T",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "Both verifiers refuse, and each names what it refused.",
+   "takeaway": "An implementation divergence is refusable by name, not silent.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "T",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "REFUSED · world-id"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "REFUSED · world-id"
+    }
+   ]
+  },
+  {
+   "caption": "Fifteen such tampers are the counterexample corpus on this page. Whether the two names must agree is, in WRL's own words, an open question.",
+   "takeaway": "Two refusals can both be drift — the claim worth having is about the same bytes.",
+   "actions": [
+    {
+     "op": "wirenote",
+     "wire": "w",
+     "text": "15 tampers · refused by both sides"
+    }
+   ]
+  }
+ ]
+}

@@ -166,84 +166,138 @@ const summary = {
 const heads = Object.fromEntries(['.', 'opensentience.org', 'WRL', 'TRVM', 'AmpersandBoxDesign', 'graphonomous', 'computedriven', 'super'].map((d) => { try { return [d, execSync('git rev-parse HEAD', { cwd: join(ROOT, d), stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()]; } catch { return [d, null]; } }));
 
 // ── emit ───────────────────────────────────────────────────────────────────────
-const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 const row = (p) => `<tr><td><a href="${p.id}.html"><code>${p.id}</code></a></td><td>${esc(p.name)}</td><td>${p.family}</td><td class="l ${p.derived.label || 'none'}">${p.derived.label ?? '—'}</td><td>${['CHECKABLE', 'RUNNABLE', 'EXECUTED', 'STAGED'].filter((k) => p.derived[k]).join(' ') || '—'}</td><td>${p.witness ? `<code>${esc(p.witness.path)}</code> <small>${p.witness.shape} · ${p.witness.rung}</small>` : '—'}</td><td>${esc(p.invariant ?? (p.kind === 'definition' ? '(definition)' : '(no invariant — gap/open)'))}</td></tr>`;
-const html = `<!doctype html><meta charset="utf-8"><title>Unboxed Patterns — catalog</title>
-<style>body{font:14px/1.45 system-ui;margin:0 auto;padding:72px 1.5rem 3rem;max-width:1400px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.3rem .5rem;vertical-align:top}th{text-align:left;background:#f3f3f3}.WITNESSED{color:#0a7;font-weight:600}.STATED{color:#a60}.PROPOSED{color:#c00}.none{color:#888}small{color:#666}code{font-size:12px}.note{background:#fff8e1;padding:.6rem 1rem;border-left:4px solid #e0a800}</style>
-<script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
-<h1>Unboxed Patterns</h1>
-<p><em>Elements of Composable Locus-Oriented Software</em> — a pattern catalog generated from a registry. Every count and label below is derived by <code>_patterns/build/build.mjs</code> from the registry, the invariants table, the claim ledger and execution receipts; none is typed. A pattern is <strong>WITNESSED</strong> only when a recorded run of a check exists for the exact bytes on disk at rung <code>in_tree</code> or above; <strong>STATED</strong> when the tree says it and no run proves it; <strong>PROPOSED</strong> when the book names it and the tree does not. Plan and rulings: <code>ProjectAmp2/UNBOXED_PATTERNS.md</code>. Built ${new Date().toISOString()}.</p>
-<p><strong>${summary.patterns}</strong> records (${summary.definitions} definitions) · <strong>${summary.anti_patterns}</strong> anti-patterns · labels: <span class="WITNESSED">${summary.WITNESSED} WITNESSED</span> · <span class="STATED">${summary.STATED} STATED</span> · <span class="PROPOSED">${summary.PROPOSED} PROPOSED</span> · standings: ${summary.CHECKABLE} checkable · ${summary.RUNNABLE} runnable · ${summary.EXECUTED} executed · ${summary.STAGED} staged · ${summary.invariant_null} pattern(s) with no invariant (gap/open).</p>
-${findings.length ? `<h2>Findings</h2><ul>${findings.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}
-<table><tr><th>id</th><th>name</th><th>family</th><th>label</th><th>standings</th><th>witness</th><th>invariant</th></tr>${derived.map(row).join('\n')}</table>
-<h2>Anti-patterns</h2><table><tr><th>id</th><th>name</th><th>problem</th><th>paid for at</th></tr>${DATA.anti_patterns.map((a) => `<tr><td><code>${a.id}</code></td><td>${esc(a.name)}</td><td>${esc(a.problem)}</td><td>${esc(a.paid_for ?? '—')}</td></tr>`).join('\n')}</table>`;
-const llms = [`# Unboxed Patterns — registry (P1, derived ${new Date().toISOString().slice(0, 10)})`, `# ${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns. Labels are derived by build.mjs, never typed. WITNESSED = a recorded run of a check on these exact bytes exists at rung ≥ in_tree.`, '', ...derived.map((p) => `- ${p.id} [${p.derived.label ?? p.kind}] (${p.family}) — ${p.invariant ?? '(no invariant)'}${p.witness ? ` — witness: ${p.witness.path} (${p.witness.shape}, ${p.witness.rung}${p.derived.EXECUTED ? ', executed' : ', NOT executed'})` : ''}`), '', '## anti-patterns', ...DATA.anti_patterns.map((a) => `- ${a.id} — ${a.problem}`)].join('\n') + '\n';
-const derivedJson = JSON.stringify({ kind: 'UNBOXED_PATTERNS_DERIVED', built: new Date().toISOString(), inputs_heads: heads, summary, findings, patterns: derived, anti_patterns: DATA.anti_patterns }, null, 2) + '\n';
-
-
-// ── pattern pages (P2) ─────────────────────────────────────────────────────────
+// ── pattern pages: refactoring.guru's rhythm over a derived record ─────────────────────────────
 // A RUN BUTTON MAY NOT OUTRUN ITS EVIDENCE (the invariants build's R28, extended): a page offers a run
 // button only when the witness is STAGED byte-identical under /witness/src/; a demo module for a pattern
-// whose witness is not staged is refused (P12) — an illustration with no evidence beside it on the page.
-const DEMOS = join(HERE, '../demos');
+// whose witness is not staged is refused (P12). A scene (animation) is an ILLUSTRATION and may exist for
+// any record; the page labels it so. A syntax excerpt is quoted from the file at build time (P13 refuses a
+// start marker that is not found) so the page cannot show code the tree does not contain.
+const DEMOS = join(HERE, '../demos'), SCENES = join(HERE, '../scenes'), SURFACE = join(HERE, '../surface/surface.mjs');
+const SF = await import(SURFACE);
 const stampFor = (p) => shaFile(join(ROOT, p)).slice(0, 16);
 const RUNJS_STAMP = shaFile(join(SITE, 'witness/run.js')).slice(0, 16);
+const SF_STAMP = shaFile(SURFACE).slice(0, 16);
 for (const p of derived) {
-  const demo = join(DEMOS, p.id + '.mjs');
-  if (existsSync(demo) && !p.derived.STAGED) refuse('P12-DEMO-WITHOUT-STAGED-WITNESS', `${p.id} has a demo module but its witness is not staged on this site`);
+  if (existsSync(join(DEMOS, p.id + '.mjs')) && !p.derived.STAGED) refuse('P12-DEMO-WITHOUT-STAGED-WITNESS', `${p.id} has a demo module but its witness is not staged on this site`);
+  if (p.scene && !existsSync(join(SCENES, p.scene + '.json'))) refuse('P13-SCENE-MISSING', `${p.id}: scenes/${p.scene}.json`);
+  for (const x of p.syntax || []) {
+    const abs = join(ROOT, x.path);
+    if (!existsSync(abs)) { refuse('P13-SYNTAX-PATH', `${p.id}: ${x.path}`); continue; }
+    if (!readFileSync(abs, 'utf8').includes(x.start)) refuse('P13-SYNTAX-START', `${p.id}: start marker not found in ${x.path}: ${JSON.stringify(x.start)}`);
+  }
 }
 if (refusals.length) { console.error(`\n✗ ${refusals.length} refusal(s):\n  ` + refusals.join('\n  ')); process.exit(1); }
 const byId = new Map(derived.map((p) => [p.id, p]));
 const antiById = new Map(DATA.anti_patterns.map((a) => [a.id, a]));
+const ORDER = DATA.families.flatMap((f) => derived.filter((p) => p.family === f));
+const FAMILY_TITLE = { locus: 'The Locus', composition: 'Composition', progress: 'Progress', world: 'Persistence and World', agency: 'Agency' };
+const sceneOf = (p) => p.scene ? JSON.parse(readFileSync(join(SCENES, p.scene + '.json'), 'utf8')) : null;
+const thumb = (p) => { const sc = sceneOf(p); return sc ? SF.svg(SF.computeState(sc, 0), { thumb: true }) : ''; };
+const excerpt = (x) => { const lines = readFileSync(join(ROOT, x.path), 'utf8').split('\n'); const i = lines.findIndex((l) => l.includes(x.start)); return { from: i + 1, text: lines.slice(i, i + (x.count || 6)).join('\n') }; };
 const para = (t) => t ? `<p>${esc(t)}</p>` : '';
-const section = (title, body) => body ? `<section><h2>${title}</h2>${body}</section>` : '';
 const list = (xs) => xs && xs.length ? `<ul>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
-const link = (id) => byId.has(id) ? `<a href="${id}.html">${esc(byId.get(id).name)}</a> <small class="l ${byId.get(id).derived.label || 'none'}">${byId.get(id).derived.label ?? byId.get(id).kind}</small>` : esc(id);
-function pageFor(p) {
-  const d = p.derived, w = p.witness, c = p.counterexample;
+const chip = (p) => `<span class="chip ${p.derived.label || 'none'}">${p.derived.label ?? p.kind}</span>`;
+const sidebar = (cur) => `<aside class="side" role="navigation" aria-label="catalog"><a class="side-home" href="./">Unboxed Patterns</a>${DATA.families.map((f) => `<div class="side-fam">${FAMILY_TITLE[f]}</div><ul>${ORDER.filter((p) => p.family === f).map((p) => `<li class="${cur && p.id === cur.id ? 'cur' : ''}"><a href="${p.id}.html">${esc(p.name)}</a> ${chip(p)}</li>`).join('')}</ul>`).join('')}<div class="side-fam">Anti-patterns</div><ul>${DATA.anti_patterns.map((a) => `<li><a href="./#anti-${a.id}">${esc(a.name)}</a></li>`).join('')}</ul></aside>`;
+const SHELL_CSS = `body{margin:0;background:var(--ink,#faf8f3);color:var(--fg,#1c1a17);font:17px/1.6 var(--display,Georgia,serif)}
+.book{display:grid;grid-template-columns:270px minmax(0,1fr);gap:2.5rem;max-width:1180px;margin:0 auto;padding:76px var(--gutter,1.5rem) 4rem}
+.side{position:sticky!important;top:76px;height:auto;width:auto;background:transparent;box-shadow:none;align-self:start;max-height:calc(100vh - 90px);overflow:auto;font:13px/1.5 var(--ui,system-ui);padding-right:.5rem;border-right:1px solid var(--line,#e7e0d2)}
+.side-home{display:block;font:700 15px var(--ui,system-ui);color:var(--acc,#6d3bd4);text-decoration:none;margin:.2rem 0 .8rem}.side-fam{font:600 11px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--fg3,#666);margin:.9rem 0 .2rem}
+.side ul{list-style:none;margin:0;padding:0}.side li{padding:.15rem 0;display:flex;gap:.4rem;align-items:baseline}.side li a{color:var(--fg,#1c1a17);text-decoration:none}.side li.cur a{color:var(--acc,#6d3bd4);font-weight:600}
+.chip{font:600 10px var(--ui,system-ui);padding:.05rem .35rem;border-radius:3px;white-space:nowrap}.chip.WITNESSED{background:var(--data-soft,#e6f7ef);color:var(--data,#0a7)}.chip.STATED{background:rgba(150,96,11,.10);color:var(--warn,#96600b)}.chip.PROPOSED{background:rgba(192,42,95,.08);color:var(--rose,#c02a5f)}.chip.none{background:var(--ink2,#eee);color:var(--fg3,#666)}
+main h1{font:700 2.4rem/1.15 var(--display,Georgia,serif);margin:.2rem 0 .3rem}.meta{font:13px var(--ui,system-ui);color:var(--fg3,#666)}.st{font:11px var(--ui,system-ui);padding:.02rem .3rem;border:1px solid var(--line2,#ccc);border-radius:3px;margin-left:.2rem}.st.on{border-color:var(--data,#0a7);color:var(--data,#0a7)}.st.off{color:var(--fg3,#aaa);text-decoration:line-through}
+main h2{font:600 13px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--acc,#6d3bd4);margin:2.4rem 0 .5rem;padding-top:.6rem;border-top:1px solid var(--line,#e7e0d2)}
+.invariant{font:1.15rem/1.5 var(--display,Georgia,serif);border-left:3px solid var(--acc,#6d3bd4);background:var(--acc-soft,rgba(109,59,212,.06));padding:.6rem 1rem;margin:1rem 0;border-radius:0 var(--r,8px) var(--r,8px) 0}
+.lede{font-size:1.15rem}.tech{font:14px/1.55 var(--ui,system-ui);color:var(--fg2,#333)}.tech summary{cursor:pointer;font-weight:600;color:var(--acc,#6d3bd4)}
+.sf{margin:.5rem 0 1rem}.illus{font:12px var(--ui,system-ui);color:var(--fg3,#666);margin:-.2rem 0 .6rem}
+pre.syn{font:12.5px/1.5 var(--mono,monospace);background:#1b1a17;color:#eee7d8;padding:.8rem 1rem;border-radius:var(--r,8px);overflow:auto;margin:.3rem 0 1rem;white-space:pre}.syn-label{font:13px var(--ui,system-ui);color:var(--fg2,#333)}.syn-label code{font:12px var(--mono,monospace);color:var(--fg3,#666)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}.two b{font:600 13px var(--ui,system-ui);text-transform:uppercase;letter-spacing:.06em}.two ul{padding-left:1.2rem;margin:.3rem 0}
+.take{list-style:none;padding:0;margin:0}.take li{padding:.5rem .8rem;margin:.4rem 0;border-left:3px solid var(--line2,#ccc);background:var(--ink3,#fffdf8);font:15px/1.5 var(--display,Georgia,serif)}.take li b{font:600 10px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--fg3,#666)}.take li.animation{border-color:var(--acc,#6d3bd4)}.take li.syntax{border-color:var(--fg,#1c1a17)}.take li.literature{border-color:var(--warn,#96600b)}.take li.witness{border-color:var(--data,#0a7)}
+.sink{font:13px/1.45 var(--mono,monospace);background:#1b1a17;color:#ddd;padding:.8rem;border-radius:var(--r,8px);min-height:1.5rem;max-height:28rem;overflow:auto;margin:.5rem 0;white-space:pre-wrap}.wline.good{color:#7fd}.wline.bad{color:#f88}.wline.warn{color:#fd7}.wline.group{color:#9cf;margin-top:.5rem}.wline.muted{color:#888}.wstatus.running{color:var(--warn)}.wstatus.pass{color:var(--data)}.wstatus.fail{color:var(--rose,#c02a5f)}
+code{font:.85em var(--mono,monospace);background:var(--ink2,#f2ede2);padding:0 .25rem;border-radius:3px}.warn{color:var(--warn,#96600b)}.exec{font:14px var(--ui,system-ui)}.note{font:14px var(--ui,system-ui);color:var(--fg2,#444);background:var(--ink2,#f2ede2);padding:.5rem .8rem;border-radius:var(--r,8px)}
+button.act{font:600 14px var(--ui,system-ui);padding:.4rem .9rem;border:1px solid var(--fg,#1c1a17);background:var(--ink3,#fff);border-radius:6px;cursor:pointer}button.act:disabled{opacity:.5}q{font-style:italic}
+.pn{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line,#e7e0d2);font:14px var(--ui,system-ui)}.pn a{color:var(--acc,#6d3bd4);text-decoration:none}.pn small{display:block;color:var(--fg3,#666)}
+footer.fin{font:12.5px var(--ui,system-ui);color:var(--fg3,#666);margin-top:2rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;margin:.6rem 0 1.6rem}.card{display:block;border:1px solid var(--line,#e7e0d2);border-radius:var(--r,8px);background:var(--ink3,#fffdf8);padding:.8rem .9rem;text-decoration:none;color:inherit}.card:hover{border-color:var(--acc-line,#c9b8f0)}.card .thumb{margin:-.3rem -.3rem .5rem;border-radius:6px;overflow:hidden}.card .thumb svg{display:block;width:100%;height:auto;border:0}.card h3{font:600 17px var(--display,Georgia,serif);margin:0 0 .2rem}.card p{font:13.5px/1.45 var(--ui,system-ui);color:var(--fg2,#333);margin:.2rem 0}
+@media(max-width:900px){.book{grid-template-columns:1fr}.side{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line,#e7e0d2);padding-bottom:.8rem}.two{grid-template-columns:1fr}}
+` + SF.CSS;
+function pageFor(p, idx) {
+  const d = p.derived, w = p.witness, c = p.counterexample, sc = sceneOf(p);
   const stamp = w && d.STAGED ? stampFor(w.staged_path) : null;
   const demo = existsSync(join(DEMOS, p.id + '.mjs'));
-  const standings = ['CHECKABLE', 'RUNNABLE', 'EXECUTED', 'STAGED'].map((k) => `<span class="st ${d[k] ? 'on' : 'off'}">${k}</span>`).join(' ');
+  const prev = ORDER[idx - 1], next = ORDER[idx + 1];
+  const standings = ['CHECKABLE', 'RUNNABLE', 'EXECUTED', 'STAGED'].map((k) => `<span class="st ${d[k] ? 'on' : 'off'}">${k}</span>`).join('');
   const exec = d.execution ? `<p class="exec">Execution identity: ${esc(d.execution.at)}${d.execution.host ? ` on <code>${esc(d.execution.host)}</code>` : ''}${d.execution.sha256 ? ` · bytes <code>${d.execution.sha256.slice(0, 16)}…</code> · repo HEAD <code>${(d.execution.repo_head || '?').slice(0, 12)}</code>` : d.execution.note ? ` — ${esc(d.execution.note)}` : ''}</p>` : `<p class="exec warn">No execution record: this check has not been run for the bytes on disk. WITNESSED requires one.</p>`;
-  const witness = w ? `<p>Source identity: <code>${esc(w.path)}</code> · shape <code>${w.shape}</code>${w.evidence_kind ? ` · evidence kind <code>${w.evidence_kind}</code>` : ''} · rung <code>${w.rung}</code> <small>(${esc(w.rung_source)})</small></p>${exec}
-    ${d.STAGED ? `<p>Staged byte-identical at <code>${esc(w.staged_path)}</code> (stamp <code>${stamp}</code>). <button id="run">Run the witness here</button> <span id="wstatus" class="wstatus"></span></p><div id="wsink" class="sink"></div>`
+  const witness = w ? `<p class="exec">Source identity: <code>${esc(w.path)}</code> · shape <code>${w.shape}</code>${w.evidence_kind ? ` · evidence kind <code>${w.evidence_kind}</code>` : ''} · rung <code>${w.rung}</code> <small>(${esc(w.rung_source)})</small></p>${exec}
+    ${d.STAGED ? `<p>Staged byte-identical at <code>${esc(w.staged_path)}</code> (stamp <code>${stamp}</code>). <button class="act" id="run">Run the witness here</button> <span id="wstatus" class="wstatus"></span></p><div id="wsink" class="sink"></div>`
                : `<p class="warn">Not staged on this site: the page cannot run this witness. ${d.RUNNABLE ? 'It runs from the command line: <code>' + esc(w.cmd) + '</code> in <code>' + esc(w.cwd) + '</code>.' : 'Its shape (' + w.shape + ') is a document, not a run.'}</p>`}`
     : `<p class="warn">No witness. ${p.kind === 'definition' ? 'A definition carries no evidence rung (AGENCY.md §6).' : 'This pattern is ' + (d.label || 'unlabelled') + ' — the tree has no check for its invariant.'}</p>`;
-  const cex = c ? `<p>${c.shape === 'lint' ? `A sentence the ontology gate rejects: <q>${esc(c.sentence)}</q> — expected <code>REFUSED</code>.` : c.shape === 'fixture' ? `Fixture <code>${esc(c.path)}</code>: ${c.expected_count} vectors, each expected <code>REFUSED</code>.` : `<code>${esc(c.path)}</code> — ${c.law ? `law <code>${esc(c.law)}</code>, ` : ''}marker <q>${esc(c.marker)}</q>, expected <code>${c.expected}</code>.`}</p>${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}${demo && d.STAGED ? `<p><button id="demo">Show the refusal</button> <small>illustration — imports the same staged modules; the suite above is the evidence</small></p><div id="dsink" class="sink"></div>` : ''}`
+  const cex = c ? `<p>${c.shape === 'lint' ? `A sentence the ontology gate rejects: <q>${esc(c.sentence)}</q> — expected <code>REFUSED</code>.` : c.shape === 'fixture' ? `Fixture <code>${esc(c.path)}</code>: ${c.expected_count} vectors, each expected <code>REFUSED</code>.` : `<code>${esc(c.path)}</code> — ${c.law ? `law <code>${esc(c.law)}</code>, ` : ''}marker <q>${esc(c.marker)}</q>, expected <code>${c.expected}</code>.`}</p>${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}${demo && d.STAGED ? `<p><button class="act" id="demo">Show the refusal</button> <small class="illus">illustration — imports the same staged modules; the suite above is the evidence</small></p><div id="dsink" class="sink"></div>` : ''}`
     : `<p class="warn">No counterexample shipped${d.label === 'WITNESSED' ? ' — the build would have refused this' : ' (required only when WITNESSED)'}.</p>`;
-  const script = (d.STAGED || demo) ? `<script type="module">
-    import { runWitness } from '/witness/run.js?v=${RUNJS_STAMP}';
+  const structure = sc ? `<div class="sf" id="sf"><div class="sf-stage">${SF.svg(SF.computeState(sc, 0))}</div></div><p class="illus">An illustration on a compute surface: loci above, carriers below. Press Play or Step; the takeaways collect as you go. Nothing here is evidence — the witness section is.</p>` : '';
+  const syntax = (p.syntax || []).map((x) => { const e = excerpt(x); return `<p class="syn-label">${esc(x.label)} <code>${esc(x.path)}:${e.from}</code></p><pre class="syn">${esc(e.text)}</pre>`; }).join('');
+  const takeaways = (p.takeaways || []).length ? `<ol class="take">${p.takeaways.map((t) => `<li class="${t.from}"><b>from the ${t.from}</b>${esc(t.text)}</li>`).join('')}</ol>` : '';
+  const fm = p.failure_mode ? antiById.get(p.failure_mode) : null;
+  const script = `<script type="module">
+    ${sc ? `import { mount } from '/patterns/surface/surface.mjs?v=${SF_STAMP}';\n    mount(document.getElementById('sf'), ${JSON.stringify(sc)});` : ''}
+    ${(d.STAGED || demo) ? `import { runWitness } from '/witness/run.js?v=${RUNJS_STAMP}';
     const spec = ${JSON.stringify({ entry: '/witness/src/' + (w ? w.path : ''), mode: w ? (w.shape === 'suite' ? 'suite' : 'side-effect') : 'suite', stamp, argv: [], trials: 200 })};
     const b = document.getElementById('run');
     if (b) b.addEventListener('click', () => runWitness({ spec, sink: document.getElementById('wsink'), status: document.getElementById('wstatus'), button: b }));
     const db = document.getElementById('demo');
-    if (db) db.addEventListener('click', async () => { db.disabled = true; try { const m = await import('./demos/${p.id}.mjs?v=${stamp}'); await m.run(document.getElementById('dsink'), { stamp: '${stamp}' }); } catch (e) { document.getElementById('dsink').textContent = 'demo failed: ' + e.message; } db.disabled = false; });
-  </script>` : '';
-  return `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(p.name)} · Unboxed Patterns</title>
-<style>body{font:16px/1.55 Georgia,serif;margin:0;color:#1b1b1b;background:#fff}main{max-width:820px;margin:0 auto;padding:72px 1.2rem 4rem}.banner{background:#f5f5f5;border-left:4px solid #1b1b1b;padding:.6rem 1rem;font:14px system-ui}.banner a{color:#1b1b1b;font-weight:600;text-decoration:none}h1{font-size:2rem;margin:.6rem 0 .2rem}h2{font:600 15px system-ui;letter-spacing:.06em;text-transform:uppercase;color:#555;margin:2rem 0 .4rem}.meta{font:14px system-ui;color:#444}.l{font:600 12px system-ui;padding:.1rem .4rem;border-radius:3px}.WITNESSED{background:#e6f7ef;color:#0a7}.STATED{background:#fff3e0;color:#a60}.PROPOSED{background:#fde8e8;color:#c00}.none{background:#eee;color:#666}.st{font:12px system-ui;padding:.05rem .35rem;border:1px solid #ccc;border-radius:3px}.st.on{border-color:#0a7;color:#0a7}.st.off{color:#aaa;text-decoration:line-through}.invariant{font:18px/1.5 Georgia,serif;border-left:3px solid #1b1b1b;padding:.4rem 1rem;margin:1rem 0;background:#fafafa}.reg{margin:.4rem 0}.reg b{font:600 12px system-ui;color:#777;text-transform:uppercase;letter-spacing:.06em;display:block}.sink{font:13px/1.45 ui-monospace,monospace;background:#111;color:#ddd;padding:.8rem;border-radius:4px;min-height:1.5rem;max-height:28rem;overflow:auto;margin:.5rem 0;white-space:pre-wrap}.wline.good{color:#7fd}.wline.bad{color:#f88}.wline.warn{color:#fd7}.wline.group{color:#9cf;margin-top:.5rem}.wline.muted{color:#888}.wstatus.running{color:#a60}.wstatus.pass{color:#0a7}.wstatus.fail{color:#c00}code{font:13px ui-monospace,monospace;background:#f3f3f3;padding:0 .2rem}.warn{color:#a60}.exec{font:14px system-ui}.note{font:14px system-ui;color:#555;background:#f7f7f7;padding:.4rem .8rem}button{font:600 14px system-ui;padding:.35rem .8rem;border:1px solid #1b1b1b;background:#fff;cursor:pointer}button:disabled{opacity:.5}q{font-style:italic}.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:640px){.two{grid-template-columns:1fr}}footer{font:13px system-ui;color:#666;margin-top:3rem;border-top:1px solid #ddd;padding-top:1rem}</style>
+    if (db) db.addEventListener('click', async () => { db.disabled = true; try { const m = await import('./demos/${p.id}.mjs?v=${stamp}'); await m.run(document.getElementById('dsink'), { stamp: '${stamp}' }); } catch (e) { document.getElementById('dsink').textContent = 'demo failed: ' + e.message; } db.disabled = false; });` : ''}
+  </script>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(p.name)} · Unboxed Patterns</title><meta name="description" content="${esc(p.headline || p.invariant || p.name)}"><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
 <script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
-<main>
-<div class="banner"><a href="./">Unboxed Patterns</a> — <em>Elements of Composable Locus-Oriented Software</em> · every label and count on this page is derived by <code>build.mjs</code>; nothing here is typed.</div>
+<div class="book">${sidebar(p)}<main>
+<p class="meta">${FAMILY_TITLE[p.family]} · ${chip(p)} ${standings}</p>
 <h1>${esc(p.name)}</h1>
-<p class="meta">family <code>${p.family}</code> · <span class="l ${d.label || 'none'}">${d.label ?? p.kind}</span> · ${standings}</p>
+${p.headline ? `<p class="lede">${esc(p.headline)}</p>` : ''}
 ${p.invariant ? `<div class="invariant">${esc(p.invariant)}</div>` : ''}
-${p.headline ? `<div class="reg"><b>headline</b>${esc(p.headline)}</div>` : ''}${p.explanatory ? `<div class="reg"><b>explanatory</b>${esc(p.explanatory)}</div>` : ''}${p.technical ? `<div class="reg"><b>technical</b>${esc(p.technical)}</div>` : ''}
-${section('Problem', para(p.problem))}${section('Forces', para(p.forces))}${section('Construction', para(p.construction))}
-${p.transformations ? section('Transformations', `<div class="two"><div><b>Allowed</b>${list(p.transformations.allowed)}</div><div><b>Forbidden</b>${list(p.transformations.forbidden)}</div></div>`) : ''}
-${p.failure_mode ? section('Failure mode it answers', `<p><b>${esc(antiById.get(p.failure_mode).name)}</b> — ${esc(antiById.get(p.failure_mode).problem)}${antiById.get(p.failure_mode).paid_for ? ` <small>Paid for at: ${esc(antiById.get(p.failure_mode).paid_for)}</small>` : ''}</p>`) : ''}
-${section('Consequences', para(p.consequences))}
-${section('Witness', witness)}
-${section('Counterexample', cex)}
-${(p.cells || []).length || (p.claims || []).length ? section('Cells and claims cited', `${d.cell_statuses.map((x) => `<p>cell <code>${x.num}</code> — status <code>${x.status}</code> (from cells.json)</p>`).join('')}${(p.claims || []).map((id, i) => `<p>claim <code>${esc(id)}</code> — <code>${d.claim_statuses[i]}</code> (from CLAIM_LEDGER.json)</p>`).join('')}`) : ''}
-${section('Prior art', para(p.prior_art))}
-${section('Realizations in the tree', list(p.realizations))}
-${section('Related', (p.related || []).length ? `<p>${p.related.map(link).join(' · ')}</p>` : '')}
-<footer>Derived ${new Date().toISOString()} by <code>opensentience.org/_patterns/build/build.mjs</code> from <code>data/patterns.json</code>, <code>_invariants/data/cells.json</code>, <code>CLAIM_LEDGER.json</code> and <code>_patterns/receipts/</code>. ${p.kind === 'pattern' && !(p.problem) ? 'Thin record: prose not yet authored; the invariant, witness and prior art are the record.' : ''}</footer>
-</main>${script}`;
+${p.explanatory ? `<h2>Intent</h2><p>${esc(p.explanatory)}</p>` : ''}${p.technical ? `<details class="tech"><summary>Technical register</summary><p>${esc(p.technical)}</p></details>` : ''}
+${p.problem ? `<h2>Problem</h2>${para(p.problem)}` : ''}
+${p.construction ? `<h2>Solution</h2>${para(p.construction)}` : ''}
+${p.analogy ? `<h2>Real-world analogy</h2>${para(p.analogy)}` : ''}
+${structure ? `<h2>Structure — on the surface</h2>${structure}` : ''}
+${syntax ? `<h2>Syntax — quoted from the tree at build time</h2>${syntax}` : ''}
+${p.forces ? `<h2>Forces</h2>${para(p.forces)}` : ''}
+${p.applicability ? `<h2>Applicability</h2>${para(p.applicability)}` : ''}
+${p.transformations ? `<h2>Transformations</h2><div class="two"><div><b>Allowed</b>${list(p.transformations.allowed)}</div><div><b>Forbidden</b>${list(p.transformations.forbidden)}</div></div>` : ''}
+${p.consequences ? `<h2>Consequences</h2>${para(p.consequences)}` : ''}
+${fm ? `<h2>Failure mode it answers</h2><p><b>${esc(fm.name)}</b> — ${esc(fm.problem)}${fm.paid_for ? ` <small>Paid for at: ${esc(fm.paid_for)}</small>` : ''}</p>` : ''}
+<h2>Witness</h2>${witness}
+<h2>Counterexample</h2>${cex}
+${takeaways ? `<h2>What to take away</h2>${takeaways}` : ''}
+${(p.cells || []).length || (p.claims || []).length ? `<h2>Cells and claims cited</h2>${d.cell_statuses.map((x) => `<p>cell <code>${x.num}</code> — status <code>${x.status}</code> (from cells.json)</p>`).join('')}${(p.claims || []).map((id, i) => `<p>claim <code>${esc(id)}</code> — <code>${d.claim_statuses[i]}</code> (from CLAIM_LEDGER.json)</p>`).join('')}` : ''}
+${p.prior_art ? `<h2>Prior art</h2>${para(p.prior_art)}` : ''}
+${(p.realizations || []).length ? `<h2>Realizations in the tree</h2>${list(p.realizations)}` : ''}
+${(p.related || []).length ? `<h2>Relations with other patterns</h2><p>${p.related.map((id) => byId.has(id) ? `<a href="${id}.html">${esc(byId.get(id).name)}</a> ${chip(byId.get(id))}` : esc(id)).join(' · ')}</p>` : ''}
+<div class="pn"><span>${prev ? `<a href="${prev.id}.html">← ${esc(prev.name)}</a><small>${FAMILY_TITLE[prev.family]}</small>` : ''}</span><span style="text-align:right">${next ? `<a href="${next.id}.html">${esc(next.name)} →</a><small>${FAMILY_TITLE[next.family]}</small>` : ''}</span></div>
+<footer class="fin">Derived ${new Date().toISOString()} by <code>opensentience.org/_patterns/build/build.mjs</code> from <code>data/patterns.json</code>, <code>_invariants/data/cells.json</code>, <code>CLAIM_LEDGER.json</code> and <code>_patterns/receipts/</code>. ${p.kind === 'pattern' && !p.problem ? 'Thin record: prose not yet authored; the invariant, witness and prior art are the record.' : ''}</footer>
+</main></div>${script}</body></html>`;
 }
 const pageOutputs = {};
-for (const p of derived) pageOutputs[`${p.id}.html`] = pageFor(p);
+ORDER.forEach((p, i) => { pageOutputs[`${p.id}.html`] = pageFor(p, i); });
 for (const f of existsSync(DEMOS) ? readdirSync(DEMOS) : []) pageOutputs[`demos/${f}`] = readFileSync(join(DEMOS, f), 'utf8');
+for (const f of existsSync(SCENES) ? readdirSync(SCENES) : []) pageOutputs[`scenes/${f}`] = readFileSync(join(SCENES, f), 'utf8');
+pageOutputs['surface/surface.mjs'] = readFileSync(SURFACE, 'utf8');
+const card = (p) => `<a class="card" href="${p.id}.html">${p.scene ? `<div class="thumb">${thumb(p)}</div>` : ''}<h3>${esc(p.name)} ${chip(p)}</h3><p>${esc(p.headline || p.invariant || (p.kind === 'definition' ? 'A definition.' : p.prior_art || ''))}</p></a>`;
+const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unboxed Patterns</title><meta name="description" content="Elements of Composable Locus-Oriented Software — a pattern catalog generated from a registry, with runnable witnesses."><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
+<script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
+<div class="book">${sidebar(null)}<main>
+<p class="meta">A catalog, and a book in progress</p>
+<h1>Unboxed Patterns</h1>
+<p class="lede"><em>Elements of Composable Locus-Oriented Software.</em> What recurring structures appear when computation is organized around persistent identity, locality, composition, authority, progress and observable semantic state — rather than around the class, the thread or the service?</p>
+<p>Every pattern here is a named problem, the forces that make it costly, one invariant, and — where the tree has one — a check you can run on this page. Labels are derived, never typed: <span class="chip WITNESSED">WITNESSED</span> means a recorded run of a check exists for the exact bytes on disk at rung <code>in_tree</code> or above; <span class="chip STATED">STATED</span> means the tree says it and no run proves it; <span class="chip PROPOSED">PROPOSED</span> means the book names it and the tree does not. ${summary.WITNESSED} witnessed · ${summary.STATED} stated · ${summary.PROPOSED} proposed · ${summary.anti_patterns} anti-patterns. Plan and open rulings: <code>ProjectAmp2/UNBOXED_PATTERNS.md</code>.</p>
+${DATA.families.map((f) => `<h2>${FAMILY_TITLE[f]}</h2><div class="cards">${ORDER.filter((p) => p.family === f).map(card).join('')}</div>`).join('')}
+<h2 id="anti">Patterns that should disappear</h2><ol class="take">${DATA.anti_patterns.map((a) => `<li id="anti-${a.id}"><b>${esc(a.name)}</b>${esc(a.problem)}${a.paid_for ? ` <small>· paid for at ${esc(a.paid_for)}</small>` : ''}</li>`).join('')}</ol>
+${findings.length ? `<h2>Findings from this build</h2><ul>${findings.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}
+<footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>. Machine-readable: <a href="llms.txt">llms.txt</a> · <a href="patterns.derived.json">patterns.derived.json</a> · <a href="artifact.json">artifact.json</a>.</footer>
+</main></div></body></html>`;
+const llms = [`# Unboxed Patterns — registry (P1, derived ${new Date().toISOString().slice(0, 10)})`, `# ${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns. Labels are derived by build.mjs, never typed. WITNESSED = a recorded run of a check on these exact bytes exists at rung ≥ in_tree.`, '', ...derived.map((p) => `- ${p.id} [${p.derived.label ?? p.kind}] (${p.family}) — ${p.invariant ?? '(no invariant)'}${p.witness ? ` — witness: ${p.witness.path} (${p.witness.shape}, ${p.witness.rung}${p.derived.EXECUTED ? ', executed' : ', NOT executed'})` : ''}`), '', '## anti-patterns', ...DATA.anti_patterns.map((a) => `- ${a.id} — ${a.problem}`)].join('\n') + '\n';
+const derivedJson = JSON.stringify({ kind: 'UNBOXED_PATTERNS_DERIVED', built: new Date().toISOString(), inputs_heads: heads, summary, findings, patterns: derived, anti_patterns: DATA.anti_patterns }, null, 2) + '\n';
+
 
 const DIST = join(SITE, 'patterns');   // SERVED at opensentience.org/patterns/ — ruling R4, 2026-09-11
 const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms, ...pageOutputs };
@@ -263,7 +317,7 @@ if (VERIFY) {
   console.log(`✓ --verify: patterns/ is what data + cells + ledger + ${receipts.length} receipt(s) derive.`); console.log(JSON.stringify(summary, null, 1)); process.exit(0);
 }
 mkdirSync(DIST, { recursive: true });
-mkdirSync(join(DIST, 'demos'), { recursive: true });
+for (const sub of ['demos', 'scenes', 'surface']) mkdirSync(join(DIST, sub), { recursive: true });
 for (const [k, v] of Object.entries(outputs)) writeFileSync(join(DIST, k), v);
 writeFileSync(join(DIST, 'artifact.json'), JSON.stringify(artifact, null, 2) + '\n');
 console.log(`✓ built ${Object.keys(outputs).length} file(s) into ${rel(DIST)}\n`);

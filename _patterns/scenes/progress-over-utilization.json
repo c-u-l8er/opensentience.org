@@ -1,0 +1,152 @@
+{
+ "stencil": "progress",
+ "interval": 2400,
+ "intro": "Two carriers, three loci each. One schedules for fairness among runnable loci; the other for admitted transitions.",
+ "params": {
+  "carriers": [
+   "carrier A · fair arm",
+   "carrier B · progress arm"
+  ],
+  "loci": [
+   {
+    "id": "a1",
+    "label": "",
+    "r": 10,
+    "at": "c0"
+   },
+   {
+    "id": "a2",
+    "label": "",
+    "r": 10,
+    "at": "c0"
+   },
+   {
+    "id": "a3",
+    "label": "",
+    "r": 10,
+    "at": "c0"
+   },
+   {
+    "id": "b1",
+    "label": "",
+    "r": 10,
+    "at": "c1"
+   },
+   {
+    "id": "b2",
+    "label": "",
+    "r": 10,
+    "at": "c1"
+   },
+   {
+    "id": "b3",
+    "label": "",
+    "r": 10,
+    "at": "c1"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "Place the loci. Each carrier is about to run flat out.",
+   "actions": [
+    {
+     "op": "place",
+     "locus": "a1",
+     "at": "c0",
+     "dx": -34
+    },
+    {
+     "op": "place",
+     "locus": "a3",
+     "at": "c0",
+     "dx": 34
+    },
+    {
+     "op": "place",
+     "locus": "b1",
+     "at": "c1",
+     "dx": -34
+    },
+    {
+     "op": "place",
+     "locus": "b3",
+     "at": "c1",
+     "dx": 34
+    }
+   ]
+  },
+  {
+   "caption": "Both run. Utilization: 100 % and 100 %. By the conventional measure they are equally healthy.",
+   "actions": [
+    {
+     "op": "meter",
+     "target": "u0",
+     "value": 100
+    },
+    {
+     "op": "meter",
+     "target": "u1",
+     "value": 100
+    },
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "busy"
+    },
+    {
+     "op": "state",
+     "target": "c1",
+     "state": "busy"
+    }
+   ]
+  },
+  {
+   "caption": "Now look at what was admitted. A spent most of its commands relocating loci for fairness. B admitted transitions.",
+   "takeaway": "The busiest Carrier can be the one making the least progress — the title of R7-EXECUTED.",
+   "actions": [
+    {
+     "op": "meter",
+     "target": "p0",
+     "value": 18
+    },
+    {
+     "op": "meter",
+     "target": "p1",
+     "value": 62
+    }
+   ]
+  },
+  {
+   "caption": "Later: B is 70 % utilized and further ahead. Utilization went down; progress went up.",
+   "takeaway": "Health is admitted semantic transitions per unit cost, never carrier busyness.",
+   "actions": [
+    {
+     "op": "meter",
+     "target": "u1",
+     "value": 70
+    },
+    {
+     "op": "meter",
+     "target": "p1",
+     "value": 88
+    },
+    {
+     "op": "meter",
+     "target": "p0",
+     "value": 24
+    },
+    {
+     "op": "state",
+     "target": "c1",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "What this picture cannot tell you is the number. The receipt on this page can, and the model document it came from says of itself: never a measurement.",
+   "takeaway": "Busywork Scheduling is the anti-pattern: maximizing utilization while semantic progress stalls.",
+   "actions": []
+  }
+ ]
+}
