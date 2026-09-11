@@ -1,0 +1,129 @@
+{
+ "stencil": "wire",
+ "interval": 2400,
+ "intro": "A state, the bytes it exposes, and the futures those bytes must be able to tell apart.",
+ "params": {
+  "producer": "state",
+  "v1": "future A",
+  "v2": "future B",
+  "wire": "Film v0.7 — the observable bytes",
+  "loci": [
+   {
+    "id": "S",
+    "label": "S₁",
+    "tag": "rotor=0 · receipt=∅",
+    "state": "record",
+    "at": "P",
+    "tagAbove": true
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "State S₁ exposes its Film bytes. Every variable that can determine the future is in them: rotor, receipt, once-latch.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "S",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "From those bytes the next transition is determined: future A.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "S",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "determined by the bytes"
+    }
+   ]
+  },
+  {
+   "caption": "Now a state S₂ whose rotor is 1 — but the rotor was left out of the Film. Same bytes as S₁, different future.",
+   "takeaway": "Hidden state is state that changes a future transition without changing the observable bytes.",
+   "actions": [
+    {
+     "op": "remove",
+     "locus": "S"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": ""
+    },
+    {
+     "op": "spawn",
+     "id": "S2",
+     "label": "S₂",
+     "tag": "rotor=1 (hidden) · same bytes",
+     "state": "tampered",
+     "at": "P",
+     "tagAbove": true
+    },
+    {
+     "op": "move",
+     "locus": "S2",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "Two states with different futures and identical Film bytes: Law 6 is violated, and the forge's binding run names the witness.",
+   "takeaway": "Law 6: if two states can lead to different futures, their Film bytes must differ.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "S2",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "future A"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "future B — same bytes: FAIL"
+    }
+   ]
+  },
+  {
+   "caption": "Two lanes hold two standings for this law — canonical for Film bytes in TRVM, too strong when lifted to any observable in the frontier package. The page says so under Prior art.",
+   "takeaway": "A law carries its domain; lifting it out of its domain is a new claim with its own evidence.",
+   "actions": [
+    {
+     "op": "wirenote",
+     "wire": "w",
+     "text": "Law 6 witness: hidden state → Film divergence"
+    }
+   ]
+  }
+ ]
+}

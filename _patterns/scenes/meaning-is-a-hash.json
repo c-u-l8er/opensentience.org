@@ -1,0 +1,149 @@
+{
+ "stencil": "wire",
+ "interval": 2400,
+ "intro": "WRL source, its canonical form, and two hosts that each compute what it means.",
+ "params": {
+  "producer": "WRL source",
+  "v1": "host A",
+  "v2": "host B",
+  "wire": "canonical form",
+  "loci": [
+   {
+    "id": "W",
+    "label": "W",
+    "tag": "4 objects · 3 routes",
+    "state": "record",
+    "at": "P",
+    "tagAbove": true
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "The starter world: a pulser, a relay, a spinner and an orb, three routes. Canonicalized.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "W",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "Host A hashes the canonical form: sem-67e954cf…. Host B, independently: sem-67e954cf…. That id is the meaning.",
+   "takeaway": "The semantics of a world is its SemanticArtifactID: computed, on every host, forever.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "W",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "sem-67e954cf…"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "sem-67e954cf…"
+    }
+   ]
+  },
+  {
+   "caption": "Edit one route. The canonical form changes, so the meaning changes, so the hash changes.",
+   "actions": [
+    {
+     "op": "remove",
+     "locus": "W"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": ""
+    },
+    {
+     "op": "spawn",
+     "id": "W2",
+     "label": "W′",
+     "tag": "one route changed",
+     "state": "tampered",
+     "at": "P",
+     "tagAbove": true
+    },
+    {
+     "op": "move",
+     "locus": "W2",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "Both hosts agree again — on a different id. There is no version flag to consult; the hash is the version.",
+   "takeaway": "A change of meaning is a change of hash; a preserved hash is a preserved meaning. There is nothing else to check.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "W2",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "sem-c1d2…  (different)"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "sem-c1d2…  (different)"
+    }
+   ]
+  },
+  {
+   "caption": "Unison did this for functions; Nix for packages. The prior-art field says so; the contribution here is executable topology plus refusal names on the wire.",
+   "takeaway": "Direct prior art exists and is credited — the page's Prior art field answers 'is this a renaming?' honestly.",
+   "actions": [
+    {
+     "op": "wirenote",
+     "wire": "w",
+     "text": "924 conformance checks · pinned fixtures"
+    }
+   ]
+  }
+ ]
+}

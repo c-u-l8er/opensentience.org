@@ -1,0 +1,99 @@
+{
+ "stencil": "join",
+ "interval": 2200,
+ "intro": "A public proposition, and the gate that decides whether it may be published.",
+ "params": {
+  "station": "ledger gate",
+  "loci": [
+   {
+    "id": "C",
+    "label": "c",
+    "tag": "claim · witness: (none)",
+    "at": "left"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "A claim arrives at the ledger: a statement, a status, an evidence kind — and no witness file.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "C",
+     "to": "J",
+     "dx": -107
+    }
+   ]
+  },
+  {
+   "caption": "The gate refuses: witness file does not exist. A claim without a witness is not admitted at any status.",
+   "takeaway": "Evidence before claim, mechanically: check-claim-ledger.mjs refuses a witness that is not on disk, an antecedent that is missing, a cell binding that contradicts the table.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "C",
+     "b": "C",
+     "result": "refused",
+     "reason": "REFUSED · witness file does not exist"
+    }
+   ]
+  },
+  {
+   "caption": "The witness is written — a script, a suite, a receipt — and the claim names it.",
+   "actions": [
+    {
+     "op": "spawn",
+     "id": "W",
+     "label": "w",
+     "tag": "witness · exists · exit 0",
+     "at": "left2"
+    },
+    {
+     "op": "state",
+     "target": "J",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "C",
+     "state": "live"
+    },
+    {
+     "op": "tag",
+     "target": "C",
+     "text": "claim · witness: w"
+    },
+    {
+     "op": "move",
+     "locus": "W",
+     "to": "J",
+     "dx": -107,
+     "dy": -46
+    }
+   ]
+  },
+  {
+   "caption": "Admitted, at the status the evidence earns — and the ledger's own vocabulary has eight, none of them a checkmark.",
+   "takeaway": "An invented number is worse than a missing one because it stops the question being asked (DOCTRINE rule 2).",
+   "actions": [
+    {
+     "op": "join",
+     "a": "C",
+     "b": "W",
+     "result": "composite",
+     "note": "admitted · PROVED with witness w"
+    }
+   ]
+  },
+  {
+   "caption": "This catalog runs the same gate on itself: 190 claims, every witness resolved, exit 0 — the receipt is under Witness.",
+   "takeaway": "The book's own labels are derived by a gate of the same shape; nothing on these pages is typed.",
+   "actions": []
+  }
+ ]
+}

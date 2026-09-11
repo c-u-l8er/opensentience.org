@@ -1,0 +1,96 @@
+{
+ "stencil": "migrate",
+ "interval": 2200,
+ "intro": "One world, three hosts. The seal above it is the hash of its canonical form.",
+ "params": {
+  "carriers": [
+   "host A",
+   "host B",
+   "host C"
+  ],
+  "loci": [
+   {
+    "id": "W",
+    "label": "W",
+    "tag": "sem-67e954cf…",
+    "at": "c0"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "Host A parses the world, canonicalizes it and seals it: sem-67e954cf….",
+   "actions": [
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Host B, a different machine, a different day: the same bytes, the same canonical form, the same seal.",
+   "takeaway": "Identity is computed, not assigned: every host derives the same seal from the same canonical form.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "W",
+     "to": "c1"
+    },
+    {
+     "op": "state",
+     "target": "c0",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "c1",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Host C, forever. The conformance suite asserts this fixture on every change.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "W",
+     "to": "c2"
+    },
+    {
+     "op": "state",
+     "target": "c1",
+     "state": "idle"
+    },
+    {
+     "op": "state",
+     "target": "c2",
+     "state": "held"
+    }
+   ]
+  },
+  {
+   "caption": "Change one relation in the world. A different future needs a different seal, and it gets one: this is W′, not W.",
+   "takeaway": "Two artifacts with different futures have different seals; a preserved seal is a preserved meaning.",
+   "actions": [
+    {
+     "op": "spawn",
+     "id": "W2",
+     "label": "W′",
+     "tag": "sem-8ae91fe9…",
+     "at": "air"
+    },
+    {
+     "op": "state",
+     "target": "W2",
+     "state": "tampered"
+    }
+   ]
+  },
+  {
+   "caption": "Nothing was named by a database row, a file path or a host. Location is not identity — that is the anti-pattern this answers.",
+   "takeaway": "Location Leak: encoding placement into identity when placement is not semantic.",
+   "actions": []
+  }
+ ]
+}

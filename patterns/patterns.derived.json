@@ -1,9 +1,9 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T16:16:09.225Z",
+  "built": "2026-09-11T16:29:37.153Z",
   "inputs_heads": {
-    ".": "b61fbe0f9eb2a77a8178ce6d0716c9dbb88b464e",
-    "opensentience.org": "79684cf6ec94a9f0a718867bc51385c3c681694d",
+    ".": "cd3ff2c15723303067a2fd09c7c72c361e37b21e",
+    "opensentience.org": "e564750af5d31920413d25d5ffdea238fcb00db1",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
@@ -110,6 +110,60 @@
       "failure_mode": "record-is-locus",
       "related": [
         "active-locus"
+      ],
+      "scene": "record-at-a-boundary",
+      "headline": "A record describes a locus at a boundary; it never is the locus.",
+      "explanatory": "Records carry the locus's fields — world, authority, evidence, certificate — and it is tempting to say the record is the agent. It is not. A record does not observe, does not act, and does not participate in the transition relation, which is exactly what active means. The correct sentence names the boundary at which the record was taken.",
+      "technical": "AGENCY.md §1 corollary: agent ≠ agent record, as world ≠ world serialization. Any sentence of the form 'X carries the locus fields, therefore X is a locus' is the error; the correct form is 'X records / certifies / bounds the locus at <boundary>'. Enforced as the lint class RECORD_IS_LOCUS over eight declared targets including this registry.",
+      "problem": "The factory page's first draft said the Assembly record — which carries world, authority, evidence and certificate — is the active locus. It collapsed the exact distinction the definition exists to draw, one screen after drawing it. The same collapse produces 'the database row is the user' and 'the checkpoint is the process'.",
+      "forces": "Records are what you can hold, hash, sign and ship; loci are what act. Everything durable about a locus reaches you as a record, so the record is always the nearer thing to point at. The pattern asks for one more clause — at which boundary — and that clause is what stops a snapshot being mistaken for a life.",
+      "construction": "Give every record a boundary: the point in the world's history at which it was taken and by whom. Write locus sentences with an active verb and record sentences with records / certifies / bounds. Put the retired phrasings in a lint list and run it over every surface that talks about agency, including the surface that lists the retired phrasings.",
+      "transformations": {
+        "allowed": [
+          "taking a record of a locus at any boundary",
+          "certifying a locus from its records",
+          "re-establishing a locus from records — a continuity question, not an identity assertion"
+        ],
+        "forbidden": [
+          "'X carries the locus fields, therefore X is a locus'",
+          "attaching an evidence rung to a definition",
+          "letting a record observe or act in prose"
+        ]
+      },
+      "consequences": "Continuity becomes askable: a successor may re-establish what a record says, and whether it did is a test, not a sentence. The cost is a lint that occasionally refuses your own registry — as it did here, twice, until the counterexample lines were quarantined by rule id.",
+      "analogy": "A passport describes a traveller at the border where it was stamped. Nobody boards the traveller's flight by holding the passport, and nobody says the passport went to Lisbon.",
+      "applicability": "Any system that persists, snapshots or certifies an acting thing: agent ledgers, factory records, world serializations, checkpoints. Especially copy about such systems, where the collapse is one adjective away.",
+      "syntax": [
+        {
+          "label": "The corollary, verbatim (AGENCY.md §1)",
+          "path": "AGENCY.md",
+          "start": "> **agent ≠ agent record**",
+          "count": 1
+        },
+        {
+          "label": "The lint class that enforces it, from the rules the gate runs",
+          "path": "scripts/messaging-rules.json",
+          "start": "\"id\": \"RECORD_IS_LOCUS\"",
+          "count": 5
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The record stayed at the boundary while the locus kept transitioning; the sentence that made them one was refused."
+        },
+        {
+          "from": "syntax",
+          "text": "The rule is a substring list with a stated reason and an 'instead' — a lint you can point at your own prose."
+        },
+        {
+          "from": "literature",
+          "text": "Map ≠ territory, and Parnas's interface/implementation split, applied to identity rather than modules."
+        },
+        {
+          "from": "witness",
+          "text": "The gate ran over eight targets with this registry among them; the counterexample sentence is one it rejects."
+        }
       ],
       "derived": {
         "label": "WITNESSED",
@@ -244,6 +298,60 @@
       "related": [
         "meaning-is-a-hash",
         "refusable-divergence"
+      ],
+      "scene": "identity-is-a-seal",
+      "headline": "An artifact's identity is the hash of its canonical form, the same on every host.",
+      "explanatory": "Identity is computed, not assigned. A WRL world is parsed, canonicalized and sealed to a SemanticArtifactID; every host derives the same id from the same canonical form, and a world with a different future has a different id. Nothing about the id names a file, a row or a machine.",
+      "technical": "WRL Core 0.1.2: the starter world seals to sem-67e954cf… on every host; a second, larger pinned fixture is what the batteries assert against; both are checked on every change by test/conformance.mjs (924 checks passing at the last run). 'birth key' appears once in WRL/HANDOFF_D8_PATH_B.md; the invariant's wording is the book's.",
+      "problem": "Systems assign identity by location — an autoincrement, a path, a host-qualified name — and then have to defend the assignment with locks, registries and migrations. Two copies with the same content get different names; one thing edited in place keeps its name while its meaning changes.",
+      "forces": "Hashing needs a canonical form, and canonicalization is where the real work is: two texts with the same meaning must produce the same bytes before hashing. A seal is only as trustworthy as the canonicalizer that both sides run, which is why the conformance suite and the cross-implementation vectors exist.",
+      "construction": "Define the canonical form first. Hash it. Make the hash the only identity the artifact has; let names be labels that point at hashes. Pin fixtures whose ids must never change, and fail the build if one does.",
+      "transformations": {
+        "allowed": [
+          "moving the artifact between hosts, files, rows",
+          "renaming a label that points at a seal",
+          "re-deriving the seal on any host"
+        ],
+        "forbidden": [
+          "assigning identity from a location",
+          "editing in place under a preserved id",
+          "trusting an id a record asserts without recomputing it (see Refusable Divergence)"
+        ]
+      },
+      "consequences": "Identity questions become recomputable. The cost is that in-place mutation is gone: to change a world is to make a new one, and continuity between the two is a separate question (Continuity Through Reconstruction).",
+      "analogy": "An ISBN is assigned; a checksum is computed. Two warehouses can disagree about an ISBN. They cannot disagree about a checksum without one of them being wrong about the bytes.",
+      "applicability": "Any artifact that must be the same thing on two machines: worlds, projections, certificates, packages. Not for things whose identity is legitimately their history rather than their content.",
+      "syntax": [
+        {
+          "label": "The starter world that seals to sem-67e954cf… — WRL/README.md",
+          "path": "WRL/README.md",
+          "start": "profile forge.world.core.v1",
+          "count": 10
+        },
+        {
+          "label": "The sentence that names the seal",
+          "path": "WRL/README.md",
+          "start": "sem-67e954cf",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Three hosts, one seal; one changed relation, a different seal."
+        },
+        {
+          "from": "syntax",
+          "text": "Nine lines of WRL are a world, and the world is its hash."
+        },
+        {
+          "from": "literature",
+          "text": "Merkle trees, Nix store paths and Unison's hashed definitions are the ancestry; credit them."
+        },
+        {
+          "from": "witness",
+          "text": "The conformance suite pins the fixture ids; this page cannot run it yet and says so."
+        }
       ],
       "derived": {
         "label": "WITNESSED",
@@ -469,6 +577,59 @@
         "semantic-membrane",
         "projection-not-duplication"
       ],
+      "scene": "shared-observable",
+      "headline": "Every state variable that can determine the future must be in the observable bytes.",
+      "explanatory": "If two states can lead to different futures, their observable bytes must differ. Anything that changes a future transition while leaving the bytes alone is hidden state, and hidden state is the bug that every replay, every cache key and every 'it works on my machine' eventually finds.",
+      "technical": "TRVM Law 6, ratified 2026-07-22, GLOBAL (no longer horizon-scoped): 'A canonical shared observable must carry every state variable that can determine future behavior; if two states can lead to different futures, their Film bytes must differ.' Witnesses in forge/FORGE_BINDING_RESULTS.md; enforced by binding_run3k.py and binding_run3h.py (hidden-state → Film divergence). In the frontier package it is adjudicated as the Markov / sufficient-statistic condition — known property, new name — and too strong when lifted to arbitrary observables, surviving there as the ADEQUACY/EQUIVARIANCE pair.",
+      "problem": "A rotor position, a receipt flag, a once-latch — each changed a future transition and none was in the Film. Replays diverged; the divergence was invisible in the bytes that were supposed to be the whole story. Three witnesses, then a law.",
+      "forces": "Carrying every variable is the easy reading and the wrong one: byte-level variables break convergence, so the frontier package demotes the naked statement to P1 and pairs it with equivariance. The honest form is scoped: for this observable, in this domain, these are the variables that determine the future. Two lanes hold two standings for exactly this reason, and neither cites the other.",
+      "construction": "Enumerate the variables that can change a future transition. Put them in the observable, canonically. Write a witness that constructs two states differing only in a candidate variable and checks that the bytes differ. Scope the law to the observable it was ratified for; lifting it is a new claim.",
+      "transformations": {
+        "allowed": [
+          "adding a variable to the observable when a witness shows it determines a future",
+          "quotienting the observable by an equivariance that provably does not change futures"
+        ],
+        "forbidden": [
+          "a variable outside the observable that changes a future transition (Invisible State)",
+          "lifting the law to another observable without its own witness",
+          "treating two lanes' standings as one"
+        ]
+      },
+      "consequences": "Replay becomes exact and cache keys become correct, because the bytes are sufficient. The methodological consequence is the one this page is honest about: a law carries its domain.",
+      "analogy": "A flight recorder that logs everything except the trim wheel. Two flights with identical recordings end differently, and the investigation cannot say why. Law 6 is the rule that the trim wheel goes in the recording.",
+      "applicability": "Any system with a replay, a cache, a memoization key or a canonical serialization. Law 23 in the same file is the memoization corollary: the key must include every dimension the generator ranges over.",
+      "syntax": [
+        {
+          "label": "Law 6, verbatim (TRVM/LAWS.md)",
+          "path": "TRVM/LAWS.md",
+          "start": "- **Statement:** *A canonical shared observable",
+          "count": 3
+        },
+        {
+          "label": "The enforcing witness in the forge binding run",
+          "path": "TRVM/forge/binding_run3k.py",
+          "start": "# ---- 16) Law 6 witness",
+          "count": 3
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Same bytes, different futures: that is the whole violation, and the witness names the hidden variable."
+        },
+        {
+          "from": "syntax",
+          "text": "The law is stated for Film bytes; 'GLOBAL' means no longer horizon-scoped, not 'true of every observable'."
+        },
+        {
+          "from": "literature",
+          "text": "Nerode's quotient and the sufficient-statistic condition are the prior art; the frontier package says so and demotes the naked law to P1."
+        },
+        {
+          "from": "witness",
+          "text": "The witness is a results document from the forge; this page cannot re-run it, and the two lanes' standings are reported side by side."
+        }
+      ],
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -547,6 +708,60 @@
       "related": [
         "carrier-confinement",
         "state-does-not-grant-authority"
+      ],
+      "scene": "capability-bounded-composition",
+      "headline": "Feasible, then permitted, then best — over a floor that composition cannot weaken.",
+      "explanatory": "An action may be possible and still not allowed. The governance kernel separates the two as rungs: the alethic rung says what can happen, the deontic rung says what may, and only then does the axiological gradient rank what is best. Deny is the default, grants are explicit and scoped, and composing two governed things never widens what either could do alone.",
+      "technical": "box-and-box, the [&] governance kernel: eight rungs, one bridge running feasible ▸ permitted ▸ best over an un-weakenable safety floor, a certificate on every verdict. 109 enforced kernel laws property-tested at 2000 trials (the suite derives its own total). Cell 16 (⊥ deny default) is proved at the impl tier. Carrier Confinement is the same rule at the OS boundary.",
+      "problem": "Ambient authority: a component needs one capability and is handed the environment. Unix permissions, process-wide credentials, an agent with the operator's whole token. Every composition then inherits everything, and the question 'may this proceed?' has no place to be asked.",
+      "forces": "Explicit grants are more to write and easier to forget, so the default matters: deny. The floor must survive composition, which means the compose laws have to be property-tested rather than trusted. And the gradient (best) must never be consulted before the floor (permitted), or optimization quietly becomes authorization.",
+      "construction": "Model authority as a distinct rung with its own laws, not a flag on an action. Make deny the identity for the permission operator. Compose by meet on the floor and by the declared operator above it. Attach a certificate to every verdict so a receiver can check the chain rather than the answer.",
+      "transformations": {
+        "allowed": [
+          "narrowing a grant's scope",
+          "composing two governed bricks (the floor is the meet)",
+          "escalating an unmet obligation back to the deontic rung (ought-implies-can)"
+        ],
+        "forbidden": [
+          "widening authority by composition",
+          "consulting the gradient before the floor",
+          "granting the environment when one capability is needed (Ambient Authority)"
+        ]
+      },
+      "consequences": "'May this proceed, and is it best?' becomes arithmetic with a certificate attached. The cost is the explicit grant, every time; the benefit is that the answer is checkable by someone who did not make it.",
+      "analogy": "A theatre with a locked stage door. Being able to climb the wall (feasible) is not a ticket (permitted), and the best seat in the house (best) is only a question once you are inside.",
+      "applicability": "Agent runtimes, plugin systems, multi-tenant services, operating-system carriers, any place where 'can' has been standing in for 'may'.",
+      "syntax": [
+        {
+          "label": "The bridge, in the kernel's own words (box-and-box README)",
+          "path": "opensentience.org/box-and-box/README.md",
+          "start": "feasible ▸ permitted ▸ best",
+          "count": 1
+        },
+        {
+          "label": "L10 — a backward phase is refused; L14 — deny_default is idempotent under ∧ (from the suite this page runs)",
+          "path": "AmpersandBoxDesign/box-and-box/test/laws.mjs",
+          "start": "['L10', 'chain refuses a backward phase'",
+          "count": 4
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The same action was refused without a grant and admitted with one; feasibility never moved."
+        },
+        {
+          "from": "syntax",
+          "text": "deny_default is idempotent under ∧ — composition cannot manufacture permission."
+        },
+        {
+          "from": "literature",
+          "text": "Object-capability discipline; 'ambient authority' is Mark S. Miller's term (Capability Myths Demolished)."
+        },
+        {
+          "from": "witness",
+          "text": "109 kernel laws × 2000 trials ran on this page, on the same bytes CI runs."
+        }
       ],
       "derived": {
         "label": "WITNESSED",
@@ -632,6 +847,60 @@
       "related": [
         "refusable-divergence",
         "shared-observable"
+      ],
+      "scene": "projection-not-duplication",
+      "headline": "Every view of an artifact is derived from it by a declared, recomputable function.",
+      "explanatory": "A view is a projection, not a second copy that pretends to be authoritative. Two viewers agree because each derived the view from the artifact, not because they trusted each other. A copy that was edited since it was taken is a replica, and a receiver that cannot derive it refuses it.",
+      "technical": "WRL §D8.18/§D8.19: deriveRuntimeProjection makes the V1→V2 downgrade in-band, and the projection on the wire carries only claims a receiver recomputes. Graphonomous projection-v1: eleven acceptance laws over schema_closure_id + projection_contract_id, so a projection's certificate closes over the schemas it actually used rather than every schema in the checkout — growing the vocabulary no longer re-mints frozen projections (the v0 defect D-068 fixed). 15 tests, five golden vectors.",
+      "problem": "v0 hashed every schema file in the checkout into every projection's identity. Adding a schema re-minted the certificates of frozen projections whose records had not moved. Identity that closes over the wrong set is duplication wearing a hash.",
+      "forces": "Derivation costs recomputation on every read, which is exactly the cost a replica avoids — and the reason replicas drift. The closure a projection's identity depends on must be neither too wide (every schema) nor too narrow (none); it is derived from the adapter runs that produced it, through a trusted contract.",
+      "construction": "Declare the projection function and its contract. Derive the schema closure from what the projection actually consumed. Put the closure id and contract id in the certificate. Have every consumer recompute the projection from the artifact and refuse anything it cannot derive.",
+      "transformations": {
+        "allowed": [
+          "adding a projection",
+          "re-deriving after the artifact changes",
+          "downgrading a projection in-band so the receiver sees the downgrade as a claim"
+        ],
+        "forbidden": [
+          "a copy presented as the artifact (Replica Theater)",
+          "an identity that closes over inputs the projection did not use",
+          "a flag that says 'this is current' instead of a recomputation"
+        ]
+      },
+      "consequences": "Views can multiply without becoming sources of truth. The methodological consequence is law 4 of projection-v1, measured in both of its readings, with the second found not to hold — the test says so, and D-072 records it.",
+      "analogy": "Two accountants each recompute the quarter from the ledger. A third brings last month's spreadsheet with edits. The first two agree; the third is not a view of anything.",
+      "applicability": "Read models, dashboards, exports, search indexes, semantic graphs over a corpus — anything that presents an artifact from another angle.",
+      "syntax": [
+        {
+          "label": "Why v1 exists — the test file's own header",
+          "path": "graphonomous/v2/test/projection_v1.test.mjs",
+          "start": "The subject is one coordinate",
+          "count": 4
+        },
+        {
+          "label": "The projection on the wire (WRL relation-v2.js)",
+          "path": "WRL/relation-v2.js",
+          "start": "export async function deriveRuntimeProjection",
+          "count": 6
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Two views agreed by derivation; the replica was refused because nothing could derive it."
+        },
+        {
+          "from": "syntax",
+          "text": "A projection's identity closes over the schemas it consumed — schema_closure_id — not the checkout."
+        },
+        {
+          "from": "literature",
+          "text": "CQRS read models and materialized views are the ancestry; the contribution is the closure id in the certificate."
+        },
+        {
+          "from": "witness",
+          "text": "15 tests over eleven laws ran today with a receipt; law 4's second reading fails and the test says so."
+        }
       ],
       "derived": {
         "label": "WITNESSED",
@@ -1258,6 +1527,60 @@
         "identity-is-a-seal",
         "refusable-divergence"
       ],
+      "scene": "meaning-is-a-hash",
+      "headline": "The meaning of a WRL world is its SemanticArtifactID.",
+      "explanatory": "A WRL program is a network of durable identities joined by textured routes and separated by boundaries, and the whole network is one content address. Change the meaning and the hash changes; keep the hash and the meaning is kept, on every host, forever. There is no version flag beside it to consult.",
+      "technical": "WallRiderLang Core 0.1.2: 'an executable topology language whose meaning is a hash'. wrl.js is the browser identity spine that seals real sem- ids; the starter world seals to sem-67e954cf…; test/conformance.mjs pins the fixtures (924 checks, 0 failed at the last run). Committed projection vectors round-trip byte-exact through TRVM Forge's independent Python spine.",
+      "problem": "Meaning lives in prose and version numbers, both of which are asserted rather than computed. Two implementations disagree about what a document means and there is nothing either can recompute to settle it.",
+      "forces": "A hash of the source is not enough — whitespace is not meaning — so a canonical form has to be defined and both implementations have to produce it identically. The cost is a canonicalizer as carefully specified as the language; the benefit is that cross-implementation agreement becomes a vector file rather than a meeting.",
+      "construction": "Specify the canonical form. Seal it. Pin fixtures. Put the sealed id on the wire and let receivers recompute it (Refusable Divergence). Run a second implementation in a second language against the same vectors.",
+      "transformations": {
+        "allowed": [
+          "re-serializing the source (same canonical form, same id)",
+          "adding an implementation that reproduces the same ids",
+          "editing the world — which makes a new world"
+        ],
+        "forbidden": [
+          "a version flag standing in for the id",
+          "an id assigned by a registry rather than derived",
+          "two implementations that disagree without one of them refusing"
+        ]
+      },
+      "consequences": "Meaning becomes portable and checkable. Unison did this for functions and Nix for packages; the prior-art field credits both, because the contribution here is the executable topology and the refusal names, not the hashing.",
+      "analogy": "A recipe written so precisely that any two kitchens produce the same dish, and the dish's name is a fingerprint of the recipe. Change the salt and it is, by name, a different dish.",
+      "applicability": "Any language or format whose documents must mean the same thing in two places: world descriptions, manifests, contracts, projections.",
+      "syntax": [
+        {
+          "label": "WRL in one sentence (WRL/README.md)",
+          "path": "WRL/README.md",
+          "start": "meaning is a hash",
+          "count": 1
+        },
+        {
+          "label": "The world that seals to sem-67e954cf…",
+          "path": "WRL/README.md",
+          "start": "profile forge.world.core.v1",
+          "count": 10
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "Two hosts computed the same id from the same canonical form, and a different one after a single edit."
+        },
+        {
+          "from": "syntax",
+          "text": "Nine lines of source are the whole world; the sem- id below them is its meaning."
+        },
+        {
+          "from": "literature",
+          "text": "Unison identifies every definition by the hash of its syntax tree; IPFS and Nix by content. Direct prior art, credited."
+        },
+        {
+          "from": "witness",
+          "text": "924 conformance checks ran today under a receipt; the suite is not staged on this page and the page says so."
+        }
+      ],
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -1430,6 +1753,60 @@
       "related": [
         "capability-bounded-composition"
       ],
+      "scene": "state-does-not-grant-authority",
+      "headline": "A fact about a locus never constitutes a power.",
+      "explanatory": "An established state may justify or constrain the issuance of authority; it never is the grant. Admissible action is a function of established state, an explicit grant, the governing policy and the contracts in force — never of state alone. The sentence that puts the grant inside the state is retired in AGENCY.md §4, and a gate refuses every paraphrase of it.",
+      "technical": "AGENCY.md §4: the chain is established state + policy + explicit grant → admissible authority. Admissible action = f(established state, explicit authority, policy, contracts). The lint class STATE_DOES_NOT_ISSUE_AUTHORITY rejects the paraphrases; the invariants table's 'authority' field means the authority consequence an invariant is proposed to justify, not one it issues. Under ruling R7's criterion this pattern may belong to the locus family.",
+      "problem": "'I am the admin, therefore I may.' Every system that derives permission from an attribute of the subject has built ambient authority with an extra step: the attribute is observed once and then stands in for a grant forever. The Periodic Table shipped three paraphrases of it before the lint existed.",
+      "forces": "Attributes are cheap to check and grants are paperwork. Policies genuinely do depend on state — a grant may have preconditions the state must satisfy — which is why the sentence is so easy to write wrong: the state is in the chain, just not at the end of it.",
+      "construction": "Keep grants as first-class objects with scope and policy preconditions. Evaluate admissibility as a function of the grant and the state, not of the state. Retire the sentences that skip the grant, list them, and run the list over every page that talks about authority.",
+      "transformations": {
+        "allowed": [
+          "a policy whose preconditions a state satisfies",
+          "narrowing a grant's scope",
+          "revoking a grant while the state persists"
+        ],
+        "forbidden": [
+          "the sentence that makes a state the source of a grant (retired; the gate lists its paraphrases)",
+          "deriving admissibility from state alone",
+          "a field named authority read as proof that nothing exceeds it"
+        ]
+      },
+      "consequences": "Authority becomes a thing that can be revoked, scoped and audited separately from the facts that justified it. The counterexample on this page is a sentence, and that is the point: a vocabulary pattern's falsifier is a lint.",
+      "analogy": "A surgeon's licence is a grant; being a surgeon is a state. The licence can be suspended while the skill remains, and the skill never operated on anyone by itself.",
+      "applicability": "Access control, agent authority, capability tokens, and every paragraph of copy about any of them.",
+      "syntax": [
+        {
+          "label": "The trap and the chain, verbatim (AGENCY.md §4)",
+          "path": "AGENCY.md",
+          "start": "### State does not grant authority",
+          "count": 6
+        },
+        {
+          "label": "The lint class, from the rules the gate runs",
+          "path": "scripts/messaging-rules.json",
+          "start": "\"id\": \"STATE_DOES_NOT_ISSUE_AUTHORITY\"",
+          "count": 5
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The established fact was refused alone and admitted with a scoped grant beside it."
+        },
+        {
+          "from": "syntax",
+          "text": "Admissible action = f(state, grant, policy, contracts) — the state is an argument, never the function."
+        },
+        {
+          "from": "literature",
+          "text": "Object-capability discipline: authority is what you hold, not what you are."
+        },
+        {
+          "from": "witness",
+          "text": "The gate rejected the counterexample sentence in this very registry until it was quarantined by rule id."
+        }
+      ],
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -1481,6 +1858,60 @@
       "related": [
         "refusal-gate",
         "descent-is-not-dependence"
+      ],
+      "scene": "evidence-before-claim",
+      "headline": "A proposition is admitted only with a named witness that exists.",
+      "explanatory": "Every public claim in this stack is a record in a ledger with a statement, a status from a fixed vocabulary, an evidence kind, and the witnesses that back it. A gate refuses a claim whose witness file is missing, whose conditional has no antecedent, or whose cell binding contradicts the invariants table. The gate's exit code is the verdict, and no report overrides it.",
+      "technical": "DOCTRINE.md rule 4 (measure before you claim, and say how); CLAIM_LEDGER.json, 190 claims across eight statuses; scripts/check-claim-ledger.mjs refuses a witness that does not exist, a CONDITIONAL with no antecedent, a binding that contradicts the table, and a witness whose relative-import closure does not resolve. 178 of 190 claims carry prior_art; one says NOT SEARCHED. This catalog's labels are derived by a gate of the same shape.",
+      "problem": "Status reports say done. Percentages stand in for evidence. A number typed beside a claim is quoted three times before anyone asks where it came from — this tree has paid that price with law counts, migration counts and a '64 of 116'. An invented number is worse than a missing one because it stops the question being asked.",
+      "forces": "Writing a witness is slower than writing a sentence, and a gate that refuses your own claim is unpleasant on the day. The pressure to soften the vocabulary — a checkmark, a 'mostly' — is constant. The rule holds by making the exit code the answer and by making '?' an acceptable one.",
+      "construction": "Keep one ledger of claims. Fix the status vocabulary and forbid every other word. Require a witness path per claim and a gate that opens it. Derive every count on every page from the ledger; never type one.",
+      "transformations": {
+        "allowed": [
+          "downgrading a status when in doubt",
+          "adding a witness and re-running the gate",
+          "answering '?' or 'status unknown'"
+        ],
+        "forbidden": [
+          "a status word outside the vocabulary",
+          "a witness that is described but not on disk",
+          "a count typed where it is displayed (A Number in Two Places)"
+        ]
+      },
+      "consequences": "Claims become things a reader can check rather than believe. The book you are reading is built this way: its labels are derived, its counts are joined, and its own first draft was caught by the same discipline with 32 labels over 30 rows.",
+      "analogy": "A courtroom exhibit list. A witness who is named but never appears does not testify, however good the story.",
+      "applicability": "Any document that makes status claims: roadmaps, READMEs, marketing pages, this catalog.",
+      "syntax": [
+        {
+          "label": "Rule 4, verbatim (DOCTRINE.md)",
+          "path": "DOCTRINE.md",
+          "start": "4. **Measure before you claim",
+          "count": 4
+        },
+        {
+          "label": "The refusal, in the gate this page ran",
+          "path": "scripts/check-claim-ledger.mjs",
+          "start": "witness file does not exist",
+          "count": 1
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The claim was refused without its witness and admitted with one, at the status the evidence earned."
+        },
+        {
+          "from": "syntax",
+          "text": "The gate's exit code is the verdict; a report cannot override it."
+        },
+        {
+          "from": "literature",
+          "text": "Toulmin's warrant and backing; assurance cases; Pollock's defeaters — the ledger has a defeater field of its own."
+        },
+        {
+          "from": "witness",
+          "text": "check-claim-ledger.mjs ran today over 190 claims, exit 0, with a receipt on this page."
+        }
       ],
       "derived": {
         "label": "WITNESSED",
@@ -1600,6 +2031,54 @@
       "related": [
         "continuity-through-reconstruction",
         "evidence-before-claim"
+      ],
+      "scene": "descent-is-not-dependence",
+      "headline": "A lineage edge generates a candidate support set and establishes none.",
+      "explanatory": "B descended from A; A had a capability. That B has it too, and that it depends on A for it, are two further claims neither of which the lineage edge makes. Competence may have been copied into weights, recompiled or independently rediscovered while the edge stayed. Support is established by ablation, intervention, runtime dependency or replacement replay — and provenance-only support is refused.",
+      "technical": "mosaic/embodiment.json refuses a lineage edge as a link in the support chain; scripts/emb-support.mjs enforces the refusal before computing any kernel or cut. A continuity kernel is a minimal causally established support set sufficient to retain a declared capability under a declared replacement contract — set-shaped, because support is a hypergraph. The revocation-cut dual holds only when the support function is monotone; the engine refuses kernels for a capability whose observations falsify monotonicity. Status: 4 capabilities, 4 synthetic, 0 observed; both refusals fire; no kernel is claimed.",
+      "problem": "'The successor inherited it' is the sentence every factory wants to write. The tree wrote it, and outside review caught it: descent had been placed in the causal chain as if a git edge were an experiment.",
+      "forces": "Lineage is cheap to record and ablation is expensive to run, so provenance will always be the evidence you have. Support sets overlap — K₁={A} and K₂={B,C} can both suffice — so a single deletion proves nothing and the engine must reason about sets. Monotonicity is a hypothesis with a falsifier, not a given.",
+      "construction": "Record lineage, but classify it as a candidate generator. Accept as support only ablation, intervention, runtime dependency or replacement replay, with the evidence kind named. Compute kernels over sets. Refuse when the observations falsify monotonicity. Report 0 observed as 0 observed.",
+      "transformations": {
+        "allowed": [
+          "proposing a candidate support set from lineage",
+          "establishing support by ablation of the set under test",
+          "revoking a capability by cutting a kernel — when monotone"
+        ],
+        "forbidden": [
+          "lineage as a link in the causal chain (Provenance as Support)",
+          "'has inherited' in the present perfect without an observed kernel",
+          "ablating one file and concluding about a set"
+        ]
+      },
+      "consequences": "Heredity becomes a specified experiment rather than a slogan. The honest status today is that the engine runs and has nothing to run on, which the page above states in those words.",
+      "analogy": "A student who studied under a master. That the student can do the thing, and that they could not without the master, are two claims; the enrolment record makes neither. You find out by taking the notebooks away.",
+      "applicability": "Model distillation, factory lineages, plugin inheritance, any claim that a successor 'carries forward' what a predecessor had.",
+      "syntax": [
+        {
+          "label": "The two refusals, in the engine's own words (scripts/emb-support.mjs)",
+          "path": "scripts/emb-support.mjs",
+          "start": " * THE TWO REFUSALS",
+          "count": 8
+        }
+      ],
+      "takeaways": [
+        {
+          "from": "animation",
+          "text": "The lineage edge was refused as support; the ablation was admitted, and the kernel it established is a set."
+        },
+        {
+          "from": "syntax",
+          "text": "Both refusals — provenance-only support and a falsified monotonicity hypothesis — are named, and both fire on the synthetic corpus."
+        },
+        {
+          "from": "literature",
+          "text": "Pearl's ladder of causation: seeing, doing, imagining. Lineage is seeing; ablation is doing."
+        },
+        {
+          "from": "witness",
+          "text": "emb-support.mjs ran today: 4 capabilities, 4 synthetic, 0 observed. Heredity is unwitnessed, and the page never says otherwise."
+        }
       ],
       "derived": {
         "label": "WITNESSED",

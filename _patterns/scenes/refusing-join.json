@@ -34,13 +34,13 @@
      "op": "move",
      "locus": "A",
      "to": "J",
-     "dx": -64
+     "dx": -74
     },
     {
      "op": "move",
      "locus": "C",
      "to": "J",
-     "dx": 64
+     "dx": 74
     }
    ]
   },
@@ -86,7 +86,7 @@
      "op": "move",
      "locus": "B",
      "to": "J",
-     "dx": -64
+     "dx": -74
     },
     {
      "op": "spawn",
@@ -105,7 +105,7 @@
      "op": "move",
      "locus": "C2",
      "to": "J",
-     "dx": 64
+     "dx": 74
     },
     {
      "op": "join",

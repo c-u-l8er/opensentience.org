@@ -1,0 +1,125 @@
+{
+ "stencil": "join",
+ "interval": 2200,
+ "intro": "An active locus, a boundary, and the record that is written there.",
+ "params": {
+  "station": "boundary",
+  "loci": [
+   {
+    "id": "L",
+    "label": "L",
+    "tag": "active · state s₀",
+    "at": "left"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "L acts: it observes, it transitions, it participates in the world's transition relation. That is what active means.",
+   "actions": [
+    {
+     "op": "tag",
+     "target": "L",
+     "text": "active · state s₁"
+    },
+    {
+     "op": "move",
+     "locus": "L",
+     "to": "J",
+     "dx": -92
+    }
+   ]
+  },
+  {
+   "caption": "At the boundary a record R is written: world, authority, evidence, certificate. R describes L at this boundary.",
+   "takeaway": "A record describes, identifies, constrains or certifies a locus at a named boundary.",
+   "actions": [
+    {
+     "op": "spawn",
+     "id": "R",
+     "label": "R",
+     "tag": "records L at s₁",
+     "state": "record",
+     "at": "J",
+     "dx": 92
+    },
+    {
+     "op": "state",
+     "target": "J",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": "R records L at the boundary"
+    }
+   ]
+  },
+  {
+   "caption": "L keeps going. R does not: it does not observe, it does not act, it never transitions.",
+   "actions": [
+    {
+     "op": "tag",
+     "target": "L",
+     "text": "active · state s₂"
+    },
+    {
+     "op": "move",
+     "locus": "L",
+     "to": "out",
+     "dx": -40
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "J",
+     "state": "idle"
+    }
+   ]
+  },
+  {
+   "caption": "Someone reads R and says: an assembly is a locus. The ontology gate refuses the sentence — RECORD_IS_LOCUS.",
+   "takeaway": "agent ≠ agent record, exactly as world ≠ world serialization. 'X carries the locus fields, therefore X is a locus' is the error.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "R",
+     "to": "J",
+     "dx": 92
+    },
+    {
+     "op": "join",
+     "a": "R",
+     "b": "R",
+     "result": "refused",
+     "reason": "REFUSED · RECORD_IS_LOCUS"
+    }
+   ]
+  },
+  {
+   "caption": "The correct sentence names the boundary: R records L at s₁. Naming the boundary is usually what makes the sentence true.",
+   "takeaway": "Say where the record was taken; a record with no boundary is a claim about nothing.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "J",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": "R records L at s₁ — admitted"
+    },
+    {
+     "op": "state",
+     "target": "R",
+     "state": "record"
+    }
+   ]
+  }
+ ]
+}

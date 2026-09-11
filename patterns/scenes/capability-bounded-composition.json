@@ -1,0 +1,94 @@
+{
+ "stencil": "join",
+ "interval": 2200,
+ "intro": "An action that can happen, a floor that says whether it may, and a gradient above the floor.",
+ "params": {
+  "station": "feasible ▸ permitted ▸ best",
+  "loci": [
+   {
+    "id": "A",
+    "label": "a",
+    "tag": "feasible",
+    "at": "left"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "Action a is feasible: the alethic rung says it can happen. Feasibility is the first rung, not the verdict.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "A",
+     "to": "J",
+     "dx": -187
+    }
+   ]
+  },
+  {
+   "caption": "Is it permitted? No explicit grant covers it. Deny is the default: the deontic rung refuses.",
+   "takeaway": "Feasibility never implies permission: feasible ▸ permitted ▸ best, with a floor that cannot be weakened.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "A",
+     "b": "A",
+     "result": "refused",
+     "reason": "0̲ · not permitted (deny default)"
+    }
+   ]
+  },
+  {
+   "caption": "A grant arrives — scoped, explicit, with the policy it satisfies. The same action, now under authority.",
+   "actions": [
+    {
+     "op": "spawn",
+     "id": "G",
+     "label": "g",
+     "tag": "grant · scope: a",
+     "at": "left2"
+    },
+    {
+     "op": "state",
+     "target": "J",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "A",
+     "state": "live"
+    },
+    {
+     "op": "move",
+     "locus": "G",
+     "to": "J",
+     "dx": -187,
+     "dy": -46
+    }
+   ]
+  },
+  {
+   "caption": "Permitted. Then, and only then, the gradient ranks it against the alternatives: best.",
+   "takeaway": "Composition grants exactly the authority the relationship needs — never ambient access to the whole environment.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "A",
+     "b": "G",
+     "result": "composite",
+     "note": "permitted ▸ best · certificate attached"
+    }
+   ]
+  },
+  {
+   "caption": "109 kernel laws, 2000 trials each, check this floor on this page; the deny-default cell (16) is proved at the impl tier.",
+   "takeaway": "Ambient Authority is the anti-pattern — Mark Miller's term, and the deontic rung's reason to exist.",
+   "actions": []
+  }
+ ]
+}

@@ -1,0 +1,94 @@
+{
+ "stencil": "join",
+ "interval": 2300,
+ "intro": "A descendant, a capability, and the question of what actually supports it.",
+ "params": {
+  "station": "support?",
+  "loci": [
+   {
+    "id": "B",
+    "label": "B",
+    "tag": "descended from A · lineage edge",
+    "at": "left"
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "B descended from A. A had capability c. Does B's lineage establish that c depends on A?",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "B",
+     "to": "J",
+     "dx": -92
+    }
+   ]
+  },
+  {
+   "caption": "Refused. A lineage edge generates a candidate support set and establishes none: c may have been copied into weights, recompiled, or rediscovered while the edge stayed.",
+   "takeaway": "Provenance is not causal support. Descent is not dependence.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "B",
+     "b": "B",
+     "result": "refused",
+     "reason": "REFUSED · support evidence of kind: provenance"
+    }
+   ]
+  },
+  {
+   "caption": "Ablation: remove the support set under test and watch whether c survives. That is evidence of the kind the engine accepts.",
+   "actions": [
+    {
+     "op": "spawn",
+     "id": "E",
+     "label": "e",
+     "tag": "ablation · c lost without K",
+     "at": "left2"
+    },
+    {
+     "op": "state",
+     "target": "J",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "J",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "B",
+     "state": "live"
+    },
+    {
+     "op": "move",
+     "locus": "E",
+     "to": "J",
+     "dx": -92,
+     "dy": -46
+    }
+   ]
+  },
+  {
+   "caption": "Admitted: a continuity kernel K — a minimal, causally established support set for c under a declared replacement contract.",
+   "takeaway": "Support is set-shaped: K₁={A} and K₂={B,C} can both suffice, so deleting A alone proves nothing.",
+   "actions": [
+    {
+     "op": "join",
+     "a": "B",
+     "b": "E",
+     "result": "composite",
+     "note": "kernel K established · ablation"
+    }
+   ]
+  },
+  {
+   "caption": "The engine has 4 capabilities, all synthetic, 0 observed. Both refusals fire; no kernel is claimed. Heredity is specified and unwitnessed, and this page says so.",
+   "takeaway": "Never write heredity in the present perfect: the engine runs and has nothing to run on.",
+   "actions": []
+  }
+ ]
+}

@@ -1,0 +1,145 @@
+{
+ "stencil": "wire",
+ "interval": 2400,
+ "intro": "An artifact, the projection derived from it, and two views that recompute rather than copy.",
+ "params": {
+  "producer": "artifact",
+  "v1": "view A",
+  "v2": "view B",
+  "wire": "projection · derived, recomputable",
+  "loci": [
+   {
+    "id": "P",
+    "label": "P",
+    "tag": "derived from the artifact",
+    "state": "record",
+    "at": "P",
+    "tagAbove": true
+   }
+  ]
+ },
+ "steps": [
+  {
+   "caption": "The artifact changes; the projection P is re-derived from it by a declared function.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "P",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "View A and view B each recompute P from the artifact. They agree because they derived, not because they trusted.",
+   "takeaway": "A view is a projection: derived by a declared, recomputable function, never a second authoritative copy.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "P",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "recomputed · matches"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "admitted"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "recomputed · matches"
+    }
+   ]
+  },
+  {
+   "caption": "A replica R appears: a copy made last week, edited since, presented as 'the same thing'.",
+   "actions": [
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": ""
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "idle"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": ""
+    },
+    {
+     "op": "spawn",
+     "id": "R",
+     "label": "R",
+     "tag": "copy · not derived",
+     "state": "tampered",
+     "at": "P",
+     "tagAbove": true
+    },
+    {
+     "op": "move",
+     "locus": "R",
+     "to": "mid"
+    }
+   ]
+  },
+  {
+   "caption": "Neither view can derive R from the artifact. It is refused as a projection: Replica Theater.",
+   "takeaway": "Replica Theater is the anti-pattern: calling independent mutable copies 'the same thing'.",
+   "actions": [
+    {
+     "op": "move",
+     "locus": "R",
+     "to": "fork"
+    },
+    {
+     "op": "state",
+     "target": "V1",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "V1",
+     "text": "REFUSED · not derivable"
+    },
+    {
+     "op": "state",
+     "target": "V2",
+     "state": "refused"
+    },
+    {
+     "op": "note",
+     "target": "V2",
+     "text": "REFUSED · not derivable"
+    }
+   ]
+  },
+  {
+   "caption": "Graphonomous projection-v1 pins this with eleven laws and a schema closure id, so growing the vocabulary cannot re-mint a frozen projection's certificate.",
+   "takeaway": "A projection's identity closes over the schemas it actually used, not over every schema in the checkout.",
+   "actions": [
+    {
+     "op": "wirenote",
+     "wire": "w",
+     "text": "projection-v1 · 11 laws · 15 tests"
+    }
+   ]
+  }
+ ]
+}
