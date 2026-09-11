@@ -71,6 +71,21 @@ const STENCILS = {
     for (const l of p.loci || []) st.loci.push(locus(l, st.anchors[l.at || 'off']));
     return st;
   },
+  /* a sealed WRL world: params.nodes = [[role,name,cfg]], params.edges = [[kind,src,dst]] — the graph the
+     forge reduced. Objects are stations laid out in columns by longest incoming path; edges are wires. A film
+     epoch is applied with generic `state` / `note` actions the build derives from the Film's lines. */
+  world(p = {}) {
+    const st = base(); const nodes = p.nodes || [], edges = p.edges || [];
+    const names = nodes.map((n) => n[1]); const depth = Object.fromEntries(names.map((n) => [n, 0]));
+    for (let k = 0; k < names.length; k++) for (const [, a, b] of edges) depth[b] = Math.max(depth[b], depth[a] + 1);
+    const cols = {}; for (const n of names) (cols[depth[n]] ||= []).push(n);
+    const nc = Object.keys(cols).length; const pos = {};
+    Object.entries(cols).forEach(([d, ns]) => ns.forEach((n, i) => { pos[n] = { x: nc === 1 ? W / 2 : 120 + (+d) * ((W - 240) / (nc - 1)), y: 200 - (ns.length - 1) * 40 + i * 80 }; }));
+    for (const [role, name] of nodes) st.stations.push({ id: name, x: pos[name].x, y: pos[name].y, label: `${name} · ${role.toLowerCase()}`, state: 'idle', note: '', role });
+    for (const [kind, a, b] of edges) st.wires.push({ id: `${a}->${b}`, x1: pos[a].x + 60, y1: pos[a].y, x2: pos[b].x - 60, y2: pos[b].y, label: kind === 'SignalWire' ? 'sig' : 'socket', note: '' });
+    st.anchors = Object.fromEntries(names.map((n) => [n, pos[n]])); st.anchors.off = { x: -80, y: 200 };
+    return st;
+  },
   /* concentric boundaries: params.rings = [{id,label}] outermost first; a locus can sit in any ring */
   nest(p = {}) {
     const st = base(); const rings = p.rings || [{ id: 'r0', label: 'outer' }, { id: 'r1', label: 'inner' }];
@@ -88,6 +103,7 @@ function locus(l, at) { return { id: l.id, label: l.label ?? l.id, state: l.stat
 /* ── generic actions ────────────────────────────────────────────────────────────────────────────── */
 const find = (st, id) => st.loci.find((l) => l.id === id) || st.slots.find((s) => s.id === id) || st.stations.find((s) => s.id === id) || st.meters.find((m) => m.id === id) || st.rings.find((r) => r.id === id);
 const ACTIONS = {
+  wirestate(st, a) { const w = st.wires.find((w) => w.id === a.wire); if (w) w.state = a.state; },
   place(st, a) { const l = find(st, a.locus), at = st.anchors[a.at]; if (l && at) { l.x = at.x + (a.dx || 0); l.y = at.y + (a.dy || 0); } },
   move(st, a) { ACTIONS.place(st, { locus: a.locus, at: a.to, dx: a.dx, dy: a.dy }); },
   state(st, a) { const t = find(st, a.target); if (t) t.state = a.state; },
@@ -123,7 +139,7 @@ export function svg(st, { thumb = false, caption = true } = {}) {
   o.push(`<rect class="sf-floor" x="0" y="336" width="${W}" height="44"/>`);
   o.push(`<text class="sf-floorlabel" x="12" y="366">compute surface</text>`);
   for (const r of st.rings) o.push(`<g class="sf-ring ${r.state}"><rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="14"/><text x="${r.x + 12}" y="${r.y + 18}">${esc(r.label)}</text>${r.note ? `<text class="sf-note ${r.state}" x="${r.x + r.w - 12}" y="${r.y + r.h - 10}" text-anchor="end">${esc(r.note)}</text>` : ''}</g>`);
-  for (const w of st.wires) o.push(`<line class="sf-wire" x1="${w.x1}" y1="${w.y1}" x2="${w.x2}" y2="${w.y2}"/><text class="sf-label" x="${(w.x1 + w.x2) / 2}" y="${w.y1 - 14}" text-anchor="middle">${esc(w.label)}</text>${w.note ? `<text class="sf-note" x="${(w.x1 + w.x2) / 2}" y="${w.y1 + 26}" text-anchor="middle">${esc(w.note)}</text>` : ''}`);
+  for (const w of st.wires) o.push(`<line class="sf-wire ${w.state || ''}" x1="${w.x1}" y1="${w.y1}" x2="${w.x2}" y2="${w.y2}"/><text class="sf-label" x="${(w.x1 + w.x2) / 2}" y="${w.y1 - 14}" text-anchor="middle">${esc(w.label)}</text>${w.note ? `<text class="sf-note" x="${(w.x1 + w.x2) / 2}" y="${w.y1 + 26}" text-anchor="middle">${esc(w.note)}</text>` : ''}`);
   for (const s of st.slots) { const w = s.wide ? 150 : 60; o.push(`<g class="sf-slot ${s.state}"><rect x="${s.x - w / 2}" y="${s.y - 16}" width="${w}" height="32" rx="6"/><text x="${s.x}" y="${s.y + 5}" text-anchor="middle">${esc(s.label)}</text></g>`); }
   for (const m of st.meters) { const pct = Math.max(0, Math.min(1, m.value / m.max)); o.push(`<g class="sf-meter ${m.kind}"><text class="sf-label" x="${m.x}" y="${m.y - 6}">${esc(m.label)} · ${Math.round(pct * 100)}%</text><rect class="sf-track" x="${m.x}" y="${m.y}" width="${m.w}" height="10" rx="5"/><rect class="sf-fill" x="${m.x}" y="${m.y}" width="${(m.w * pct).toFixed(1)}" height="10" rx="5"/></g>`); }
   for (const s of st.stations) { o.push(s.box ? `<g class="sf-station ${s.state}"><rect x="${s.x - 40}" y="${s.y - 22}" width="80" height="44" rx="6"/><text x="${s.x}" y="${s.y - 2}" text-anchor="middle">${esc(s.label)}</text><text class="sf-count" x="${s.x}" y="${s.y + 15}" text-anchor="middle">${s.count ? s.count + ' pending' : 'empty'}</text></g>` : `<g class="sf-station ${s.state}"><path d="M${s.x} ${s.y - 34} L${s.x + Math.max(44, s.label.length * 5 + 22)} ${s.y} L${s.x} ${s.y + 34} L${s.x - Math.max(44, s.label.length * 5 + 22)} ${s.y} Z"/><text x="${s.x}" y="${s.y + 5}" text-anchor="middle">${esc(s.label)}</text></g>`); if (s.note) o.push(`<text class="sf-note ${s.state}" x="${s.x}" y="${s.y + (s.box ? 40 : 56)}" text-anchor="middle">${esc(s.note)}</text>`); }
@@ -181,7 +197,7 @@ export const CSS = `
 .sf-ring rect{fill:none;stroke:var(--line2,#d8cfba);stroke-width:1.5}.sf-ring text{font:11px var(--mono,monospace);fill:var(--fg3,#666);letter-spacing:.06em;text-transform:uppercase}.sf-ring.held rect{stroke:var(--acc,#6d3bd4);fill:var(--acc-soft,rgba(109,59,212,.05))}.sf-ring.held text{fill:var(--acc,#6d3bd4)}.sf-ring.refused rect{stroke:var(--rose,#c02a5f)}.sf-ring.refused text{fill:var(--rose,#c02a5f)}.sf-ring.admitted rect{stroke:var(--data,#0a6e62)}.sf-ring.admitted text{fill:var(--data,#0a6e62)}
 .sf-station .sf-count{font:10px var(--mono,monospace);fill:var(--fg3,#555)}
 .sf-note{font:12px var(--mono,monospace);fill:var(--fg2,#333)}.sf-note.refused{fill:var(--rose,#c02a5f)}.sf-note.admitted{fill:var(--data,#0a6e62)}
-.sf-wire{stroke:var(--fg3,#555);stroke-width:2;stroke-dasharray:6 4}.sf-label{font:12px var(--ui,system-ui);fill:var(--fg2,#333)}
+.sf-wire{stroke:var(--fg3,#555);stroke-width:2;stroke-dasharray:6 4}.sf-wire.on{stroke:var(--acc,#6d3bd4);stroke-width:3;stroke-dasharray:none}.sf-label{font:12px var(--ui,system-ui);fill:var(--fg2,#333)}
 .sf-meter .sf-track{fill:var(--ink3,#fff);stroke:var(--line2,#d8cfba)}.sf-meter.util .sf-fill{fill:var(--warn,#96600b);transition:width .7s}.sf-meter.prog .sf-fill{fill:var(--data,#0a6e62);transition:width .7s}
 .sf-caption{font:15px var(--display,Georgia,serif);fill:var(--fg,#1c1a17)}
 .sf-controls{display:flex;gap:.5rem;align-items:center;margin:.6rem 0 .3rem;font:13px var(--ui,system-ui)}.sf-controls button{font:600 13px var(--ui,system-ui);padding:.3rem .7rem;border:1px solid var(--fg,#1c1a17);background:var(--ink3,#fff);border-radius:6px;cursor:pointer}.sf-pos{color:var(--fg3,#555);margin-left:auto;font-family:var(--mono,monospace)}

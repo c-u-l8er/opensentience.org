@@ -213,6 +213,19 @@ for (const p of derived) {
   if (w.variant) await sealFile(w.variant, true);
   if (w.refused) await sealFile(w.refused, false);
 }
+// ── Films: the forge's receipts, admitted only for the exact world bytes and a matching id (P15) ────
+const FILMS_DIR = join(HERE, '../films');
+const filmReceipts = existsSync(FILMS_DIR) ? readdirSync(FILMS_DIR).filter((f) => f.endsWith('.json')).map((f) => readJson(join(FILMS_DIR, f))) : [];
+const films = new Map();   // world file → receipt (validated)
+for (const p of derived) {
+  const w = p.wrl; if (!w || !w.world || !w.film) continue;
+  const key = shaFile(join(WRL_DIR, w.world));
+  const rc = filmReceipts.find((r) => r.source_identity.world_sha256 === key);
+  if (!rc) { findings.push(`${p.id}: world ${w.world} declares a film and no receipt exists for these bytes — run run-films.mjs`); continue; }
+  const S = sealed.get(w.world);
+  if (S && S.r.ok && rc.forge.semantic_artifact_id !== S.r.semanticId) { refuse('P15-FILM-ID-MISMATCH', `${p.id}: forge sealed ${rc.forge.semantic_artifact_id}, wrl.js sealed ${S.r.semanticId}`); continue; }
+  films.set(w.world, rc);
+}
 if (refusals.length) { console.error(`\n✗ ${refusals.length} refusal(s):\n  ` + refusals.join('\n  ')); process.exit(1); }
 const byId = new Map(derived.map((p) => [p.id, p]));
 const antiById = new Map(DATA.anti_patterns.map((a) => [a.id, a]));
@@ -248,6 +261,35 @@ footer.fin{font:12.5px var(--ui,system-ui);color:var(--fg3,#666);margin-top:2rem
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;margin:.6rem 0 1.6rem}.card{display:block;border:1px solid var(--line,#e7e0d2);border-radius:var(--r,8px);background:var(--ink3,#fffdf8);padding:.8rem .9rem;text-decoration:none;color:inherit}.card:hover{border-color:var(--acc-line,#c9b8f0)}.card .thumb{margin:-.3rem -.3rem .5rem;border-radius:6px;overflow:hidden}.card .thumb svg{display:block;width:100%;height:auto;border:0}.card h3{font:600 17px var(--display,Georgia,serif);margin:0 0 .2rem}.card p{font:13.5px/1.45 var(--ui,system-ui);color:var(--fg2,#333);margin:.2rem 0}
 @media(max-width:900px){.book{grid-template-columns:1fr}.side{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line,#e7e0d2);padding-bottom:.8rem}.two{grid-template-columns:1fr}}
 ` + SF.CSS;
+function parseFilmLine(l) { const [role, name, rest] = l.split(':'); const kv = Object.fromEntries((rest || '').split(',').map((x) => x.split('=')).filter((x) => x.length === 2)); for (const k of ['rotor', 'pose']) { const m = (rest || '').match(new RegExp(k + '=([0-9a-f]+(?:,[0-9a-f]+){3})')); if (m) kv[k] = m[1]; } return { role, name, kv, raw: l }; }
+function filmScene(p) {
+  const w = p.wrl; const rc = films.get(w.world); if (!rc) return null; const g = sealed.get(w.world).r.graph;
+  const steps = []; let prev = {};
+  rc.epochs.forEach((ep, i) => {
+    const actions = []; const cur = {};
+    for (const l of ep.film) {
+      if (!/^(pulser|relay|door|spinner|orb|wire):/.test(l)) continue;
+      const f = parseFilmLine(l); cur[f.name] = f;
+      if (f.role === 'wire') { const [, a, b] = f.name.split('__'); actions.push({ op: 'wirestate', wire: `${a}->${b}`, state: f.kv.cur === '1' ? 'on' : '' }); continue; }
+      const note = f.role === 'spinner' ? `rotor=${f.kv.rotor}` : f.role === 'orb' ? `pose=${f.kv.pose}${f.kv.fault === '1' ? ' · FAULT' : ''}` : f.role === 'pulser' ? `armed=${f.kv.armed} done=${f.kv.done} nf=${f.kv.nf}` : f.role === 'door' ? `open=${f.kv.open}` : `cur_out=${f.kv.cur_out}`;
+      const changed = prev[f.name] && prev[f.name].raw !== f.raw;
+      actions.push({ op: 'note', target: f.name, text: note }, { op: 'state', target: f.name, state: changed ? 'admitted' : (f.role === 'orb' && f.kv.fault === '1' ? 'refused' : 'idle') });
+    }
+    prev = cur;
+    steps.push({ caption: `epoch ${ep.t} · Film v0.7 ${ep.film_hash.slice(7, 23)}… — every line below is the forge's; the picture only colours what changed`, actions, takeaway: i === rc.epochs.length - 1 ? `${rc.epochs.length} epochs reduced by TRVM's forge; ${new Set(rc.epochs.map((e) => e.film_hash)).size} distinct film hashes; this replay is of a sealed world, not of scene data.` : undefined });
+  });
+  return { stencil: 'world', interval: 2200, intro: `The sealed world, before epoch 1. Reduced by TRVM's forge (${rc.execution_identity.reducer}) in ${rc.execution_identity.seconds}s on ${rc.execution_identity.host}.`, params: { nodes: g.nodes.map(([r, n]) => [r, n, {}]), edges: g.edges }, steps };
+}
+function filmSection(p) {
+  const w = p.wrl; if (!w || !w.world) return '';
+  const rc = films.get(w.world);
+  if (!rc) return `<p class="warn">${w.film ? 'A film is declared for this world and no receipt exists for the bytes on disk; run <code>run-films.mjs</code>.' : 'No film declared for this world.'}</p>`;
+  const sc = filmScene(p);
+  return `<p>This is not scene data. TRVM's forge reduced the sealed world above — the production fold, reference reducer, no scenario, empty claim batches merged with the world's own routes — and each step is one epoch's Film v0.7. The forge's id <code>${esc(rc.forge.semantic_artifact_id.slice(0, 24))}…</code> equals the id <code>wrl.js</code> sealed (the build refuses otherwise): two implementations, one identity.</p>
+  <p class="exec">Execution identity: ${esc(rc.execution_identity.started)} on <code>${esc(rc.execution_identity.host)}</code> · ${rc.execution_identity.seconds}s · reducer <code>${esc(rc.execution_identity.reducer)}</code> · policy <code>${esc(rc.forge.policy_id)}</code> · TRVM HEAD <code>${(rc.source_identity.trvm_head || '?').slice(0, 12)}</code> · world bytes <code>${rc.source_identity.world_sha256.slice(0, 16)}…</code></p>
+  <div class="sf" id="film"><div class="sf-stage">${SF.svg(SF.computeState(sc, 0))}</div></div>
+  <details class="tech"><summary>The Film, epoch by epoch (${rc.epochs.length})</summary>${rc.epochs.map((e) => `<p class="syn-label">epoch ${e.t} · <code>${esc(e.film_hash)}</code></p><pre class="syn">${esc(e.film.join('\n'))}</pre>`).join('')}</details>`;
+}
 function graphSvg(g) {
   // columns by longest incoming path; boxes; arrows. Small on purpose: the text listing is the authority.
   const names = g.nodes.map((n) => n[1]); const depth = Object.fromEntries(names.map((n) => [n, 0]));
@@ -290,7 +332,9 @@ function pageFor(p, idx) {
   const takeaways = (p.takeaways || []).length ? `<ol class="take">${p.takeaways.map((t) => `<li class="${t.from}"><b>from the ${t.from}</b>${esc(t.text)}</li>`).join('')}</ol>` : '';
   const fm = p.failure_mode ? antiById.get(p.failure_mode) : null;
   const script = `<script type="module">
-    ${sc ? `import { mount } from '/patterns/surface/surface.mjs?v=${SF_STAMP}';\n    mount(document.getElementById('sf'), ${JSON.stringify(sc)});` : ''}
+    ${sc || (p.wrl && p.wrl.world && films.get(p.wrl.world)) ? `import { mount } from '/patterns/surface/surface.mjs?v=${SF_STAMP}';` : ''}
+    ${sc ? `mount(document.getElementById('sf'), ${JSON.stringify(sc)});` : ''}
+    ${p.wrl && p.wrl.world && films.get(p.wrl.world) ? `mount(document.getElementById('film'), ${JSON.stringify(filmScene(p))});` : ''}
     ${(d.STAGED || demo) ? `import { runWitness } from '/witness/run.js?v=${RUNJS_STAMP}';
     const spec = ${JSON.stringify({ entry: '/witness/src/' + (w ? w.path : ''), mode: w ? (w.shape === 'suite' ? 'suite' : 'side-effect') : 'suite', stamp, argv: [], trials: 200 })};
     const b = document.getElementById('run');
@@ -311,6 +355,7 @@ ${p.construction ? `<h2>Solution</h2>${para(p.construction)}` : ''}
 ${p.analogy ? `<h2>Real-world analogy</h2>${para(p.analogy)}` : ''}
 ${structure ? `<h2>Structure — on the surface</h2>${structure}` : ''}
 ${p.wrl ? `<h2>The scene as a WRL world</h2>${wrlSection(p)}` : ''}
+${p.wrl && p.wrl.world ? `<h2>The Film — reduced by TRVM's forge</h2>${filmSection(p)}` : ''}
 ${syntax ? `<h2>Syntax — quoted from the tree at build time</h2>${syntax}` : ''}
 ${p.forces ? `<h2>Forces</h2>${para(p.forces)}` : ''}
 ${p.applicability ? `<h2>Applicability</h2>${para(p.applicability)}` : ''}
@@ -334,13 +379,14 @@ for (const f of existsSync(DEMOS) ? readdirSync(DEMOS) : []) pageOutputs[`demos/
 for (const f of existsSync(SCENES) ? readdirSync(SCENES) : []) pageOutputs[`scenes/${f}`] = readFileSync(join(SCENES, f), 'utf8');
 pageOutputs['surface/surface.mjs'] = readFileSync(SURFACE, 'utf8');
 for (const f of existsSync(WRL_DIR) ? readdirSync(WRL_DIR) : []) pageOutputs[`wrl/${f}`] = readFileSync(join(WRL_DIR, f), 'utf8');
+for (const f of existsSync(FILMS_DIR) ? readdirSync(FILMS_DIR) : []) pageOutputs[`films/${f}`] = readFileSync(join(FILMS_DIR, f), 'utf8');
 const CONC = readJson(join(HERE, '../data/conclusion.json'));
 const last = ORDER[ORDER.length - 1];
 pageOutputs['conclusion.html'] = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(CONC.title)} · Unboxed Patterns</title><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
 <script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
 <div class="book">${sidebar('conclusion')}<main><p class="meta">Front matter, at the back</p><h1>${esc(CONC.title)}</h1><p class="lede">${esc(CONC.lede)}</p>
 ${CONC.sections.map((sec) => `<h2>${esc(sec.h)}</h2>${sec.p.map((t) => `<p>${esc(t)}</p>`).join('')}`).join('')}
-<h2>The numbers this page is allowed to quote</h2><p>${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns · ${[...sealed.values()].filter((x) => x.r.ok).length} WRL worlds sealed at build and ${[...sealed.values()].filter((x) => !x.r.ok).length} refused by design — every one derived by <code>build.mjs</code>, none typed.</p>
+<h2>The numbers this page is allowed to quote</h2><p>${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns · ${[...sealed.values()].filter((x) => x.r.ok).length} WRL worlds sealed at build and ${[...sealed.values()].filter((x) => !x.r.ok).length} refused by design · ${films.size} worlds with a Film reduced by TRVM's forge (${[...films.values()].reduce((n, r) => n + r.epochs.length, 0)} epochs) — every one derived by <code>build.mjs</code>, none typed.</p>
 <div class="pn"><span><a href="${last.id}.html">← ${esc(last.name)}</a><small>${FAMILY_TITLE[last.family]}</small></span><span style="text-align:right"><a href="./">Catalog →</a></span></div>
 <footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>.</footer></main></div></body></html>`;
 const card = (p) => `<a class="card" href="${p.id}.html">${p.scene ? `<div class="thumb">${thumb(p)}</div>` : ''}<h3>${esc(p.name)} ${chip(p)}</h3><p>${esc(p.headline || p.invariant || (p.kind === 'definition' ? 'A definition.' : p.prior_art || ''))}</p></a>`;
@@ -362,7 +408,7 @@ const derivedJson = JSON.stringify({ kind: 'UNBOXED_PATTERNS_DERIVED', built: ne
 
 const DIST = join(SITE, 'patterns');   // SERVED at opensentience.org/patterns/ — ruling R4, 2026-09-11
 const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms, ...pageOutputs };
-const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])), 'WRL/wrl.js': WRLJS_SHA, wrl_worlds: Object.fromEntries([...sealed.entries()].map(([f, x]) => [f, x.r.ok ? x.r.semanticId : x.r.code])) };
+const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])), films: Object.fromEntries([...films.entries()].map(([f, r]) => [f, r.source_identity.world_sha256.slice(0, 16) + ':' + r.epochs.length])), 'WRL/wrl.js': WRLJS_SHA, wrl_worlds: Object.fromEntries([...sealed.entries()].map(([f, x]) => [f, x.r.ok ? x.r.semanticId : x.r.code])) };
 // the artifact excludes the timestamps so --verify compares content, not clock
 const stable = (s) => s.replace(/\d{4}-\d\d-\d\dT[\d:.]+Z/g, 'T');
 const artifact = { kind: 'UNBOXED_PATTERNS_ARTIFACT', inputs, inputs_heads: heads, summary, outputs: Object.fromEntries(Object.entries(outputs).map(([k, v]) => [k, sha(stable(v))])) };
@@ -378,7 +424,7 @@ if (VERIFY) {
   console.log(`✓ --verify: patterns/ is what data + cells + ledger + ${receipts.length} receipt(s) derive.`); console.log(JSON.stringify(summary, null, 1)); process.exit(0);
 }
 mkdirSync(DIST, { recursive: true });
-for (const sub of ['demos', 'scenes', 'surface', 'wrl']) mkdirSync(join(DIST, sub), { recursive: true });
+for (const sub of ['demos', 'scenes', 'surface', 'wrl', 'films']) mkdirSync(join(DIST, sub), { recursive: true });
 for (const [k, v] of Object.entries(outputs)) writeFileSync(join(DIST, k), v);
 writeFileSync(join(DIST, 'artifact.json'), JSON.stringify(artifact, null, 2) + '\n');
 console.log(`✓ built ${Object.keys(outputs).length} file(s) into ${rel(DIST)}\n`);
