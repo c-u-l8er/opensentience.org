@@ -1,0 +1,9 @@
+profile forge.world.core.v1
+
+; a record that asserts a route the port table does not allow — refused by name, not by prose
+[relay:r0]{sig_in, sig_out}
+[door:d]{sig_in}
+[orb:ob]{pose}
+
+[r0] --sig--> [d]
+[d] --sig--> [ob]

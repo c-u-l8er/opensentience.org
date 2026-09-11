@@ -1,0 +1,7 @@
+profile forge.world.core.v1
+
+; a signal driven straight into a pose port: feasible to type, not permitted by the port table
+[pulser:action](every 1){sig_out}
+[orb:world]{pose}
+
+[action] --sig--> [world]

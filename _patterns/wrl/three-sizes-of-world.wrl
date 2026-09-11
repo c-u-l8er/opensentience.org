@@ -1,0 +1,11 @@
+profile forge.world.core.v1
+
+; this IS a WRL GRAPH — the smallest of the three sizes; its id is a wrl_head, never a current_head
+[pulser:p0](every 2){sig_out}
+[relay:r0]{sig_in, sig_out}
+[spinner:sp](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ob]{pose}
+
+[p0] --sig--> [r0]
+[r0] --sig--> [sp]
+[sp] --socket--> [ob]

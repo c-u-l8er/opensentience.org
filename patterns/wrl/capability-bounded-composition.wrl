@@ -1,0 +1,9 @@
+profile forge.world.core.v1
+
+; an action reaches a gate through a relay; the Door is the permitted rung
+[pulser:action](every 1){sig_out}
+[relay:policy]{sig_in, sig_out}
+[door:permitted]{sig_in}
+
+[action] --sig--> [policy]
+[policy] --sig--> [permitted]

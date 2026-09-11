@@ -1,9 +1,9 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T16:45:03.376Z",
+  "built": "2026-09-11T16:55:30.505Z",
   "inputs_heads": {
-    ".": "f5f799b1d718257381e230d92085ffd14f1a4ac8",
-    "opensentience.org": "1ea65f3a476722493d8103c38fe1169e66126d24",
+    ".": "177cfcfa302e33aca354a08229880f47ab1f8b4f",
+    "opensentience.org": "d0a780b6c65583b7ffd8fdc79a1107d52409ae4e",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
@@ -112,6 +112,9 @@
           "text": "A definition carries no rung; this page is labelled none by rule."
         }
       ],
+      "wrl": {
+        "note": "A definition; no world."
+      },
       "derived": {
         "label": null,
         "CHECKABLE": false,
@@ -212,6 +215,9 @@
           "text": "The gate ran over eight targets with this registry among them; the counterexample sentence is one it rejects."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding: a record is not a role, and inventing one would need a book profile (WRL-P0), which waits on the WRL lane's ruling."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -300,6 +306,9 @@
           "text": "This is STATED: a standing rule, not a measurement. The measured neighbour is Carrier Multiplexing."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding: WRL has no carrier role by design — the runtime is the carrier — which is the pattern's point, stated by absence."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -400,6 +409,10 @@
           "text": "The conformance suite pins the fixture ids; this page cannot run it yet and says so."
         }
       ],
+      "wrl": {
+        "world": "identity-is-a-seal.wrl",
+        "note": "The starter world. Sealed here, in node, at build; the id the page prints was computed from these bytes by WRL's own wrl.js."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -505,6 +518,9 @@
           "text": "emb-support.mjs runs today: 4 capabilities, 4 synthetic, 0 observed. Both refusals fire. Heredity is unwitnessed and the page says so."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding yet; continuity is a relation between two worlds and a contract, not a topology."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": true,
@@ -628,6 +644,11 @@
           "text": "This is not an argument: 101 laws × 2000 trials ran in your browser above, on the same bytes CI runs."
         }
       ],
+      "wrl": {
+        "world": "refusing-join.wrl",
+        "refused": "refusing-join.refused.wrl",
+        "note": "A Door admits exactly one signal wire. Two producers into one join is WRL_CONTROLLER_CONFLICT — the language's own refusing join, named at the port."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -731,6 +752,10 @@
           "text": "The witness is a results document from the forge; this page cannot re-run it, and the two lanes' standings are reported side by side."
         }
       ],
+      "wrl": {
+        "world": "shared-observable.wrl",
+        "note": "The Spinner's rotor is the state Law 6 was first written for: it determines the Orb's pose and must be in the Film."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -806,6 +831,9 @@
           "text": "PROPOSED: no witness, no counterexample, and the label derives to say so."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding; the membrane is a quotient on state, not a route."
+      },
       "derived": {
         "label": "PROPOSED",
         "CHECKABLE": false,
@@ -910,6 +938,11 @@
           "text": "109 kernel laws × 2000 trials ran on this page, on the same bytes CI runs."
         }
       ],
+      "wrl": {
+        "world": "capability-bounded-composition.wrl",
+        "refused": "capability-bounded-composition.refused.wrl",
+        "note": "The Door is the permitted rung. A signal driven into a pose port is feasible to type and refused by the port table."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -996,6 +1029,9 @@
           "text": "STATED: the witness is a review document in super/, referenced by path and never copied; ABI 10 on this host."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding: confinement is an OS-boundary property."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -1097,6 +1133,10 @@
           "text": "15 tests over eleven laws ran today with a receipt; law 4's second reading fails and the test says so."
         }
       ],
+      "wrl": {
+        "world": "projection-not-duplication.wrl",
+        "note": "The Orb's pose is derived from the Spinner through a SocketControl edge — a projection, not a copy."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -1203,6 +1243,11 @@
           "text": "924 conformance checks ran today; this page cannot run them yet (the suite is not staged), and says so under Witness."
         }
       ],
+      "wrl": {
+        "world": "refusable-divergence.wrl",
+        "refused": "refusable-divergence.refused.wrl",
+        "note": "A world that routes a signal out of a Door is refused with a code and a locator, not a warning."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -1310,6 +1355,9 @@
           "text": "The witness is a receipt with instruction counts; the model document beside it is a prediction and is not cited as evidence."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding: progress is a property of a Film, and the page cannot reduce one."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -1400,6 +1448,9 @@
           "text": "STATED, not witnessed: the source is an OPEN record, and the label on this page derives from that."
         }
       ],
+      "wrl": {
+        "note": "Mailbox is the role this scene wants, and Mailbox has no surface spelling (Core 0.1.2 §14b): the runtime honours it, source cannot declare it. Stated by WRL's own limit."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -1499,6 +1550,9 @@
           "text": "The witness is a receipt document; this page cannot re-run it, and says so under Witness."
         }
       ],
+      "wrl": {
+        "note": "No honest core-role encoding: fan-out from one Pulser to eight Doors is legal WRL but would picture a broadcast, not a multiplexer."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -1576,6 +1630,9 @@
           "text": "STATED, in progress: stage 2 of R7.2.1D is prespecified and unrun."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding: placement is a runtime decision below the topology."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -1649,6 +1706,9 @@
           "text": "PROPOSED: no witness. The label says so and nothing on this page argues otherwise."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding; a sweep is over a Film, not a topology."
+      },
       "derived": {
         "label": "PROPOSED",
         "CHECKABLE": false,
@@ -1728,6 +1788,10 @@
           "text": "STATED: the witness is a review in super/, and its §0 is the refutation of the round before it."
         }
       ],
+      "wrl": {
+        "world": "three-valued-outcome.wrl",
+        "note": "An attempt reaches the world through a carrier; a Door is a sink. The three outcomes are the Film's, and the Film is TRVM's."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -1815,6 +1879,9 @@
           "text": "STATED at the spec rung; the studbook §10.2 ruling is the blocker and is published as one."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding: persistence is below the semantic level by definition."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -1896,6 +1963,10 @@
           "text": "STATED: frozen vocabulary; the witness is the retraction record in WORLD_SIZE.md §11."
         }
       ],
+      "wrl": {
+        "world": "three-sizes-of-world.wrl",
+        "note": "This world is a WRL GRAPH — the smallest of the three sizes. Its seal is a wrl_head."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -1957,6 +2028,9 @@
           "text": "GAP, derived as PROPOSED: no invariant, no witness, one open ruling."
         }
       ],
+      "wrl": {
+        "note": "No encoding — the boundary has no definition to encode."
+      },
       "derived": {
         "label": "PROPOSED",
         "CHECKABLE": false,
@@ -2057,6 +2131,11 @@
           "text": "924 conformance checks ran today under a receipt; the suite is not staged on this page and the page says so."
         }
       ],
+      "wrl": {
+        "world": "meaning-is-a-hash.wrl",
+        "variant": "meaning-is-a-hash.variant.wrl",
+        "note": "The same world with one period changed. Two ids; there is no version flag to consult."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -2137,6 +2216,10 @@
           "text": "STATED with '?': no receipt states a fidelity, and the page says so instead of inventing one."
         }
       ],
+      "wrl": {
+        "world": "exact-replay.wrl",
+        "note": "A sealed world whose film TRVM reduces; the page cannot run the film — reduction lives in TRVM, not in wrl.js."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -2220,6 +2303,9 @@
           "text": "STATED: shape 'card' carries no execution, and the derivation says so."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding: an InteractionTrace is OS-011's artifact, not a WRL world."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": true,
@@ -2283,6 +2369,9 @@
           "text": "OPEN: no pattern, one ruling, published as the question."
         }
       ],
+      "wrl": {
+        "note": "No encoding; the open ruling is about keys, not topology."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -2357,6 +2446,9 @@
           "text": "A definition; no rung; the lint on the neighbouring pattern is the falsifier."
         }
       ],
+      "wrl": {
+        "note": "A definition; no world."
+      },
       "derived": {
         "label": null,
         "CHECKABLE": false,
@@ -2457,6 +2549,9 @@
           "text": "The gate rejected the counterexample sentence in this very registry until it was quarantined by rule id."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding; a grant is not a role."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -2563,6 +2658,9 @@
           "text": "check-claim-ledger.mjs ran today over 190 claims, exit 0, with a receipt on this page."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding; the ledger gate is over claims, not worlds."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -2644,6 +2742,9 @@
           "text": "STATED: the Academy refusal log is MOCK and this page says so; the thin records in this catalog are the same discipline applied to itself."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding; the gate is on prose sufficiency."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -2721,6 +2822,9 @@
           "text": "STATED: the review in super/ specifies it and names its own unimplemented re-observation."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding; provenance is a field on a Film frame, not a route."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,
@@ -2823,6 +2927,9 @@
           "text": "emb-support.mjs ran today: 4 capabilities, 4 synthetic, 0 observed. Heredity is unwitnessed, and the page never says otherwise."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding; lineage is a relation between worlds."
+      },
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -2907,6 +3014,9 @@
           "text": "STATED: doctrine and vocabulary; the lint on State Does Not Grant Authority is the nearest mechanical falsifier."
         }
       ],
+      "wrl": {
+        "note": "No core-role encoding; six registers are not six roles."
+      },
       "derived": {
         "label": "STATED",
         "CHECKABLE": false,

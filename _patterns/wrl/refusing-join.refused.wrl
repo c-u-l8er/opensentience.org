@@ -1,0 +1,9 @@
+profile forge.world.core.v1
+
+; two producers into one Door: the join refuses, and names the port
+[pulser:a](every 1){sig_out}
+[pulser:b](every 2){sig_out}
+[door:join]{sig_in}
+
+[a] --sig--> [join]
+[b] --sig--> [join]

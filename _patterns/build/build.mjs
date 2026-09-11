@@ -188,6 +188,31 @@ for (const p of derived) {
     if (!readFileSync(abs, 'utf8').includes(x.start)) refuse('P13-SYNTAX-START', `${p.id}: start marker not found in ${x.path}: ${JSON.stringify(x.start)}`);
   }
 }
+// ── WRL: seal every scene's world with WRL's own wrl.js, at build (P10 stage A) ───────────────
+// The id a page prints was computed from these bytes by the same module the WRL playground runs. A world
+// declared `world` must seal; a world declared `refused` must be refused (P14 either way). Reduction to a
+// Film lives in TRVM, so nothing here runs a world — the page says so.
+const WRLJS = join(ROOT, 'WRL/wrl.js');
+const WRL = await import(WRLJS);
+const WRL_DIR = join(HERE, '../wrl');
+const WRLJS_SHA = shaFile(WRLJS);
+const sealed = new Map();   // file → result
+async function sealFile(f, expectOk) {
+  const abs = join(WRL_DIR, f);
+  if (!existsSync(abs)) { refuse('P14-WRL-MISSING', f); return null; }
+  const src = readFileSync(abs, 'utf8');
+  const r = await WRL.sealWorld(src);
+  if (expectOk && !r.ok) refuse('P14-WRL-REFUSED', `${f}: ${r.code} — ${r.message}`);
+  if (!expectOk && r.ok) refuse('P14-WRL-SEALED', `${f} was declared refused and sealed to ${r.semanticId}`);
+  sealed.set(f, { src, r });
+  return r;
+}
+for (const p of derived) {
+  const w = p.wrl || {};
+  if (w.world) await sealFile(w.world, true);
+  if (w.variant) await sealFile(w.variant, true);
+  if (w.refused) await sealFile(w.refused, false);
+}
 if (refusals.length) { console.error(`\n✗ ${refusals.length} refusal(s):\n  ` + refusals.join('\n  ')); process.exit(1); }
 const byId = new Map(derived.map((p) => [p.id, p]));
 const antiById = new Map(DATA.anti_patterns.map((a) => [a.id, a]));
@@ -199,7 +224,7 @@ const excerpt = (x) => { const lines = readFileSync(join(ROOT, x.path), 'utf8').
 const para = (t) => t ? `<p>${esc(t)}</p>` : '';
 const list = (xs) => xs && xs.length ? `<ul>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
 const chip = (p) => `<span class="chip ${p.derived.label || 'none'}">${p.derived.label ?? p.kind}</span>`;
-const sidebar = (cur) => `<aside class="side" role="navigation" aria-label="catalog"><a class="side-home" href="./">Unboxed Patterns</a>${DATA.families.map((f) => `<div class="side-fam">${FAMILY_TITLE[f]}</div><ul>${ORDER.filter((p) => p.family === f).map((p) => `<li class="${cur && p.id === cur.id ? 'cur' : ''}"><a href="${p.id}.html">${esc(p.name)}</a> ${chip(p)}</li>`).join('')}</ul>`).join('')}<div class="side-fam">Anti-patterns</div><ul>${DATA.anti_patterns.map((a) => `<li><a href="./#anti-${a.id}">${esc(a.name)}</a></li>`).join('')}</ul></aside>`;
+const sidebar = (cur) => `<aside class="side" role="navigation" aria-label="catalog"><a class="side-home" href="./">Unboxed Patterns</a><div class="side-fam">Front</div><ul><li><a href="./">Catalog</a></li><li class="${cur === 'conclusion' ? 'cur' : ''}"><a href="conclusion.html">Conclusion</a></li></ul>${DATA.families.map((f) => `<div class="side-fam">${FAMILY_TITLE[f]}</div><ul>${ORDER.filter((p) => p.family === f).map((p) => `<li class="${cur && p.id === cur.id ? 'cur' : ''}"><a href="${p.id}.html">${esc(p.name)}</a> ${chip(p)}</li>`).join('')}</ul>`).join('')}<div class="side-fam">Anti-patterns</div><ul>${DATA.anti_patterns.map((a) => `<li><a href="./#anti-${a.id}">${esc(a.name)}</a></li>`).join('')}</ul></aside>`;
 const SHELL_CSS = `body{margin:0;background:var(--ink,#faf8f3);color:var(--fg,#1c1a17);font:17px/1.6 var(--display,Georgia,serif)}
 .book{display:grid;grid-template-columns:270px minmax(0,1fr);gap:2.5rem;max-width:1180px;margin:0 auto;padding:76px var(--gutter,1.5rem) 4rem}
 .side{position:sticky!important;top:76px;height:auto;width:auto;background:transparent;box-shadow:none;align-self:start;max-height:calc(100vh - 90px);overflow:auto;font:13px/1.5 var(--ui,system-ui);padding-right:.5rem;border-right:1px solid var(--line,#e7e0d2)}
@@ -212,6 +237,7 @@ main h2{font:600 13px var(--ui,system-ui);letter-spacing:.08em;text-transform:up
 .lede{font-size:1.15rem}.tech{font:14px/1.55 var(--ui,system-ui);color:var(--fg2,#333)}.tech summary{cursor:pointer;font-weight:600;color:var(--acc,#6d3bd4)}
 .sf{margin:.5rem 0 1rem}.illus{font:12px var(--ui,system-ui);color:var(--fg3,#666);margin:-.2rem 0 .6rem}
 pre.syn{font:12.5px/1.5 var(--mono,monospace);background:#1b1a17;color:#eee7d8;padding:.8rem 1rem;border-radius:var(--r,8px);overflow:auto;margin:.3rem 0 1rem;white-space:pre}.syn-label{font:13px var(--ui,system-ui);color:var(--fg2,#333)}.syn-label code{font:12px var(--mono,monospace);color:var(--fg3,#666)}
+.wrlg{width:100%;height:auto;display:block;color:var(--fg3,#666);background:var(--ink3,#fffdf8);border:1px solid var(--line,#e7e0d2);border-radius:var(--r,8px)}.wrlg .n rect{fill:var(--ink2,#f2ede2);stroke:var(--fg2,#333);stroke-width:1.2}.wrlg .n.Door rect{stroke:var(--rose,#c02a5f)}.wrlg .n.Pulser rect{stroke:var(--acc,#6d3bd4)}.wrlg .n.Orb rect{stroke:var(--data,#0a6e62)}.wrlg .n text{font:12px var(--mono,monospace);fill:var(--fg,#1c1a17)}.wrlg .n text.r{font-size:10px;fill:var(--fg3,#666)}.wrlg .e{stroke:currentColor;stroke-width:1.4}.wrlg .ek{font:10px var(--mono,monospace);fill:var(--fg3,#666)}.semid{font:13px var(--mono,monospace);word-break:break-all}.semid.bad{color:var(--rose,#c02a5f)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}.two b{font:600 13px var(--ui,system-ui);text-transform:uppercase;letter-spacing:.06em}.two ul{padding-left:1.2rem;margin:.3rem 0}
 .take{list-style:none;padding:0;margin:0}.take li{padding:.5rem .8rem;margin:.4rem 0;border-left:3px solid var(--line2,#ccc);background:var(--ink3,#fffdf8);font:15px/1.5 var(--display,Georgia,serif)}.take li b{font:600 10px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--fg3,#666)}.take li.animation{border-color:var(--acc,#6d3bd4)}.take li.syntax{border-color:var(--fg,#1c1a17)}.take li.literature{border-color:var(--warn,#96600b)}.take li.witness{border-color:var(--data,#0a7)}
 .sink{font:13px/1.45 var(--mono,monospace);background:#1b1a17;color:#ddd;padding:.8rem;border-radius:var(--r,8px);min-height:1.5rem;max-height:28rem;overflow:auto;margin:.5rem 0;white-space:pre-wrap}.wline.good{color:#7fd}.wline.bad{color:#f88}.wline.warn{color:#fd7}.wline.group{color:#9cf;margin-top:.5rem}.wline.muted{color:#888}.wstatus.running{color:var(--warn)}.wstatus.pass{color:var(--data)}.wstatus.fail{color:var(--rose,#c02a5f)}
@@ -222,6 +248,30 @@ footer.fin{font:12.5px var(--ui,system-ui);color:var(--fg3,#666);margin-top:2rem
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;margin:.6rem 0 1.6rem}.card{display:block;border:1px solid var(--line,#e7e0d2);border-radius:var(--r,8px);background:var(--ink3,#fffdf8);padding:.8rem .9rem;text-decoration:none;color:inherit}.card:hover{border-color:var(--acc-line,#c9b8f0)}.card .thumb{margin:-.3rem -.3rem .5rem;border-radius:6px;overflow:hidden}.card .thumb svg{display:block;width:100%;height:auto;border:0}.card h3{font:600 17px var(--display,Georgia,serif);margin:0 0 .2rem}.card p{font:13.5px/1.45 var(--ui,system-ui);color:var(--fg2,#333);margin:.2rem 0}
 @media(max-width:900px){.book{grid-template-columns:1fr}.side{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line,#e7e0d2);padding-bottom:.8rem}.two{grid-template-columns:1fr}}
 ` + SF.CSS;
+function graphSvg(g) {
+  // columns by longest incoming path; boxes; arrows. Small on purpose: the text listing is the authority.
+  const names = g.nodes.map((n) => n[1]); const depth = Object.fromEntries(names.map((n) => [n, 0]));
+  for (let k = 0; k < names.length; k++) for (const [, sN, dN] of g.edges) depth[dN] = Math.max(depth[dN], depth[sN] + 1);
+  const cols = {}; for (const n of names) (cols[depth[n]] ||= []).push(n);
+  const nc = Object.keys(cols).length, W = 720, H = 60 + 56 * Math.max(...Object.values(cols).map((c) => c.length)), pos = {};
+  Object.entries(cols).forEach(([d, ns]) => ns.forEach((n, i) => { pos[n] = { x: 80 + (+d) * ((W - 160) / Math.max(1, nc - 1)) , y: 40 + i * 56 }; }));
+  if (nc === 1) for (const n of names) pos[n].x = W / 2;
+  const role = Object.fromEntries(g.nodes.map((n) => [n[1], n[0]]));
+  const o = [`<svg class="wrlg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>`];
+  for (const [kind, a, b] of g.edges) { const A = pos[a], B = pos[b]; o.push(`<line class="e ${kind}" x1="${A.x + 54}" y1="${A.y}" x2="${B.x - 56}" y2="${B.y}" marker-end="url(#ar)"/><text class="ek" x="${(A.x + B.x) / 2}" y="${(A.y + B.y) / 2 - 8}" text-anchor="middle">${esc(kind)}</text>`); }
+  for (const n of names) { const P = pos[n]; o.push(`<g class="n ${role[n]}"><rect x="${P.x - 54}" y="${P.y - 20}" width="108" height="40" rx="7"/><text x="${P.x}" y="${P.y - 3}" text-anchor="middle">${esc(n)}</text><text class="r" x="${P.x}" y="${P.y + 13}" text-anchor="middle">${esc(role[n])}</text></g>`); }
+  return o.join('') + '</svg>';
+}
+function wrlSection(p) {
+  const w = p.wrl; if (!w) return '';
+  if (!w.world) return `<p class="warn">${esc(w.note || 'No WRL world for this scene.')}</p>`;
+  const S = sealed.get(w.world); const g = S.r.graph;
+  let out = `<p>${esc(w.note || '')}</p><p class="exec">Sealed at build by <code>WRL/wrl.js</code> (bytes <code>${WRLJS_SHA.slice(0, 16)}…</code>, WRL repo HEAD <code>${(heads.WRL || '?').slice(0, 12)}</code>). Nothing here ran the world: reduction to a Film lives in TRVM.</p>
+  <p class="syn-label">Source <code>_patterns/wrl/${esc(w.world)}</code></p><pre class="syn">${esc(S.src.trim())}</pre><p class="syn-label">Graph, rendered from the sealed artifact's nodes and edges</p>${graphSvg(g)}<p class="semid">seals to → <code>${esc(S.r.semanticId)}</code></p>`;
+  if (w.variant) { const V = sealed.get(w.variant); out += `<p class="syn-label">Variant <code>_patterns/wrl/${esc(w.variant)}</code> — one change</p><pre class="syn">${esc(V.src.trim())}</pre><p class="semid">→ <code>${esc(V.r.semanticId)}</code> <small>(≠ the id above)</small></p>`; }
+  if (w.refused) { const R = sealed.get(w.refused); out += `<p class="syn-label">Refused world <code>_patterns/wrl/${esc(w.refused)}</code></p><pre class="syn">${esc(R.src.trim())}</pre><p class="semid bad">✗ <code>${esc(R.r.code)}</code> — ${esc(R.r.message)}${R.r.line ? ` <small>(line ${R.r.line})</small>` : ''}</p>`; }
+  return out;
+}
 function pageFor(p, idx) {
   const d = p.derived, w = p.witness, c = p.counterexample, sc = sceneOf(p);
   const stamp = w && d.STAGED ? stampFor(w.staged_path) : null;
@@ -260,6 +310,7 @@ ${p.problem ? `<h2>Problem</h2>${para(p.problem)}` : ''}
 ${p.construction ? `<h2>Solution</h2>${para(p.construction)}` : ''}
 ${p.analogy ? `<h2>Real-world analogy</h2>${para(p.analogy)}` : ''}
 ${structure ? `<h2>Structure — on the surface</h2>${structure}` : ''}
+${p.wrl ? `<h2>The scene as a WRL world</h2>${wrlSection(p)}` : ''}
 ${syntax ? `<h2>Syntax — quoted from the tree at build time</h2>${syntax}` : ''}
 ${p.forces ? `<h2>Forces</h2>${para(p.forces)}` : ''}
 ${p.applicability ? `<h2>Applicability</h2>${para(p.applicability)}` : ''}
@@ -282,6 +333,16 @@ ORDER.forEach((p, i) => { pageOutputs[`${p.id}.html`] = pageFor(p, i); });
 for (const f of existsSync(DEMOS) ? readdirSync(DEMOS) : []) pageOutputs[`demos/${f}`] = readFileSync(join(DEMOS, f), 'utf8');
 for (const f of existsSync(SCENES) ? readdirSync(SCENES) : []) pageOutputs[`scenes/${f}`] = readFileSync(join(SCENES, f), 'utf8');
 pageOutputs['surface/surface.mjs'] = readFileSync(SURFACE, 'utf8');
+for (const f of existsSync(WRL_DIR) ? readdirSync(WRL_DIR) : []) pageOutputs[`wrl/${f}`] = readFileSync(join(WRL_DIR, f), 'utf8');
+const CONC = readJson(join(HERE, '../data/conclusion.json'));
+const last = ORDER[ORDER.length - 1];
+pageOutputs['conclusion.html'] = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(CONC.title)} · Unboxed Patterns</title><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
+<script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
+<div class="book">${sidebar('conclusion')}<main><p class="meta">Front matter, at the back</p><h1>${esc(CONC.title)}</h1><p class="lede">${esc(CONC.lede)}</p>
+${CONC.sections.map((sec) => `<h2>${esc(sec.h)}</h2>${sec.p.map((t) => `<p>${esc(t)}</p>`).join('')}`).join('')}
+<h2>The numbers this page is allowed to quote</h2><p>${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns · ${[...sealed.values()].filter((x) => x.r.ok).length} WRL worlds sealed at build and ${[...sealed.values()].filter((x) => !x.r.ok).length} refused by design — every one derived by <code>build.mjs</code>, none typed.</p>
+<div class="pn"><span><a href="${last.id}.html">← ${esc(last.name)}</a><small>${FAMILY_TITLE[last.family]}</small></span><span style="text-align:right"><a href="./">Catalog →</a></span></div>
+<footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>.</footer></main></div></body></html>`;
 const card = (p) => `<a class="card" href="${p.id}.html">${p.scene ? `<div class="thumb">${thumb(p)}</div>` : ''}<h3>${esc(p.name)} ${chip(p)}</h3><p>${esc(p.headline || p.invariant || (p.kind === 'definition' ? 'A definition.' : p.prior_art || ''))}</p></a>`;
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unboxed Patterns</title><meta name="description" content="Elements of Composable Locus-Oriented Software — a pattern catalog generated from a registry, with runnable witnesses."><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
 <script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
@@ -301,7 +362,7 @@ const derivedJson = JSON.stringify({ kind: 'UNBOXED_PATTERNS_DERIVED', built: ne
 
 const DIST = join(SITE, 'patterns');   // SERVED at opensentience.org/patterns/ — ruling R4, 2026-09-11
 const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms, ...pageOutputs };
-const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])) };
+const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])), 'WRL/wrl.js': WRLJS_SHA, wrl_worlds: Object.fromEntries([...sealed.entries()].map(([f, x]) => [f, x.r.ok ? x.r.semanticId : x.r.code])) };
 // the artifact excludes the timestamps so --verify compares content, not clock
 const stable = (s) => s.replace(/\d{4}-\d\d-\d\dT[\d:.]+Z/g, 'T');
 const artifact = { kind: 'UNBOXED_PATTERNS_ARTIFACT', inputs, inputs_heads: heads, summary, outputs: Object.fromEntries(Object.entries(outputs).map(([k, v]) => [k, sha(stable(v))])) };
@@ -317,7 +378,7 @@ if (VERIFY) {
   console.log(`✓ --verify: patterns/ is what data + cells + ledger + ${receipts.length} receipt(s) derive.`); console.log(JSON.stringify(summary, null, 1)); process.exit(0);
 }
 mkdirSync(DIST, { recursive: true });
-for (const sub of ['demos', 'scenes', 'surface']) mkdirSync(join(DIST, sub), { recursive: true });
+for (const sub of ['demos', 'scenes', 'surface', 'wrl']) mkdirSync(join(DIST, sub), { recursive: true });
 for (const [k, v] of Object.entries(outputs)) writeFileSync(join(DIST, k), v);
 writeFileSync(join(DIST, 'artifact.json'), JSON.stringify(artifact, null, 2) + '\n');
 console.log(`✓ built ${Object.keys(outputs).length} file(s) into ${rel(DIST)}\n`);

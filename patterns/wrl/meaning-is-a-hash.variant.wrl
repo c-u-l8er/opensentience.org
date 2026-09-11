@@ -1,0 +1,11 @@
+profile forge.world.core.v1
+
+; the same world with one period changed — a different meaning, a different id
+[pulser:p0](every 3){sig_out}
+[relay:r0]{sig_in, sig_out}
+[spinner:sp](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ob]{pose}
+
+[p0] --sig--> [r0]
+[r0] --sig--> [sp]
+[sp] --socket--> [ob]
