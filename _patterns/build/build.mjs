@@ -464,6 +464,28 @@ const CH = await import(join(HERE, 'chain.mjs'));
 const chainIds = CH.order().filter((id) => CH.fragment(id));
 const chainGroups = Object.fromEntries(chainIds.map((id) => { const m = (CH.fragment(id) || '').match(/\[[a-z]+:([a-z0-9]+)_/); const rec = DATA.patterns.find((p) => p.id === id); return m && rec ? [m[1], rec.family] : null; }).filter(Boolean));
 const chainBands = DATA.families.map((f) => ({ id: f, label: ({ locus: 'I · The Locus', composition: 'II · Composition', progress: 'III · Progress', world: 'IV · Persistence and World', agency: 'V · Agency' })[f] || f }));
+const chainChapter = Object.fromEntries(chainIds.map((id, i) => { const m = (CH.fragment(id) || '').match(/\[[a-z]+:([a-z0-9]+)_/); const rec = DATA.patterns.find((p) => p.id === id); return m && rec ? [m[1], { id, name: rec.name, n: i + 1 }] : null; }).filter(Boolean));
+const GLOSSARY = readJson(join(HERE, '../data/board-glossary.json'));
+/* P32/P33 — the readout says what every field means, so the glossary has to cover what the forge
+   actually emits rather than what someone remembered it emitting. Both gates read the receipts and
+   the sealed graphs, not a list. A field the films emit and this file does not explain is a readout
+   that prints a number with no account of it; a role or edge kind the board draws and this file does
+   not name is a shape on the page with nothing to say what it is. */
+{
+  const OBJ = /^(pulser|relay|door|spinner|orb|wire):/;
+  const emitted = new Set();
+  for (const rc of filmReceipts) for (const ep of rc.epochs || []) for (const l of ep.film) {
+    if (!OBJ.test(l)) continue;
+    for (const tok of (l.split(':').slice(2).join(':')).split(',')) {
+      if (tok.includes('=')) emitted.add(tok.split('=')[0]);
+      else if (tok && !/^[0-9a-f]{1,8}$/.test(tok)) emitted.add(tok);
+    }
+  }
+  const missing = [...emitted].filter((k) => !GLOSSARY.fields[k]).sort();
+  if (missing.length) refuse('P32-GLOSSARY-INCOMPLETE', `the Films emit ${missing.length} field(s) the board glossary does not explain: ${missing.join(', ')}`);
+  const stale = Object.keys(GLOSSARY.fields).filter((k) => !emitted.has(k)).sort();
+  if (stale.length) refuse('P32-GLOSSARY-STALE', `the board glossary explains ${stale.length} field(s) no Film emits: ${stale.join(', ')}`);
+}
 const chainRowOrder = chainIds.map((id) => { const m = (CH.fragment(id) || '').match(/\[[a-z]+:([a-z0-9]+)_/); return m ? m[1] : null; }).filter(Boolean);
 const chain = new Map();   // id → { delta, cum, prevCum, links, scenario, film, deltaSrc, index }
 { let prev = null;
@@ -489,6 +511,17 @@ if (conclusionSeal && conclusionFilm && conclusionSeal.ok && conclusionFilm.forg
 if (conclusionFilm && conclusionFilm.parity && !conclusionFilm.parity.failed && !conclusionFilm.parity.identical) refuse('P19-REDUCERS-DISAGREE', 'conclusion: the two reducers produced different films');
 const reducerLine = (rc) => `${rc.execution_identity.reducer === 'native_reduce' ? 'the native reducer (ic32)' : 'the reference reducer (pure Python)'}${rc.parity ? (rc.parity.failed ? '; the other reducer\'s run failed' : rc.parity.identical ? `; <b>${rc.parity.other_reducer === 'native_reduce' ? 'the native reducer' : 'the reference reducer'} reproduces every epoch\'s film hash</b> (${rc.parity.seconds}s)` : '; THE REDUCERS DISAGREE') : '; parity with the other reducer not run for this world'}`;
 if (conclusionSrc && !conclusionFilm) findings.push('conclusion: no film receipt for the whole chain — run run-films.mjs conclusion');
+{
+  const roles = new Set(['Ledger']), kinds = new Set();
+  for (const { r } of sealed.values()) if (r.ok) { for (const [k] of r.graph.nodes) roles.add(k); for (const [k] of r.graph.edges) kinds.add(k); }
+  for (const c of chain.values()) { for (const [k] of c.cum.graph.nodes) roles.add(k); for (const [k] of c.cum.graph.edges) kinds.add(k); }
+  if (conclusionSeal && conclusionSeal.ok) { for (const [k] of conclusionSeal.graph.nodes) roles.add(k); for (const [k] of conclusionSeal.graph.edges) kinds.add(k); }
+  const mr = [...roles].filter((k) => !GLOSSARY.roles[k]).sort(), me = [...kinds].filter((k) => !GLOSSARY.edges[k]).sort();
+  if (mr.length) refuse('P33-GLOSSARY-ROLE', `the board draws role(s) the glossary does not name: ${mr.join(', ')}`);
+  if (me.length) refuse('P33-GLOSSARY-EDGE', `the board draws edge kind(s) the glossary does not name: ${me.join(', ')}`);
+  const sr = Object.keys(GLOSSARY.roles).filter((k) => !roles.has(k)).sort(), se = Object.keys(GLOSSARY.edges).filter((k) => !kinds.has(k)).sort();
+  if (sr.length || se.length) refuse('P33-GLOSSARY-STALE', `the glossary names what no world has: ${[...sr, ...se].join(', ')}`);
+}
 if (refusals.length) { console.error(`\n✗ ${refusals.length} refusal(s):\n  ` + refusals.join('\n  ')); process.exit(1); }
 const byId = new Map(derived.map((p) => [p.id, p]));
 const antiById = new Map(DATA.anti_patterns.map((a) => [a.id, a]));
@@ -579,7 +612,17 @@ const SHELL_CSS = `body{margin:0;background:var(--ink,#faf8f3);color:var(--fg,#1
 main{max-width:1080px}main h1{font:700 2.4rem/1.15 var(--display,Georgia,serif);margin:.2rem 0 .3rem}.meta{font:13px var(--ui,system-ui);color:var(--fg3,#666)}.st{font:11px var(--ui,system-ui);padding:.02rem .3rem;border:1px solid var(--line2,#ccc);border-radius:3px;margin-left:.2rem}.st.on{border-color:var(--data,#0a7);color:var(--data,#0a7)}.st.off{color:var(--fg3,#aaa);text-decoration:line-through}
 main h2{font:600 13px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--acc,#6d3bd4);margin:2.4rem 0 .5rem;padding-top:.6rem;border-top:1px solid var(--line,#e7e0d2)}
 .invariant{font:1.15rem/1.5 var(--display,Georgia,serif);border-left:3px solid var(--acc,#6d3bd4);background:var(--acc-soft,rgba(109,59,212,.06));padding:.6rem 1rem;margin:1rem 0;border-radius:0 var(--r,8px) var(--r,8px) 0}
-.lede{font-size:1.15rem}.tech{font:14px/1.55 var(--ui,system-ui);color:var(--fg2,#333)}.tech summary{cursor:pointer;font-weight:600;color:var(--acc,#6d3bd4)}
+.lede{font-size:1.15rem}
+details.legend{border:1px solid var(--line,#e7e0d2);border-radius:var(--r,8px);background:var(--ink3,#fffdf8);padding:.5rem .8rem;margin:.8rem 0}
+details.legend>summary{cursor:pointer;font:600 13.5px var(--ui,system-ui);color:var(--acc,#6d3bd4)}
+details.legend>p{font:13.5px/1.5 var(--ui,system-ui);margin:.6rem 0}
+table.legend-t{border-collapse:collapse;font:13px/1.45 var(--ui,system-ui);margin:.4rem 0;width:100%}
+table.legend-t th{text-align:left;font:9.5px var(--ui,system-ui);text-transform:uppercase;letter-spacing:.1em;color:var(--fg3,#888);padding:.1rem .5rem .25rem 0;border-bottom:1px solid var(--line,#e7e0d2)}
+table.legend-t td{padding:.3rem .5rem .3rem 0;border-bottom:1px solid var(--line,#e7e0d2);vertical-align:top}
+table.legend-t td:first-child{width:1%;white-space:nowrap}table.legend-t td:nth-child(3){color:var(--fg2,#444)}
+table.legend-t small{display:block;font:9.5px var(--mono,monospace);color:var(--fg3,#888)}
+svg.legend-k{width:78px;height:26px;display:block;overflow:visible}
+.tech{font:14px/1.55 var(--ui,system-ui);color:var(--fg2,#333)}.tech summary{cursor:pointer;font-weight:600;color:var(--acc,#6d3bd4)}
 .sf{margin:.5rem 0 1rem}.illus{font:12px var(--ui,system-ui);color:var(--fg3,#666);margin:-.2rem 0 .6rem}
 pre.syn{font:12.5px/1.5 var(--mono,monospace);background:#1b1a17;color:#eee7d8;padding:.8rem 1rem;border-radius:var(--r,8px);overflow:auto;margin:.3rem 0 1rem;white-space:pre}.syn-label{font:13px var(--ui,system-ui);color:var(--fg2,#333)}.syn-label code{font:12px var(--mono,monospace);color:var(--fg3,#666)}
 .sf-static{cursor:grab;touch-action:none}.sf-static.grabbing{cursor:grabbing}.wrlg{width:100%;height:auto;display:block;color:var(--fg3,#666);background:var(--ink3,#fffdf8);border:1px solid var(--line,#e7e0d2);border-radius:var(--r,8px)}.wrlg .n rect{fill:var(--ink2,#f2ede2);stroke:var(--fg2,#333);stroke-width:1.2}.wrlg .n.Door rect{stroke:var(--rose,#c02a5f)}.wrlg .n.Pulser rect{stroke:var(--acc,#6d3bd4)}.wrlg .n.Orb rect{stroke:var(--data,#0a6e62)}.wrlg .n text{font:12px var(--mono,monospace);fill:var(--fg,#1c1a17)}.wrlg .n text.r{font-size:10px;fill:var(--fg3,#666)}.wrlg .e{stroke:currentColor;stroke-width:1.4}.wrlg .ek{font:10px var(--mono,monospace);fill:var(--fg3,#666)}.semid{font:13px var(--mono,monospace);word-break:break-all}table.claims{border-collapse:collapse;font:13px var(--ui,system-ui);margin:.3rem 0 .8rem}table.claims td,table.claims th{border:1px solid var(--line,#e7e0d2);padding:.2rem .5rem;text-align:left}main h3{font:600 15px var(--ui,system-ui);margin:1.6rem 0 .4rem}.semid.bad{color:var(--rose,#c02a5f)}
@@ -692,9 +735,20 @@ function chapterWrlSection(p) {
   out += `<h3>${c.index === 0 ? 'The chain begins here' : `Composes with the ${c.index} chapter${c.index === 1 ? '' : 's'} before it`}</h3>
   <p>The chain through this chapter — every earlier fragment, this one, and the links — seals to <code>${esc(c.cum.semanticId)}</code>: ${g.nodes.length} objects, ${g.edges.length} edges${pg ? ` (was ${pg.nodes.length} / ${pg.edges.length}; every earlier object and edge is still present — checked, or the build refuses)` : ''}.${c.prevCum && c.prevCum.semanticId === c.cum.semanticId ? ' <b>The id did not move</b>: this fragment adds nothing but a comment, and a comment is not meaning.' : ''}</p>
   ${c.links ? `<p class="syn-label">Links only the chain carries</p><pre class="syn">${esc(c.links.trim())}</pre>` : ''}
-  <div class="sf-static">${boardStatic(g)}</div><p class="illus">The board so far: one band per Part, signal flowing left to right; relays that fan out are routers, doors are switches, pulsers are clock domains. Hover an object — or click the board and walk it with the arrow keys — for its role, its Part and what it is wired to. This board is the chain’s sealed <em>shape</em>; no Film drives it, so it has no state to report, and <a href="conclusion.html#board">the whole board in the conclusion</a> is where every object’s state is read epoch by epoch. Wheel zooms · drag pans · double-click fits.</p>`;
+  ${boardLegend()}<div class="sf-static">${boardStatic(g)}</div><p class="illus">The board so far: one band per Part, signal flowing left to right; relays that fan out are routers, doors are switches, pulsers are clock domains. Hover an object — or click the board and walk it with the arrow keys — for its role, its Part and what it is wired to. This board is the chain’s sealed <em>shape</em>; no Film drives it, so it has no state to report, and <a href="conclusion.html#board">the whole board in the conclusion</a> is where every object’s state is read epoch by epoch. Wheel zooms · drag pans · double-click fits.</p>`;
   return out;
 }
+const INSP_OPTS = `{ glossary: ${JSON.stringify({ roles: GLOSSARY.roles, edges: GLOSSARY.edges, fields: GLOSSARY.fields, kinds: GLOSSARY.kinds })}, chapters: ${JSON.stringify(chainChapter)} }`;
+/* The key to the board, rendered from the same file the readout reads — so a shape explained here and
+   a shape explained on hover cannot drift apart, and P32/P33 gate both at once. */
+const boardLegend = () => `<details class="legend"><summary>How to read this board</summary>
+<p>Five kinds of object, two kinds of wire, and one band per Part of the book. Signal flows left to right: it starts at a clock, travels through relays, and ends at a door — or turns a spinner, which drives an orb. Nothing below is the book's own vocabulary; each line is quoted from where the definition lives.</p>
+<table class="legend-t"><tr><th>shape</th><th>is</th><th>and so</th></tr>
+${Object.entries(GLOSSARY.roles).map(([k, v]) => `<tr><td><svg class="legend-k" viewBox="0 0 78 26" aria-hidden="true"><g class="sf-station idle ${esc(k)} compact"><rect x="1" y="1" width="76" height="24" rx="5"/><text x="39" y="13" text-anchor="middle">${esc(k.toLowerCase())}</text></g></svg></td><td>${esc(v.is)}</td><td>${esc(v.then)}</td></tr>`).join('')}
+${Object.entries(GLOSSARY.edges).map(([k, v]) => `<tr><td><svg class="legend-k" viewBox="0 0 78 26" aria-hidden="true"><polyline class="sf-wire thin ${esc(k)}" points="6,13 66,13"/></svg><small>${esc(k)}</small></td><td>${esc(v.is)}</td><td>${esc(v.then)}</td></tr>`).join('')}
+</table>
+<p class="note">Hover any object for what it is, which chapter put it there, and every field of its line in that epoch's Film — split into what it is <b>doing now</b> and how it was <b>built</b>. Click to pin the readout, then click a wired name to follow the signal. The field definitions come from ${esc(GLOSSARY.field_source)}; the shapes from <code>WRL/learn.html</code> and <code>WRL/docs/spec/README.md</code>. The build refuses if a Film emits a field this key does not explain.</p>
+</details>`;
 const pageFilmScenes = new Map();
 function graphSvg(g) {
   // columns by longest incoming path; boxes; arrows. Small on purpose: the text listing is the authority.
@@ -780,9 +834,10 @@ function pageFor(p, idx) {
   const wrlHtml = chain.has(p.id) ? `<h2>The chapter in WRL — and the chain so far</h2>${chapterWrlSection(p)}` : (p.wrl ? `<h2>The scene as a WRL world</h2>${wrlSection(p)}` : '');
   const script = `<script type="module">
     import { mount, panZoom, inspector } from '/patterns/surface/surface.mjs?v=${SF_STAMP}';
-    for (const el of document.querySelectorAll('.sf-static')) { panZoom(el, () => el.querySelector('svg')); inspector(el, el); }
-    ${sc ? `mount(document.getElementById('sf'), ${JSON.stringify(sc)});` : ''}
-    ${pageFilmScenes.has(p.id) ? `mount(document.getElementById('film'), ${JSON.stringify(pageFilmScenes.get(p.id))});` : ''}
+    const IO = ${INSP_OPTS};
+    for (const el of document.querySelectorAll('.sf-static')) { panZoom(el, () => el.querySelector('svg')); inspector(el, el, IO); }
+    ${sc ? `mount(document.getElementById('sf'), ${JSON.stringify(sc)}, IO);` : ''}
+    ${pageFilmScenes.has(p.id) ? `mount(document.getElementById('film'), ${JSON.stringify(pageFilmScenes.get(p.id))}, IO);` : ''}
     ${(d.STAGED || demo) ? `import { runWitness } from '/witness/run.js?v=${RUNJS_STAMP}';
     const spec = ${JSON.stringify({ entry: '/witness/src/' + (w ? w.path : ''), mode: w ? (w.shape === 'suite' ? 'suite' : 'side-effect') : 'suite', stamp, argv: [], trials: 200 })};
     const b = document.getElementById('run');
@@ -848,6 +903,7 @@ ${CONC.sections.map((sec) => `<h2>${esc(sec.h)}</h2>${sec.p.map((t) => `<p>${esc
 <p>Each chapter contributed a fragment; the cumulative world was sealed after every one and checked to contain everything before it. Two chapters contributed the empty world and moved no id. The whole chain seals to <code>${conclusionSeal && conclusionSeal.ok ? esc(conclusionSeal.semanticId) : '?'}</code>: ${conclusionSeal && conclusionSeal.ok ? conclusionSeal.graph.nodes.length : '?'} objects, ${conclusionSeal && conclusionSeal.ok ? conclusionSeal.graph.edges.length : '?'} edges.</p>
 <table class="claims"><tr><th>#</th><th>chapter</th><th>fragment seals to</th><th>chain seals to</th><th>objects / edges</th></tr>${chainIds.map((id) => { const c = chain.get(id); return `<tr><td>${c.index + 1}</td><td><a href="${id}.html">${esc(byId.get(id).name)}</a></td><td><code>${c.delta.semanticId.slice(0, 20)}…</code></td><td><code>${c.cum.semanticId.slice(0, 20)}…</code></td><td>${c.cum.graph.nodes.length} / ${c.cum.graph.edges.length}</td></tr>`; }).join('')}</table>
 <h2>The circuit board</h2>
+${boardLegend()}
 <p>The whole world as a network: one band per Part, signal flowing left to right from the root clock and the other clock domains, through relays that fan out (the routers) into spinners (state), orbs (observation) and doors (the switches that latch when a signal reaches them). ${conclusionSeal && conclusionSeal.ok ? `${conclusionSeal.graph.edges.length} wires, ${conclusionSeal.graph.edges.filter((e) => e[0] === 'SignalWire').length} of them signal, ${conclusionSeal.graph.nodes.filter((n) => n[0] === 'Relay').length} relays, ${conclusionSeal.graph.nodes.filter((n) => n[0] === 'Door').length} doors, ${conclusionSeal.graph.nodes.filter((n) => n[0] === 'Pulser').length} clocks.` : ''} Hover an object — or click the board and walk it with the arrow keys — and a readout gives its role, its Part, every field of its line in the Film for the epoch on screen, and which signals and socket controls reach it and which it reaches. Before you press Step there is no epoch yet, and the readout says so rather than showing you a state it does not have.</p>
 ${conclusionFilm ? `<p>Reduced whole by TRVM's forge in ${conclusionFilm.execution_identity.seconds}s on ${esc(conclusionFilm.execution_identity.host)} — ${conclusionFilm.epochs.length} epochs, ${new Set(conclusionFilm.epochs.map((e) => e.film_hash)).size} distinct film hashes; the forge's id equals the seal above. Reduced by ${reducerLine(conclusionFilm)}.</p><div class="sf" id="board"><div class="sf-stage">${SF.svg(SF.computeState(concBoardScene(), 0), { caption: false })}</div></div>` : `<div class="sf-static">${conclusionSeal && conclusionSeal.ok ? boardStatic(conclusionSeal.graph) : ''}</div><p class="warn">The whole-board film has not been reduced yet (<code>run-films.mjs conclusion</code>); the board above is the sealed topology.</p>`}
 ${conclusionFilm ? `<h2>The same film, chapter by chapter</h2><div class="sf" id="film"><div class="sf-stage">${SF.svg(SF.computeState(CONC_FILM_SCENE, 0), { caption: false })}</div></div>` : ''}
@@ -858,15 +914,16 @@ ${conclusionFilm ? `<h2>The same film, chapter by chapter</h2><div class="sf" id
 <div class="pn"><span><a href="${last.id}.html">← ${esc(last.name)}</a><small>${FAMILY_TITLE[last.family]}</small></span><span style="text-align:right"><a href="./">Catalog →</a></span></div>
 <footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>.</footer></main></div><script type="module">
 import { mount, panZoom, inspector } from '/patterns/surface/surface.mjs?v=${SF_STAMP}';
-const enliven = (el) => { panZoom(el, () => el.querySelector('svg')); inspector(el, el); };
+const IO = ${INSP_OPTS};
+const enliven = (el) => { panZoom(el, () => el.querySelector('svg')); inspector(el, el, IO); };
 for (const el of document.querySelectorAll('.sf-static')) enliven(el);${CONC_SCENE_JSON ? `
 /* one scene, fetched once: the board and the film-by-chapter differ only in stencil and three
    params — the steps are the same array — and embedding it twice was 82% of this page. The
    pictures above are rendered on the server, so they are already here if this never arrives. */
 try {
   const sc = await fetch('conclusion.scene.json?v=${CONC_SCENE_STAMP}').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
-  mount(document.getElementById('board'), { ...sc, stencil: 'network', intro: ${JSON.stringify(CONC_BOARD_OVERRIDE.intro)}, params: { ...sc.params, groups: ${JSON.stringify(chainGroups)}, bands: ${JSON.stringify(chainBands)} } });
-  mount(document.getElementById('film'), sc);
+  mount(document.getElementById('board'), { ...sc, stencil: 'network', intro: ${JSON.stringify(CONC_BOARD_OVERRIDE.intro)}, params: { ...sc.params, groups: ${JSON.stringify(chainGroups)}, bands: ${JSON.stringify(chainBands)} } }, IO);
+  mount(document.getElementById('film'), sc, IO);
 } catch (e) {
   /* no player, but the sealed pictures are still here and still answer a hover */
   for (const el of document.querySelectorAll('#board .sf-stage, #film .sf-stage')) enliven(el);

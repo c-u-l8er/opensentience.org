@@ -1,0 +1,165 @@
+{
+  "kind": "BOARD_GLOSSARY",
+  "note": "What every shape, wire and Film field on the board means. Nothing here is authored for the book: each entry cites where in the tree the definition already lives, and build.mjs refuses if a Film emits a field this file does not explain (P32) or the board draws a role or edge kind it does not name (P33). Each field is marked state (what it is doing this epoch) or built (read once when the world was built) — FORGE_SEMANTIC_IR_v1_MEASURE.md §1.3 and WRL/learn.html §4.",
+  "roles": {
+    "Pulser": {
+      "is": "a clock; the only source of signal",
+      "then": "Every signal on the board starts at one of these. Nothing else can make one.",
+      "source": "WRL/learn.html · The five surface roles"
+    },
+    "Relay": {
+      "is": "a pass-through, so signal can travel",
+      "then": "One arrives, any number leave — a relay that fans out is the board's router.",
+      "source": "WRL/learn.html · The five surface roles"
+    },
+    "Door": {
+      "is": "a sink; signal arrives and stops",
+      "then": "It latches what reached it and passes nothing on. A door is where a path ends.",
+      "source": "WRL/learn.html · The five surface roles"
+    },
+    "Spinner": {
+      "is": "rotation: takes signal, drives a pose",
+      "then": "The only object on the board that holds a value a claim can rewrite — and only if its config says configurable.",
+      "source": "WRL/learn.html · The five surface roles"
+    },
+    "Orb": {
+      "is": "the thing that gets moved",
+      "then": "It is driven, never driving: an orb is what you watch to see whether anything happened.",
+      "source": "WRL/learn.html · The five surface roles"
+    },
+    "Ledger": {
+      "is": "not a WRL role — the book's own drawing of the receipts in the epoch's Film",
+      "then": "It counts what the run admitted, and turns red on a Rejected outcome.",
+      "source": "_patterns/build/build.mjs · filmSceneFrom"
+    }
+  },
+  "edges": {
+    "SignalWire": {
+      "is": "signal: a sig_out to a sig_in",
+      "then": "Legal from a Pulser or Relay, into a Relay, Door or Spinner. This is how the board moves.",
+      "source": "WRL/docs/spec/README.md · Edge kinds"
+    },
+    "SocketControl": {
+      "is": "control: a socket to a pose",
+      "then": "Legal only from a Spinner into an Orb. At most one may land on any input port — fan-in is a typed refusal.",
+      "source": "WRL/docs/spec/README.md · Edge kinds"
+    }
+  },
+  "fields": {
+    "cur": {
+      "of": "wire",
+      "is": "the signal on this wire in this epoch",
+      "kind": "state"
+    },
+    "nxt": {
+      "of": "wire",
+      "is": "the signal it will be carrying in the next one",
+      "kind": "state"
+    },
+    "open": {
+      "of": "door",
+      "is": "the gate in this epoch — 1 means signal reached it and it latched",
+      "kind": "state"
+    },
+    "next_open": {
+      "of": "door",
+      "is": "what the gate becomes next epoch (open′ = next_open)",
+      "kind": "state"
+    },
+    "cur_out": {
+      "of": "relay",
+      "is": "what this relay is putting out in this epoch",
+      "kind": "state"
+    },
+    "next_out": {
+      "of": "relay",
+      "is": "what it will put out next epoch — the OR of its incoming wires (cur_out′ = next_out)",
+      "kind": "state"
+    },
+    "rotor": {
+      "of": "spinner",
+      "is": "the rotation it is holding right now: runtime state, one hex lane per quaternion component, not configuration",
+      "kind": "state"
+    },
+    "socket": {
+      "of": "spinner",
+      "is": "the orb this spinner drives",
+      "kind": "built"
+    },
+    "config": {
+      "of": "spinner",
+      "is": "fixed or configurable — whether a claim is allowed to rewrite its rotor",
+      "kind": "built"
+    },
+    "pose": {
+      "of": "orb",
+      "is": "the orientation it is holding right now, in the same four lanes",
+      "kind": "state"
+    },
+    "controller": {
+      "of": "orb",
+      "is": "the spinner that drives it. Exactly one, always",
+      "kind": "built"
+    },
+    "fault": {
+      "of": "orb",
+      "is": "the sticky numeric-fault latch: once 1 it stays 1 until a claim resets it",
+      "kind": "state"
+    },
+    "w": {
+      "of": "spinner, orb",
+      "is": "lane width in bits — geometry, fixed when the world was built",
+      "kind": "built"
+    },
+    "n": {
+      "of": "spinner, orb",
+      "is": "how many lanes — geometry, fixed when the world was built",
+      "kind": "built"
+    },
+    "policy": {
+      "of": "spinner, orb",
+      "is": "the numeric policy the forge reduced under. Same id on every object of a run",
+      "kind": "built"
+    },
+    "quat4": {
+      "of": "spinner, orb",
+      "is": "a flag: those lanes are a four-component quaternion",
+      "kind": "built"
+    },
+    "mode": {
+      "of": "pulser",
+      "is": "periodic (fires on a cycle) or once (fires one epoch and is done)",
+      "kind": "built"
+    },
+    "p": {
+      "of": "pulser",
+      "is": "the period: it fires every p epochs",
+      "kind": "built"
+    },
+    "phase": {
+      "of": "pulser",
+      "is": "the offset within that period at which it fires",
+      "kind": "built"
+    },
+    "armed": {
+      "of": "pulser",
+      "is": "0 in every Film on this site — 389 of 389 pulser lines measured. A pulser arms at commit and is consumed at react, so it is never armed at the boundary a Film is taken at",
+      "kind": "state"
+    },
+    "done": {
+      "of": "pulser",
+      "is": "a once clock that has already fired",
+      "kind": "state"
+    },
+    "nf": {
+      "of": "pulser",
+      "is": "epochs until it next fires; −1 means a once clock that has fired and never will again",
+      "kind": "state"
+    }
+  },
+  "field_source": "TRVM/forge/film.py (the emitter), TRVM/forge/forge_state.py (nf, derived from the decoded counter and never from t), TRVM/forge/lower_e2a.py (the commit/react law), TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md §1.3",
+  "kinds": {
+    "state": "What it is doing in this epoch. The forge derived every one of these; none of them is in the world document.",
+    "built": "How the object was made, read once when the world was built. These do not change as the film runs."
+  }
+}

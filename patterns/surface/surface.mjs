@@ -217,7 +217,7 @@ export function svg(st, { thumb = false, caption = true } = {}) {
   for (const r of st.rings) o.push(`<g class="sf-ring ${r.state}"><rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="14"/><text x="${r.x + 12}" y="${r.y + 18}">${esc(r.label)}</text>${r.note ? `<text class="sf-note ${r.state}" x="${r.x + r.w - 12}" y="${r.y + r.h - 10}" text-anchor="end">${esc(r.note)}</text>` : ''}</g>`);
   if (st.wires.some((w) => w.points)) o.push(`<defs><marker id="sfar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>`);
   for (const w of st.wires) {
-    const cls = `sf-wire ${w.state || ''} ${w.thin ? 'thin' : ''} ${w.link ? 'link' : ''}`;
+    const cls = `sf-wire ${w.state || ''} ${w.thin ? 'thin' : ''} ${w.link ? 'link' : ''} ${w.kind || ''}`;
     if (w.points) {
       /* label sits on the longest segment; the arrowhead marks the target box's edge */
       const segs = w.points.slice(1).map((q, i) => [w.points[i], q]);
@@ -250,7 +250,14 @@ export function svg(st, { thumb = false, caption = true } = {}) {
 
    It reads the DOM, not a copy of the state, so a hover reports what is actually drawn; that also
    makes it work on the static boards, which ship a picture and no scene data. */
-export function inspector(host, stage) {
+export function inspector(host, stage, opts = {}) {
+  /* opts.glossary says what a role, an edge kind and every Film field mean; opts.chapters maps an
+     id prefix to the chapter that introduced the object. Both come from the build: surface.mjs
+     draws pictures and has no opinion about WRL. */
+  const G = opts.glossary || { roles: {}, edges: {}, fields: {}, kinds: {} };
+  const CH = opts.chapters || {};
+  const chapterOf = (id) => CH[String(id).split('_')[0]] || null;
+  const here = (typeof location !== 'undefined' ? location.pathname : '').replace(/^.*\//, '').replace(/\.html$/, '');
   const card = document.createElement('div'); card.className = 'sf-insp'; card.hidden = true;
   host.appendChild(card);
   if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
@@ -272,13 +279,22 @@ export function inspector(host, stage) {
     const ins = peers(id, 'data-to', 'data-from'), outs = peers(id, 'data-from', 'data-to');
     /* grouped by edge kind, because a signal reaching an object and a socket control reaching it are
        not the same event, and the board draws both with the same kind of line */
-    const link = (p) => { const by = {}; for (const [n, on, k] of p) (by[k] ||= []).push(`<code class="${on ? 'on' : 'off'}">${esc(n)}</code>`);
-      return Object.entries(by).map(([k, v]) => `${k ? `<em>${esc(KIND[k] || k)}</em> ` : ''}${v.join(' ')}`).join(' · '); };
+    const link = (p) => { const by = {}; for (const [n, on, k] of p) (by[k] ||= []).push(`<button type="button" class="sf-peer ${on ? 'on' : 'off'}" data-go="${esc(n)}">${esc(n)}</button>`);
+      return Object.entries(by).map(([k, v]) => `${k ? `<em>${esc(KIND[k] || k)}</em>` : ''}${v.join(' ')}${k && G.edges[k] ? `<i>${esc(G.edges[k].is)}</i>` : ''}`).join(''); };
+    /* the fields, split the way the forge splits them: what the object is DOING this epoch, and how it
+       was BUILT — read once when the world was made and unchanged for the whole film */
+    const rows = (want) => facts.filter(([k]) => ((G.fields[k] || {}).kind || 'state') === want)
+      .map(([k, v]) => `<div class="sf-f"><dt>${esc(k)}</dt><dd>${esc(v)}</dd>${(G.fields[k] || {}).is ? `<p>${esc(G.fields[k].is)}</p>` : ''}</div>`).join('');
+    const group = (want) => { const r = rows(want); return r ? `<div class="sf-insp-g"><h4>${esc(want === 'state' ? 'doing now' : 'built this way')}</h4><dl>${r}</dl></div>` : ''; };
+    const role = G.roles[g.dataset.role];
+    const ch = chapterOf(id);
     card.innerHTML =
       `<div class="sf-insp-h"><b>${esc(g.dataset.id)}</b>${g.dataset.role ? `<span class="sf-insp-role">${esc(g.dataset.role)}</span>` : ''}${g.dataset.band ? `<span class="sf-insp-band">${esc(g.dataset.band)}</span>` : ''}</div>`
+      + (role ? `<p class="sf-insp-is">${esc(role.is)}</p>${role.then ? `<p class="sf-insp-then">${esc(role.then)}</p>` : ''}` : '')
+      + (ch ? `<p class="sf-insp-ch">from chapter ${ch.n} — ${here === ch.id ? `<b>${esc(ch.name)}</b>, this one` : `<a href="${esc(ch.id)}.html">${esc(ch.name)}</a>`}</p>` : '')
       + (facts.length
         ? `<div class="sf-insp-ep${changed ? ' changed' : ''}">${esc(epoch || 'this epoch')}${changed ? ' · changed in this epoch' : ' · unchanged'}</div>`
-           + `<dl>${facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`
+           + group('state') + group('built')
         /* an illustration carries no Film line, but it does carry the step's own state and note */
         : (g.dataset.state || g.dataset.note)
         ? `${epoch ? `<div class="sf-insp-ep">${esc(epoch)}</div>` : ''}<dl>${g.dataset.state ? `<dt>state</dt><dd>${esc(g.dataset.state)}</dd>` : ''}${g.dataset.note ? `<dt>note</dt><dd>${esc(g.dataset.note)}</dd>` : ''}</dl>`
@@ -300,6 +316,18 @@ export function inspector(host, stage) {
   function show(g, cx, cy) { if (!render(g)) return; card.hidden = false; placeAt(cx, cy); mark(g); }
   function hide() { card.hidden = true; card.classList.remove('pinned'); pinned = null; mark(null); }
 
+  /* a pinned card is interactive, so its peer names are buttons: click one and the readout moves to
+     that object. Following a wire by name is the only practical way to read a path off a board of
+     111 objects, where the lines themselves are 1.4px and cross bands. */
+  card.addEventListener('click', (ev) => {
+    const b = ev.target.closest && ev.target.closest('[data-go]');
+    if (!b) return;
+    ev.preventDefault(); ev.stopPropagation();
+    const t = stage.querySelector(`.sf-station[data-id="${q(b.dataset.go)}"], .sf-locus[data-id="${q(b.dataset.go)}"]`);
+    if (!t) return;
+    const r = t.getBoundingClientRect();
+    pinned = t.dataset.id; card.classList.add('pinned'); show(t, r.right, r.bottom);
+  });
   stage.addEventListener('pointermove', (ev) => {
     if (pinned) return;
     const g = ev.target.closest && ev.target.closest('.sf-station[data-id], .sf-locus[data-id]');
@@ -358,7 +386,7 @@ export function panZoom(host, getSvg) {
 }
 
 /* ── browser: mount with controls, tweening, takeaways ─────────────────────────────────────────── */
-export function mount(root, scene) {
+export function mount(root, scene, inspectorOpts = {}) {
   const total = scene.steps.length; let i = 0, timer = null;
   root.innerHTML = `<div class="sf-stage"></div>
     <div class="sf-controls"><button class="sf-play">▶ Play</button><button class="sf-step">Step ▸</button><button class="sf-reset">↺ Reset</button><span class="sf-zoom"><button class="sf-zin" title="zoom in">＋</button><button class="sf-zout" title="zoom out">－</button><button class="sf-fit" title="fit (or double-click the picture)">⤢</button></span><span class="sf-hint">hover an object for its state · wheel zooms · drag pans · double-click fits</span><span class="sf-pos"></span></div>
@@ -368,7 +396,7 @@ export function mount(root, scene) {
   let prev = computeState(scene, 0);
   stage.innerHTML = svg(prev, { caption: false });
   const pz = panZoom(stage, () => stage.querySelector('svg'));
-  const insp = inspector(root, stage);
+  const insp = inspector(root, stage, inspectorOpts);
   root.querySelector('.sf-zin').addEventListener('click', () => pz.zoom(1 / 1.3)); root.querySelector('.sf-zout').addEventListener('click', () => pz.zoom(1.3)); root.querySelector('.sf-fit').addEventListener('click', () => pz.reset());
   const paint = () => { cap.textContent = prev.caption; pos.textContent = `${i} / ${total}`; root.querySelectorAll('.sf-take li').forEach((li) => li.classList.toggle('got', +li.dataset.step <= i)); };
   paint();
@@ -408,7 +436,7 @@ export const CSS = `
 .sf-ring rect{fill:none;stroke:var(--line2,#d8cfba);stroke-width:1.5}.sf-ring text{font:11px var(--mono,monospace);fill:var(--fg3,#666);letter-spacing:.06em;text-transform:uppercase}.sf-ring.held rect{stroke:var(--acc,#6d3bd4);fill:var(--acc-soft,rgba(109,59,212,.05))}.sf-ring.held text{fill:var(--acc,#6d3bd4)}.sf-ring.refused rect{stroke:var(--rose,#c02a5f)}.sf-ring.refused text{fill:var(--rose,#c02a5f)}.sf-ring.admitted rect{stroke:var(--data,#0a6e62)}.sf-ring.admitted text{fill:var(--data,#0a6e62)}
 .sf-station .sf-count{font:10px var(--mono,monospace);fill:var(--fg3,#555)}.sf-station.compact text{font-size:10.5px}.sf-station.compact .sf-count{font-size:8.5px}.sf-station.compact.admitted rect{fill:var(--data-soft,rgba(10,110,98,.18))}.sf-station.compact.refused rect{fill:rgba(192,42,95,.16)}.sf-station.Pulser rect,.sf-station.Relay rect,.sf-station.Door rect,.sf-station.Spinner rect,.sf-station.Orb rect{stroke-width:1.2}.sf-station.Pulser rect{stroke:var(--acc,#6d3bd4)}.sf-station.Door rect{stroke:var(--rose,#c02a5f)}.sf-station.Orb rect{stroke:var(--data,#0a6e62)}
 .sf-note{font:12px var(--mono,monospace);fill:var(--fg2,#333)}.sf-note.refused{fill:var(--rose,#c02a5f)}.sf-note.admitted{fill:var(--data,#0a6e62)}
-.sf-wire{stroke:var(--fg3,#555);stroke-width:2;stroke-dasharray:6 4;fill:none;color:var(--fg3,#555)}.sf-wire.on{color:var(--acc,#6d3bd4)}.sf-wire.thin{stroke-width:1.4;stroke-dasharray:4 3}.sf-wire.link{stroke-width:1;opacity:.55}.sf-wire.link.on{stroke-width:1.6;opacity:.8}.sf-label.small{font-size:10px}.sf-note.small{font-size:10.5px}.sf-stage{cursor:grab;touch-action:none}.sf-stage.grabbing{cursor:grabbing}.sf-zoom{display:inline-flex;gap:.2rem;margin-left:.4rem}.sf-zoom button{padding:.2rem .5rem}.sf-hint{font:11px var(--ui,system-ui);color:var(--fg3,#777);margin-left:.4rem}.sf-wire.on{stroke:var(--acc,#6d3bd4);stroke-width:3;stroke-dasharray:none}.sf-label{font:12px var(--ui,system-ui);fill:var(--fg2,#333)}
+.sf-wire{stroke:var(--fg3,#555);stroke-width:2;stroke-dasharray:6 4;fill:none;color:var(--fg3,#555)}.sf-wire.on{color:var(--acc,#6d3bd4)}.sf-wire.thin{stroke-width:1.4;stroke-dasharray:4 3}.sf-wire.link{stroke-width:1;opacity:.55}.sf-wire.SocketControl{stroke:var(--data,#0a6e62);stroke-dasharray:1 3;stroke-linecap:round;color:var(--data,#0a6e62)}.sf-wire.link.on{stroke-width:1.6;opacity:.8}.sf-label.small{font-size:10px}.sf-note.small{font-size:10.5px}.sf-stage{cursor:grab;touch-action:none}.sf-stage.grabbing{cursor:grabbing}.sf-zoom{display:inline-flex;gap:.2rem;margin-left:.4rem}.sf-zoom button{padding:.2rem .5rem}.sf-hint{font:11px var(--ui,system-ui);color:var(--fg3,#777);margin-left:.4rem}.sf-wire.on{stroke:var(--acc,#6d3bd4);stroke-width:3;stroke-dasharray:none}.sf-label{font:12px var(--ui,system-ui);fill:var(--fg2,#333)}
 .sf-meter .sf-track{fill:var(--ink3,#fff);stroke:var(--line2,#d8cfba)}.sf-meter.util .sf-fill{fill:var(--warn,#96600b);transition:width .7s}.sf-meter.prog .sf-fill{fill:var(--data,#0a6e62);transition:width .7s}
 .sf-caption{font:15px var(--display,Georgia,serif);fill:var(--fg,#1c1a17)}
 .sf-controls{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.6rem 0 .3rem;font:13px var(--ui,system-ui)}.sf-controls button{font:600 13px var(--ui,system-ui);padding:.3rem .7rem;border:1px solid var(--fg,#1c1a17);background:var(--ink3,#fff);border-radius:6px;cursor:pointer}.sf-pos{color:var(--fg3,#555);margin-left:auto;font-family:var(--mono,monospace)}
@@ -420,8 +448,18 @@ export const CSS = `
 .sf-insp-role{font:10.5px var(--mono,monospace);text-transform:uppercase;letter-spacing:.06em;color:var(--acc,#6d3bd4)}
 .sf-insp-band{font:10.5px var(--ui,system-ui);color:var(--fg3,#666)}
 .sf-insp-ep{margin:.25rem 0 .35rem;font:11.5px var(--ui,system-ui);color:var(--fg3,#666)}.sf-insp-ep.changed{color:var(--data,#0a6e62);font-weight:600}
-.sf-insp dl{display:grid;grid-template-columns:auto 1fr;gap:.05rem .5rem;margin:0}
+.sf-insp{max-height:min(72vh,30rem);overflow:auto}
+.sf-insp-is{margin:.3rem 0 0;font:12px/1.4 var(--ui,system-ui);color:var(--fg,#1c1a17)}
+.sf-insp-then{margin:.1rem 0 0;font:11px/1.4 var(--ui,system-ui);color:var(--fg2,#555)}
+.sf-insp-ch{margin:.25rem 0 0;font:11px var(--ui,system-ui);color:var(--fg3,#666)}.sf-insp-ch a{color:var(--acc,#6d3bd4)}
+.sf-insp-g{margin-top:.35rem}.sf-insp-g h4{margin:0 0 .15rem;font:9.5px var(--ui,system-ui);text-transform:uppercase;letter-spacing:.1em;color:var(--fg3,#888);font-weight:600}
+.sf-insp dl{margin:0}
+.sf-f{display:grid;grid-template-columns:auto 1fr;gap:0 .5rem;margin-bottom:.18rem}
 .sf-insp dt{font:10.5px var(--mono,monospace);color:var(--fg3,#666)}.sf-insp dd{margin:0;font:11.5px var(--mono,monospace);color:var(--fg,#1c1a17);word-break:break-all}
+.sf-f p{grid-column:1/-1;margin:0;font:10.5px/1.35 var(--ui,system-ui);color:var(--fg2,#555)}
+.sf-insp-w em{margin-right:.3rem}.sf-insp-w i{display:block;font:10px var(--ui,system-ui);color:var(--fg3,#888);font-style:normal;margin:0 0 .25rem}
+.sf-peer{font:10.5px var(--mono,monospace);background:var(--ink2,#f2ede2);border:1px solid var(--line,#e7e0d2);padding:0 .25rem;border-radius:3px;cursor:pointer;color:inherit;margin:0 .1rem .1rem 0}
+.sf-insp.pinned .sf-peer:hover{border-color:var(--acc,#6d3bd4);color:var(--acc,#6d3bd4)}.sf-peer.on{background:var(--acc-soft,rgba(109,59,212,.14));color:var(--acc,#6d3bd4);border-color:var(--acc-line,#c9b8f0)}
 .sf-insp-none{margin:.25rem 0;color:var(--fg2,#444)}
 .sf-insp-w{margin-top:.4rem;padding-top:.35rem;border-top:1px solid var(--line,#e7e0d2);font:11px var(--ui,system-ui);color:var(--fg3,#666)}
 .sf-insp-w em{font-style:normal;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--fg3,#888)}.sf-insp-w code{font-size:10.5px;background:var(--ink2,#f2ede2);padding:0 .2rem;border-radius:3px}.sf-insp-w code.on{background:var(--acc-soft,rgba(109,59,212,.14));color:var(--acc,#6d3bd4)}
