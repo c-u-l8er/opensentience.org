@@ -75,6 +75,12 @@
   .refs em{color:var(--ink)}
   footer{margin-top:4rem;padding-top:1.6rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.9} footer b{color:var(--accent)}
   @media(max-width:640px){body{font-size:16.5px} .lawrow{grid-template-columns:1rem 2.8rem 1fr} .lst{display:none}}
+
+/* The rung ladder is a sticky flex row that never wrapped: on a 390px screen its last four rungs
+   sat past the edge with nothing to scroll to, so half the ladder was unreachable on exactly the
+   pages that teach it. Below 700px it wraps and stops being sticky, so the whole ladder is visible
+   at the top without eating the viewport while you read. */
+@media(max-width:700px){.bar{position:static;flex-wrap:wrap;gap:.5rem;row-gap:.3rem}.bar .spacer{display:none}.bar .tag{flex-basis:100%}}
 </style>
 </head>
 <body>

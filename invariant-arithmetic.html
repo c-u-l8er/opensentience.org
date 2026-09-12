@@ -611,7 +611,13 @@
                     grid-template-columns: 1fr;
                 }
             }
-        </style>
+        
+/* The rung ladder is a sticky flex row that never wrapped: on a 390px screen its last four rungs
+   sat past the edge with nothing to scroll to, so half the ladder was unreachable on exactly the
+   pages that teach it. Below 700px it wraps and stops being sticky, so the whole ladder is visible
+   at the top without eating the viewport while you read. */
+@media(max-width:700px){.bar{position:static;flex-wrap:wrap;gap:.5rem;row-gap:.3rem}.bar .spacer{display:none}.bar .tag{flex-basis:100%}}
+</style>
     </head>
     <body>
         <script type="module" src="/amp-nav.js"></script>

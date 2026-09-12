@@ -137,6 +137,10 @@
             /* ── Status banner ── */
             .status-banner {
                 display: flex;
+                /* the text column holds long unbreakable <code> tokens; a flex item defaults to
+                   min-width:auto and so refuses to shrink below them, which put 87px of this
+                   banner past the edge of a 390px screen with nothing to scroll to */
+                flex-wrap: wrap;
                 gap: 1.5rem;
                 align-items: flex-start;
                 background: var(--paper-deep);
@@ -157,7 +161,9 @@
                 border-radius: 2px;
                 margin-top: 0.1rem;
             }
+            .status-banner > div { min-width: 0; }
             .status-banner code {
+                overflow-wrap: anywhere;
                 font-family: var(--font-mono);
                 font-size: 0.82em;
                 background: var(--paper-soft);
