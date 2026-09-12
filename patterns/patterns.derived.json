@@ -1,15 +1,15 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-12T14:57:48.454Z",
+  "built": "2026-09-12T15:56:38.107Z",
   "inputs_heads": {
-    ".": "2570261866e5c04aa246b8a33f7df77fab8c5092",
-    "opensentience.org": "5407226c9a039b01bb7aa69669e5d609c92de14d",
-    "WRL": "beec04c5f75dd247dfbc595765fa75d5efe584ce",
-    "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
-    "AmpersandBoxDesign": "8a77b781c5290a3e12b09771b1d9f46a212c2d82",
+    ".": "0e5565c02671ef24a2477496437be12e32673daf",
+    "opensentience.org": "dd92395985befc91c5a198bae2adf058dd801850",
+    "WRL": "d431101567455d2c10dfeccb5c3a96334a1731bc",
+    "TRVM": "3f2b41434e8a7c4d1bb40e3705936b93a1368c4c",
+    "AmpersandBoxDesign": "664458e559c0c479c6397fae2bb92457d73b6e5d",
     "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
     "computedriven": "eb6320182c9b4820b5ed5b5d0d0fe3805a03ff03",
-    "super": "bef166dabc94a998798f04eb0ecd4a44defa88a9"
+    "super": "45c121920e5177a87a78197cfc39ba196d549362"
   },
   "summary": {
     "patterns": 32,
