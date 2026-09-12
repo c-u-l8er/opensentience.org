@@ -1,15 +1,15 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T23:44:46.480Z",
+  "built": "2026-09-11T23:59:43.767Z",
   "inputs_heads": {
-    ".": "37e07251b88cb3b96d12aabca7c352dd89d0e001",
-    "opensentience.org": "6c213b1fe0d4ae708a8084834ccbf5b29d564e9b",
+    ".": "358f8f013d4c49e3393233321ea3eb2401dece0b",
+    "opensentience.org": "eea6912829717cbdbbb82cc44e559d2c1667bedc",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
     "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
     "computedriven": "3669fe0de4b9ac06d745d2637bdaf2a4f72a755a",
-    "super": "9825e31c4a310352ac8ec265ef0d8723c68713b2"
+    "super": "79dad405fa89eb26daefb8434d9143ed5d0ad9f6"
   },
   "summary": {
     "patterns": 32,
@@ -50,10 +50,7 @@
       "descent-is-not-dependence"
     ]
   },
-  "findings": [
-    "refusing-join: witness is STAGED and the page is served, yet its rung is authored in_tree — the ladder position is understated (rung re-adjudication owed)",
-    "capability-bounded-composition: witness is STAGED and the page is served, yet its rung is authored in_tree — the ladder position is understated (rung re-adjudication owed)"
-  ],
+  "findings": [],
   "patterns": [
     {
       "id": "active-locus",
@@ -157,6 +154,7 @@
             "text": "kind is definition — carries no evidence rung (AGENCY.md §6)"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -311,8 +309,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-11T15:27:41.066Z",
           "host": "PX13",
@@ -455,8 +458,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -617,8 +625,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-11T15:25:45.285Z",
           "host": "PX13",
@@ -793,8 +806,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-11T15:25:45.592Z",
           "host": "PX13",
@@ -828,8 +846,8 @@
         "path": "AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
         "shape": "suite",
         "evidence_kind": "constructive_witness",
-        "rung": "in_tree",
-        "rung_source": "STACK_COMPLETION.md corrections §1: 101 compose laws, 2000 trials, derived totals",
+        "rung": "live_deployed",
+        "rung_source": "A live-run receipt: the staged bytes ran from https://opensentience.org/patterns/refusing-join and reported 101 laws · 101 passing · 0 failing · 3 declared-open, bound to staged stamp 06726c3fb022f31e. Recorded by _patterns/build/run-live.mjs; the rung is derived from that receipt by build.mjs (P26), not authored.",
         "cmd": "node test/compose-laws.mjs",
         "cwd": "AmpersandBoxDesign/box-and-box",
         "staged": true,
@@ -936,7 +954,7 @@
       },
       "up": "UP-006",
       "limit": "101 compose laws over this algebra's own bricks, 2000 trials each, on the bytes staged on this site. It establishes that THIS composition refuses an undeclared contract. It does not establish that refusal is the right policy for any other join, and it says nothing about joins outside box-and-box.",
-      "next_rung": "live_local: the staged bytes already run from this page, which means the rung recorded on this witness understates where it stands — a re-adjudication is owed. The step that would actually matter is further up: an implementation not written in this tree passing the same law suite. Five ports exist (npm run parity) and all five are ours.",
+      "next_rung": "external — an implementation not written in this tree passing the same law suite. Five ports exist (npm run parity) and all five are ours, so none of them is this rung. It cannot be reached by editing this file: the build derives the rung from receipts, and outside reproduction needs a receipt kind that does not exist yet.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -945,7 +963,7 @@
         "STAGED": true,
         "REPRODUCED": false,
         "PUBLISHED": true,
-        "next_rung_name": "live_local",
+        "next_rung_name": "external",
         "why": [
           {
             "ok": true,
@@ -961,7 +979,7 @@
           },
           {
             "ok": true,
-            "text": "its rung is in_tree or above (in_tree)"
+            "text": "its rung is in_tree or above (live_deployed)"
           },
           {
             "ok": true,
@@ -974,8 +992,18 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": true,
+            "text": "it has run from the deployed site — 101 laws · 101 passing · 0 failing · 3 declared-open · 13693.4 ms"
           }
         ],
+        "live_run": {
+          "at": "2026-09-11T23:58:52.515Z",
+          "url": "https://opensentience.org/patterns/refusing-join",
+          "status": "101 laws · 101 passing · 0 failing · 3 declared-open · 13693.4 ms",
+          "stamp": "06726c3fb022f31e"
+        },
         "execution": {
           "at": "2026-09-11T15:25:45.724Z",
           "host": "PX13",
@@ -1133,8 +1161,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-07-22",
           "note": "the witness is itself an execution record"
@@ -1258,8 +1291,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1284,8 +1322,8 @@
         "path": "AmpersandBoxDesign/box-and-box/test/laws.mjs",
         "shape": "suite",
         "evidence_kind": "constructive_witness",
-        "rung": "in_tree",
-        "rung_source": "109 kernel laws × 2000 trials; playground re-measured 2026-08-24 (CLAUDE.md)",
+        "rung": "live_deployed",
+        "rung_source": "A live-run receipt: the staged kernel suite ran from https://opensentience.org/patterns/capability-bounded-composition and reported 109 laws · 109 passing · 0 failing, bound to staged stamp 51ffdf3aa3658f18. Recorded by _patterns/build/run-live.mjs; derived by build.mjs (P26).",
         "cmd": "node test/laws.mjs",
         "cwd": "AmpersandBoxDesign/box-and-box",
         "staged": true,
@@ -1390,7 +1428,7 @@
       },
       "up": "UP-009",
       "limit": "Cell 16 (deny by default) is proved at the impl tier, which makes the floor real. It does not establish that any composition in this tree grants only what it needs — the cell is the floor, not the pattern.",
-      "next_rung": "live_local: a composition on this page that refuses because a participant asked for authority it was not granted. The demo infrastructure exists; this record has no demo.",
+      "next_rung": "external — the deny-by-default floor (cell 16) checked by someone who did not write it. The suite runs live here and that is this tree checking its own kernel.",
       "derived": {
         "label": "WITNESSED",
         "CHECKABLE": true,
@@ -1399,7 +1437,7 @@
         "STAGED": true,
         "REPRODUCED": false,
         "PUBLISHED": true,
-        "next_rung_name": "live_local",
+        "next_rung_name": "external",
         "why": [
           {
             "ok": true,
@@ -1415,7 +1453,7 @@
           },
           {
             "ok": true,
-            "text": "its rung is in_tree or above (in_tree)"
+            "text": "its rung is in_tree or above (live_deployed)"
           },
           {
             "ok": true,
@@ -1428,8 +1466,18 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": true,
+            "text": "it has run from the deployed site — 109 laws · 109 passing · 0 failing · 294.2 ms"
           }
         ],
+        "live_run": {
+          "at": "2026-09-11T23:58:57.584Z",
+          "url": "https://opensentience.org/patterns/capability-bounded-composition",
+          "status": "109 laws · 109 passing · 0 failing · 294.2 ms",
+          "stamp": "51ffdf3aa3658f18"
+        },
         "execution": {
           "at": "2026-09-11T15:26:16.294Z",
           "host": "PX13",
@@ -1577,8 +1625,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1734,8 +1787,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-11T15:26:17.256Z",
           "host": "PX13",
@@ -1897,8 +1955,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-11T15:25:45.285Z",
           "host": "PX13",
@@ -2060,8 +2123,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-05",
           "note": "the witness is itself an execution record"
@@ -2212,8 +2280,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2361,8 +2434,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-05",
           "note": "the witness is itself an execution record"
@@ -2494,8 +2572,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2629,8 +2712,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2773,8 +2861,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": [
@@ -2911,8 +3004,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3042,8 +3140,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3153,8 +3256,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3310,8 +3418,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-11T15:25:45.285Z",
           "host": "PX13",
@@ -3446,8 +3559,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3585,8 +3703,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3698,8 +3821,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3806,6 +3934,7 @@
             "text": "kind is definition — carries no evidence rung (AGENCY.md §6)"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3954,8 +4083,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-11T15:27:41.066Z",
           "host": "PX13",
@@ -4122,8 +4256,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-11T15:26:22.369Z",
           "host": "PX13",
@@ -4259,8 +4398,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -4395,8 +4539,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": [
@@ -4563,8 +4712,13 @@
           {
             "ok": true,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": {
           "at": "2026-09-11T15:25:45.592Z",
           "host": "PX13",
@@ -4710,8 +4864,13 @@
           {
             "ok": false,
             "text": "a counterexample is shipped (required once WITNESSED)"
+          },
+          {
+            "ok": false,
+            "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "live_run": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []

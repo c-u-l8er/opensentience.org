@@ -40,6 +40,7 @@ const rel = (p) => p.replace(ROOT + '/', '');
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const sha = (buf) => createHash('sha256').update(buf).digest('hex');
 const shaFile = (p) => sha(readFileSync(p));
+const stampFor = (p) => shaFile(join(ROOT, p)).slice(0, 16);
 
 const DATA = readJson(join(HERE, '../data/patterns.json'));
 const CELLS = readJson(join(SITE, '_invariants/data/cells.json')).cells;
@@ -47,6 +48,10 @@ const LEDGER = readJson(join(ROOT, 'CLAIM_LEDGER.json'));
 const RULES = readJson(join(ROOT, 'scripts/messaging-rules.json')).rules;
 const RECEIPT_DIR = join(HERE, '../receipts');
 const receipts = existsSync(RECEIPT_DIR) ? readdirSync(RECEIPT_DIR).filter((f) => f.endsWith('.json')).map((f) => readJson(join(RECEIPT_DIR, f))) : [];
+// Live-run receipts (run-live.mjs): a staged witness executed from the DEPLOYED site, bound to the
+// stamp the page itself printed. This is the only evidence the build has for the live_deployed rung.
+const LIVE_DIR = join(RECEIPT_DIR, 'live');
+const liveReceipts = new Map((existsSync(LIVE_DIR) ? readdirSync(LIVE_DIR).filter((f) => f.endsWith('.json')).map((f) => readJson(join(LIVE_DIR, f))) : []).map((r) => [r.for_pattern, r]));
 
 const LADDER = ['spec', 'in_tree', 'live_local', 'live_deployed', 'external'];
 const EVIDENCE_KINDS = new Set(LEDGER.claims.map((c) => c.evidence_kind).filter(Boolean));   // the ledger's vocabulary, not ours
@@ -189,6 +194,28 @@ for (const p of DATA.patterns) {
       else STAGED = true;
     }
   }
+  // The RUNG was the last hand-typed status word in this catalog, and typing it is how two records
+  // came to understate what the site already did. It is now DERIVED from what the build can see, and
+  // P26 refuses an authored rung that disagrees. Note the consequence, which is deliberate: `external`
+  // is never derivable, so reaching it needs a new kind of receipt — never a word typed into the file.
+  let LIVE_RUN = null;
+  if (w && STAGED) {
+    const lr = liveReceipts.get(p.id);
+    if (lr && lr.source_identity.stamp === stampFor(w.staged_path)) LIVE_RUN = lr;
+    else if (lr) findings.push(`${p.id}: a live-run receipt exists but its stamp ${lr.source_identity.stamp} is not the staged bytes ${stampFor(w.staged_path)} — the witness was restaged after the run; re-run run-live.mjs`);
+  }
+  const derivedRung = !w ? null
+    : LIVE_RUN ? 'live_deployed'
+      : w.shape === 'spec' ? 'spec'
+        : existsSync(join(ROOT, w.path)) ? 'in_tree' : 'spec';
+  if (w && w.rung !== derivedRung) {
+    const dir = LADDER.indexOf(w.rung) > LADDER.indexOf(derivedRung) ? 'OVERSTATES' : 'UNDERSTATES';
+    const why = w.rung === 'external' ? 'external cannot be derived here — outside reproduction needs a receipt kind that does not exist yet, not a word typed into this file'
+      : derivedRung === 'live_deployed' ? 'a live-run receipt binds this witness to the deployed site'
+        : LIVE_RUN === null && STAGED ? 'no live-run receipt matches the staged bytes — run run-live.mjs, or the claim is about a run nobody made'
+          : `the witness path ${existsSync(join(ROOT, w.path)) ? 'resolves in the tree' : 'does not resolve'}`;
+    refuse('P26-RUNG', `${p.id}: the authored rung "${w.rung}" ${dir} what the build derives ("${derivedRung}") — ${why}`);
+  }
   const supportOk = claimStatuses.every((s) => SUPPORT_OK.has(s));
   let label = null;
   if (p.kind === 'pattern') {
@@ -212,6 +239,7 @@ for (const p of DATA.patterns) {
       { ok: EXECUTED, text: `a run is recorded for these exact bytes${exec && !exec.executed ? ` — ${exec.why}` : ''}` },
       { ok: supportOk, text: claimStatuses.length ? `every cited claim is PROVED/KNOWN/MEASURED/CONDITIONAL (${claimStatuses.join(', ')})` : 'no claim is cited that could be REFUTED' },
       { ok: !!p.counterexample, text: 'a counterexample is shipped (required once WITNESSED)' },
+      { ok: !!LIVE_RUN, text: LIVE_RUN ? `it has run from the deployed site — ${LIVE_RUN.execution_identity.status}` : (STAGED ? 'it has NOT been run from the deployed site (staged, so it could be)' : 'not staged on this site, so it cannot run from the page') },
     ];
   // REPRODUCED — the ladder's top rung, and nothing in this tree has reached it. The field exists so
   // that the absence is visible on every page rather than inferred from the absence of a field.
@@ -230,7 +258,7 @@ for (const p of DATA.patterns) {
   // witness and re-adjudicating them is its own pass — this records that the pass is owed.
   if (w && STAGED && PUBLISHED_IDS.has(p.id) && w.rung === 'in_tree') findings.push(`${p.id}: witness is STAGED and the page is served, yet its rung is authored in_tree — the ladder position is understated (rung re-adjudication owed)`);
 
-  derived.push({ ...p, derived: { label, CHECKABLE, RUNNABLE: RUNNABLE_, EXECUTED, STAGED, REPRODUCED, PUBLISHED: PUBLISHED_IDS.has(p.id), next_rung_name, why, execution: exec && exec.receipt ? { at: exec.receipt.execution_identity.started, host: exec.receipt.execution_identity.host, sha256: exec.receipt.source_identity.sha256, repo_head: exec.receipt.source_identity.repo_head } : (exec && exec.at ? { at: exec.at, note: exec.why } : null), claim_statuses: claimStatuses, cell_statuses: (p.cells || []).map((b) => ({ num: b.ref, modality: b.modality, status: CELLS.find((c) => c.num === b.ref).status })) } });
+  derived.push({ ...p, derived: { label, CHECKABLE, RUNNABLE: RUNNABLE_, EXECUTED, STAGED, REPRODUCED, PUBLISHED: PUBLISHED_IDS.has(p.id), next_rung_name, why, live_run: LIVE_RUN ? { at: LIVE_RUN.execution_identity.finished, url: LIVE_RUN.execution_identity.url, status: LIVE_RUN.execution_identity.status, stamp: LIVE_RUN.source_identity.stamp } : null, execution: exec && exec.receipt ? { at: exec.receipt.execution_identity.started, host: exec.receipt.execution_identity.host, sha256: exec.receipt.source_identity.sha256, repo_head: exec.receipt.source_identity.repo_head } : (exec && exec.at ? { at: exec.at, note: exec.why } : null), claim_statuses: claimStatuses, cell_statuses: (p.cells || []).map((b) => ({ num: b.ref, modality: b.modality, status: CELLS.find((c) => c.num === b.ref).status })) } });
 }
 for (const a of DATA.anti_patterns) for (const f of ['label']) if (f in a) refuse('P0-TYPED-DERIVED', a.id);
 
@@ -262,7 +290,6 @@ const row = (p) => `<tr><td><a href="${p.id}.html"><code>${p.id}</code></a></td>
 // start marker that is not found) so the page cannot show code the tree does not contain.
 const DEMOS = join(HERE, '../demos'), SCENES = join(HERE, '../scenes'), SURFACE = join(HERE, '../surface/surface.mjs');
 const SF = await import(SURFACE);
-const stampFor = (p) => shaFile(join(ROOT, p)).slice(0, 16);
 const RUNJS_STAMP = shaFile(join(SITE, 'witness/run.js')).slice(0, 16);
 const SF_STAMP = shaFile(SURFACE).slice(0, 16);
 for (const p of derived) {
@@ -382,6 +409,7 @@ table.pa,table.basis{border-collapse:collapse;font:13px/1.5 var(--ui,system-ui);
 .mod.necessary{background:var(--acc-soft,rgba(109,59,212,.08));color:var(--acc,#6d3bd4)}.mod.not_sufficient,.mod.stronger_than_needed{background:rgba(150,96,11,.10);color:var(--warn,#96600b)}
 p.nonovelty{font:13.5px/1.6 var(--ui,system-ui);border-left:3px solid var(--warn,#96600b);background:rgba(150,96,11,.05);padding:.5rem .8rem;border-radius:0 var(--r,8px) var(--r,8px) 0}
 p.note{font:12.5px/1.55 var(--ui,system-ui);color:var(--fg3,#666)}
+p.liverun{font:13.5px/1.6 var(--ui,system-ui);border-left:3px solid var(--data,#0a7);background:var(--data-soft,#e6f7ef);padding:.5rem .8rem;border-radius:0 var(--r,8px) var(--r,8px) 0}
 .take{list-style:none;padding:0;margin:0}.take li{padding:.5rem .8rem;margin:.4rem 0;border-left:3px solid var(--line2,#ccc);background:var(--ink3,#fffdf8);font:15px/1.5 var(--display,Georgia,serif)}.take li b{font:600 10px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--fg3,#666)}.take li.animation{border-color:var(--acc,#6d3bd4)}.take li.syntax{border-color:var(--fg,#1c1a17)}.take li.literature{border-color:var(--warn,#96600b)}.take li.witness{border-color:var(--data,#0a7)}
 .sink{font:13px/1.45 var(--mono,monospace);background:#1b1a17;color:#ddd;padding:.8rem;border-radius:var(--r,8px);min-height:1.5rem;max-height:28rem;overflow:auto;margin:.5rem 0;white-space:pre-wrap}.wline.good{color:#7fd}.wline.bad{color:#f88}.wline.warn{color:#fd7}.wline.group{color:#9cf;margin-top:.5rem}.wline.muted{color:#888}.wstatus.running{color:var(--warn)}.wstatus.pass{color:var(--data)}.wstatus.fail{color:var(--rose,#c02a5f)}
 code{font:.85em var(--mono,monospace);background:var(--ink2,#f2ede2);padding:0 .25rem;border-radius:3px}.warn{color:var(--warn,#96600b)}.exec{font:14px var(--ui,system-ui)}.note{font:14px var(--ui,system-ui);color:var(--fg2,#444);background:var(--ink2,#f2ede2);padding:.5rem .8rem;border-radius:var(--r,8px)}
@@ -530,6 +558,7 @@ function pageFor(p, idx) {
   const standings = ['CHECKABLE', 'RUNNABLE', 'EXECUTED', 'STAGED'].map((k) => `<span class="st ${d[k] ? 'on' : 'off'}">${k}</span>`).join('');
   const exec = d.execution ? `<p class="exec">Execution identity: ${esc(d.execution.at)}${d.execution.host ? ` on <code>${esc(d.execution.host)}</code>` : ''}${d.execution.sha256 ? ` · bytes <code>${d.execution.sha256.slice(0, 16)}…</code> · repo HEAD <code>${(d.execution.repo_head || '?').slice(0, 12)}</code>` : d.execution.note ? ` — ${esc(d.execution.note)}` : ''}</p>` : `<p class="exec warn">No execution record: this check has not been run for the bytes on disk. WITNESSED requires one.</p>`;
   const witness = w ? `<p class="exec">Source identity: <code>${esc(w.path)}</code> · shape <code>${w.shape}</code>${w.evidence_kind ? ` · evidence kind <code>${w.evidence_kind}</code>` : ''} · rung <code>${w.rung}</code> <small>(${esc(w.rung_source)})</small></p>${exec}
+    ${d.live_run ? `<p class="liverun"><b>It has already run from this site.</b> On ${esc(String(d.live_run.at).slice(0, 10))} the staged bytes at stamp <code>${esc(d.live_run.stamp)}</code> were executed by a browser at <code>${esc(d.live_run.url)}</code> and reported <b>${esc(d.live_run.status)}</b>. That recorded run — not a word in the registry — is what puts this witness at rung <code>${w.rung}</code>; restage the file and the stamp moves, the receipt stops matching, and the rung falls back (P26).</p>` : ''}
     ${d.STAGED ? `<p>Staged byte-identical at <code>${esc(w.staged_path)}</code> (stamp <code>${stamp}</code>). <button class="act" id="run">Run the witness here</button> <span id="wstatus" class="wstatus"></span></p><div id="wsink" class="sink"></div>`
                : `<p class="warn">Not staged on this site: the page cannot run this witness. ${d.RUNNABLE ? 'It runs from the command line: <code>' + esc(w.cmd) + '</code> in <code>' + esc(w.cwd) + '</code>.' : 'Its shape (' + w.shape + ') is a document, not a run.'}</p>`}`
     : `<p class="warn">No witness. ${p.kind === 'definition' ? 'A definition carries no evidence rung (AGENCY.md §6).' : 'This pattern is ' + (d.label || 'unlabelled') + ' — the tree has no check for its invariant.'}</p>`;

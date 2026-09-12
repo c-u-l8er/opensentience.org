@@ -562,8 +562,8 @@
     "path": "AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
     "shape": "suite",
     "evidence_kind": "constructive_witness",
-    "rung": "in_tree",
-    "rung_source": "STACK_COMPLETION.md corrections §1: 101 compose laws, 2000 trials, derived totals",
+    "rung": "live_deployed",
+    "rung_source": "A live-run receipt: the staged bytes ran from https://opensentience.org/patterns/refusing-join and reported 101 laws · 101 passing · 0 failing · 3 declared-open, bound to staged stamp 06726c3fb022f31e. Recorded by _patterns/build/run-live.mjs; the rung is derived from that receipt by build.mjs (P26), not authored.",
     "cmd": "node test/compose-laws.mjs",
     "cwd": "AmpersandBoxDesign/box-and-box",
     "staged": true,
@@ -670,7 +670,7 @@
    },
    "up": "UP-006",
    "limit": "101 compose laws over this algebra's own bricks, 2000 trials each, on the bytes staged on this site. It establishes that THIS composition refuses an undeclared contract. It does not establish that refusal is the right policy for any other join, and it says nothing about joins outside box-and-box.",
-   "next_rung": "live_local: the staged bytes already run from this page, which means the rung recorded on this witness understates where it stands — a re-adjudication is owed. The step that would actually matter is further up: an implementation not written in this tree passing the same law suite. Five ports exist (npm run parity) and all five are ours."
+   "next_rung": "external — an implementation not written in this tree passing the same law suite. Five ports exist (npm run parity) and all five are ours, so none of them is this rung. It cannot be reached by editing this file: the build derives the rung from receipts, and outside reproduction needs a receipt kind that does not exist yet."
   },
   {
    "id": "shared-observable",
@@ -881,8 +881,8 @@
     "path": "AmpersandBoxDesign/box-and-box/test/laws.mjs",
     "shape": "suite",
     "evidence_kind": "constructive_witness",
-    "rung": "in_tree",
-    "rung_source": "109 kernel laws × 2000 trials; playground re-measured 2026-08-24 (CLAUDE.md)",
+    "rung": "live_deployed",
+    "rung_source": "A live-run receipt: the staged kernel suite ran from https://opensentience.org/patterns/capability-bounded-composition and reported 109 laws · 109 passing · 0 failing, bound to staged stamp 51ffdf3aa3658f18. Recorded by _patterns/build/run-live.mjs; derived by build.mjs (P26).",
     "cmd": "node test/laws.mjs",
     "cwd": "AmpersandBoxDesign/box-and-box",
     "staged": true,
@@ -987,7 +987,7 @@
    },
    "up": "UP-009",
    "limit": "Cell 16 (deny by default) is proved at the impl tier, which makes the floor real. It does not establish that any composition in this tree grants only what it needs — the cell is the floor, not the pattern.",
-   "next_rung": "live_local: a composition on this page that refuses because a participant asked for authority it was not granted. The demo infrastructure exists; this record has no demo."
+   "next_rung": "external — the deny-by-default floor (cell 16) checked by someone who did not write it. The suite runs live here and that is this tree checking its own kernel."
   },
   {
    "id": "carrier-confinement",
