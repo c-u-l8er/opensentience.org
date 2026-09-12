@@ -891,8 +891,10 @@
    "counterexample": {
     "shape": "refusal",
     "path": "AmpersandBoxDesign/box-and-box/test/laws.mjs",
-    "marker": "should refuse",
-    "expected": "REFUSED"
+    "marker": "chain refuses a backward phase",
+    "law": "L10",
+    "expected": "REFUSED",
+    "note": "The marker here was 'should refuse' until 2026-09-13. That is the string L10 RETURNS WHEN IT FAILS — a law's failure tag, cited as evidence that the law holds. It is the same defect v0.4 shipped on Refusing Join (CD2's failure string used as CD1's marker), and it survived undetected because this record carried no law id and so never reached the check that exists for it. The marker is now L10's own statement, on L10's own declaration line."
    },
    "prior_art": {
     "works": [

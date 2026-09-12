@@ -1,15 +1,15 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-12T00:32:30.541Z",
+  "built": "2026-09-12T01:38:18.410Z",
   "inputs_heads": {
-    ".": "95f42c94313f400c40e314debba765cd596ea43f",
-    "opensentience.org": "54992e919d7da44e5ab52cce7422f6802b3509b7",
-    "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
+    ".": "47eea877fc9c3bdf1d4dcd48e3fa2d334c1f588e",
+    "opensentience.org": "9cb71ee7613618738eb26ead3f6a113514ad048d",
+    "WRL": "beec04c5f75dd247dfbc595765fa75d5efe584ce",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
-    "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
+    "AmpersandBoxDesign": "8a77b781c5290a3e12b09771b1d9f46a212c2d82",
     "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
-    "computedriven": "1fa13cbb654748cd9e2150e93692cc73797531c0",
-    "super": "79dad405fa89eb26daefb8434d9143ed5d0ad9f6"
+    "computedriven": "69ebd7a36691e61c38cd5c5ab353e9c3da43c8b8",
+    "super": "f7e6209463e9d59f9ea40f6f43824a83be8756ab"
   },
   "summary": {
     "patterns": 32,
@@ -25,7 +25,8 @@
     "PUBLISHED": 32,
     "REPRODUCED": 0,
     "counterexamples_resolved": 1,
-    "counterexamples_marker_only": 7,
+    "counterexamples_scoped": 1,
+    "counterexamples_marker_only": 6,
     "prior_art_works": 67,
     "prior_art_not_searched": 2,
     "invariant_null": 2,
@@ -54,6 +55,7 @@
   },
   "findings": [
     "shared-observable: marker \"Law 6\" occurs 3× in TRVM/forge/binding_run3k.py — it does not pick out one place, so it is weaker evidence than a resolved law id",
+    "capability-bounded-composition: the marker is scoped to L10's declaration, but AmpersandBoxDesign/box-and-box/test/laws.mjs exports no law index (BB_LAW_INDEX) — the id itself could not be resolved against the suite that runs",
     "progress-over-utilization: marker \"fair arm\" occurs 2× in computedriven/receipts/R7-EXECUTED.md — it does not pick out one place, so it is weaker evidence than a resolved law id",
     "carrier-multiplexing: marker \"fair arm\" occurs 2× in computedriven/receipts/R7-EXECUTED.md — it does not pick out one place, so it is weaker evidence than a resolved law id"
   ],
@@ -1354,8 +1356,10 @@
       "counterexample": {
         "shape": "refusal",
         "path": "AmpersandBoxDesign/box-and-box/test/laws.mjs",
-        "marker": "should refuse",
-        "expected": "REFUSED"
+        "marker": "chain refuses a backward phase",
+        "law": "L10",
+        "expected": "REFUSED",
+        "note": "The marker here was 'should refuse' until 2026-09-13. That is the string L10 RETURNS WHEN IT FAILS — a law's failure tag, cited as evidence that the law holds. It is the same defect v0.4 shipped on Refusing Join (CD2's failure string used as CD1's marker), and it survived undetected because this record carried no law id and so never reached the check that exists for it. The marker is now L10's own statement, on L10's own declaration line."
       },
       "prior_art": {
         "works": [
@@ -1501,9 +1505,9 @@
           "stamp": "51ffdf3aa3658f18"
         },
         "counterexample_strength": {
-          "strength": "marker",
+          "strength": "scoped",
           "occurrences": 1,
-          "law": null
+          "law": "L10"
         },
         "execution": {
           "at": "2026-09-11T15:26:16.294Z",
