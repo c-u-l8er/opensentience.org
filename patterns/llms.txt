@@ -1,4 +1,4 @@
-# Unboxed Patterns — registry (P1, derived 2026-09-11)
+# Unboxed Patterns — registry (P1, derived 2026-09-12)
 # 32 records · 13 WITNESSED · 14 STATED · 3 PROPOSED · 12 anti-patterns. Labels are derived by build.mjs, never typed. WITNESSED = a recorded run of a check on these exact bytes exists at rung ≥ in_tree.
 
 - active-locus [definition] (locus) — (no invariant)

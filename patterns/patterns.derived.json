@@ -1,14 +1,14 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-11T23:59:43.767Z",
+  "built": "2026-09-12T00:03:03.493Z",
   "inputs_heads": {
-    ".": "358f8f013d4c49e3393233321ea3eb2401dece0b",
-    "opensentience.org": "eea6912829717cbdbbb82cc44e559d2c1667bedc",
+    ".": "301168ec97f67bcd80edd5ae91ec4959096ea8c2",
+    "opensentience.org": "5ccaac433e9d4cdf5625d6d9260a49ac09f5a873",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
     "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
-    "computedriven": "3669fe0de4b9ac06d745d2637bdaf2a4f72a755a",
+    "computedriven": "1fa13cbb654748cd9e2150e93692cc73797531c0",
     "super": "79dad405fa89eb26daefb8434d9143ed5d0ad9f6"
   },
   "summary": {
@@ -995,13 +995,13 @@
           },
           {
             "ok": true,
-            "text": "it has run from the deployed site — 101 laws · 101 passing · 0 failing · 3 declared-open · 13693.4 ms"
+            "text": "it has run from the deployed site — 101 laws · 101 passing · 0 failing · 3 declared-open · 7584.4 ms"
           }
         ],
         "live_run": {
-          "at": "2026-09-11T23:58:52.515Z",
+          "at": "2026-09-12T00:01:45.814Z",
           "url": "https://opensentience.org/patterns/refusing-join",
-          "status": "101 laws · 101 passing · 0 failing · 3 declared-open · 13693.4 ms",
+          "status": "101 laws · 101 passing · 0 failing · 3 declared-open · 7584.4 ms",
           "stamp": "06726c3fb022f31e"
         },
         "execution": {
@@ -1469,13 +1469,13 @@
           },
           {
             "ok": true,
-            "text": "it has run from the deployed site — 109 laws · 109 passing · 0 failing · 294.2 ms"
+            "text": "it has run from the deployed site — 109 laws · 109 passing · 0 failing · 336.4 ms"
           }
         ],
         "live_run": {
-          "at": "2026-09-11T23:58:57.584Z",
+          "at": "2026-09-12T00:02:41.726Z",
           "url": "https://opensentience.org/patterns/capability-bounded-composition",
-          "status": "109 laws · 109 passing · 0 failing · 294.2 ms",
+          "status": "109 laws · 109 passing · 0 failing · 336.4 ms",
           "stamp": "51ffdf3aa3658f18"
         },
         "execution": {

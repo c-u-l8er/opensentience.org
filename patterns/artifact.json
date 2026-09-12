@@ -13,6 +13,10 @@
       "scripts/check-messaging-language.mjs": "4c1baac1ee7b0a3985fc5d8bc206009f42b5b114bf378797059ecdf873ec0d04",
       "scripts/emb-support.mjs": "7a8b6a2f444c397075557f0210684171de3b8fc03a59a564cd5fd0347f3c456b"
     },
+    "live_receipts": {
+      "capability-bounded-composition": "51ffdf3aa3658f18:109/109",
+      "refusing-join": "06726c3fb022f31e:101/101"
+    },
     "chain": {
       "active-locus": "sem-61ff2ac8fba36791bbc6997d57d02680e09b7bb7394095add69f09db15d125cb",
       "record-at-a-boundary": "sem-530dc1a3e5ad1d19942868b1be34afe64d606c4c10d5af7eed5e987e81664c6b",
@@ -91,13 +95,13 @@
     }
   },
   "inputs_heads": {
-    ".": "358f8f013d4c49e3393233321ea3eb2401dece0b",
-    "opensentience.org": "eea6912829717cbdbbb82cc44e559d2c1667bedc",
+    ".": "301168ec97f67bcd80edd5ae91ec4959096ea8c2",
+    "opensentience.org": "5ccaac433e9d4cdf5625d6d9260a49ac09f5a873",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
     "graphonomous": "61adec2d548408589372d4321da0cd96257bb230",
-    "computedriven": "3669fe0de4b9ac06d745d2637bdaf2a4f72a755a",
+    "computedriven": "1fa13cbb654748cd9e2150e93692cc73797531c0",
     "super": "79dad405fa89eb26daefb8434d9143ed5d0ad9f6"
   },
   "summary": {
@@ -140,19 +144,19 @@
     ]
   },
   "outputs": {
-    "patterns.derived.json": "83913abccc5f4299b574d09a806cc4099e518c7fea7eef3330c349bed586c5d5",
+    "patterns.derived.json": "fca70ad0b98b6b992254cef82bbba58c5b9a90c286b40f35025f2639f40f59ac",
     "index.html": "719aa9bc99ab4b57a2a77dfef00d38d334391c22505730c9e12dfa845faddb76",
-    "llms.txt": "a942b99a4bc4e61ff46f11a59ba8e7d449b501d889eb2c006b612499a113ea4f",
+    "llms.txt": "7857cc78bb330558a27dae24a8de35eff9b35321b3d7a32b36bb2b67cb466826",
     "sitemap.xml": "3188e24ce74e4e81f4cc591c5a729fa3ba0dadcb5b98037d41567f1d5751e169",
     "active-locus.html": "b872da9156aca345ab07b91caafda2c92982937f09868c37fa83524afcc0bdae",
     "record-at-a-boundary.html": "52cdd0dc4743365f23b679850b472b9cb8d0b70caa1147630236851c30ebdc92",
     "locus-is-not-its-carrier.html": "a17f92c4a9ad88c92b095dc50566cc7a4063f175cfee52063a194601dc39e4fe",
     "identity-is-a-seal.html": "f31ad38180d14d39dd0ed48e9e0824884125f257031711b2d3f42befcd37a349",
     "continuity-through-reconstruction.html": "a21a390a61aa4890d551ca9c840d23a281d0c1b4ad35045baef4484e40598fb5",
-    "refusing-join.html": "29bcd8b314013e650c68a8c78cccd9f0a76792cfd7a6409f6082410a143a29ec",
+    "refusing-join.html": "cb6c9d0dcc227caaeeaccc75c21797bd9d5e198e37425b0c6b60d27113aa1d38",
     "shared-observable.html": "19c9a2f4bd7884aca3888eafb663f74acc8fb86e2061d866a4af9e1caeb550ed",
     "semantic-membrane.html": "b25cfb6987aeed1fb765003f736b0acebc5cecc153100f7ff971f941a060c440",
-    "capability-bounded-composition.html": "26714304e3983014ad8992703f1ab6b0400e3bf51d07c77d884d9abd5a59ccd4",
+    "capability-bounded-composition.html": "9d827ba007088484254e3d99528858f330ad59e1d1a270a5153747ec7c722458",
     "carrier-confinement.html": "5b66da60a79c56061128d147032d77ca459c4598fb28a469dff38b25d037b3e0",
     "projection-not-duplication.html": "793200c07b48ec8a672d7f93622bd13ab1ff5b47e50e6047ad5e09bb73f7e502",
     "refusable-divergence.html": "afb0e9d1c79678d78ee1b766c5603e33d6494fa7c8a9127a1049553e06ca2bc4",
