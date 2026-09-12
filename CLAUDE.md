@@ -164,14 +164,36 @@ browser**, not a port of it.
 
 ## What the build refuses — and each of these has been seen to refuse
 
-Run `node _rebuild/build/prove-gate.mjs` and it proves both halves in one pass: **27 deliberate
+Run `node _rebuild/build/prove-gate.mjs` and it proves three things in one pass: **112 deliberate
 breaks, each of which must fail with the message that break targets** (SHELL.md r12 — a table of
-refusals that all refuse for one unrelated reason proves nothing), and **6 soundness probes, which
+refusals that all refuse for one unrelated reason proves nothing), **30 soundness probes, which
 are correct or unusual-but-legitimate inputs the gate must still PERMIT** (SHELL.md r11 — a check
-that refuses everything scores perfectly on a refusal-only harness). It sandboxes into a private
-`mkdtemp`; the working tree is never written to. **The shell revision this page meets in full is
-recorded in `_rebuild/data/surface.json` as `shell_revision`, with the later items it does and does
-not carry spelled out beside it.**
+that refuses everything scores perfectly on a refusal-only harness), and **3 boundary crossings**
+(below). It sandboxes into a private `mkdtemp`; the working tree is never written to. **Run it with
+`TMPDIR` off `/tmp`** — that is a 16 GB tmpfs on this machine and the harness mkdtemps per stage.
+
+### The boundary table — why a single build cannot prove an offer
+
+A SOUND probe proves "this record is accepted". It does not prove "a real launch will transition
+correctly", because an offer has two sides and a build only ever stands on one of them. So
+`build.mjs --as-of=YYYY-MM-DD` moves the build day **for analysis only** and is a trapdoor that
+does not open outwards: **a build on a moved clock refuses to write anything at all**, so it can
+never be used to keep an expired offer alive by lying to the clock. The `BOUNDARY` stages install
+ONE offer, build it on both sides of its end date, and assert on the **rendered CTA markup** each
+time. `--as-of` moves the clock for EVERY day-sensitive check, not just the offer — a mode that
+aged one field and froze another would describe a page that could never exist.
+
+`PUB2E` is the rule that came out of it: an `expiry_check` of `{kind, cadence, how}` was three
+fields of **prose**, and nothing in this repository rebuilds on a clock, so a record could pass
+every check while the offer sat on a deployed static page forever. An offer is now always checked
+as a **prospective** record, and may only be **printed** when it names a workflow that exists, that
+declares a `schedule:` cron at least as frequent as the claimed cadence, and cites a receipt that
+exited 0 with an `exercised_after` date past the offer's end. `kind: "none"` is the honest default
+and publishes nothing. An expired offer **transitions** rather than refusing: refusing takes the
+SITE off the next deploy while the stale offer stays live in front of every visitor.
+
+**The shell revision this page meets in full is recorded in `_rebuild/data/surface.json` as
+`shell_revision`**, with the later items it does and does not carry spelled out beside it.
 
 The page-level treatment is `ProjectAmp2/agents/SHELL.md`. The tokens block in
 `_rebuild/styles/site.css` between `TOKENS-START` / `TOKENS-END` is this site's own; everything
@@ -238,6 +260,104 @@ after `TOKENS-END` is the shared shell.
 - **No `IntersectionObserver`.** Both were removed — the scroll-reveal and the spine scrollspy. IO
   does not fire in a non-compositing renderer, and the reveal made the page's *content* depend on
   JavaScript. Do not reintroduce one; the build refuses it.
+- **The information architecture is gated** (`SEC1`–`SEC4`). OPENSENTIENCE_SURFACE §3 approves
+  **seven units — the hero plus six numbered sections** — with the references as an unnumbered
+  appendix. The page had TEN and nothing said so. Nothing was cut to reach six: "The Gap" folded
+  into the hero, "The Loop" folded into The Stack as its spine, "Protocols" merged with The Stack,
+  and every folded block **keeps its id**, so every anchor that ever worked still does — `SEC4`
+  refuses a build that drops one. It also added `#kappa`, which two other pages on this site have
+  been linking to and this page had never had. **The heading COUNT is deliberately not gated**: the
+  brief called this "a 45-heading research-paper structure", but measured per section 26 of the 45
+  were in two sections and 15 of those were the twelve protocol cards' own `h3` titles — correct
+  markup for a card grid. A gate on the total is satisfied by demoting card titles out of headings,
+  which is an accessibility regression dressed as a structural win.
+- **The rail and the section are ONE name** (`SEC3`). They were typed separately and disagreed: the
+  spine said "Proof" where the page said "The Receipts". `SecLabel(id)` derives both from `SECTIONS`.
+- **The three research questions are data, and their status is derived** (`QST1`–`QST3`,
+  `_rebuild/data/questions.json`). The five "Open Questions" cards they replaced asserted maturity
+  in prose, so a protocol could be re-adjudicated and the question beside it would go on describing
+  the old one. `QST2` refuses a status word typed into the prose beside the derived chip; `QST3`
+  refuses a question with no `settles_it`, because a question nobody could answer is a slogan.
+- **Accessibility is four rules, not four repairs** (`A11Y1`–`A11Y4`). Exactly one `<main>` with an
+  id and `tabindex="-1"`; a `.skip-link` that is the FIRST focusable element in `<body>`; one `h1`,
+  no level jump **and no empty heading** (a sequence gate alone is satisfied by inserting an empty
+  `h3` in front of the skip); every `<svg>` either `aria-hidden="true"` **or** named, never neither
+  and never both; and the informational `.loop-ring`'s name **derived from `loop.json`**.
+  **A11Y1 also bounds the skip link's stacking against `--amp-nav-z`, which `amp-nav.js`
+  publishes** — the link shipped present, focusable, correctly styled and INVISIBLE under 57px of
+  that fixed bar, which `getBoundingClientRect` reports as on-screen and only
+  `document.elementFromPoint` catches. If the nav lane raises that number, this build goes red.
+- **The book's cover is DRAWN FROM THE REGISTRY** (`COV1`–`COV3`). It is not an
+  illustration: one mark per chapter, coloured by the rung that chapter's evidence has earned, so
+  the first thing the jacket tells a reader is how much of the book is witnessed — today **16 of 32
+  chapters have no witness rung at all**, and the cover shows that as 16 empty rings. `COV1` refuses
+  a cover whose mark count differs from `derived_counts.chapters`. **`COV3` refuses a jacket that
+  implies an artifact the record does not have** — no `download`, `PDF`, `EPUB`, `paperback`, and no
+  spine, page edge or tilt in the drawing, because `delivery` is `web` and a jacket promising a file
+  is the Download verb drawn instead of written. It skips NEGATIONS: its first version refused this
+  very cover, whose caption explains that there *is no file to download*, and a gate that refuses
+  the sentence denying a promise teaches the next person to delete the denial.
+- **`COV2` measures every string on the jacket against the width it has.** SVG `<text>` does not
+  wrap: a string that outgrows the cover is clipped at the edge, the markup stays valid, every gate
+  stays green, and it appears only in a screenshot after it ships. That is exactly what the footer
+  did. A `<text>` whose class the gate has no font metrics for is refused rather than skipped.
+- **A receipt may not claim a comparative with nothing on the other side of it** (`REC1`), and may
+  not type a status the protocol record derives (`REC2`). The front page's first receipt read
+  *"Graphonomous (OS-001), shipped · graph-backed memory beats flat RAG"*: it typed a derived
+  status, and **no flat-RAG baseline has ever been measured** — the only comparison that was run is
+  the topology ablation, and it is **+0.3pp**. It also pointed at graphonomous.com, which has since
+  retracted that engine's figures by name. A comparative now requires `baseline {what, value}`.
+- **A protocol's tags may not restate its status or version** (`PRO1`). All twelve typed their
+  status as a tag beside the `status` field, and **OS-010's had already drifted** — the record said
+  `v0.1.1` and the tag printed `v0.1`. The chip is derived in the template now.
+- **`/styles/site.css` IS NOT THIS PAGE'S PRIVATE STYLESHEET** (`SHARED1`). Other pages in this
+  repository load it, and a class added here lands on every one of them. `.book` did exactly that:
+  the catalog at `/patterns/` has its own top-level `<div class="book">`, and this page's new 3-D
+  rule squeezed it to **205px and rotated it in three dimensions**. This page built green, every
+  gate passed, and the damage was on a DIFFERENT page that nothing was looking at. The intersection
+  is small enough to name — seven classes are shared on purpose (playground.html deliberately wears
+  the shell's band, rung and button) and anything else that collides is refused. The book's own
+  classes are namespaced `osbook-*` for the same reason.
+- **The book is the hero, above the fold** (`COV2`–`COV4`). Travis 2026-09-12: the identifying
+  animation IS the cover art, on a 3-D jacket that stands beside the headline — one root, not two,
+  because two copies of the same animation a hand-span apart is one copy too many. The title,
+  subtitle and destination are **derived from `publication.json`** (`COV2`), the book is a real
+  `<a href>` so it opens with scripting off, on a keyboard and in a new tab (`COV4`), and it must be
+  **inside the hero** — a probe that moves it below the fold is refused. Its size is one custom
+  property bounded on BOTH axes (`min(27vw, 40vh)`): width alone gave a book that stood 575px tall
+  and crossed the fold on a 900px screen, and **the fold is a height**.
+- **`COV3` refuses a jacket that promises a file the record has no download for** — and it skips
+  NEGATIONS. Its first version refused this very page, whose caption explains there *is no file to
+  download*: a gate that refuses the sentence denying a promise teaches the next person to delete
+  the denial. It was also once written to refuse a spine, a page edge and a tilt; that over-reached
+  and was narrowed — a 3-D render is how every book on every store page is shown, web-only ones
+  included. The claim is made in words, and the words are what it reads.
+- **Every gate that reaches OUTSIDE `_rebuild/` must be given its subject in the sandbox.** `SHARED1`
+  reads sibling pages; until they were staged it found no subject, refused, and **every soundness
+  probe in the table went red for one unrelated reason** — including "the tree exactly as it is".
+  That is r12's meaningless-table failure recurring in the same harness for the same cause.
+- **A gate whose subject moves reads exactly like a gate that passes.** Two did, in one session: the
+  `<line>` check matched `<div class="idanim">`, which stopped existing when the hero's graph became
+  the book's cover art, so it silently tested `""`; and `COV1`'s refusal was written AFTER the
+  `errors.length` exit, so it could never fire. Both were caught only because a probe reported the
+  wrong message — which is why the harness matches messages and not exit codes.
+- **The chapter banner on `/patterns/`** (`_patterns/build/build.mjs`). Every page of the book now
+  carries a band between the nav and the sidebar: the SAME identifying graph, its geometry read out
+  of `_rebuild/build/idanim.js`'s own GRAPH region — the one file that owns it — and emitted with
+  the same four layers and class names, so `/idanim.js` mounts it like any other root. **The driver
+  refuses a root whose counts disagree with its own graph and fails QUIET when it does**, so nothing
+  is trimmed to fit. **The band is TILED with `<use>`**: it is about 9:1 and the drawing is 0.7:1,
+  so one copy can only ever occupy a fraction of the width — measured at **41%, with 7 of its 31
+  nodes inside the band's height** and the rest blank. Padding the viewBox to fix that pads with
+  nothing. `<use>` shadow instances mirror the referenced subtree *including the attribute values
+  the driver writes at run time*, so four tiles animate together while `querySelectorAll('.idn')`
+  still returns exactly 31 — one real element set, four tiles, **96% span and 15 nodes in the
+  band**. The y offsets stop the repeat reading as a repeat. The overlay —
+  book title and *"Chapter N of M · Family"* — is derived from `ORDER`, never typed. The four
+  animation classes are on `SHARED1`'s deliberate-sharing list for exactly this reason; `SHARED1`
+  caught the addition on the next build and made the decision be stated, which is what it is for.
+  **`ROOT` in that build is ProjectAmp2, not the site dir** — reading the geometry from
+  `join(ROOT, …)` silently produced an empty banner, so a missing source now throws.
 - **The law counts stay derived.** `lawCount` is retired; `kernelLaws + composeLaws` is computed in
   the template and the total is typed nowhere. Re-derive by running both suites and move
   `rungs.measured` in the same commit.

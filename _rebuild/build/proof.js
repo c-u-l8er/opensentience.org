@@ -309,3 +309,56 @@
                         });
                 });
             })();
+
+            // ─── the book: pointer-driven rotation ───
+            // Progressive enhancement and nothing more. The book's pose is
+            // static CSS, so with scripting off it is still a book, still a
+            // link, and still opens. This only moves two custom properties.
+            (function book3d() {
+                "use strict";
+                const book = document.querySelector("[data-osbook]");
+                if (!book) return;
+                const link = book.closest(".osbook-link");
+                if (!link) return;
+                if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+                const REST_X = 5, REST_Y = 24, SWING = 15;
+                let raf = 0, wantX = REST_X, wantY = REST_Y;
+
+                function apply() {
+                    raf = 0;
+                    book.style.setProperty("--rx", wantX.toFixed(2) + "deg");
+                    book.style.setProperty("--ry", wantY.toFixed(2) + "deg");
+                }
+                function schedule() {
+                    if (!raf) raf = requestAnimationFrame(apply);
+                }
+                link.addEventListener("pointermove", function (e) {
+                    // Per EVENT, not per device. The first version gated the
+                    // whole handler on `(hover: hover)`, which is the wrong
+                    // question twice: a hybrid laptop reports hover TRUE and
+                    // still receives taps, which would tilt the book on the way
+                    // to another page; and a device that reports FALSE was
+                    // denied the effect even when a real mouse was attached.
+                    // The pointer says what it is on every event.
+                    if (e.pointerType === "touch") return;
+                    const r = link.getBoundingClientRect();
+                    // -1 … 1 across the link, so the book leans towards the
+                    // cursor rather than away from it.
+                    const px = (e.clientX - r.left) / r.width * 2 - 1;
+                    const py = (e.clientY - r.top) / r.height * 2 - 1;
+                    wantY = REST_Y + px * SWING;
+                    wantX = REST_X - py * (SWING * 0.55);
+                    book.classList.add("is-tracking");
+                    schedule();
+                });
+                link.addEventListener("pointerleave", function () {
+                    // Drop the tracking class FIRST so the CSS transition is
+                    // back in force for the journey home; setting the values in
+                    // the same frame would snap instead of settle.
+                    book.classList.remove("is-tracking");
+                    wantX = REST_X;
+                    wantY = REST_Y;
+                    schedule();
+                });
+            })();

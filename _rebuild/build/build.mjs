@@ -73,6 +73,8 @@ const receipts = read("data/receipts.json");
 const rungs = read("data/rungs.json");
 const references = read("data/references.json");
 const retractions = read("data/retractions.json");
+const publication = read("data/publication.json");
+const questions = read("data/questions.json");
 
 const css = readFileSync(resolve(root, "styles/site.css"), "utf8");
 const idanim = readFileSync(resolve(root, "build/idanim.js"), "utf8");
@@ -167,6 +169,20 @@ if (!loop || !Array.isArray(loop.phases) || loop.phases.length !== 5) {
 }
 if (!Array.isArray(loop.rings) || loop.rings.length === 0) errors.push("loop.rings must be a non-empty array");
 
+// A11Y4 — the ring diagram's ACCESSIBLE NAME, derived here and never typed.
+// The ring is a picture of the same phases the <ol> beside it lists, so a
+// hand-typed label is a second copy of data that moves: rename a phase in
+// loop.json and the list follows while the label does not. It said
+// "retrieve, route, act, learn, consolidate" in lower case when the data had
+// said "Retrieve, Route, …" for as long as the file has existed.
+// It also has to carry the one thing the list cannot: an <ol> says "five
+// things in order" and stops; the ring says the last one returns to the first,
+// and that closure is the whole reason the picture is drawn.
+const loopVerbs = (loop.phases || []).map((ph) => ph.verb).filter(Boolean);
+const ringName =
+  `The cognition loop drawn as a ring: ${loopVerbs.join(", then ")}, then back to ${loopVerbs[0]}. ` +
+  `The same phases are listed beside this diagram.`;
+
 // receipts: each must carry a metric/value/note (the proof band is real claims)
 if (!Array.isArray(receipts) || receipts.length === 0) {
   errors.push("receipts must be a non-empty array");
@@ -246,7 +262,10 @@ for (const [r, actions] of Object.entries(surface.cta || {})) {
   if (!VERBS[r]) errors.push(`surface.cta declares an unknown rung: ${r}`);
   if (!surface.cta._labels?.[r]) errors.push(`surface.cta group ${r} has no claim-tag label`);
   for (const a of actions) {
-    if (!VERBS[r]?.includes(a.verb)) {
+    // A CTA that cites a publication is governed by the publication table
+    // (PUB3) instead of this one: the rung governs claims about the code, the
+    // publication record governs claims about the book. Neither is typed.
+    if (!a.publication && !VERBS[r]?.includes(a.verb)) {
       errors.push(`BUILD REFUSED — CTA "${a.verb}" is not available at rung ${r}. Allowed: ${(VERBS[r] || []).join(" · ")}`);
     }
     if (/^mailto:/i.test(a.href || "")) errors.push(`CTA "${a.verb}" points at a mailto:`);
@@ -264,6 +283,596 @@ if (surface.rung_witness && !surface.gates?.[surface.rung_witness]) errors.push(
 if (surface.rung_witness && surface.gates?.[surface.rung_witness]?.status !== "approved") {
   errors.push(`rung_witness "${surface.rung_witness}" is not approved — a rung with an unapproved witness is a rung with no witness`);
 }
+
+// ---- receipts and protocol chips (REC1–REC2, PRO1) ----------------------
+// The front page's first receipt used to read: "Graphonomous (OS-001), shipped ·
+// graph-backed memory beats flat RAG". Three defects in one sentence, and all
+// three are now unwritable:
+//   · it typed a status word the protocol record derives (REC2);
+//   · it made a comparative claim against a baseline NOTHING in any tree, public
+//     or private, has measured (REC1) — the only comparison that was actually
+//     run is the topology ablation, and it is +0.3pp;
+//   · it pointed at graphonomous.com, which has since RETRACTED that engine's
+//     figures by name and says they "were never re-measured here".
+// The sibling site retracted a neighbouring claim ("96.6 — attributed to a
+// third-party system with no citation, in a comparison table this site cannot
+// witness") for exactly this reason. This page kept its own.
+{
+  const STATUS_WORDS = /\b(shipped|spec[- ]complete|in[- ]development|draft)\b/i;
+  const COMPARATIVE = /\b(beats?|outperforms?|better than|faster than|more accurate than|ahead of|superior to)\b/i;
+  receipts.forEach((r, i) => {
+    const at = `receipts[${i}] (${r.metric || "?"})`;
+    const w = (r.note || "").match(STATUS_WORDS);
+    if (w) {
+      errors.push(`REC2 — ${at} writes the status "${w[0]}" into its note. A protocol's status is derived from protocols.json and shown on its own chip; a second copy in a sentence is the copy that goes stale.`);
+    }
+    const c = (r.note || "").match(COMPARATIVE);
+    if (c && !r.baseline) {
+      errors.push(`REC1 — ${at} claims to "${c[0]}" something and names no baseline. A comparative with nothing on the other side of it is not a measurement. Record baseline {what, value} or state the figure on its own.`);
+    }
+    if (r.baseline && (!r.baseline.what || !r.baseline.value)) {
+      errors.push(`REC1 — ${at} declares a baseline with no ${!r.baseline.what ? "what" : "value"}. Name what was compared and what it measured.`);
+    }
+  });
+}
+
+// PRO1 — a protocol's tags may not restate its status or its version. All
+// twelve typed both, and OS-010's had already drifted: the record said v0.1.1
+// and the tag it printed said v0.1. The chip is derived in the template now.
+for (const p of protocols) {
+  for (const t of p.tags || []) {
+    const txt = t.t || "";
+    const w = txt.match(/\b(shipped|spec[- ]complete|in[- ]development|draft)\b/i);
+    if (w) errors.push(`PRO1 — ${p.id} carries the tag "${txt}", which types the status "${w[0]}". The status chip is derived from the record; delete the tag.`);
+    if (p.version && txt.includes(p.version)) {
+      errors.push(`PRO1 — ${p.id} carries the tag "${txt}", which restates its own version ${p.version}. The chip is derived; a second copy drifts.`);
+    }
+  }
+}
+
+// ---- the three research questions (QST1–QST3) ---------------------------
+// OPENSENTIENCE_SURFACE §3.1. These replaced five cards that asserted their own
+// maturity in prose — so a protocol could be re-adjudicated and the question
+// beside it would go on describing the old one. The status is now read out of
+// protocols.json, and these three gates keep it that way.
+{
+  const qs = questions.questions || [];
+  if (qs.length !== 3) errors.push(`QST1 — the section is "Three questions" and questions.json holds ${qs.length}. Change the heading or change the file; do not let them disagree.`);
+  const known = new Set(protocols.map((p) => p.id));
+  for (const [i, q] of qs.entries()) {
+    const at = `questions[${i}] (${q.id || "?"})`;
+    for (const f of ["id", "ask", "lives_in", "established", "unsettled", "settles_it"]) {
+      if (!q[f] || (Array.isArray(q[f]) && !q[f].length)) errors.push(`QST3 — ${at} is missing "${f}". A question with no ${f === "settles_it" ? "falsifier is not an open question, it is a slogan" : `"${f}" cannot be printed honestly`}.`);
+    }
+    for (const id of q.lives_in || []) {
+      if (!known.has(id)) errors.push(`QST1 — ${at} lives in "${id}" and protocols.json has no such protocol. A question cannot be homed in something that is not there.`);
+    }
+    // QST2 — the status words belong to the chip, which is derived. Prose that
+    // names one is prose that will be wrong the day the protocol moves.
+    const prose = [q.established, q.unsettled, q.settles_it].join(" ");
+    const typed = prose.match(/\b(spec-complete|in-development|in development|shipped|draft)\b/i);
+    if (typed) {
+      errors.push(`QST2 — ${at} writes the status "${typed[0]}" into its prose. The chip beside it is derived from protocols.json; a second copy in a sentence is the copy that goes stale.`);
+    }
+  }
+  if (!questions.closing) errors.push("QST3 — questions.json has no closing line");
+}
+
+// ---- the publication record (PUB1–PUB8) --------------------------------
+// Ruled 2026-09-11. A book CTA is DERIVED from a verified record, never typed.
+//
+// The brief that asked for one proposed a single draft|preview|released scale.
+// That cannot express a book which is fully released and has no file to
+// download, and collapsing the two is exactly what produces "Download the
+// founding edition" for something you can only read. So the record carries two
+// axes — state and delivery — and the verb is a function of both.
+//
+// A publication CTA is governed by THIS table instead of the rung's VERBS
+// table, and that split is deliberate: the rung governs claims about the code,
+// the record governs claims about the book. Neither is typed.
+const PUB_STATES = ["forthcoming", "public_draft", "released"];
+const PUB_DELIVERY = ["web", "download", "both"];
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+// One day-stamp for the whole run, so two checks in the same build cannot
+// straddle midnight and disagree about how old a record is.
+//
+// `--as-of=YYYY-MM-DD` moves that day for ANALYSIS ONLY. It exists because an
+// offer has two sides and a build can only ever stand on one of them: without
+// it, "the page transitions correctly after the offer expires" is a sentence
+// nobody can check until the day it is too late to fix. It is deliberately a
+// TRAPDOOR THAT DOES NOT OPEN OUTWARDS — a build run under a moved day refuses
+// to write anything at all (see the emit section), so it cannot be used to keep
+// an expired offer alive by lying to the clock.
+const AS_OF = (process.argv.find((a) => a.startsWith("--as-of=")) || "").slice(8);
+if (AS_OF && !/^\d{4}-\d{2}-\d{2}$/.test(AS_OF)) {
+  console.error(`\u2717 --as-of must be an ISO date, got "${AS_OF}"`);
+  process.exit(2);
+}
+const BUILD_DAY = AS_OF || new Date().toISOString().slice(0, 10);
+
+const pubs = publication.publications || [];
+if (!pubs.length) errors.push("publication.json declares no publications — remove the file or record one");
+
+const pubById = new Map();
+const bookVerb = new Map();
+const ctaAfterById = new Map();
+// The ONLY urgency string this page may print, and only when the record earns
+// it. Anything else urgent is refused outright further down — a date the record
+// holds is supportable; "limited time" never is.
+const offerSuffix = new Map();
+// Whether the offer's END is something this build can find a mechanism for, as
+// opposed to something the record describes. Only an enforced offer may print.
+const offerEnforced = new Map();
+// The registry rows PUB7 re-derives its counts from, kept so the cover is
+// drawn from the SAME read — a cover derived from a second read of the same
+// file is a cover that can disagree with the counts printed beside it.
+let registryRows = null;
+// What the page PRINTS, which after expiry is not what the record contracts.
+const renderVerb = new Map();
+
+for (const [i, p] of pubs.entries()) {
+  const at = `publication[${i}] (${p.id || "?"})`;
+  for (const f of ["id", "title", "state", "delivery", "home", "verified_at"]) {
+    if (!p[f]) errors.push(`${at}: missing "${f}"`);
+  }
+  if (p.id) {
+    if (pubById.has(p.id)) errors.push(`${at}: duplicate publication id`);
+    pubById.set(p.id, p);
+  }
+  if (p.state && !PUB_STATES.includes(p.state)) errors.push(`${at}: unknown state "${p.state}" (want ${PUB_STATES.join(" | ")})`);
+  if (p.delivery && !PUB_DELIVERY.includes(p.delivery)) errors.push(`${at}: unknown delivery "${p.delivery}" (want ${PUB_DELIVERY.join(" | ")})`);
+  const downloadable = p.delivery === "download" || p.delivery === "both";
+
+  // PUB1 — a download that does not exist. The whole reason the record has two
+  // axes: this is the exact sentence the brief asked for and the tree could not
+  // support, and it is now unwritable rather than merely discouraged.
+  if (downloadable && (!p.download || !p.download.url || !p.download.sha256)) {
+    errors.push(`PUB1 — ${at} declares delivery "${p.delivery}" with no download {url, sha256}. There is no file to offer.`);
+  }
+
+  // PUB2 — CONDITIONAL DERIVATION, not prohibition. Corrected 2026-09-12: the
+  // first version forbade dated offers outright, which would have made a
+  // genuine book launch unsayable. That is the wrong fix for the right problem.
+  // What must be inexpressible is UNSUPPORTED urgency — so a real offer becomes
+  // reachable the moment the record can carry it, and the only urgency the page
+  // may print is a date the record actually holds.
+  if (p.free_offer) {
+    const o = p.free_offer;
+    for (const f of ["starts", "ends", "price_during", "price_after", "expiry_check"]) {
+      if (o[f] === undefined || o[f] === null) errors.push(`PUB2 — ${at} free_offer is missing "${f}". An offer without it cannot be checked, and an offer nobody can check is scarcity theatre.`);
+    }
+    for (const f of ["starts", "ends"]) {
+      if (o[f] !== undefined && !ISO_DATE.test(o[f] || "")) errors.push(`PUB2 — ${at} free_offer.${f} must be an exact ISO date, got "${o[f]}"`);
+    }
+    if (ISO_DATE.test(o.starts || "") && ISO_DATE.test(o.ends || "") && Date.parse(o.ends) <= Date.parse(o.starts)) {
+      errors.push(`PUB2 — ${at} free_offer ends ${o.ends} on or before it starts ${o.starts}`);
+    }
+    // CORRECTED 2026-09-12. This used to REFUSE an offer whose window had
+    // closed, and that refusal was the whole of PUB2's expiry story. It is the
+    // wrong instrument twice over. A build that refuses does not take the
+    // offer off the deployed page — it takes the SITE off the next deploy,
+    // while the stale offer stays live in front of every visitor; and it can
+    // only do even that on the day somebody happens to build. So the record no
+    // longer has to be settled by hand: an expired offer TRANSITIONS, the page
+    // derives the post-expiry call to action, and the dated string stops
+    // printing. What remains true, and is why the block below exists, is that
+    // a static page transitions only when something rebuilds it.
+    if (o.price_during && o.price_during.amount !== 0) {
+      errors.push(`PUB2 — ${at} free_offer.price_during is ${o.price_during.amount}, not 0. A free offer is free during its window.`);
+    }
+    if (o.price_after && !(o.price_after.amount > 0)) {
+      errors.push(`PUB2 — ${at} free_offer.price_after is ${o.price_after.amount} — free before and free after is not an offer, it is the price`);
+    }
+    for (const f of ["kind", "cadence", "how"]) {
+      if (o.expiry_check && !o.expiry_check[f]) errors.push(`PUB2 — ${at} free_offer.expiry_check is missing "${f}" — name the mechanism that will notice the expiry`);
+    }
+
+    // ── PUB2E — the difference between describing a mechanism and having one.
+    // The original expiry_check was {kind, cadence, how} and all three were
+    // PROSE. "the nightly Pages build re-runs this gate" is a sentence; it is
+    // not a nightly Pages build. A record could pass every check above and the
+    // offer would still sit on a deployed static page forever, because nothing
+    // in this repository rebuilds anything on a clock.
+    //
+    // So the claim is split from the capability. An offer may always be
+    // RECORDED and is fully checked as a prospective plan. It may only be
+    // PRINTED — the dated "Free until …" string, the thing a reader acts on —
+    // when the mechanism that will end it is one this build can find and read.
+    // kind "none" is the honest default and is not a failure; what IS refused
+    // is a record that names an enforcement it does not have.
+    const EXPIRY_KINDS = ["none", "scheduled_rebuild"];
+    const ec = o.expiry_check || {};
+    if (ec.kind && !EXPIRY_KINDS.includes(ec.kind)) {
+      errors.push(`PUB2E — ${at} expiry_check.kind "${ec.kind}" is outside the vocabulary (${EXPIRY_KINDS.join(" | ")}). A kind nothing can check is prose with a field name.`);
+    }
+    let enforced = false;
+    if (ec.kind === "scheduled_rebuild") {
+      // Three things, each of which has to be TRUE rather than described.
+      const CADENCE_DAYS = { daily: 1, weekly: 7 };
+      const wantDays = CADENCE_DAYS[ec.cadence];
+      if (!wantDays) {
+        errors.push(`PUB2E — ${at} expiry_check.cadence "${ec.cadence}" is not one this build can compare against a schedule (${Object.keys(CADENCE_DAYS).join(" | ")})`);
+      }
+      if (!ec.workflow) {
+        errors.push(`PUB2E — ${at} claims a scheduled rebuild and names no workflow. Name the file that runs, so this build can read it.`);
+      } else {
+        const wf = resolve(site_root, ec.workflow);
+        if (!existsSync(wf)) {
+          errors.push(`PUB2E — ${at} names the workflow ${ec.workflow} and there is no such file. A schedule that is not in the tree will not run.`);
+        } else {
+          const src = readFileSync(wf, "utf8");
+          // A workflow with no `schedule:` trigger runs when a human pushes,
+          // which is exactly the thing that cannot be relied on to happen on
+          // the day an offer ends.
+          const crons = [...src.matchAll(/-\s*cron:\s*["']([^"']+)["']/g)].map((m) => m[1]);
+          if (!/^\s*schedule\s*:/m.test(src) || !crons.length) {
+            errors.push(`PUB2E — ${at} names ${ec.workflow}, which declares no schedule: cron trigger. It runs when somebody pushes, and an offer ends whether or not anybody pushes.`);
+          } else if (wantDays) {
+            // Coarse but honest: a cron whose day-of-month and month fields are
+            // wildcards fires at least daily; one that pins a weekday fires at
+            // least weekly. Anything narrower is not compared — it is refused,
+            // because a bound this build cannot compute is a bound it must not
+            // assert.
+            const everyDay = crons.some((c) => { const f = c.trim().split(/\s+/); return f.length === 5 && f[2] === "*" && f[3] === "*" && f[4] === "*"; });
+            const everyWeek = crons.some((c) => { const f = c.trim().split(/\s+/); return f.length === 5 && f[2] === "*" && f[3] === "*" && f[4] !== "*"; });
+            const haveDays = everyDay ? 1 : everyWeek ? 7 : null;
+            if (haveDays === null) {
+              errors.push(`PUB2E — ${at} names a cron (${crons.join(", ")}) this build cannot bound. Use a schedule whose period it can compute, or do not claim a cadence from it.`);
+            } else if (haveDays > wantDays) {
+              errors.push(`PUB2E — ${at} declares cadence "${ec.cadence}" and ${ec.workflow} is scheduled every ${haveDays} day(s). The offer would outlive its end date by up to ${haveDays - wantDays} day(s) on a live page.`);
+            }
+          }
+          // And the receipt. A schedule that has never been shown to produce
+          // the post-expiry page proves the job is configured, not that the
+          // transition works. This is the one that makes "a real launch will
+          // transition correctly" a measured sentence instead of a hoped one.
+          if (!ec.receipt) {
+            errors.push(`PUB2E — ${at} has a schedule and no receipt. Run the transition and record it: a configured job is not an exercised one.`);
+          } else {
+            const rp = resolve(site_root, ec.receipt);
+            if (!existsSync(rp)) {
+              errors.push(`PUB2E — ${at} cites a receipt at ${ec.receipt} and there is no such file`);
+            } else {
+              let rec = null;
+              try { rec = JSON.parse(readFileSync(rp, "utf8")); } catch (e) { errors.push(`PUB2E — ${at} receipt ${ec.receipt} is unreadable: ${e.message}`); }
+              if (rec) {
+                const exit = rec.execution_identity ? rec.execution_identity.exit : rec.exit;
+                if (exit !== 0) errors.push(`PUB2E — ${at} cites a receipt whose run exited ${exit}. A failing run may not witness an expiry transition.`);
+                else if (!rec.exercised_after || !ISO_DATE.test(rec.exercised_after)) {
+                  errors.push(`PUB2E — ${at} receipt does not record exercised_after (the day it built the page AS), so nothing says which side of the boundary it stood on.`);
+                } else if (Date.parse(rec.exercised_after) <= Date.parse(o.ends)) {
+                  errors.push(`PUB2E — ${at} receipt exercised ${rec.exercised_after}, which is on or before the offer's end ${o.ends}. It witnessed the offer, not its expiry.`);
+                } else {
+                  enforced = true;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    offerEnforced.set(p.id, enforced);
+    // A deterministic CTA on BOTH sides of the expiry, or the offer is not
+    // expressible: the page must know what it will say the day after.
+    const afterState = o.state_after || p.state;
+    const afterDelivery = o.delivery_after || p.delivery;
+    const rowAfter = (publication.cta_derivation?.rows || []).find(
+      (r) => r.state === afterState && (r.delivery === afterDelivery || r.delivery === "*")
+    );
+    if (!rowAfter) {
+      errors.push(`PUB2 — ${at} free_offer leaves no derivable CTA after expiry: (${afterState}, ${afterDelivery}) has no row. Declare state_after / delivery_after.`);
+    } else {
+      ctaAfterById.set(p.id, rowAfter.verb);
+    }
+  }
+
+  // PUB4 — a "last verified" date nothing checks for staleness is decoration.
+  if (ISO_DATE.test(p.verified_at || "")) {
+    const maxAge = Number.isInteger(p.verified_max_age_days) ? p.verified_max_age_days : 30;
+    const ageDays = Math.floor((Date.parse(BUILD_DAY) - Date.parse(p.verified_at)) / 86400000);
+    if (ageDays > maxAge) {
+      errors.push(`PUB4 — ${at} was last verified ${ageDays} days ago and its record allows ${maxAge}. Re-check the route table and move verified_at.`);
+    }
+    if (!p.verified_what) errors.push(`PUB4 — ${at} states a verified_at with no verified_what — say what was checked`);
+  } else if (p.verified_at) {
+    errors.push(`${at}: verified_at must be an ISO date, got "${p.verified_at}"`);
+  }
+
+  // PUB5 — a file may not be offered without terms.
+  if (downloadable && !p.license) {
+    errors.push(`PUB5 — ${at} offers a download while license is null. A file may not be offered without terms.`);
+  }
+
+  // PUB7 — the counts are re-derived from the registry the record names, and a
+  // disagreement refuses. These moved under this very build once, when a
+  // parallel session committed a rung re-adjudication mid-pass.
+  if (p.registry?.path && p.derived_counts) {
+    const regPath = resolve(site_root, p.registry.path);
+    if (!existsSync(regPath)) {
+      errors.push(`PUB7 — ${at} names a registry at ${p.registry.path} and there is no such file. The counts cannot be re-derived, so they cannot be published.`);
+    } else {
+      let rows;
+      try {
+        const reg = JSON.parse(readFileSync(regPath, "utf8"));
+        rows = Array.isArray(reg) ? reg : reg.patterns;
+      } catch (e) {
+        errors.push(`PUB7 — ${at} registry ${p.registry.path} is unreadable: ${e.message}`);
+      }
+      if (Array.isArray(rows)) {
+        registryRows = rows;
+        // `spec` on this ladder means written down and nothing runs, so a spec
+        // is NOT a witness. One field used to count it and was called
+        // `with_witness_rung`, which is misleading terminology in a system
+        // whose whole claim is that its terms are exact. It is now two fields
+        // that each say what they count, and the retired name is refused below
+        // the way `rungs.lawCount` is — by name, forever.
+        const WITNESS_RUNGS = new Set(["in_tree", "live_local", "live_deployed", "external"]);
+        const rungOf = (r) => (r.witness || {}).rung;
+        const fresh = {
+          chapters: rows.length,
+          with_any_rung: rows.filter((r) => rungOf(r)).length,
+          witnessed: rows.filter((r) => WITNESS_RUNGS.has(rungOf(r))).length,
+          externally_reproduced: rows.filter((r) => rungOf(r) === "external").length,
+        };
+        if ("with_witness_rung" in p.derived_counts) {
+          errors.push(`PUB7 — ${at} uses the retired field with_witness_rung. It counted the spec rung as a witness. Use witnessed (spec excluded) or with_any_rung.`);
+        }
+        for (const [k, v] of Object.entries(fresh)) {
+          if (k in p.derived_counts && p.derived_counts[k] !== v) {
+            errors.push(`PUB7 — ${at} derived_counts.${k} says ${p.derived_counts[k]} and the registry says ${v}. Re-derive, never re-type.`);
+          }
+        }
+      }
+    }
+  }
+
+  // The verb this publication has earned. A record whose (state, delivery) pair
+  // has no row derives nothing, and PUB3 then refuses every CTA that cites it —
+  // which is the right failure: an unmapped pair is an unanswered question.
+  const row = (publication.cta_derivation?.rows || []).find(
+    (r) => r.state === p.state && (r.delivery === p.delivery || r.delivery === "*")
+  );
+  if (!row) {
+    errors.push(`PUB3 — ${at} is (${p.state}, ${p.delivery}) and cta_derivation has no row for that pair`);
+  } else if (p.id) {
+    bookVerb.set(p.id, row.verb);
+    // Two verbs, on purpose. `bookVerb` is the CONTRACT — what (state,
+    // delivery) derives, and what surface.json's hand-written copy is checked
+    // against. `renderVerb` is what the page prints TODAY. They are the same
+    // verb until an offer expires; after that the page moves and the record
+    // does not, which is the point: settling an expired offer must not require
+    // a human to edit a CTA on the right morning.
+    renderVerb.set(p.id, row.verb);
+    const o = p.free_offer;
+    if (o && ISO_DATE.test(o.starts || "") && ISO_DATE.test(o.ends || "")) {
+      const started = Date.parse(o.starts) <= Date.parse(BUILD_DAY);
+      const ended = Date.parse(BUILD_DAY) > Date.parse(o.ends);
+      if (ended) {
+        // The destination state. The post-expiry row was computed above and,
+        // until this line existed, was computed and thrown away — the build
+        // knew what the page would say the day after and never said it.
+        const after = ctaAfterById.get(p.id);
+        if (after) renderVerb.set(p.id, after);
+      } else if (started && offerEnforced.get(p.id)) {
+        // The dated string prints only on the enforced side of PUB2E. An
+        // unenforced offer is a validated plan, and a validated plan is not an
+        // offer a reader may be asked to act on.
+        offerSuffix.set(p.id, `Free until ${o.ends}`);
+      }
+    }
+  }
+}
+
+// PUB3, record side — a CTA that cites a publication must carry the derived
+// verb. The artifact side is re-checked further down against the emitted page,
+// because a template can print a verb the record never held.
+for (const [r, actions] of Object.entries(surface.cta || {})) {
+  if (r.startsWith("_") || !Array.isArray(actions)) continue;
+  for (const a of actions) {
+    if (!a.publication) continue;
+    if (!pubById.has(a.publication)) {
+      errors.push(`PUB3 — a CTA cites publication "${a.publication}", which publication.json does not record`);
+      continue;
+    }
+    const want = bookVerb.get(a.publication);
+    if (want && a.verb !== want) {
+      errors.push(`PUB3 — CTA "${a.verb}" cites ${a.publication}, whose record derives "${want}". The verb is derived from (state, delivery); it is not a writing choice.`);
+    }
+  }
+}
+
+// PUB3 also governs the HERO's primary call to action. The hero is where a
+// book claim does the most work, so it is the last place a verb should be
+// writable by hand.
+{
+  const h = surface.hero || {};
+  if (!h.lead || !["mission", "question"].includes(h.lead)) {
+    errors.push(`surface.hero.lead must be "mission" or "question", got "${h.lead}"`);
+  }
+  for (const k of ["mission_eyebrow", "mission_headline", "mission_subtitle", "question_eyebrow", "question_headline", "question_subtitle", "primary_cta", "secondary_cta", "tertiary_cta"]) {
+    if (!h[k]) errors.push(`surface.hero.${k} is missing — both directions must stay buildable, or one of them is not a direction`);
+  }
+  if (h.primary_cta && "verb" in h.primary_cta) {
+    errors.push("PUB3 — surface.hero.primary_cta writes a verb down. The hero's book verb is derived from publication.json like every other one.");
+  }
+  if (h.primary_cta?.publication && !pubById.has(h.primary_cta.publication)) {
+    errors.push(`PUB3 — surface.hero.primary_cta cites publication "${h.primary_cta.publication}", which publication.json does not record`);
+  }
+}
+
+// MIS1 — R-S1 made mechanical. Ruled 2026-09-11: the front door MAY summarise
+// its mission and MAY NOT summarise twelve maturity levels into one status. An
+// identity statement asserts what this is; a maturity word asserts how far
+// along it is, and no single word is true of twelve protocols at four statuses.
+// "the open research and executable protocol layer" is the sentence this
+// refuses; "open research into machine cognition" is the sentence it permits.
+const MATURITY = /\b(shipped|complete|completed|production|production-ready|proven|mature|executable|battle-tested)\b/i;
+if (!surface.mission) {
+  errors.push("surface.mission is missing — the front door is entitled to state its mission (R-S1) and this is where it says it");
+} else {
+  const hit = surface.mission.match(MATURITY);
+  if (hit) {
+    errors.push(`MIS1 — surface.mission says "${hit[0]}". A mission may assert identity and may not assert maturity: ${protocols.length} protocols at four distinct statuses have no single true maturity word.`);
+  }
+  if (surface.mission.length < 40) errors.push("surface.mission is too short to be a mission");
+}
+
+
+// ---- the status-aware stack map (MAP1–MAP5) ----------------------------
+// Ruled 2026-09-11 (ruling 3): keep the diagram, and give every component its
+// own DERIVED status. The fault was false aggregation, not diagrams.
+//
+// Per-node status alone does not close it. In a stack diagram the overclaim
+// lives in the CONNECTOR, not the label: a node marked `draft` still reads
+// load-bearing if a solid arrow runs through it. So an edge must NAME a
+// producer and a consumer, each a path that exists, and an edge that cannot is
+// drawn dashed. What a path proves is that a named artifact EXISTS — not that
+// it is wired at runtime, which is the stronger §1.1 gate. The page says so.
+const stackmap = read("data/stackmap.json");
+const protoById = new Map(protocols.map((p) => [p.id, p]));
+const nodeById = new Map();
+const accounted = new Set();
+
+for (const [i, n] of (stackmap.nodes || []).entries()) {
+  const at = `stackmap.nodes[${i}] (${n.id || "?"})`;
+  for (const f of ["id", "label", "role", "note"]) if (!n[f]) errors.push(`${at}: missing "${f}"`);
+  if (n.id && nodeById.has(n.id)) errors.push(`${at}: duplicate node id`);
+
+  // MAP3 — the same rule as surface_rung: derived, or absent with a reason.
+  if ("status" in n) {
+    errors.push(`MAP3 — ${at} writes a status down. A node's status is derived from protocols.json or it is absent with a stated reason.`);
+  }
+
+  const ps = Array.isArray(n.protocols) ? n.protocols : [];
+  for (const id of ps) {
+    if (!protoById.has(id)) errors.push(`${at}: cites unknown protocol "${id}"`);
+    else accounted.add(id);
+  }
+
+  // MAP1 — no silent statusless node.
+  if (!ps.length && !n.status_why) {
+    errors.push(`MAP1 — ${at} carries no protocol and no status_why. A node with no status must say why it has none.`);
+  }
+  if (n.id) nodeById.set(n.id, n);
+}
+
+// MAP5 — added during implementation, because the hand-written diagram this
+// replaces covered ten of the twelve protocols and omitted OS-011 and OS-012
+// with nothing to notice. A map that can silently drop a protocol is a map
+// whose coverage is an accident.
+const unaccounted = protocols.map((p) => p.id).filter((id) => !accounted.has(id));
+if (unaccounted.length) {
+  errors.push(`MAP5 — no stack-map node accounts for ${unaccounted.join(", ")}. Every protocol appears on the map or the map is not of this stack.`);
+}
+
+// MAP4 — THREE states, corrected 2026-09-12. The first version drew an edge
+// solid when both endpoint paths existed and the legend called that witnessed.
+// Two files existing does not witness a connection between them: that is the
+// same overclaim MAP4 exists to catch, committed by MAP4. Only an executable
+// integration witness — a test or a generated run receipt that names and
+// exercises BOTH endpoints, and passed — earns `solid`.
+//
+//   solid    an integration has actually run over both ends
+//   dashed   both ends exist; nothing has exercised the connection
+//   missing  one or both ends do not exist
+const STATES = stackmap.edge_states || {};
+for (const st of ["solid", "dashed", "missing"]) {
+  if (!STATES[st]?.label || !STATES[st]?.means) errors.push(`stackmap.edge_states.${st} needs a label and a means`);
+}
+// MAP6 — the language rule, mechanised. A state that is not `solid` may not
+// borrow the vocabulary of proof — and neither may the heading ABOVE the list,
+// which is where it first went wrong: "what witnesses the connection" stood
+// over four edges nothing had exercised.
+const PROOF_WORDS = /\b(witness(?:ed|es|ing)?|verif(?:ied|ies)|proved|proven|confirms?)\b/i;
+if (!stackmap.edges_heading) errors.push("stackmap.edges_heading is missing — the edge list needs a heading, and MAP6 checks it");
+else {
+  const h = stackmap.edges_heading.match(PROOF_WORDS);
+  if (h) errors.push(`MAP6 — stackmap.edges_heading says "${h[0]}". The heading stands over every edge, including the ones nothing has exercised.`);
+}
+for (const [st, v] of Object.entries(STATES)) {
+  if (st.startsWith("_") || st === "solid" || !v?.means) continue;
+  const claim = String(v.means).match(PROOF_WORDS);
+  if (claim) {
+    errors.push(`MAP6 — edge_states.${st}.means says "${claim[0]}". Only \`solid\` may use the language of proof; everything else describes what exists.`);
+  }
+}
+
+const stackEdges = [];
+for (const [i, e] of (stackmap.edges || []).entries()) {
+  const at = `stackmap.edges[${i}] (${e.from || "?"}\u2192${e.to || "?"})`;
+  if (!nodeById.has(e.from)) errors.push(`${at}: unknown from-node "${e.from}"`);
+  if (!nodeById.has(e.to)) errors.push(`${at}: unknown to-node "${e.to}"`);
+  if (!e.what) errors.push(`${at}: missing "what" — an edge states the claim it makes`);
+
+  const endOf = (side) => {
+    const v = e[side];
+    if (!v) {
+      if (!e[`${side}_why`]) errors.push(`MAP4 — ${at} has no ${side} and no ${side}_why. An absent end is a claim about the tree and must be stated.`);
+      return { ok: false, why: e[`${side}_why`] || "" };
+    }
+    if (!v.path || !v.what) {
+      errors.push(`${at}: ${side} must name both a "what" and a "path"`);
+      return { ok: false, why: "" };
+    }
+    if (!existsSync(resolve(site_root, v.path))) {
+      errors.push(`MAP4 — ${at} names a ${side} at ${v.path} and there is no such path.`);
+      return { ok: false, why: "", what: v.what, path: v.path };
+    }
+    return { ok: true, what: v.what, path: v.path };
+  };
+
+  const producer = endOf("producer");
+  const consumer = endOf("consumer");
+
+  // The integration witness. A declared one that does not hold up is REFUSED
+  // rather than quietly downgraded — a mis-declared integration is a false
+  // claim in the record, not a weaker one.
+  let integration = null;
+  if (e.integration) {
+    const g = e.integration;
+    const gat = `${at} integration`;
+    if (!["receipt", "test"].includes(g.kind)) errors.push(`MAP4 — ${gat} kind must be "receipt" or "test", got "${g.kind}"`);
+    if (!g.path) errors.push(`MAP4 — ${gat} must name a path`);
+    else if (!existsSync(resolve(site_root, g.path))) errors.push(`MAP4 — ${gat} names ${g.path} and there is no such path. An integration nothing can find is not one.`);
+    const ex = Array.isArray(g.exercises) ? g.exercises : [];
+    for (const end of [producer, consumer]) {
+      if (end.path && !ex.includes(end.path)) {
+        errors.push(`MAP4 — ${gat} does not list the ${end === producer ? "producer" : "consumer"} ${end.path} among what it exercises. An integration that does not touch both ends cannot witness the connection between them.`);
+      }
+    }
+    if (g.kind === "receipt" && g.path && existsSync(resolve(site_root, g.path))) {
+      try {
+        const r = JSON.parse(readFileSync(resolve(site_root, g.path), "utf8"));
+        const exit = r?.execution_identity?.exit;
+        if (exit !== 0) errors.push(`MAP4 — ${gat} cites a receipt whose run exited ${exit}. A failing run may not witness an integration.`);
+        else integration = { kind: g.kind, path: g.path, ran: r?.execution_identity?.finished || null, cmd: r?.witness?.cmd || null };
+      } catch (err) {
+        errors.push(`MAP4 — ${gat} receipt ${g.path} is unreadable: ${err.message}`);
+      }
+    } else if (g.kind === "test" && g.path && existsSync(resolve(site_root, g.path))) {
+      if (!g.cmd) errors.push(`MAP4 — ${gat} of kind "test" must name the cmd that runs it`);
+      else integration = { kind: g.kind, path: g.path, cmd: g.cmd, ran: null };
+    }
+  }
+
+  const bothEnds = producer.ok && consumer.ok;
+  const state = !bothEnds ? "missing" : integration ? "solid" : "dashed";
+  stackEdges.push({ ...e, producer, consumer, integration, state });
+}
+
+// The derived node list the template draws from. A node citing ONE protocol
+// carries that protocol's status; a node citing several carries a per-status
+// BREAKDOWN, never one averaged chip — R-S1's line, applied to the diagram.
+const stackNodes = (stackmap.nodes || []).map((n) => {
+  const ps = (n.protocols || []).map((id) => protoById.get(id)).filter(Boolean);
+  const counts = ps.reduce((m, p) => ((m[p.status] = (m[p.status] || 0) + 1), m), {});
+  return {
+    ...n,
+    chips: Object.entries(counts).map(([status, count]) => ({ status, count })),
+    single: ps.length === 1,
+  };
+});
+
 
 // Contrast (SHELL.md §0): no declared text token may fall below 4.5:1 against
 // the surface it sits on. --fg3 shipped at .34 elsewhere in this portfolio,
@@ -303,6 +912,59 @@ if (surface.rung_witness && surface.gates?.[surface.rung_witness]?.status !== "a
     }
   }
 }
+
+// The catalog and its cover are derived HERE, before the error check below,
+// and that position is load-bearing. They were first written down beside the
+// render, which is AFTER this exit — so COV1's refusal was unreachable: a gate
+// that pushes onto `errors` after `errors` has been reported is a gate that
+// cannot fire. The probe for it failed with the wrong message, which is how it
+// was found, and is why the harness matches messages rather than exit codes.
+// The catalog section prints only numbers PUB7 has already re-derived from the
+// registry and refused on disagreement — it introduces no new count of its own.
+const catalogPub = pubs.find((p) => p.registry && p.derived_counts) || null;
+if (!catalogPub) errors.push("the catalog section needs a publication with a registry and derived_counts, and none is recorded");
+// ---- the cover (COV1–COV3) ----------------------------------------------
+// The book object on this page is not a picture of a book. There is no file,
+// no spine and nothing to hold: `delivery` is `web`, and a jacket with a page
+// edge on it is the same overclaim as a Download verb — it draws an artifact
+// the record does not have. So the cover is DRAWN FROM THE REGISTRY: one mark
+// per chapter, coloured by the rung that chapter's evidence has earned.
+//
+// It is the most honest jacket this book can have, because the first thing it
+// tells a reader is how much of the book is evidenced — and today that is half.
+const RUNG_ORDER = ["external", "live_deployed", "live_local", "in_tree", "spec", null];
+const RUNG_LABEL = { external: "reproduced elsewhere", live_deployed: "deployed", live_local: "run locally", in_tree: "in the tree", spec: "written down", null: "no witness yet" };
+const coverMarks = (registryRows || []).map((r) => ((r.witness || {}).rung) || null);
+const coverSplit = RUNG_ORDER
+  .map((k) => ({ rung: k, label: RUNG_LABEL[k], n: coverMarks.filter((m) => m === k).length }))
+  .filter((x) => x.n > 0);
+const cover = catalogPub
+  ? {
+      title: catalogPub.title,
+      subtitle: catalogPub.subtitle || "",
+      // Same-origin, so the book opens the local copy in a preview and the
+      // published one in production. The record's `home` is the canonical
+      // absolute URL; the site's own CTAs are all paths, and a jacket that
+      // jumps to the live domain from a preview cannot be tested where it is
+      // built.
+      home: String(catalogPub.home).replace(/^https?:\/\/opensentience\.org/i, "") || "/",
+      state: catalogPub.state,
+      delivery: catalogPub.delivery,
+      marks: coverMarks,
+      split: coverSplit,
+      // Derived, never typed — and it says the thing the picture shows.
+      name: `The cover of ${catalogPub.title}: one mark for each of its ${coverMarks.length} chapters, ` +
+        coverSplit.map((x) => `${x.n} ${x.label}`).join(", ") + ". Read on the web; there is no file to download.",
+    }
+  : null;
+if (!cover) errors.push("COV1 — there is no publication with a registry, so no cover can be drawn");
+else if (cover.marks.length !== (catalogPub.derived_counts || {}).chapters) {
+  errors.push(`COV1 — the cover would draw ${cover.marks.length} marks and the record derives ${(catalogPub.derived_counts || {}).chapters} chapters. The cover is the registry; it cannot show a different book.`);
+}
+
+const catalog = catalogPub
+  ? { title: catalogPub.title, home: catalogPub.home, counts: catalogPub.derived_counts }
+  : { title: "", home: "#", counts: { chapters: 0, witnessed: 0, externally_reproduced: 0 } };
 
 if (errors.length) {
   console.error("✗ build failed — data drift detected:\n  - " + errors.join("\n  - "));
@@ -355,7 +1017,9 @@ const assetv = createHash("sha256")
   .digest("hex")
   .slice(0, 8);
 
-const html = Page({ site, surface, protocols, loop, receipts, rungs, references, stats, rung, assetv, idgraph });
+const bookVerbs = Object.fromEntries(renderVerb);
+const bookOffers = Object.fromEntries(offerSuffix);
+const html = Page({ site, surface, protocols, loop, receipts, rungs, references, stats, rung, assetv, idgraph, stackNodes, stackEdges, bookVerbs, bookOffers, edgeStates: STATES, edgesHeading: stackmap.edges_heading, ringName, questions, catalog, cover });
 
 // ---- gate the ARTIFACT, not the source ---------------------------------
 // A gate that reads the source checks what the build meant; these read what a
@@ -395,6 +1059,385 @@ const textNodes = html
   .filter(Boolean)
   .join("\n");
 
+
+// PUB2, artifact side. Two halves of one rule: urgency the record cannot date
+// is unprintable, and the single dated string it CAN earn must be the derived
+// one. "Limited time" is not refused because urgency is dishonest — it is
+// refused because a record that holds an end date can say the date instead.
+{
+  const URGENCY = /\b(limited time|limited-time|act now|hurry|while it lasts|last chance|don'?t miss(?: out)?|ends soon|going fast|only \d+ (?:left|remaining))\b/i;
+  const u = text.match(URGENCY);
+  if (u) {
+    artifactErrors.push(`PUB2 — the page says "${u[0]}". Urgency the record cannot date is scarcity theatre: print the date the offer actually holds, or say nothing.`);
+  }
+  const earned = new Set(offerSuffix.values());
+  for (const m of text.matchAll(/Free until [0-9]{4}-[0-9]{2}-[0-9]{2}/g)) {
+    if (!earned.has(m[0])) artifactErrors.push(`PUB2 — the page prints "${m[0]}" and no publication record derives it`);
+  }
+}
+
+// PUB6 — a chapter count typed in prose where a derived one exists. The page
+// may state how many chapters the book has; it may not state a DIFFERENT
+// number from the one the registry answers with.
+for (const p of pubs) {
+  const want = p.derived_counts?.chapters;
+  if (!Number.isInteger(want)) continue;
+  for (const m of text.matchAll(/(\d+)\s+(chapters|patterns)\b/gi)) {
+    if (Number(m[1]) !== want) {
+      artifactErrors.push(`PUB6 — the page says "${m[0]}" and the registry derives ${want} chapters. Render the derived count, never a typed one.`);
+    }
+  }
+}
+
+// PUB8 — an edition number may not reach the page while the edition is
+// unruled. "0.1" was defined as the WITNESSED set and was never re-ruled after
+// the catalog shipped complete, so printing it would publish a label whose
+// meaning has moved.
+for (const p of pubs) {
+  if (p.edition_ruled || !p.edition) continue;
+  // Scoped to the BOOK's vocabulary on purpose. The first draft of this gate
+  // matched /(edition|version|v)\s*0\.1/ and refused the page for PULSE v0.1,
+  // Embodiment v0.1 and SCOPE v0.1 — three protocol versions with nothing to do
+  // with the book. A gate that cries wolf gets switched off, so it matches only
+  // the word an edition is actually written with.
+  const n = p.edition.replace(/\./g, "\\.");
+  const pat = new RegExp(`\\bedition\\s*${n}\\b|\\b${n}\\s*edition\\b`, "i");
+  if (pat.test(text)) {
+    artifactErrors.push(`PUB8 — the page prints edition ${p.edition} for ${p.id} while edition_ruled is false. Rule the edition or do not print it.`);
+  }
+}
+
+// ---- SHARED1: site.css is not this page's private stylesheet ------------
+// `/styles/site.css` is loaded by other pages in this repository, and a class
+// added here lands on every one of them. `.book` did exactly that: the catalog
+// at /patterns/ has its own top-level <div class="book">, and this page's new
+// 3-D rule squeezed it to 205px and rotated it in three dimensions. The page
+// built green, every gate passed, and the damage was on a DIFFERENT page —
+// which nothing here was looking at.
+//
+// The intersection is small enough to name: seven classes are shared on
+// purpose (playground.html deliberately wears the shell's band, rung and
+// button), and anything else that collides is an accident.
+{
+  // Deliberate sharing, each with a reason. playground.html wears the shell's
+  // band, rung and buttons; and the four animation classes are shared because
+  // /patterns/ draws the SAME identifying graph as its chapter banner and wants
+  // the same colours, widths and easing — one stylesheet rule for one drawing,
+  // which is the opposite of the .book accident this gate exists to catch.
+  const SHARED_ON_PURPOSE = new Set(["band", "btn", "covers", "ok", "rung", "tag", "where", "ida", "idh", "idt", "idn"]);
+  const declared = new Set([...css.replace(/\/\*[\s\S]*?\*\//g, " ").matchAll(/\.([A-Za-z][\w-]*)/g)].map((m) => m[1]));
+  const others = [];
+  for (const rel of ["patterns/index.html", "playground.html", "invariants.html", "scope.html", "404.html"]) {
+    const p = resolve(site_root, rel);
+    if (!existsSync(p)) continue;
+    const h = readFileSync(p, "utf8");
+    if (!h.includes("/styles/site.css")) continue;
+    const used = new Set();
+    for (const m of h.matchAll(/class="([^"]+)"/g)) for (const c of m[1].split(/\s+/)) if (c) used.add(c);
+    others.push([rel, used]);
+  }
+  if (!others.length) artifactErrors.push("SHARED1 — no other page was found loading /styles/site.css, so this check has nothing to protect and cannot fail");
+  for (const [rel, used] of others) {
+    for (const c of used) {
+      if (!declared.has(c) || SHARED_ON_PURPOSE.has(c)) continue;
+      artifactErrors.push(`SHARED1 — site.css styles ".${c}" and ${rel} uses that class too. This stylesheet is shared: a rule written for this page lands on that one. Namespace the class, or add it to the shared list if the styling is meant for both.`);
+    }
+  }
+}
+
+// ---- the book, on the ARTIFACT (COV2–COV4) ------------------------------
+// COV2 USED TO measure every <text> on the jacket against the width it had,
+// because SVG text does not wrap: an overlong string is clipped at the edge
+// with valid markup, a green gate list and no report, and that is exactly what
+// the footer did — "32 chapters · one mark each · released on the web" shipped
+// as "…released on th". That rule is retired here because its SUBJECT MOVED:
+// the jacket is HTML now, and HTML wraps. Retiring it is recorded rather than
+// quiet, because a gate that silently loses its subject is a gate nobody
+// notices is gone.
+//
+// What replaces it is the defect one level up: the title, the subtitle and the
+// link were all TYPED into the jacket while the publication record held them.
+{
+  const book = markup.match(/<a class="osbook-link"[^>]*>([\s\S]*?)<\/a>/);
+  if (!book) artifactErrors.push("COV2 — the artifact draws no book, so nothing here is protected");
+  else {
+    const pub = pubs.find((p) => p.registry && p.derived_counts);
+    const inner = book[1];
+    const txt = (cls) => {
+      const m = inner.match(new RegExp(`<span class="${cls}"[^>]*>([^<]*)<`));
+      return m ? m[1].replace(/&amp;/g, "&").trim() : null;
+    };
+    const title = txt("osbook-title");
+    const sub = txt("osbook-sub");
+    if (pub && title !== pub.title) {
+      artifactErrors.push(`COV2 — the jacket is titled "${title}" and the record says "${pub.title}". The book's own name is not a writing choice.`);
+    }
+    if (pub && pub.subtitle && sub !== pub.subtitle) {
+      artifactErrors.push(`COV2 — the jacket's subtitle is "${sub}" and the record says "${pub.subtitle}"`);
+    }
+    // COV4 — the book OPENS. A cover that only opens under JavaScript is a
+    // picture of a book; this one is a link, so it works with scripting off,
+    // on a keyboard, and in a new tab from the context menu.
+    const href = (book[0].match(/href="([^"]+)"/) || [])[1];
+    if (!href) artifactErrors.push("COV4 — the book is not a link. A cover that only opens under script is a picture of a book.");
+    else {
+      const want = String(pub ? pub.home : "").replace(/^https?:\/\/opensentience\.org/i, "") || null;
+      if (want && href !== want) {
+        artifactErrors.push(`COV4 — the book opens "${href}" and the record's home is "${pub.home}" (same-origin path "${want}")`);
+      }
+    }
+    // COV3 — the jacket may not promise a file the record has no download for.
+    // NARROWED, on Travis's call 2026-09-12. Its first version also refused a
+    // spine, a page edge and a tilt, reasoning that they draw an object you
+    // could hold. That over-reached: a 3-D render is how every book on every
+    // store page is shown, web-only ones included — a presentation convention,
+    // not a claim about a file. The claim is what this gate is for, and the
+    // claim is made in words.
+    const downloadable = pubs.some((p) => p.delivery === "download" || p.delivery === "both");
+    if (!downloadable) {
+      const IMPLIES_FILE = /\b(download|downloadable|pdf|epub|mobi|paperback|hardcover|hardback|print edition|ships|order (?:your|a) copy)\b/gi;
+      // NEGATIONS are skipped. The first version refused this very page,
+      // whose caption explains that there IS no file to download — and a gate
+      // that refuses the sentence denying a promise teaches the next person to
+      // delete the denial, which is the PUB8 cry-wolf failure with the stakes
+      // reversed.
+      const NEGATED = /\b(no|not|never|without|neither|nothing)\b[^.]{0,28}$/i;
+      const claims = [
+        inner.replace(/<[^>]+>/g, " "),
+        ...[...markup.matchAll(/<title[^>]*id="cover-name"[^>]*>([\s\S]*?)<\/title>/g)].map((t) => t[1]),
+      ].join(" \u00b7 ").replace(/\s+/g, " ");
+      for (const m of claims.matchAll(IMPLIES_FILE)) {
+        if (NEGATED.test(claims.slice(0, m.index))) continue;
+        artifactErrors.push(`COV3 — the book says "${m[0]}" and no publication has a download. A jacket that promises a file is the Download verb drawn instead of written, and PUB1/PUB3 refuse it written.`);
+      }
+    }
+  }
+}
+
+// ── Gate 3b: the seven-section architecture, gated on the ARTIFACT ───────
+// OPENSENTIENCE_SURFACE §3 approved seven units: the hero and six numbered
+// sections, with the references as an unnumbered appendix. Written as rules
+// because an information architecture reached by one editing pass is an
+// architecture that drifts back: this page had TEN top-level sections against
+// an approved seven, and nothing anywhere said so.
+//
+// The heading count is deliberately NOT gated. The brief called this a
+// "45-heading research-paper structure"; measured per section, 26 of those 45
+// were in two sections and 15 of them were the twelve protocol cards' own h3
+// titles — correct markup for a card grid. A gate on the total would have been
+// satisfied by demoting card titles out of headings, which is an accessibility
+// regression dressed as a structural win. What was actually wrong was the
+// number of SECTIONS, so that is what is bounded.
+{
+  const APPROVED = 6; // numbered sections; the hero is the seventh unit
+  const mainStart = markup.indexOf("<main");
+  const mainEnd = markup.indexOf("</main>");
+  const inMain = mainStart >= 0 && mainEnd > mainStart ? markup.slice(mainStart, mainEnd) : "";
+  const numbered = [...inMain.matchAll(/<div class="section-label"><span class="sec-num">(\d+)<\/span>\s*([^<]*)<\/div>/g)];
+  const unnumbered = [...inMain.matchAll(/<div class="section-label">(?!<span class="sec-num">)([^<]*)<\/div>/g)];
+  if (numbered.length !== APPROVED) {
+    artifactErrors.push(`SEC1 — the page carries ${numbered.length} numbered sections and the approved architecture has ${APPROVED} (plus the hero, plus an unnumbered appendix). Fold a section or change the architecture; do not let the page and §3 disagree.`);
+  }
+  if (unnumbered.length > 1) {
+    artifactErrors.push(`SEC1 — ${unnumbered.length} unnumbered section labels. One appendix is the exception the architecture allows; two is a way of adding sections without counting them.`);
+  }
+  // SEC2 — the numbers are a sequence, and they are the spine's sequence. A
+  // section that prints 04 while the rail calls it 03 is two documents.
+  const seen = numbered.map((m) => Number(m[1]));
+  for (const [i, n] of seen.entries()) {
+    if (n !== i + 1) artifactErrors.push(`SEC2 — the ${i + 1}th numbered section prints ${String(n).padStart(2, "0")}. The numbers are the reader's position, not a label.`);
+  }
+  // SEC3 — the rail and the eyebrow are ONE name. They were typed separately
+  // and disagreed: the rail said "Proof" where the page said "The Receipts".
+  const rail = [...markup.matchAll(/data-spine="([^"]+)"[^>]*><span class="spine-num">(\d+)<\/span><span class="spine-label">([^<]*)</g)];
+  if (rail.length !== APPROVED) {
+    artifactErrors.push(`SEC3 — the spine rail lists ${rail.length} sections and the page numbers ${numbered.length}. The rail is the page's own table of contents; a rail that does not match it is a map of a different page.`);
+  }
+  for (const [i, r] of rail.entries()) {
+    const want = numbered[i];
+    if (!want) continue;
+    if (r[3].trim() !== want[2].trim()) {
+      artifactErrors.push(`SEC3 — the rail calls section ${r[2]} "${r[3].trim()}" and the section calls itself "${want[2].trim()}". One name.`);
+    }
+  }
+  // SEC4 — every id the architecture folded away still answers. Nothing was
+  // cut to reach six, so every anchor that ever worked has to keep working —
+  // including /#kappa, which two other pages on this site have been linking to
+  // and which this page has never had.
+  for (const id of ["gap", "loop", "protocols", "stack", "proof", "status", "references", "kappa"]) {
+    if (!new RegExp(`\\bid="${id}"`).test(markup)) {
+      artifactErrors.push(`SEC4 — nothing on the page has id="${id}", and something links to it. Folding a section keeps its anchor; that is the difference between folding and cutting.`);
+    }
+  }
+}
+
+// ── Gate 3a: the four accessibility rules, gated on the ARTIFACT ─────────
+// Each of these was a MEASURED defect on the built page (GATE3_BASELINE.md),
+// not a checklist item copied from a standard. They are written as rules
+// rather than repairs so the defect cannot come back: a repair is a commit, a
+// rule is a refusal.
+//
+// One honest bound, stated once and not repeated below: these read the STATIC
+// artifact. <amp-nav> hydrates client-side, so "first focusable element" means
+// first in the markup this build emits. That is sound here only because
+// amp-nav.js never touches document.body — it renders inside its own element,
+// which is already after the skip link. If that ever changes, this gate goes
+// quiet rather than red, and it is the one weakness it has.
+
+// A11Y1 — a skip link that a keyboard can reach, pointing at a real <main>.
+{
+  const mains = [...markup.matchAll(/<main\b([^>]*)>/g)];
+  if (mains.length !== 1) {
+    artifactErrors.push(`A11Y1 — the page has ${mains.length} <main> element(s). A skip link needs exactly one target, and a screen reader's "jump to main" needs exactly one destination.`);
+  } else {
+    const attrs = mains[0][1];
+    const id = (attrs.match(/\bid="([^"]+)"/) || [])[1];
+    if (!id) artifactErrors.push("A11Y1 — <main> carries no id, so nothing can link to it");
+    // Browsers refuse to move keyboard focus to a non-interactive element on a
+    // hash jump. Without this the link scrolls, the focus ring stays up in the
+    // navigation, and the next Tab lands back where the user just escaped —
+    // which looks exactly like a working skip link to anyone using a mouse.
+    if (!/\btabindex="-1"/.test(attrs)) {
+      artifactErrors.push('A11Y1 — <main> is not tabindex="-1". The page will scroll and the focus will not follow, which is the failure that looks like a pass.');
+    }
+    const body = markup.slice(markup.indexOf("<body>"));
+    const skip = body.match(/<a\b([^>]*\bclass="[^"]*\bskip-link\b[^"]*"[^>]*)>/);
+    if (!skip) artifactErrors.push("A11Y1 — no .skip-link in the body");
+    else {
+      const href = (skip[1].match(/\bhref="([^"]+)"/) || [])[1];
+      if (href !== `#${id}`) artifactErrors.push(`A11Y1 — the skip link points at "${href}" and <main> is "#${id}"`);
+      const firstFocusable = body.match(/<(?:a|button|select|textarea|summary)\b[^>]*>|<input\b(?![^>]*type="hidden")[^>]*>/i);
+      if (!firstFocusable || firstFocusable.index !== skip.index) {
+        artifactErrors.push(`A11Y1 — the skip link is not the first focusable element in <body> (that is "${(firstFocusable || ["(none)"])[0].slice(0, 70)}"). Anything focusable before it is a block the skip link cannot bypass.`);
+      }
+      const nameText = body.slice(skip.index).match(/>([\s\S]*?)<\/a>/);
+      if (!nameText || !nameText[1].replace(/<[^>]+>/g, " ").trim()) artifactErrors.push("A11Y1 — the skip link has no text");
+    }
+    // The stylesheet half. Markup alone cannot tell you whether the link ever
+    // becomes visible, and an invisible skip link is 2.4.1 failed with the
+    // markup of a pass.
+    const sheet = css.replace(/\/\*[\s\S]*?\*\//g, " ");
+    const base = sheet.match(/(?:^|[};])\s*\.skip-link\s*\{([^}]*)\}/);
+    const focused = sheet.match(/(?:^|[};])\s*\.skip-link:focus(?:-visible)?\s*\{([^}]*)\}/);
+    if (!base) artifactErrors.push("A11Y1 — .skip-link has no rule in the stylesheet at all");
+    else if (/(^|;)\s*display\s*:\s*none|(^|;)\s*visibility\s*:\s*hidden/.test(base[1])) {
+      artifactErrors.push("A11Y1 — the skip link is display:none or visibility:hidden. Both remove it from the keyboard, which is the only device that uses it.");
+    }
+    if (!focused) {
+      artifactErrors.push("A11Y1 — .skip-link has no :focus rule, so it never comes back on screen. Off-screen and staying there is not a skip link, it is a hidden link.");
+    } else if (base) {
+      // and the :focus rule must actually undo the displacement
+      const off = (prop) => {
+        const m = base[1].match(new RegExp(`(?:^|;)\\s*${prop}\\s*:\\s*(-?[\\d.]+)`));
+        return m ? parseFloat(m[1]) : null;
+      };
+      const on = (prop) => {
+        const m = focused[1].match(new RegExp(`(?:^|;)\\s*${prop}\\s*:\\s*(-?[\\d.]+)`));
+        return m ? parseFloat(m[1]) : null;
+      };
+      const moved = ["left", "top", "right", "bottom"].some((prop) => {
+        const o = off(prop), n = on(prop);
+        return o !== null && o < 0 && n !== null && n >= 0;
+      }) || /transform\s*:/.test(focused[1]) || /clip(-path)?\s*:/.test(focused[1]);
+      if (!moved) {
+        artifactErrors.push("A11Y1 — .skip-link:focus exists but brings nothing back on screen: no off-screen offset is returned to a non-negative value and no transform or clip is released.");
+      }
+    }
+    // And the stacking half, which every check above passes without.
+    // The skip link shares the top-left corner with <amp-nav> — position:fixed,
+    // 57px tall, painted over everything under it. A skip link beneath that bar
+    // is on screen by getBoundingClientRect, focusable, correctly coloured, and
+    // INVISIBLE. The markup gate passed it, the CSS gate passed it, and a
+    // browser screenshot is what caught it. So the bound is derived from the
+    // file that owns the number: amp-nav publishes its own stacking level as
+    // --amp-nav-z, and if the nav lane raises it this build goes red instead of
+    // the skip link quietly disappearing underneath.
+    if (base) {
+      const navSrc = resolve(site_root, "amp-nav.js");
+      if (!existsSync(navSrc)) {
+        artifactErrors.push("A11Y1 — amp-nav.js is not in the tree, so the skip link's stacking cannot be bounded against the fixed bar it shares a corner with");
+      } else {
+        const navZ = Number((readFileSync(navSrc, "utf8").match(/--amp-nav-z\s*:\s*(\d+)/) || [])[1]);
+        const skipZ = Number((base[1].match(/(?:^|;)\s*z-index\s*:\s*(\d+)/) || [])[1]);
+        if (!Number.isFinite(navZ)) {
+          artifactErrors.push("A11Y1 — amp-nav.js no longer declares --amp-nav-z, so the number this bound is derived from is gone. Do not guess it: find where the bar's stacking moved to.");
+        } else if (!Number.isFinite(skipZ)) {
+          artifactErrors.push(`A11Y1 — .skip-link declares no z-index and <amp-nav> is fixed at ${navZ}. Unstacked, the link paints under the bar.`);
+        } else if (skipZ <= navZ) {
+          artifactErrors.push(`A11Y1 — .skip-link is z-index ${skipZ} and amp-nav declares --amp-nav-z: ${navZ}. The bar is position:fixed over the same corner, so the link focuses, reads as on-screen, and cannot be seen.`);
+        }
+        if (!/(?:^|;)\s*position\s*:\s*fixed/.test(base[1])) {
+          artifactErrors.push("A11Y1 — .skip-link is not position:fixed. The bar it has to clear is, so an absolutely positioned link scrolls away from the corner it was placed to clear.");
+        }
+      }
+    }
+  }
+}
+
+// A11Y2 — the heading outline, and the filler that would fake one.
+// The two halves belong together on purpose. A gate that only checked the
+// sequence can be satisfied by dropping an empty <h3> in front of the skip,
+// which produces a clean outline and an extra announced heading that says
+// nothing — the repair being worse than the defect. Refusing empty headings is
+// what makes the sequence rule mean "get the structure right".
+{
+  const heads = [...markup.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/g)].map((m) => ({
+    lvl: Number(m[1]),
+    text: m[2].replace(/<[^>]+>/g, " ").replace(/&[a-z]+;|&#\d+;/gi, " ").replace(/\s+/g, " ").trim(),
+  }));
+  if (!heads.length) artifactErrors.push("A11Y2 — the page has no headings, so this check has nothing to protect");
+  const h1s = heads.filter((h) => h.lvl === 1);
+  if (h1s.length !== 1) artifactErrors.push(`A11Y2 — the page has ${h1s.length} <h1>; a document has exactly one`);
+  for (const h of heads) {
+    if (!h.text) artifactErrors.push(`A11Y2 — an empty <h${h.lvl}> reached the page. A heading with no text is a rung on a ladder with no step: it is announced, it is navigated to, and it says nothing.`);
+  }
+  let prev = 0;
+  for (const h of heads) {
+    if (prev && h.lvl > prev + 1) {
+      artifactErrors.push(`A11Y2 — the heading outline jumps h${prev} → h${h.lvl} at "${h.text.slice(0, 50)}". Give the section the level it actually has; do not insert an empty heading to close the gap.`);
+    }
+    prev = h.lvl;
+  }
+}
+
+// A11Y3 — every <svg> is in exactly one of two states: hidden from assistive
+// technology, or carrying a name. There is no third state, and the third state
+// is what shipped: an unnamed, unhidden graphic is announced as "image" with
+// nothing after it, which is worse than either.
+for (const m of markup.matchAll(/<svg\b([^>]*)>/g)) {
+  const a = m[1];
+  const hidden = /\baria-hidden="true"/.test(a);
+  const named = /\baria-label="[^"]+"/.test(a) || /\baria-labelledby="[^"]+"/.test(a);
+  const where = (a.match(/\bclass="([^"]+)"/) || a.match(/\bviewBox="([^"]+)"/) || [, "?"])[1];
+  if (hidden && named) artifactErrors.push(`A11Y3 — the <svg> (${where}) is both aria-hidden and named. One of the two is a lie about whether it carries information.`);
+  if (!hidden && !named) artifactErrors.push(`A11Y3 — the <svg> (${where}) is neither aria-hidden="true" nor named. Decide which it is: decoration gets hidden, information gets a name.`);
+}
+
+// A11Y4 — and the name on the informational one is DERIVED, not typed.
+{
+  const ring = markup.match(/<svg\b([^>]*\bclass="[^"]*\bloop-ring\b[^"]*"[^>]*)>([\s\S]*?)<\/svg>/);
+  if (!ring) artifactErrors.push("A11Y4 — the artifact draws no .loop-ring, so the name this gate protects cannot be checked");
+  else {
+    const [, attrs, inner] = ring;
+    if (!/\brole="img"/.test(attrs)) artifactErrors.push('A11Y4 — the .loop-ring carries information and does not declare role="img", so assistive technology walks into it and reads the loose numbers inside as content');
+    const lb = (attrs.match(/\baria-labelledby="([^"]+)"/) || [])[1];
+    const al = (attrs.match(/\baria-label="([^"]+)"/) || [])[1];
+    let got = null;
+    if (lb) {
+      const t = inner.match(new RegExp(`<title\\s+id="${lb.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"\\s*>([\\s\\S]*?)</title>`));
+      if (!t) artifactErrors.push(`A11Y4 — the .loop-ring is labelled by "${lb}" and no <title id="${lb}"> is inside it. A name that points at nothing is not a name, and it resolves to nothing silently.`);
+      else got = t[1];
+    } else if (al) got = al;
+    else artifactErrors.push("A11Y4 — the .loop-ring declares role=img and has no accessible name");
+    if (got !== null) {
+      const unesc = (x) => x.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+      if (unesc(got).trim() !== ringName) {
+        artifactErrors.push(`A11Y4 — the .loop-ring is named "${unesc(got).slice(0, 70)}…" and loop.json derives "${ringName.slice(0, 70)}…". The ring is a picture of the list beside it: name it from the data, or a renamed phase moves the list and leaves the name behind.`);
+      }
+    }
+  }
+}
+
 // No page advertises a mailbox, and no bare address either.
 const mailtos = html.match(/mailto:[^"'<> ]*/gi);
 if (mailtos) artifactErrors.push(`the artifact advertises ${mailtos.join(", ")} — no mailto:, Travis's call 2026-08-11`);
@@ -433,9 +1476,81 @@ else {
 for (const g of markup.matchAll(/<div class="ctagroup">([\s\S]*?)<\/div>\s*<\/div>/g)) {
   const r = (g[1].match(/class="tag(?: ok)?">([a-z_]+)/) || [])[1];
   if (!VERBS[r]) { artifactErrors.push(`a CTA group on the page declares an unknown rung "${r}"`); continue; }
-  for (const m of g[1].matchAll(/class="verb">([^<]+)</g)) {
-    if (!VERBS[r].includes(m[1].trim())) {
-      artifactErrors.push(`CTA "${m[1].trim()}" is not available at rung ${r} — allowed: ${VERBS[r].join(" · ")}`);
+  // A card that cites a publication is answerable to the publication table
+  // (PUB3 below), not the rung's — matched on the anchor so the marker and the
+  // verb are read from the same element and cannot drift apart.
+  for (const m of g[1].matchAll(/<a\b([^>]*)>\s*<span class="verb">([^<]+)</g)) {
+    if (/\bdata-publication=/.test(m[1])) continue;
+    if (!VERBS[r].includes(m[2].trim())) {
+      artifactErrors.push(`CTA "${m[2].trim()}" is not available at rung ${r} — allowed: ${VERBS[r].join(" · ")}`);
+    }
+  }
+}
+
+// PUB3, artifact side. The record was checked above; this re-reads the EMITTED
+// page, because a template can print a verb the record never held — which is
+// the same reason the rung chip is re-read out of the markup rather than
+// trusted from the data.
+for (const m of markup.matchAll(/<a\b[^>]*\bdata-publication="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)) {
+  const id = m[1];
+  // Both shapes the page uses: a CTA card with a .verb span, and a hero button
+  // whose whole label is the verb. Either way the verb is read off the EMITTED
+  // element, never trusted from the record.
+  const inner = m[2];
+  const verb = (inner.match(/<span class="verb">([^<]*)</) || [, inner.replace(/<[^>]+>/g, "")])[1];
+  if (!bookVerb.has(id)) {
+    artifactErrors.push(`PUB3 — the page carries a CTA for publication "${id}", which derives no verb`);
+    continue;
+  }
+  // Against renderVerb, not bookVerb: after an offer expires the page is
+  // SUPPOSED to move off the contract verb, and comparing to the contract
+  // would refuse the very transition PUB2 exists to produce.
+  if (verb.trim() !== renderVerb.get(id)) {
+    artifactErrors.push(`PUB3 — the page says "${verb.trim()}" for ${id} and the record derives "${renderVerb.get(id)}"`);
+  }
+}
+
+
+// MAP2 — every status token the map prints is one protocols.json actually uses.
+// Read off the EMITTED chips, not the data, because a template can invent a
+// label the record never held.
+for (const m of markup.matchAll(/class="map-chip[^"]*" data-status="([^"]+)"/g)) {
+  if (m[1] !== "none" && !STATUSES.has(m[1])) {
+    artifactErrors.push(`MAP2 — the stack map prints status "${m[1]}", which is not in protocols.json's vocabulary`);
+  }
+}
+
+// MAP1 — no node reaches the page without a chip of some kind.
+for (const m of markup.matchAll(/<div class="stack-layer [^"]*" data-node="([^"]+)">([\s\S]*?)<\/div>\s*<\/div>/g)) {
+  if (!/class="map-chip/.test(m[2])) {
+    artifactErrors.push(`MAP1 — the stack map draws node "${m[1]}" with no status chip`);
+  }
+}
+
+// MAP4 — the page draws each edge in the state the record earns, and no other.
+// Three states now, so "not solid" is no longer the whole check.
+{
+  const earned = new Map(stackEdges.map((e) => [`${e.from}>${e.to}`, e.state]));
+  for (const m of markup.matchAll(/data-edge-state="([a-z]+)" data-from="([^"]+)" data-to="([^"]+)"/g)) {
+    const [, drawn, from, to] = m;
+    const want = earned.get(`${from}>${to}`);
+    if (want === undefined) { artifactErrors.push(`MAP4 — the page draws an edge ${from}→${to} the record does not declare`); continue; }
+    if (drawn !== want) {
+      artifactErrors.push(`MAP4 — the page draws ${from}→${to} as "${drawn}" and the record earns "${want}"`);
+    }
+  }
+  const drawnKeys = new Set([...markup.matchAll(/data-from="([^"]+)" data-to="([^"]+)"/g)].map((m) => `${m[1]}>${m[2]}`));
+  for (const k of earned.keys()) if (!drawnKeys.has(k)) artifactErrors.push(`MAP4 — the record declares edge ${k.replace(">", "→")} and the page does not draw it`);
+  // MAP6, artifact side: the heading, then every non-solid legend row.
+  const headM = markup.match(/<div class="stack-edges-head">([^<]*)</);
+  if (headM && PROOF_WORDS.test(headM[1])) {
+    artifactErrors.push(`MAP6 — the edge list heading on the page claims proof: "${headM[1].trim()}"`);
+  }
+  // no state but `solid` may print the language of proof.
+  for (const m of markup.matchAll(/<div class="legend-row legend-([a-z]+)"><span class="legend-key">([^<]*)<\/span><span class="legend-means">([^<]*)</g)) {
+    if (m[1] === "solid") continue;
+    if (/\b(witness(?:ed|es|ing)?|verif(?:ied|ies)|proved|proven|confirms?)\b/i.test(m[2] + " " + m[3])) {
+      artifactErrors.push(`MAP6 — the legend describes "${m[1]}" with the language of proof: "${m[3]}"`);
     }
   }
 }
@@ -444,14 +1559,41 @@ for (const g of markup.matchAll(/<div class="ctagroup">([\s\S]*?)<\/div>\s*<\/di
 // nodes it drives (SHELL.md §8.5). The middle check is the `12 Active
 // Pathfinders` defect mechanised: a decorative canvas's loop bound was
 // published as a live user metric on a sibling domain for months.
-if (!/data-identity-animation/.test(html)) artifactErrors.push("the landing page has no [data-identity-animation] element");
+// Not "at least one". The page draws this graph twice by design — behind the
+// hero as the site's identifying mark, and as the book's cover art — and a
+// presence test passes while either one is missing, because the other is still
+// there. A probe that deleted the hero's marker BUILT ANYWAY. So each one is
+// required where it belongs, which is a structural claim rather than a count.
+{
+  const hero = html.match(/<header class="hero[\s\S]*?<\/header>/);
+  if (!hero) artifactErrors.push("the landing page has no hero to carry the identifying animation");
+  else if (!/data-identity-animation/.test(hero[0])) artifactErrors.push("the hero has no [data-identity-animation] element — the site's identifying mark is gone from the one place SHELL.md §8 requires it");
+  // The hero's identifying mark and the book's cover art are now ONE element:
+  // the book stands above the fold and the graph is printed on its jacket. So
+  // the rule is that the mark lives on the cover, inside the hero — losing it
+  // empties the jacket and removes the mark in the same stroke.
+  const front = html.match(/<span class="osbook-face osbook-front"[\s\S]*?<\/svg>/);
+  if (!front) artifactErrors.push("the book has no front cover to carry its art");
+  else if (!/data-identity-animation/.test(front[0])) artifactErrors.push("the book's cover has no [data-identity-animation] element — the jacket would ship blank and nothing else would say so");
+  else if (hero && !hero[0].includes(front[0].slice(0, 60))) {
+    artifactErrors.push("the book is not in the hero — it was moved above the fold on purpose, and a cover five sections down is the thing that change undid");
+  }
+}
 const constBlock = idanim.match(/IDENTITY-CONSTANTS-START([\s\S]*?)IDENTITY-CONSTANTS-END/);
 if (!constBlock) artifactErrors.push("build/idanim.js declares no IDENTITY-CONSTANTS block");
 else {
   const nums = [...constBlock[1].matchAll(/=\s*(\d+)/g)].map((m) => m[1]);
   if (!nums.length) artifactErrors.push("the IDENTITY-CONSTANTS block is empty");
+  // ISO dates are masked out first. The surrounding character classes already
+  // exclude a number sitting inside a decimal, a thousands separator, a
+  // currency amount or a percentage — the same judgement, that a digit buried
+  // in a longer token is not a count a reader can see. A hyphen was never in
+  // that list, so `2026-12-31` read as the animation's 31 nodes and refused the
+  // page for an unrelated reason. Found by PUB2's dated-offer probe, whose
+  // whole job is to end on a real date.
+  const scanned = text.replace(/\d{4}-\d{2}-\d{2}/g, " \u2014 ");
   for (const n of nums) {
-    if (new RegExp(`(^|[^\\w.,$])${n}([^\\w.,%]|$)`).test(text)) {
+    if (new RegExp(`(^|[^\\w.,$])${n}([^\\w.,%]|$)`).test(scanned)) {
       artifactErrors.push(`animation constant ${n} also appears as text on the page — a decoration constant a reader can see is how a canvas loop bound became a published metric`);
     }
   }
@@ -465,15 +1607,35 @@ else {
 {
   if (IDN !== idgraph.nodes.length) artifactErrors.push(`idanim.js declares NODES=${IDN} and its own idGraph() returns ${idgraph.nodes.length}`);
   if (IDA !== idgraph.arcs.length) artifactErrors.push(`idanim.js declares ARCS=${IDA} and its own idGraph() returns ${idgraph.arcs.length}`);
-  const count = (re) => (html.match(re) || []).length;
-  const nodesInSvg = count(/<circle class="idn"/g);
-  const arcsInSvg = count(/<path class="ida"/g);
-  const headsInSvg = count(/<path class="idh"/g);
-  const tracesInSvg = count(/<path class="idt"/g);
-  if (nodesInSvg !== IDN) artifactErrors.push(`the artifact draws ${nodesInSvg} graph nodes and the driver expects ${IDN}`);
-  if (arcsInSvg !== IDA) artifactErrors.push(`the artifact draws ${arcsInSvg} arcs and the driver expects ${IDA}`);
-  if (headsInSvg !== IDA) artifactErrors.push(`the artifact draws ${headsInSvg} arrowheads and the driver expects ${IDA}`);
-  if (tracesInSvg !== IDA) artifactErrors.push(`the artifact draws ${tracesInSvg} trace overlays and the driver expects ${IDA} — the driver refuses to run if these disagree, and a still graph is indistinguishable from a quiet one`);
+  // PER ROOT, not per page. The graph is drawn twice now — behind the hero and
+  // as the book's cover art — and the driver mounts each root separately, so a
+  // page-wide count would read 62 against a driver that expects 31 from each.
+  // Counting the whole page would ALSO hide the case this is really for: one
+  // root complete and the other missing an arc sums to the right total.
+  // Matched on the ATTRIBUTE the driver actually uses, not on a tag or a class.
+  // The first version required `<div class="...idanim...">`, and the book's
+  // cover art is a <span> that does not carry that class — so the second root
+  // was silently not counted at all, which is the failure mode this whole block
+  // exists to prevent. `roots.length` is asserted against the driver's own
+  // query below for the same reason.
+  const roots = [...html.matchAll(/data-identity-animation[^>]*>([\s\S]*?)<\/svg>/g)];
+  const declared = (html.match(/data-identity-animation/g) || []).length;
+  if (!roots.length) artifactErrors.push("no [data-identity-animation] root could be extracted to count");
+  else if (roots.length !== declared) {
+    artifactErrors.push(`the page declares ${declared} [data-identity-animation] root(s) and only ${roots.length} could be extracted to count. An uncounted root is an unchecked one.`);
+  }
+  roots.forEach((r, i) => {
+    const where = roots.length > 1 ? ` (root ${i + 1} of ${roots.length})` : "";
+    const count = (re) => (r[1].match(re) || []).length;
+    const nodesInSvg = count(/<circle class="idn"/g);
+    const arcsInSvg = count(/<path class="ida"/g);
+    const headsInSvg = count(/<path class="idh"/g);
+    const tracesInSvg = count(/<path class="idt"/g);
+    if (nodesInSvg !== IDN) artifactErrors.push(`the artifact draws ${nodesInSvg} graph nodes and the driver expects ${IDN}${where}`);
+    if (arcsInSvg !== IDA) artifactErrors.push(`the artifact draws ${arcsInSvg} arcs and the driver expects ${IDA}${where}`);
+    if (headsInSvg !== IDA) artifactErrors.push(`the artifact draws ${headsInSvg} arrowheads and the driver expects ${IDA}${where}`);
+    if (tracesInSvg !== IDA) artifactErrors.push(`the artifact draws ${tracesInSvg} trace overlays and the driver expects ${IDA}${where} — the driver refuses to run if these disagree, and a still graph is indistinguishable from a quiet one`);
+  });
   // The trace layer must ship silent AND drivable. Silent, because with
   // scripting off a row of dashes lying over the graph is decoration nobody
   // asked for; drivable, because the moment its opacity moves into the
@@ -525,8 +1687,15 @@ else {
   }
   // And the ladder was literally made of <line>; this graph is paths and
   // circles. A <line> inside the animation is the old shape returning.
-  const idsvg = (html.match(/<div class="idanim"[\s\S]*?<\/svg>/) || [""])[0];
-  if (/<line\b/i.test(idsvg)) artifactErrors.push("the identifying animation contains a <line> — the ladder it replaced was 31 of them, and that is what read as ruled paper");
+  // Extracted by the ATTRIBUTE, not by `<div class="idanim">`. When the hero's
+  // ambient graph became the book's cover art there was no longer any element
+  // with that class, so this match returned "" and the check silently had
+  // nothing to test — a gate that loses its subject reads exactly like a gate
+  // that passes. A probe that planted a <line> BUILT ANYWAY, which is how it
+  // was caught.
+  const idsvgs = [...html.matchAll(/data-identity-animation[\s\S]*?<\/svg>/g)].map((m) => m[0]);
+  if (!idsvgs.length) artifactErrors.push("no identifying animation could be extracted to check for <line>");
+  if (idsvgs.some((x) => /<line\b/i.test(x))) artifactErrors.push("the identifying animation contains a <line> — the ladder it replaced was 31 of them, and that is what read as ruled paper");
   if (/<hr[\s/>]/i.test(markup)) artifactErrors.push("the artifact contains an <hr> — this page has never had one, and the last thing that looked like one was the animation");
 }
 for (const m of idanim.matchAll(/querySelector(?:All)?\("([^"]+)"\)/g)) {
@@ -892,6 +2061,28 @@ if (artifactErrors.length) {
 // site root, which is what actually serves, and recorded in dist/artifact.json
 // so a later reader — or a deploy step — can ask "is what is on disk the thing
 // that was gated?" and get an answer rather than an assurance.
+// The trapdoor closes here. Everything above ran against a moved clock, and
+// everything below writes files a visitor is served. A page built as some other
+// day must never become the published page — otherwise `--as-of` is a way to
+// keep an expired offer on the site by lying about the date. So this mode
+// reports what the derivation produced and exits before the first write.
+if (AS_OF) {
+  const offers = [...offerSuffix.entries()].map(([id, v]) => `${id}: "${v}"`);
+  console.log(
+    `\u2713 --as-of ${AS_OF}: derivation only, NOTHING WRITTEN.\n` +
+      `  CTA verbs rendered : ${[...renderVerb.entries()].map(([id, v]) => `${id} → "${v}"`).join(" · ") || "(none)"}\n` +
+      `  contract verbs     : ${[...bookVerb.entries()].map(([id, v]) => `${id} → "${v}"`).join(" · ") || "(none)"}\n` +
+      `  dated offer printed: ${offers.length ? offers.join(" · ") : "(none)"}\n` +
+      `  offer enforcement  : ${[...offerEnforced.entries()].map(([id, v]) => `${id} → ${v ? "enforced" : "prospective"}`).join(" · ") || "(no offer)"}\n` +
+      `  artifact sha256    : ${sha(html).slice(0, 16)}\u2026 (${Buffer.byteLength(html)} bytes, not published)\n` +
+      // The RENDERED element, not the map it came from. A boundary probe that
+      // reads the derivation is checking the build's arithmetic; one that reads
+      // this is checking the thing a visitor is served.
+      `  rendered CTA       : ${(html.match(/<a[^>]*data-publication="[^"]*"[^>]*>[\s\S]*?<\/a>/) || ["(no publication CTA on the page)"])[0].replace(/\s+/g, " ")}`,
+  );
+  process.exit(0);
+}
+
 const outDir = resolve(root, "dist");
 const emitHash = sha(html);
 

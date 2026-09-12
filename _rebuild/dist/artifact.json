@@ -1,48 +1,48 @@
 {
   "_comment": "Written by build/build.mjs at emit. Every file listed was hashed before it was written and re-hashed after being read back off disk; the build refuses if they differ. `node build/build.mjs --verify` re-checks these against what is on disk right now, which is how a deploy step proves it is shipping the artifact that was gated rather than whatever survived the last failed build.",
-  "built_at": "2026-09-11T16:12:26.898Z",
+  "built_at": "2026-09-12T14:58:27.174Z",
   "shell_revision": "shell-r10",
-  "artifact_sha256": "bfeb204fb6328ebf2b6dda9d1c638fed93b16415ad93dce1e102359a5db40e3b",
+  "artifact_sha256": "dfd2639922a1ed7046a7cf6a87535263a5456c4613c0199c2bfe0777a4b90729",
   "files": [
     {
       "path": "_rebuild/dist/index.html",
-      "sha256": "bfeb204fb6328ebf2b6dda9d1c638fed93b16415ad93dce1e102359a5db40e3b",
-      "bytes": 92372
+      "sha256": "dfd2639922a1ed7046a7cf6a87535263a5456c4613c0199c2bfe0777a4b90729",
+      "bytes": 110946
     },
     {
       "path": "_rebuild/dist/styles/site.css",
-      "sha256": "381525b90c3df894e63d1b9519ef35fd388dd6df7300537f0e58a86770cebacf",
-      "bytes": 81260
+      "sha256": "0d17208b6f4fd26fd7062805b80b48f76622239fb2f5ea3d7dd19d73020891ed",
+      "bytes": 107629
     },
     {
       "path": "_rebuild/dist/proof.js",
-      "sha256": "d14d9f69d846ee23438f91c8e9dce91618f2c9c4aa57e5268210aed447128cf4",
-      "bytes": 16263
+      "sha256": "e9be6ff43e45357aeecd40f6229e092c8482696e9d131dde7d60e432d4844d24",
+      "bytes": 19127
     },
     {
       "path": "_rebuild/dist/idanim.js",
-      "sha256": "45aa4628c20783cd0e51583ac6c6b9ab15ccb2707f48c2f840c6b1c3dc612ef3",
-      "bytes": 24777
+      "sha256": "36d12731840d32a46500cd0190b757e824dca2255876d17aa2a69b6a7cb4e54e",
+      "bytes": 25238
     },
     {
       "path": "index.html",
-      "sha256": "bfeb204fb6328ebf2b6dda9d1c638fed93b16415ad93dce1e102359a5db40e3b",
-      "bytes": 92372
+      "sha256": "dfd2639922a1ed7046a7cf6a87535263a5456c4613c0199c2bfe0777a4b90729",
+      "bytes": 110946
     },
     {
       "path": "styles/site.css",
-      "sha256": "381525b90c3df894e63d1b9519ef35fd388dd6df7300537f0e58a86770cebacf",
-      "bytes": 81260
+      "sha256": "0d17208b6f4fd26fd7062805b80b48f76622239fb2f5ea3d7dd19d73020891ed",
+      "bytes": 107629
     },
     {
       "path": "proof.js",
-      "sha256": "d14d9f69d846ee23438f91c8e9dce91618f2c9c4aa57e5268210aed447128cf4",
-      "bytes": 16263
+      "sha256": "e9be6ff43e45357aeecd40f6229e092c8482696e9d131dde7d60e432d4844d24",
+      "bytes": 19127
     },
     {
       "path": "idanim.js",
-      "sha256": "45aa4628c20783cd0e51583ac6c6b9ab15ccb2707f48c2f840c6b1c3dc612ef3",
-      "bytes": 24777
+      "sha256": "36d12731840d32a46500cd0190b757e824dca2255876d17aa2a69b6a7cb4e54e",
+      "bytes": 25238
     }
   ]
 }

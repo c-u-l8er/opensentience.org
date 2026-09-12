@@ -286,8 +286,15 @@ function idGraph() {
 
 (function idanim() {
     "use strict";
-    const root = document.querySelector("[data-identity-animation]");
-    if (!root) return;
+    // EVERY root, not the first. The page now draws this graph twice — once
+    // behind the hero as the site's identifying mark, once as the cover art of
+    // the book in §5 — and `querySelector` animated the hero while the cover
+    // sat still. A still copy of an animation is indistinguishable from a
+    // broken one, which is the same complaint the trace-layer rule makes.
+    const roots = document.querySelectorAll("[data-identity-animation]");
+    if (!roots.length) return;
+    roots.forEach(mount);
+    function mount(root) {
     const arcEls = root.querySelectorAll(".ida");
     const headEls = root.querySelectorAll(".idh");
     const traceEls = root.querySelectorAll(".idt");
@@ -473,4 +480,5 @@ function idGraph() {
     document.addEventListener("visibilitychange", function () {
         last = performance.now();
     });
+    }
 })();

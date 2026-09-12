@@ -1,0 +1,31 @@
+{
+  "_comment": "OPENSENTIENCE_SURFACE §3.1 — the three research questions, re-homed. This file exists so the questions are DATA and their status is DERIVED: each question names the protocols it lives in, and build.mjs reads those statuses out of protocols.json rather than letting prose assert them. QST1 refuses an unknown protocol id; QST2 refuses a status word typed into the prose beside a derived one; QST3 refuses a question with no settles_it, because a question nobody could answer is not an open question, it is a slogan.",
+  "_fold_comment": "The five cards of the old 'Open Questions' section were folded in here, not dropped: old Q1 (κ-routing ROI on cheap hardware) is now what would settle question 1; old Q2 (Goodhart) and Q3 (surprise vs scheduled consolidation) sit under question 2; old Q4 (SCOPE, pairwise claims) sits under question 3 CORRECTED — R-S3 ruled the coordination question is not SCOPE's, and SCOPE is deferred with no spec file, so it is named as a sketch and not as an answer. Old Q5 is the closing line.",
+  "closing": "And behind all three, the one this site exists to ask: if a system holds the right relationships at high confidence and can navigate them to answer, does it understand the domain?",
+  "questions": [
+    {
+      "id": "kappa",
+      "ask": "Can the shape of a knowledge graph tell an agent when to deliberate?",
+      "lives_in": ["OS-002", "OS-005"],
+      "established": "The κ invariant is proved exhaustively — the proof below runs in your browser and finds no counterexample.",
+      "unsettled": "That topology <em>can</em> be measured says nothing about whether routing on it helps. The routing benefit is untested, and it is this page's own stated limit.",
+      "settles_it": "One measured task where κ-routing beats both always-retrieve and always-deliberate on the same corpus. OS-005 makes the sharper bet — that the margin <em>inverts</em> on cheap hardware, because topology is most valuable when it tells you to skip an expensive inference entirely."
+    },
+    {
+      "id": "continual",
+      "ask": "Can memory improve continuously without quietly corrupting itself?",
+      "lives_in": ["OS-001", "OS-009"],
+      "established": "One system runs the loop and another measures it, end to end.",
+      "unsettled": "The instrument and the subject are both ours. A benchmark we wrote, scoring a system we wrote, is not evidence about either — and PRISM rewrites its own scenarios as systems improve, so if the benchmark optimises against the system it measures, the score stops meaning anything at some point nobody has located.",
+      "settles_it": "Someone who is not us, running the benchmark against a system that is not ours. Beneath it a narrower question we can answer in-house: should consolidation fire on surprise (OS-011 emits prediction error into the loop) or on a schedule — and which actually crystallises better knowledge?"
+    },
+    {
+      "id": "coordination",
+      "ask": "Can autonomous agents coordinate without surrendering accountability?",
+      "lives_in": ["OS-006"],
+      "established": "The governance floor underneath the stack decides one action at a time and ships a certificate with every verdict.",
+      "unsettled": "Coordination <em>as such</em> is not something OpenSentience has. A floor that governs a single decision is not a protocol for many agents holding to it at once, and nothing here has shown that. Printing a question with no work behind it is the point.",
+      "settles_it": "A run in which agents with conflicting claims reach a safe outcome with no central arbiter, and every step is auditable afterwards. OS-012 SCOPE sketched typed spatial claims checked pairwise — it is deferred and has no spec file, so it is a sketch, not an answer."
+    }
+  ]
+}

@@ -501,6 +501,75 @@ const para = (t) => t ? `<p>${esc(t)}</p>` : '';
 const list = (xs) => xs && xs.length ? `<ul>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
 const chip = (p) => `<span class="chip ${p.derived.label || 'none'}">${p.derived.label ?? p.kind}</span>`;
 const sidebar = (cur) => `<aside class="side" role="navigation" aria-label="catalog"><a class="side-home" href="./">Unboxed Patterns</a><div class="side-fam">Front</div><ul><li><a href="./">Catalog</a></li><li class="${cur === 'conclusion' ? 'cur' : ''}"><a href="conclusion.html">Conclusion</a></li></ul>${DATA.families.map((f) => `<div class="side-fam">${FAMILY_TITLE[f]}</div><ul>${ORDER.filter((p) => p.family === f).map((p) => `<li class="${cur && p.id === cur.id ? 'cur' : ''}"><a href="${p.id}.html">${esc(p.name)}</a> ${chip(p)}</li>`).join('')}</ul>`).join('')}<div class="side-fam">Anti-patterns</div><ul>${DATA.anti_patterns.map((a) => `<li><a href="./#anti-${a.id}">${esc(a.name)}</a></li>`).join('')}</ul></aside>`;
+// ─── the chapter banner ───────────────────────────────────────────────────
+// The same identifying graph the front door draws, shaped as a band across the
+// top of every page of the book. It is NOT a second drawing: the geometry is
+// read out of `_rebuild/build/idanim.js`'s own GRAPH region — the one file that
+// owns it — and emitted with the same four layers and the same class names, so
+// `/idanim.js` mounts it like any other root. The driver refuses a root whose
+// counts disagree with its own graph, which is why nothing here is trimmed to
+// fit: the band is a SLICE of the full portrait drawing, cropped by
+// `preserveAspectRatio="slice"`, not a reduced version of it.
+const IDANIM_SRC = join(SITE, '_rebuild/build/idanim.js');   // SITE, not ROOT: ROOT is ProjectAmp2
+const idGraphOf = (() => {
+  if (!existsSync(IDANIM_SRC)) throw new Error(`banner: no idanim source at ${IDANIM_SRC} — the band's geometry has one owner and this is it`);
+  const src = readFileSync(IDANIM_SRC, 'utf8');
+  const region = (src.match(/GRAPH-START[\s\S]*?\*\/([\s\S]*?)\/\*\s*GRAPH-END/) || [])[1];
+  if (!region) throw new Error('banner: idanim.js has no GRAPH-START/GRAPH-END region');
+  return new Function(region + '\nreturn idGraph;')();
+})();
+
+function bannerArt() {
+  const g = idGraphOf();
+  // The driver refuses a root whose counts disagree with its own graph, and
+  // it fails QUIET when it does — a still band is indistinguishable from a
+  // band nobody wired up. So the disagreement is caught here instead.
+  if (!g || !g.nodes || !g.arcs || !g.nodes.length || !g.arcs.length) {
+    throw new Error('banner: idGraph() returned no geometry');
+  }
+  const arcs = g.arcs.map((a) => `<path class="ida" d="${a.d}"></path>`).join('');
+  const heads = g.arcs.map((a) => `<path class="idh" d="${a.head}"></path>`).join('');
+  const traces = g.arcs.map((a) => `<path class="idt" d="${a.d}" stroke-dasharray="${a.dash}" opacity="0"></path>`).join('');
+  const nodes = g.nodes.map((n) => `<circle class="idn" cx="${n.x}" cy="${n.y}" r="${g.r}"></circle>`).join('');
+  // TILED, with <use>. The band is about 9:1 and the drawing is 0.7:1, so one
+  // copy can only ever occupy a fraction of the width — measured at 41%, with
+  // 7 of its 31 nodes inside the band's height and the rest of the band blank.
+  // Padding the viewBox to fix that just pads with NOTHING.
+  //
+  // <use> is the way out: the shadow instances mirror the referenced subtree,
+  // including the attribute values the driver writes at run time, so all four
+  // tiles animate together — while `querySelectorAll('.idn')` still returns
+  // exactly 31, which is what the driver checks before it will run at all.
+  // One real element set, four tiles, full width. The y offsets stop the
+  // repeat from reading as a repeat.
+  const OFF = [0, -58, 31, -22];
+  const tiles = OFF.slice(1)
+    .map((y, i) => `<use href="#pb-graph" x="${(i + 1) * 300}" y="${y}"></use>`)
+    .join('');
+  return `<div class="pb-art" data-identity-animation aria-hidden="true"><svg viewBox="0 0 1200 430" preserveAspectRatio="xMidYMid slice" focusable="false"><g id="pb-graph"><g>${arcs}</g><g>${heads}</g><g>${traces}</g><g>${nodes}</g></g>${tiles}</svg></div>`;
+}
+
+// `where` is the reader's position in the book, derived — never typed.
+function banner(where) {
+  const art = bannerArt();
+  return `<div class="pb">${art}<div class="pb-type"><a class="pb-site" href="/">OpenSentience.org</a><span class="pb-book">Unboxed Patterns</span><span class="pb-where">${esc(where)}</span></div></div>`;
+}
+
+const BANNER_CSS = `
+.pb{position:relative;height:clamp(104px,15vh,168px);overflow:hidden;border-bottom:1px solid var(--border,#e6e1d7);background:linear-gradient(180deg,var(--bg-card,#fffdf8),var(--ink,#faf8f3))}
+/* The band is a SLICE of the portrait drawing, so the graph reads as a wide
+   field of network rather than a squashed copy of the cover. Masked at both
+   ends so it dissolves into the page instead of stopping at a hard edge. */
+.pb-art{position:absolute;inset:0;opacity:.58;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 86%,transparent 100%);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 86%,transparent 100%)}
+.pb-art svg{width:100%;height:100%;display:block}
+.pb-type{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;justify-content:center;gap:.3rem;max-width:1180px;margin:0 auto;padding:0 clamp(1rem,4vw,2.6rem)}
+.pb-site{font:500 .62rem/1 var(--mono,ui-monospace,monospace);letter-spacing:.2em;text-transform:uppercase;color:var(--accent-dim,#6d3bd4);text-decoration:none;width:max-content}
+.pb-site:hover,.pb-site:focus-visible{text-decoration:underline}
+.pb-book{font:600 clamp(1.15rem,2.4vw,1.75rem)/1.1 var(--display,Georgia,serif);color:var(--fg,#1c1a17);letter-spacing:-.01em}
+.pb-where{font:500 .7rem/1 var(--mono,ui-monospace,monospace);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-dim,#6d3bd4)}
+@media (prefers-reduced-motion:reduce){.pb-art{opacity:.34}}
+`;
+
 const SHELL_CSS = `body{margin:0;background:var(--ink,#faf8f3);color:var(--fg,#1c1a17);font:17px/1.6 var(--display,Georgia,serif)}
 .book{display:grid;grid-template-columns:250px minmax(0,1fr);gap:2.2rem;max-width:1460px;margin:0 auto;padding:76px var(--gutter,1.5rem) 4rem}
 .side{position:sticky!important;top:76px;height:auto;width:auto;background:transparent;box-shadow:none;align-self:start;max-height:calc(100vh - 90px);overflow:auto;font:13px/1.5 var(--ui,system-ui);padding-right:.5rem;border-right:1px solid var(--line,#e7e0d2)}
@@ -709,8 +778,9 @@ function pageFor(p, idx) {
     const db = document.getElementById('demo');
     if (db) db.addEventListener('click', async () => { db.disabled = true; try { const m = await import('./demos/${p.id}.mjs?v=${stamp}'); await m.run(document.getElementById('dsink'), { stamp: '${stamp}' }); } catch (e) { document.getElementById('dsink').textContent = 'demo failed: ' + e.message; } db.disabled = false; });` : ''}
   </script>`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(p.name)} · Unboxed Patterns</title><meta name="description" content="${esc(p.headline || p.invariant || p.name)}"><link rel="canonical" href="https://opensentience.org/patterns/${p.id}"><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
-<script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(p.name)} · Unboxed Patterns</title><meta name="description" content="${esc(p.headline || p.invariant || p.name)}"><link rel="canonical" href="https://opensentience.org/patterns/${p.id}"><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}${BANNER_CSS}</style></head><body>
+<script type="module" src="/amp-nav.js"></script><script src="/idanim.js" defer></script><amp-nav property="opensentience"></amp-nav>
+${banner(`Chapter ${idx + 1} of ${ORDER.length} \u00b7 ${FAMILY_TITLE[p.family]}`)}
 <div class="book">${sidebar(p)}<main>
 <p class="meta"><code class="up">${p.up}</code> · ${FAMILY_TITLE[p.family]} · ${chip(p)} ${standings}</p>
 <h1>${esc(p.name)}</h1>
@@ -750,8 +820,9 @@ for (const f of existsSync(CH.CHAIN) ? readdirSync(CH.CHAIN) : []) if (!f.starts
 for (const f of existsSync(FILMS_DIR) ? readdirSync(FILMS_DIR) : []) pageOutputs[`films/${f}`] = readFileSync(join(FILMS_DIR, f), 'utf8');
 const CONC = readJson(join(HERE, '../data/conclusion.json'));
 const last = ORDER[ORDER.length - 1];
-pageOutputs['conclusion.html'] = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(CONC.title)} · Unboxed Patterns</title><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
-<script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
+pageOutputs['conclusion.html'] = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(CONC.title)} · Unboxed Patterns</title><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}${BANNER_CSS}</style></head><body>
+<script type="module" src="/amp-nav.js"></script><script src="/idanim.js" defer></script><amp-nav property="opensentience"></amp-nav>
+${banner(`Conclusion \u00b7 after ${ORDER.length} chapters`)}
 <div class="book">${sidebar('conclusion')}<main><p class="meta">Front matter, at the back</p><h1>${esc(CONC.title)}</h1><p class="lede">${esc(CONC.lede)}</p>
 ${CONC.sections.map((sec) => `<h2>${esc(sec.h)}</h2>${sec.p.map((t) => `<p>${esc(t)}</p>`).join('')}`).join('')}
 <h2>The chain — thirty-two fragments, one world</h2>
@@ -768,8 +839,9 @@ ${conclusionFilm ? `<h2>The same film, chapter by chapter</h2><div class="sf" id
 <div class="pn"><span><a href="${last.id}.html">← ${esc(last.name)}</a><small>${FAMILY_TITLE[last.family]}</small></span><span style="text-align:right"><a href="./">Catalog →</a></span></div>
 <footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>.</footer></main></div><script type="module">import { mount, panZoom } from '/patterns/surface/surface.mjs?v=${SF_STAMP}'; for (const el of document.querySelectorAll('.sf-static')) panZoom(el, () => el.querySelector('svg'));${conclusionFilm ? ` mount(document.getElementById('board'), ${JSON.stringify(boardScene(conclusionFilm, conclusionSeal.graph, 'The board before epoch 1.'))}); mount(document.getElementById('film'), ${JSON.stringify(filmSceneFrom(conclusionFilm, conclusionSeal.graph, 'Every chapter\'s world at once, before epoch 1.'))});` : ''}</script></body></html>`;
 const card = (p) => `<a class="card" href="${p.id}.html">${p.scene ? `<div class="thumb">${thumb(p)}</div>` : ''}<h3>${esc(p.name)} ${chip(p)}</h3><p>${esc(p.headline || p.invariant || (p.kind === 'definition' ? 'A definition.' : p.prior_art || ''))}</p></a>`;
-const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unboxed Patterns</title><meta name="description" content="Elements of Composable Locus-Oriented Software — a pattern catalog generated from a registry, with runnable witnesses."><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}</style></head><body>
-<script type="module" src="/amp-nav.js"></script><amp-nav property="opensentience"></amp-nav>
+const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unboxed Patterns</title><meta name="description" content="Elements of Composable Locus-Oriented Software — a pattern catalog generated from a registry, with runnable witnesses."><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}${BANNER_CSS}</style></head><body>
+<script type="module" src="/amp-nav.js"></script><script src="/idanim.js" defer></script><amp-nav property="opensentience"></amp-nav>
+${banner(`The catalog \u00b7 ${ORDER.length} chapters`)}
 <div class="book">${sidebar(null)}<main>
 <p class="meta">A catalog, and a book in progress</p>
 <h1>Unboxed Patterns</h1>

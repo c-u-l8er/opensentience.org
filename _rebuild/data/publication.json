@@ -1,0 +1,117 @@
+{
+  "_comment": "The publication record. Ruled 2026-09-11: a book CTA is DERIVED from this record, never typed. build.mjs reads this and enforces PUB1-PUB8 + MIS1; prove-gate.mjs proves each refuses for its own reason and that legitimate input still builds. A CTA citing a publication is governed by cta_derivation below INSTEAD of the rung's VERBS table - the rung governs claims about the code, this record governs claims about the book.",
+  "_two_axes_comment": "STATE and DELIVERY are separate on purpose. A book can be fully released and still have no file to download. Collapsing them into one 'draft | preview | released' scale is what produces 'Download the founding edition' for something you can only read.",
+  "publications": [
+    {
+      "id": "unboxed-patterns",
+      "title": "Unboxed Patterns",
+      "subtitle": "Elements of Composable Locus-Oriented Software",
+      "edition": "0.1",
+      "edition_ruled": false,
+      "_edition_ruled_comment": "PUB8 refuses an edition number reaching the page while this is false.",
+      "_edition_comment": "Edition 0.1 was defined as the WITNESSED set. The catalog shipped complete at 32 chapters; the edition label has not been re-ruled since. Do not print an edition number on the page until it has been.",
+      "state": "released",
+      "_state_comment": "released | public_draft | forthcoming. 'released' is asserted on the live route table below, not on anyone's say-so. The Codex weekly review of 2026-09-11 independently describes it as 'a public, interactive book rather than an internal plan'.",
+      "delivery": "web",
+      "_delivery_comment": "web | download | both. There is NO downloadable file: a search of the whole of $HOME on 2026-09-11 found no .epub, .mobi, .azw3, .indd, .scriv, and no manuscript PDF. Until one exists this stays 'web', and PUB1 refuses any download CTA.",
+      "formats": [
+        "html"
+      ],
+      "home": "https://opensentience.org/patterns/",
+      "download": null,
+      "_download_comment": "When a file exists this becomes {url, bytes, sha256, produced_by}. PUB1 refuses delivery 'download' with a null here.",
+      "verification": {
+        "kind": "build_artifact",
+        "path": "patterns/artifact.json",
+        "outputs_hashed": 210,
+        "_comment": "A web edition's analogue of a download checksum: the build artifact that pins every emitted file. For a downloadable edition this becomes kind 'file_sha256'."
+      },
+      "registry": {
+        "path": "_patterns/data/patterns.json",
+        "_comment": "PUB7 re-reads this from the site root and refuses if derived_counts disagrees. prove-gate stages a copy in its sandbox so the gate is real there too."
+      },
+      "derived_counts": {
+        "_comment": "Re-derived at build from the registry named above; PUB7 refuses a disagreement. `witnessed` EXCLUDES the `spec` rung: on this ladder `spec` means written down and nothing runs, so a spec is not a witness — the field was called with_witness_rung and counted it, which was misleading terminology in an integrity system and is corrected here. `with_any_rung` keeps the unfiltered number under a name that says what it is. PUB7's first run refused this record for a different error: with_witness_rung read 15, the in_tree count copied by hand into the has-any-rung field.",
+        "chapters": 32,
+        "with_any_rung": 16,
+        "witnessed": 15,
+        "externally_reproduced": 0,
+        "witness_rung_split": {
+          "none": 16,
+          "in_tree": 13,
+          "live_deployed": 2,
+          "spec": 1
+        }
+      },
+      "license": null,
+      "_license_comment": "OPEN. There is no LICENSE file at the site root and no license field in the registry. PUB5 refuses a download CTA while this is null: a file may not be offered without terms. A web edition may be read without one, so this does not block today's CTA.",
+      "price": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "_price_comment": "Free to read on the web. This is the price of the CURRENT delivery, not a promise about a future downloadable edition.",
+      "free_offer": null,
+      "_free_offer_comment": "null, and prospective if it ever is not. The schema is {starts, ends, price_during, price_after, state_after, delivery_after, expiry_check{kind, cadence, how, workflow, receipt}} - this comment used to describe an `until`/`condition` schema that no version of build.mjs has ever read. PUB2 checks the record; PUB2E decides whether it may reach the page. What PUB2E does NOT do, stated plainly: it verifies that a scheduled mechanism EXISTS and has once been exercised across the boundary. It cannot guarantee that mechanism runs on any particular night, and no build-time check can. That is why an unenforced offer publishes nothing at all rather than publishing with a caveat.",
+      "verified_at": "2026-09-11",
+      "verified_what": "Route table, not page copy: /patterns/ 200 · /patterns/refusing-join 200 · /patterns/conclusion 200 · /patterns/sitemap.xml 200.",
+      "verified_max_age_days": 30,
+      "_verified_comment": "PUB4 refuses a record whose verified_at is older than verified_max_age_days. A 'last verified' date that is never checked for staleness is decoration."
+    }
+  ],
+  "cta_derivation": {
+    "_comment": "The allowed CTA verb is a function of (state, delivery). PUB3 refuses any book CTA whose verb is not the row this table derives — the same shape as the existing VERBS gate in build.mjs, which keys on rung.",
+    "rows": [
+      {
+        "state": "forthcoming",
+        "delivery": "*",
+        "verb": "Explore the research",
+        "note": "no book verb at all — there is nothing to read yet"
+      },
+      {
+        "state": "public_draft",
+        "delivery": "web",
+        "verb": "Read the public draft"
+      },
+      {
+        "state": "public_draft",
+        "delivery": "download",
+        "verb": "Download the public draft"
+      },
+      {
+        "state": "released",
+        "delivery": "web",
+        "verb": "Read the book",
+        "note": "the row that applies today"
+      },
+      {
+        "state": "released",
+        "delivery": "download",
+        "verb": "Download the founding edition"
+      },
+      {
+        "state": "released",
+        "delivery": "both",
+        "verb": "Download the founding edition"
+      }
+    ],
+    "free_until_suffix": {
+      "_comment": "'Free until <date>' may be appended ONLY when price.amount > 0 AND free_offer.until is a real future ISO date. A free_offer on a zero price is not an offer.",
+      "requires": [
+        "price.amount > 0",
+        "free_offer.until is a future ISO date"
+      ]
+    }
+  },
+  "gates": {
+    "PUB1": "delivery includes 'download' while download is null → refused",
+    "PUB2": "a free_offer missing starts/ends/price_during/price_after/expiry_check, or free on both sides, or ending on or before it starts -> refused. An offer whose window has CLOSED is not refused: it transitions. The page derives the post-expiry CTA from state_after/delivery_after and stops printing the date, so settling an expired offer does not depend on a human editing a CTA on the right morning.",
+    "PUB2E": "the split between DESCRIBING an expiry mechanism and HAVING one. An offer is always fully checked as a prospective record; it may only be PRINTED (the dated 'Free until <date>' a reader acts on) when expiry_check.kind is 'scheduled_rebuild' AND it names a workflow that exists in the tree AND that workflow declares a schedule: cron at least as frequent as the declared cadence AND it cites a receipt whose run exited 0 and recorded an exercised_after date PAST the offer's end. kind 'none' is the honest default and publishes nothing. A record that CLAIMS an enforcement the tree cannot support -> refused. Added 2026-09-12: the previous expiry_check was {kind, cadence, how} and all three were prose, so a record could pass every check and the offer would still sit on a deployed static page forever - nothing in this repository rebuilds on a clock. Today no publication declares an offer and no scheduled workflow exists, so every offer here is prospective by construction.",
+    "PUB3": "a book CTA whose verb is not the row derived from (state, delivery) → refused",
+    "PUB4": "verified_at older than verified_max_age_days → refused",
+    "PUB5": "delivery includes 'download' while license is null → refused",
+    "PUB6": "a chapter or edition count typed in page prose where derived_counts has one → refused",
+    "PUB7": "derived_counts disagreeing with a fresh read of _patterns/data/patterns.json → refused",
+    "PUB8": "an edition number reaching the page while edition_ruled is false -> refused",
+    "MIS1": "a surface.mission containing a maturity word (shipped/complete/production/proven/mature/executable) -> refused. R-S1 made mechanical. Scoped to the word an edition is written with: the first draft matched v0.1 too and refused the page for PULSE, Embodiment and SCOPE."
+  }
+}

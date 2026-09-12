@@ -1,0 +1,175 @@
+{
+  "_comment": "The status-aware stack map. Ruled 2026-09-11 (ruling 3): keep the diagram, but give every component its own DERIVED status — the fault was false aggregation, not diagrams. MAP1-MAP5 in build.mjs enforce it; prove-gate.mjs proves each refuses for its own reason.",
+  "_why_edges_are_data": "Per-node status alone does not close the SCOPE problem, because in a stack diagram the overclaim lives in the CONNECTOR, not the label. A node marked `draft` still reads load-bearing if a solid arrow runs through it. So an edge names its endpoints and, if it has one, its integration witness — and the state it is drawn in is derived from what is actually there. See edge_states.",
+  "_what_a_path_proves": "CORRECTED 2026-09-12. The first version drew an edge SOLID when both endpoint paths existed, and called that witnessed. Two files existing does not witness a connection between them — that is the same overclaim MAP4 was invented to catch, one level up. There are now THREE states and only an executable integration witness earns the strongest one.",
+  "nodes": [
+    {
+      "id": "prism",
+      "label": "PRISM",
+      "role": "diagnostic",
+      "note": "measures how well a loop performs over time",
+      "protocols": [
+        "OS-009"
+      ]
+    },
+    {
+      "id": "pulse",
+      "label": "PULSE",
+      "role": "temporal",
+      "note": "declares how loops cycle, nest and signal",
+      "protocols": [
+        "OS-010"
+      ]
+    },
+    {
+      "id": "embodiment",
+      "label": "Embodiment",
+      "role": "sensorimotor",
+      "note": "the typed perceive/act loop for &body.*",
+      "protocols": [
+        "OS-011"
+      ]
+    },
+    {
+      "id": "scope",
+      "label": "SCOPE",
+      "role": "spatial",
+      "note": "deferred 2026-06-12 — no spec file exists, and its prerequisites are unmet",
+      "protocols": [
+        "OS-012"
+      ]
+    },
+    {
+      "id": "primitives",
+      "label": "OS-001 … OS-008",
+      "role": "capability",
+      "note": "the eight cognitive primitives",
+      "protocols": [
+        "OS-001",
+        "OS-002",
+        "OS-003",
+        "OS-004",
+        "OS-005",
+        "OS-006",
+        "OS-007",
+        "OS-008"
+      ]
+    },
+    {
+      "id": "amp",
+      "label": "[&]",
+      "role": "structural",
+      "note": "composes capabilities into agents",
+      "protocols": [],
+      "status_why": "not an OS-NNN protocol — [&] is the composition layer the protocols are written against, and it carries no rung on this ladder"
+    },
+    {
+      "id": "floor",
+      "label": "box-and-box",
+      "role": "governance floor",
+      "note": "decides what is allowed, and what is best",
+      "protocols": [],
+      "status_why": "not an OS-NNN protocol — it is a property-tested kernel, and its standing is the law manifest rather than a protocol status"
+    }
+  ],
+  "edges": [
+    {
+      "from": "prism",
+      "to": "pulse",
+      "what": "PRISM reads a system's PULSE manifest to discover its phases",
+      "producer": {
+        "what": "the PULSE loop-manifest schema",
+        "path": "../PULSE/schemas/pulse-loop-manifest.v0.1.json"
+      },
+      "consumer": {
+        "what": "PRISM's dual-loop machine spec",
+        "path": "../PRISM/docs/DUAL_LOOP_MACHINES.md"
+      }
+    },
+    {
+      "from": "pulse",
+      "to": "primitives",
+      "what": "each product declares its loop topology as a PULSE manifest",
+      "producer": {
+        "what": "the reference manifests",
+        "path": "../PULSE/manifests"
+      },
+      "consumer": {
+        "what": "Graphonomous's spec, which carries a PULSE Loop Manifest section",
+        "path": "../graphonomous/docs/spec/README.md"
+      }
+    },
+    {
+      "from": "primitives",
+      "to": "amp",
+      "what": "capabilities compose into agents",
+      "producer": {
+        "what": "the protocol specs",
+        "path": "docs/spec"
+      },
+      "consumer": {
+        "what": "the [&] protocol docs",
+        "path": "../AmpersandBoxDesign/docs/index.md"
+      }
+    },
+    {
+      "from": "amp",
+      "to": "floor",
+      "what": "every verdict passes the governance floor",
+      "producer": {
+        "what": "the [&] reference implementation",
+        "path": "../AmpersandBoxDesign/reference"
+      },
+      "consumer": {
+        "what": "the derived law manifest",
+        "path": "../AmpersandBoxDesign/box-and-box/LAW_MANIFEST.json"
+      }
+    },
+    {
+      "from": "embodiment",
+      "to": "primitives",
+      "what": "OS-011 emits a SurpriseSignal into the loop vocabulary",
+      "producer": {
+        "what": "the Embodiment spec",
+        "path": "docs/spec/OS-011-EMBODIMENT.md"
+      },
+      "consumer": null,
+      "consumer_why": "no implementation consumes it. The SurpriseSignal token exists in PULSE v0.1.1 and nothing emits one, so this end is absent."
+    },
+    {
+      "from": "scope",
+      "to": "primitives",
+      "what": "OS-012 would carry spatial claims into the loop vocabulary",
+      "producer": null,
+      "producer_why": "there is no SCOPE spec file anywhere in the tree — the 'v0.1 draft' is a design reviewed in prose in a planning doc and never committed",
+      "consumer": null,
+      "consumer_why": "Graphonomous has no `region` field and there is no region-scoped consumer, which is why OS-012 was deferred on 2026-06-12"
+    }
+  ],
+  "gates": {
+    "MAP1": "a node rendered without a derived status chip and without a status_why saying why it has none → refused",
+    "MAP2": "a status token not in protocols.json's own vocabulary → refused",
+    "MAP3": "a hand-written node status — derived or absent, the same rule as surface_rung → refused",
+    "MAP4": "the page drawing an edge in a state the record does not earn. THREE states: solid needs an executable integration witness covering both endpoints; dashed means both endpoints exist and nothing exercised the connection; missing means an endpoint is absent. A declared integration that does not cover both endpoints, names a path that is not there, or cites a failing run, is refused outright",
+    "MAP5": "a protocol in protocols.json that no node accounts for → refused. Added during implementation: the hand-written diagram this replaces covered ten of the twelve protocols and silently omitted OS-011 and OS-012",
+    "MAP6": "edge language claiming witness, verification or proof where it is not earned — checked on the edges_heading AND on every edge_states entry other than `solid`, in the record and again on the emitted page. Mere path existence may not be called witnessed"
+  },
+  "edge_states": {
+    "_comment": "MAP6 refuses any state other than `solid` whose `means` uses the language of witness, verification or proof. The legend is data so the page cannot drift from the rule.",
+    "solid": {
+      "label": "integration has run",
+      "means": "an executable test or a generated receipt names and exercises both endpoints, and it passed"
+    },
+    "dashed": {
+      "label": "available, unverified",
+      "means": "both endpoints exist and nothing has exercised the connection between them"
+    },
+    "missing": {
+      "label": "endpoint absent",
+      "means": "one or both endpoints do not exist"
+    }
+  },
+  "_integration_shape": "An edge may declare integration: {kind: 'receipt'|'test', path, exercises: [...], cmd?}. `exercises` must cover BOTH endpoint paths or MAP4 refuses the record rather than quietly downgrading it. For kind 'receipt' the file must be a run receipt whose execution_identity.exit is 0 — a failing run may not be cited as an integration. Nothing in this stack declares one today, so every edge below is dashed or missing and none is solid.",
+  "edges_heading": "What connects them, and what has actually been run",
+  "_edges_heading_comment": "MAP6 covers this too. It read 'what witnesses the connection' while sitting directly above four edges that nothing has exercised — the heading asserting for the whole list what only one state earns. The legend rows were gated and the heading above them was not."
+}

@@ -39,9 +39,10 @@
         "what": "Run the κ proof. It is exhaustive, it is client-side, and it takes no argument from us — if it finds a counterexample it will say so on your machine before it says so on ours."
       },
       {
-        "verb": "Use the deployed artifact",
-        "href": "/patterns/refusing-join",
-        "what": "Read Unboxed Patterns, the pattern catalog for locus-oriented software, and run a pattern's witness on its own page: the Refusing Join page executes the compose-law suite, byte-identical to what CI runs, and shows a join refuse with its reason named. Every label in the catalog is derived, never typed."
+        "verb": "Read the book",
+        "href": "/patterns/",
+        "what": "Unboxed Patterns, the pattern catalog for locus-oriented software: 32 chapters, every label derived and never typed, and a witness that runs on the page. The Refusing Join chapter executes the compose-law suite byte-identical to what CI runs and shows a join refuse with its reason named.",
+        "publication": "unboxed-patterns"
       }
     ],
     "in_tree": [
@@ -115,6 +116,32 @@
       "evidence": null,
       "reviewer": null,
       "date": null
+    }
+  },
+  "mission": "OpenSentience is open research into machine cognition — what a system should remember, when it should reconsider, how it would know whether it improved, and what it must not be allowed to do.",
+  "_mission_comment": "Ruled 2026-09-11 (R-S1): a mission-level summary is allowed; an aggregate maturity claim is not. MIS1 refuses a maturity word here. The sentence this replaces the temptation for is 'the open research and executable protocol layer' — nine of the twelve protocols do not execute.",
+  "hero": {
+    "_comment": "A DIRECTION is a data value, not a template fork: flip `lead` and the whole hero changes, and both values build clean through the same gates. Both make the book the primary entry point and both keep the runnable proof one click away.",
+    "lead": "mission",
+    "_lead_comment": "mission | question. A = mission-led (recommended: orients a first-time visitor immediately). B = question-led (retains more of the existing research character).",
+    "mission_eyebrow": "Open research into machine cognition",
+    "mission_headline": "Intelligence isn't generated. <em>It accumulates.</em>",
+    "mission_subtitle": "What should a system remember, when should it reconsider, how would it know whether it improved, and what must it never be allowed to do? Those questions are published here as protocols, implementations, experiments and evidence — and this page's own build refuses any claim it has not earned. The book is the way in; the proof below runs in your browser.",
+    "question_eyebrow": "The question this site exists to answer",
+    "question_headline": "Does the shape of a knowledge graph tell you <em>when to think harder?</em>",
+    "question_subtitle": "Below, that question is answered exhaustively and in your own browser: for every directed graph on two to five nodes and every finite map on two to seven, κ&nbsp;&gt;&nbsp;0 holds exactly when the graph contains an irreducible feedback loop. <strong>The theorem is settled and the useful part is not.</strong> Routing a system's reasoning on that signal is a claim nothing here tests. The book is the way into the rest.",
+    "primary_cta": {
+      "publication": "unboxed-patterns",
+      "href": "/patterns/",
+      "_comment": "The verb is DERIVED from publication.json by PUB3 and is not written here — the same rule as the CTA groups further down the page."
+    },
+    "secondary_cta": {
+      "label": "Run the proof yourself",
+      "href": "#proof"
+    },
+    "tertiary_cta": {
+      "label": "What this does not establish",
+      "href": "#status"
     }
   }
 }

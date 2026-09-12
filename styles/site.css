@@ -211,7 +211,7 @@
 
             /* ─── HERO ─── */
             .hero {
-                padding: 3.5rem 0 3.5em 0;
+                padding: 3.5rem 0 0em;
                 text-align: left;
                 position: relative;
                 /* The glow below is a fixed 800px square centred on the hero.
@@ -1540,7 +1540,7 @@
             }
             .stack-layer {
                 display: grid;
-                grid-template-columns: 200px 130px 1fr;
+                grid-template-columns: 180px 118px 1fr auto;
                 gap: 0;
                 align-items: center;
                 border: 1px solid var(--border);
@@ -1579,8 +1579,14 @@
             .stack-layer.l-pulse {
                 border-left: 4px solid var(--cyan);
             }
-            .stack-layer.l-prim {
+            .stack-layer.l-primitives {
                 border-left: 4px solid var(--blue);
+            }
+            .stack-layer.l-embodiment {
+                border-left: 4px solid var(--rose);
+            }
+            .stack-layer.l-scope {
+                border-left: 4px solid var(--text-dim);
             }
             .stack-layer.l-amp {
                 border-left: 4px solid var(--accent);
@@ -1588,6 +1594,181 @@
             .stack-layer.l-floor {
                 border-left: 4px solid var(--amber);
                 background: var(--bg-elevated);
+            }
+
+            /* ─── STATUS-AWARE STACK MAP (ruling 3, 2026-09-11) ───
+               Every node carries its OWN derived status; a node covering several
+               protocols carries a per-status breakdown and never one averaged
+               chip. The edge list below it states what witnesses each
+               connector, because in a stack diagram the overclaim lives in the
+               connector rather than the label. */
+            .stack-status {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.3rem;
+                padding: 1rem 1.2rem 1rem 0.5rem;
+                justify-content: flex-end;
+            }
+            .map-chip {
+                font-family: var(--mono);
+                font-size: 0.62rem;
+                letter-spacing: 0.04em;
+                padding: 0.18rem 0.42rem;
+                border-radius: 3px;
+                border: 1px solid var(--border);
+                color: var(--text-secondary);
+                white-space: nowrap;
+            }
+            .map-chip[data-status="shipped"],
+            .q-status[data-status="shipped"] {
+                color: var(--cyan);
+                border-color: rgba(14, 140, 126, 0.35);
+            }
+            .map-chip[data-status="spec-complete"],
+            .q-status[data-status="spec-complete"] {
+                color: var(--blue);
+                border-color: rgba(37, 96, 201, 0.3);
+            }
+            .map-chip[data-status="in-development"],
+            .q-status[data-status="in-development"] {
+                color: var(--accent);
+                border-color: rgba(109, 59, 212, 0.3);
+            }
+            .map-chip[data-status="draft"],
+            .q-status[data-status="draft"] {
+                color: var(--amber);
+                border-color: rgba(185, 117, 15, 0.3);
+            }
+            .map-chip-none {
+                color: var(--text-dim);
+                border-style: dashed;
+            }
+
+            .stack-edges {
+                margin-top: 1.5rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: var(--bg-card);
+                padding: 1.1rem 1.2rem 1.2rem;
+            }
+            .stack-edges-head {
+                font-family: var(--mono);
+                font-size: 0.64rem;
+                letter-spacing: 0.09em;
+                text-transform: uppercase;
+                color: var(--text-dim);
+                margin-bottom: 0.9rem;
+            }
+            .stack-edge {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                gap: 0.2rem 0.8rem;
+                padding: 0.55rem 0 0.55rem 0.9rem;
+                border-left: 3px solid var(--border);
+                margin-bottom: 0.45rem;
+            }
+            /* Three states, and the strongest is the only one drawn solid.
+               An edge whose ends merely exist is dashed — existence is not a
+               witness, and MAP6 refuses a legend that says otherwise. */
+            .stack-edge.edge-solid {
+                border-left: 3px solid var(--cyan);
+            }
+            .stack-edge.edge-dashed {
+                border-left: 3px dashed var(--amber);
+            }
+            .stack-edge.edge-missing {
+                border-left: 3px dotted var(--text-dim);
+            }
+            .edge-state {
+                font-family: var(--mono);
+                font-size: 0.6rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                padding: 0.12rem 0.38rem;
+                border-radius: 3px;
+                border: 1px solid var(--border);
+                color: var(--text-secondary);
+                white-space: nowrap;
+            }
+            .edge-solid .edge-state { color: var(--cyan); border-color: rgba(14, 140, 126, 0.35); }
+            .edge-dashed .edge-state { color: var(--amber); border-color: rgba(185, 117, 15, 0.3); }
+            .edge-missing .edge-state { color: var(--text-dim); border-style: dotted; }
+            .edge-ran {
+                font-family: var(--mono);
+                font-size: 0.64rem;
+                color: var(--cyan);
+                flex-basis: 100%;
+            }
+            .stack-legend {
+                margin-top: 0.9rem;
+                padding-top: 0.9rem;
+                border-top: 1px solid var(--border);
+                display: flex;
+                flex-direction: column;
+                gap: 0.4rem;
+            }
+            .legend-row {
+                display: grid;
+                grid-template-columns: 10.5rem 1fr;
+                gap: 0.7rem;
+                align-items: baseline;
+                padding-left: 0.6rem;
+                border-left: 3px solid var(--border);
+            }
+            .legend-solid { border-left: 3px solid var(--cyan); }
+            .legend-dashed { border-left: 3px dashed var(--amber); }
+            .legend-missing { border-left: 3px dotted var(--text-dim); }
+            .legend-key {
+                font-family: var(--mono);
+                font-size: 0.64rem;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--text);
+            }
+            .legend-means {
+                font-family: var(--sans);
+                font-size: 0.78rem;
+                line-height: 1.5;
+                color: var(--text-secondary);
+            }
+            /* The one dated string an offer can earn (PUB2). */
+            .cta-row .btn .offer {
+                display: block;
+                font-family: var(--mono);
+                font-size: 0.62rem;
+                letter-spacing: 0.05em;
+                opacity: 0.85;
+                margin-top: 0.15rem;
+            }
+            @media (max-width: 700px) {
+                .legend-row { grid-template-columns: 1fr; gap: 0.15rem; }
+            }
+            .edge-what {
+                font-family: var(--sans);
+                font-size: 0.86rem;
+                color: var(--text);
+            }
+            .edge-ends {
+                font-family: var(--mono);
+                font-size: 0.66rem;
+                line-height: 1.5;
+                color: var(--text-secondary);
+            }
+            .stack-edges-foot {
+                font-family: var(--sans);
+                font-size: 0.78rem;
+                line-height: 1.6;
+                color: var(--text-secondary);
+                margin: 0.9rem 0 0;
+                padding-top: 0.9rem;
+                border-top: 1px solid var(--border);
+            }
+            @media (max-width: 700px) {
+                .stack-status {
+                    justify-content: flex-start;
+                    padding: 0 1.2rem 1rem;
+                }
             }
             @media (max-width: 700px) {
                 .stack-layer {
@@ -1658,46 +1839,400 @@
             }
 
             /* ─── §6 OPEN QUESTIONS ─── */
-            .oq-grid {
+            /* ─── §2 THREE QUESTIONS — replaces the five .oq-* cards, whose
+                   status words were prose. The chip below is derived. ─── */
+            .q-grid {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
                 gap: 1.25rem;
                 margin-top: 2rem;
             }
-            @media (max-width: 760px) {
-                .oq-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
-            .oq-card {
+            .q-card {
                 display: flex;
-                gap: 1rem;
+                gap: 1.25rem;
                 align-items: flex-start;
                 background: var(--bg-card);
                 border: 1px solid var(--border);
                 border-radius: 12px;
-                padding: 1.6rem;
+                padding: 1.8rem;
             }
-            .oq-num {
+            .q-num {
                 font-family: var(--mono);
                 font-size: 0.9rem;
                 font-weight: 600;
                 color: var(--accent);
                 flex: none;
-                padding-top: 0.1rem;
+                padding-top: 0.3rem;
             }
-            .oq-card strong {
+            .q-body {
+                min-width: 0;
+            }
+            .q-body h3 {
                 font-family: var(--serif);
                 font-weight: 600;
-                font-size: 1.05rem;
+                font-size: 1.18rem;
                 line-height: 1.3;
+                margin: 0;
             }
-            .oq-card p {
+            .q-homes {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.7rem;
+                margin: 0.8rem 0 0.4rem;
+            }
+            .q-home {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                font-family: var(--mono);
+                font-size: 0.68rem;
+                letter-spacing: 0.04em;
+            }
+            .q-status {
+                font-family: var(--mono);
+                font-size: 0.62rem;
+                letter-spacing: 0.04em;
+                padding: 0.18rem 0.42rem;
+                border-radius: 3px;
+                border: 1px solid var(--border);
+                color: var(--text-secondary);
+                white-space: nowrap;
+            }
+            .q-card p {
                 font-family: var(--sans);
-                font-size: 0.84rem;
+                font-size: 0.86rem;
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-top: 0.65rem;
+            }
+            .q-card p strong {
+                color: var(--text);
+                font-weight: 600;
+            }
+            /* The falsifier is the load-bearing line of each card, the way LIMIT
+               is the load-bearing row of the status block. It is marked. */
+            .q-settles {
+                border-left: 2px solid var(--acc-line);
+                padding-left: 0.95rem;
+                margin-top: 0.95rem !important;
+            }
+            .q-closing {
+                font-family: var(--serif);
+                font-size: 1.02rem;
+                font-style: italic;
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-top: 2rem;
+                max-width: 46em;
+            }
+
+            /* ─── §5 THE CATALOG — every number re-derived by PUB7 ─── */
+            .cat-strip {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin: 2rem 0 1.25rem;
+            }
+            .cat-chip {
+                font-family: var(--mono);
+                font-size: 0.72rem;
+                color: var(--text-secondary);
+                padding: 0.4rem 0.9rem;
+                border: 1px solid var(--border);
+                border-radius: 100px;
+                background: var(--bg-card);
+            }
+            .cat-chip strong {
+                color: var(--accent-dim);
+                font-weight: 600;
+            }
+            .cat-note {
+                font-family: var(--sans);
+                font-size: 0.86rem;
+                color: var(--text-secondary);
+                line-height: 1.6;
+                max-width: 44em;
+                margin-bottom: 1.5rem;
+            }
+
+            /* ─── §5 THE CATALOG — the book, as a book ───────────────────
+               The alignment fix that came with it: the h2 and the lead used to
+               sit OUTSIDE this grid and span the full container, so the section
+               stacked a ~1250px measure on top of a 656px one and the book was
+               orphaned to the right above 800px of empty column. All the prose
+               shares one measure now, and the book starts level with it. */
+            .cat-layout {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) 300px;
+                gap: 4rem;
+                align-items: start;
+            }
+            @media (max-width: 900px) {
+                .cat-layout {
+                    grid-template-columns: minmax(0, 1fr);
+                    gap: 3rem;
+                }
+                .osbook-column { margin: 0 auto; }
+            }
+            .cat-strip {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin: 2rem 0 1.25rem;
+            }
+            .cat-chip {
+                font-family: var(--mono);
+                font-size: 0.72rem;
+                color: var(--text-secondary);
+                padding: 0.4rem 0.9rem;
+                border: 1px solid var(--border);
+                border-radius: 100px;
+                background: var(--bg-card);
+            }
+            .cat-chip strong { color: var(--accent-dim); font-weight: 600; }
+            .cat-note {
+                font-family: var(--sans);
+                font-size: 0.86rem;
+                color: var(--text-secondary);
+                line-height: 1.6;
+                max-width: 44em;
+                margin-bottom: 1.5rem;
+            }
+
+            /* --- the 3-D book ------------------------------------------------
+               A real object on a store page: a front cover, a spine, a page
+               block and a top edge, standing on its own shadow. The pose is
+               static CSS, so with scripting off the book is still a book; the
+               pointer only moves two custom properties. */
+            .osbook-column { max-width: 300px; }
+            .osbook-link {
+                display: block;
+                text-decoration: none;
+                color: inherit;
+            }
+            .osbook-stage {
+                display: block;
+                perspective: 1500px;
+                padding: 2.5rem 0 2.5rem;
+            }
+            .osbook {
+                /* One knob. Everything inside the jacket is a ratio of it, so
+                   the book scales as a single object instead of a fixed drawing
+                   with type sizes that drift out of proportion. */
+                /* Bounded on BOTH axes. Width alone gave a 348px book that
+                   stood 575px tall and ran past the fold on a 900px screen —
+                   and the fold is a height. vh binds on a laptop, vw on a wide
+                   monitor, and min() takes whichever actually limits the page. */
+                --w: clamp(250px, min(27vw, 40vh), 460px);
+                --h: calc(var(--w) * 1.464);
+                --d: calc(var(--w) * 0.17);
+                --rx: 5deg;
+                --ry: 24deg;
+                --s: 1;
+                position: relative;
+                display: block;
+                width: var(--w);
+                height: var(--h);
+                margin: 0 auto;
+                transform-style: preserve-3d;
+                transform: rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--s));
+                transition: transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
+            }
+            .osbook-link:hover .osbook,
+            .osbook-link:focus-visible .osbook {
+                --s: 1.05;
+            }
+            /* The pointer is driving --rx/--ry directly; a transition on top of
+               that lags the cursor by a quarter second and feels broken. */
+            .osbook.is-tracking { transition: none; }
+            .osbook-face {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                backface-visibility: hidden;
+            }
+            .osbook-front {
+                width: var(--w);
+                height: var(--h);
+                transform: translate(-50%, -50%) translateZ(calc(var(--d) / 2));
+                background: linear-gradient(158deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+                border: 1px solid var(--border);
+                border-left: none;
+                border-radius: 0 3px 3px 0;
+                box-shadow: inset 14px 0 22px -16px rgba(0, 0, 0, 0.5), 0 18px 34px -22px rgba(40, 30, 60, 0.55);
+                display: flex;
+                flex-direction: column;
+                padding: calc(var(--w) * 0.067) calc(var(--w) * 0.06) calc(var(--w) * 0.071);
+                overflow: hidden;
+            }
+            .osbook-kicker {
+                font-family: var(--mono);
+                font-size: calc(var(--w) * 0.04);
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--accent-dim);
+            }
+            .osbook-art {
+                position: relative;
+                flex: 1;
+                min-height: calc(var(--w) * 0.62);
+                display: block;
+                margin: 0.5rem calc(var(--w) * -0.05) 0.7rem;
+                /* a wider mask lets the graph reach the jacket edges instead
+                   of sitting in a small vignette in the middle of it */
+                -webkit-mask-image: radial-gradient(circle at 50% 46%, #000 68%, transparent 96%);
+                mask-image: radial-gradient(circle at 50% 46%, #000 68%, transparent 96%);
+            }
+            /* absolute, because a flex item with min-height:0 has no definite
+               height for the SVG's `height:100%` to resolve against — it fell
+               back to the intrinsic 300x430 and ran off the jacket. */
+            .osbook-art svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+            .osbook-type { display: block; }
+            .osbook-title {
+                display: block;
+                font-family: var(--serif);
+                font-size: calc(var(--w) * 0.115);
+                font-weight: 600;
+                line-height: 1.08;
+                letter-spacing: -0.01em;
+                color: var(--text);
+            }
+            .osbook-rule {
+                display: block;
+                width: calc(var(--w) * 0.152);
+                height: 2px;
+                background: var(--acc);
+                margin: 0.6rem 0 0.55rem;
+            }
+            .osbook-sub {
+                display: block;
+                font-family: var(--serif);
+                font-style: italic;
+                font-size: calc(var(--w) * 0.054);
+                line-height: 1.35;
+                color: var(--text-secondary);
+            }
+            .osbook-spine {
+                width: var(--d);
+                height: var(--h);
+                transform: translate(-50%, -50%) rotateY(-90deg) translateZ(calc(var(--w) / 2));
+                background: linear-gradient(90deg, #221c33 0%, #3d3259 38%, #4a3d6b 62%, #261f39 100%);
+                border-radius: 3px 0 0 3px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .osbook-spine span {
+                font-family: var(--sans);
+                font-size: calc(var(--w) * 0.031);
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                color: #ded7f2;
+                white-space: nowrap;
+                transform: rotate(90deg);
+            }
+            /* The page block. Ruled paper, not a flat slab. */
+            .osbook-edge {
+                width: var(--d);
+                height: calc(var(--h) - 6px);
+                transform: translate(-50%, -50%) rotateY(90deg) translateZ(calc(var(--w) / 2));
+                background:
+                    linear-gradient(90deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0) 55%),
+                    repeating-linear-gradient(90deg, #ddd7ca 0 1px, #faf8f3 1px 4px);
+                border-radius: 0 2px 2px 0;
+            }
+            .osbook-top {
+                width: calc(var(--w) - 4px);
+                height: var(--d);
+                transform: translate(-50%, -50%) rotateX(90deg) translateZ(calc(var(--h) / 2));
+                background:
+                    linear-gradient(180deg, rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0) 60%),
+                    repeating-linear-gradient(90deg, #ddd7ca 0 1px, #faf8f3 1px 4px);
+            }
+            /* The ground shadow — what makes it stand rather than float. */
+            .osbook-stage::after {
+                content: "";
+                display: block;
+                width: calc(var(--w) * 0.94);
+                height: calc(var(--w) * 0.116);
+                margin: 4px auto 0;
+                border-radius: 50%;
+                background: radial-gradient(ellipse at center, rgba(40, 30, 60, 0.3) 0%, rgba(40, 30, 60, 0.12) 45%, rgba(40, 30, 60, 0) 72%);
+                filter: blur(3px);
+                transition: opacity 260ms ease;
+            }
+            .osbook-link:hover .osbook-stage::after { opacity: 0.7; }
+            .osbook-cta {
+                display: block;
+                text-align: center;
+                font-family: var(--mono);
+                font-size: 0.72rem;
+                color: var(--acc);
+                margin-top: 0.25rem;
+            }
+            .osbook-link:hover .osbook-cta { text-decoration: underline; }
+
+            /* the registry marks, now the book's caption rather than its jacket */
+            .cover-figure { margin: 1.6rem 0 0; }
+            .cover-marks { display: block; width: 100%; max-width: 190px; height: auto; }
+            .cover-legend {
+                list-style: none;
+                padding: 0;
+                margin: 1rem 0 0;
+                display: grid;
+                gap: 0.4rem;
+            }
+            .cover-legend li {
+                display: flex;
+                align-items: center;
+                gap: 0.55rem;
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                color: var(--text-secondary);
+            }
+            .cover-legend strong { color: var(--text); font-weight: 600; min-width: 1.4em; text-align: right; }
+            .cover-key { width: 11px; height: 11px; border-radius: 50%; flex: none; background: var(--accent); }
+            .cover-key[data-rung="live_deployed"],
+            .cover-key[data-rung="external"] { background: var(--cyan); }
+            .cover-key[data-rung="spec"] { background: var(--amber); opacity: 0.75; }
+            .cover-key[data-rung="null"] { background: none; border: 1.4px solid var(--border); }
+            .cover-note {
+                font-family: var(--sans);
+                font-size: 0.76rem;
                 color: var(--text-secondary);
                 line-height: 1.55;
-                margin-top: 0.5rem;
+                margin-top: 0.9rem;
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .osbook { transition: none; }
+                .osbook-link:hover .osbook, .osbook-link:focus-visible .osbook { --s: 1; }
+            }
+
+            /* ─── the folds (SECTIONS in templates.mjs) ─── */
+            /* "The Gap", now the hero's closing block rather than its own
+               numbered section. It sits inside .hero, which is already a
+               .container, so it carries no padding of its own. */
+            .hero-coda {
+                margin-top: 4.5rem;
+                padding-top: 3rem;
+                border-top: 1px solid var(--border);
+            }
+            /* "The Loop" and the protocol map, now blocks inside The Stack. */
+            .stack-block {
+                margin-top: 4rem;
+            }
+            .stack-block-head {
+                font-family: var(--serif);
+                font-weight: 600;
+                font-size: 1.5rem;
+                line-height: 1.25;
+                margin-bottom: 1rem;
+            }
+            /* The references, out of the numbered sequence on purpose. */
+            .appendix {
+                margin-top: 2rem;
+                border-top: 1px solid var(--border);
+                padding-top: 3rem;
             }
 
             /* ─── §7 GET INVOLVED — three doors ─── */
@@ -1744,6 +2279,43 @@
             }
 
             /* ─── REFERENCES GROUP HEADING ─── */
+            /* ── the skip link (WCAG 2.4.1, bypass blocks) ──────────────────
+               Off-screen rather than display:none. `display:none` and
+               `visibility:hidden` remove it from the KEYBOARD as well, which
+               deletes the only user it exists for while leaving markup that
+               passes a markup-only scan. A11Y1 in build.mjs refuses both, and
+               refuses a build where this rule has no :focus partner to bring
+               it back — an off-screen link that stays off-screen on focus is
+               2.4.1 failed with the markup of a pass. */
+            .skip-link {
+                /* fixed, and stacked ABOVE <amp-nav>. The bar is position:fixed
+                   at z-index 9999 (it publishes the number as --amp-nav-z) and
+                   occupies the same top-left corner, so a skip link below it is
+                   on screen, focusable, correctly styled — and invisible under
+                   57px of another repository's navigation. A11Y1 derives the
+                   bound from amp-nav.js and refuses a build where this number
+                   stops clearing it. Custom properties inherit downward and
+                   .skip-link is amp-nav's SIBLING, so calc(var(--amp-nav-z)+1)
+                   would silently read the fallback and not the bar. */
+                position: fixed;
+                left: -9999px;
+                top: 0;
+                z-index: 10000;
+                padding: 0.65rem 1.1rem;
+                background: var(--bg);
+                color: var(--acc);
+                border: 1px solid var(--acc);
+                border-radius: 4px;
+                font-family: var(--sans);
+                font-size: 0.85rem;
+                font-weight: 600;
+                text-decoration: none;
+            }
+            .skip-link:focus {
+                left: 0.75rem;
+                top: 0.75rem;
+            }
+
             .ref-group {
                 font-family: var(--mono);
                 font-size: 0.72rem;
@@ -1964,6 +2536,34 @@
                 mask-image: radial-gradient(circle at 55% 50%, #000 48%, transparent 80%);
             }
             .idanim svg { display: block; width: 100%; height: 100%; }
+            /* The animation's containing block. .hero is no longer it: the
+               hero now carries "The Gap" as its closing block, and an element
+               with top+bottom set stretches to whatever contains it. */
+            /* Two columns above the fold: the headline reads on the left,
+               the book stands on the right. It replaced an absolutely
+               positioned ambient graph, so as a flow element it first stacked
+               UNDER the headline and landed 961px down a 577px viewport —
+               present on the page and not above the fold, which is the one
+               thing it was moved here for. */
+            .hero-stage {
+                position: relative;
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 2.5rem;
+                /* start, not center. The text column is ~700px tall, so a
+                   centred book sat 360px down and its foot crossed the fold on
+                   a 900px screen by 11px. Aligned to the top it stands beside
+                   the headline, which is also where a reader's eye already is. */
+                align-items: start;
+            }
+            @media (max-width: 900px) {
+                .hero-stage {
+                    grid-template-columns: minmax(0, 1fr);
+                    gap: 1rem;
+                }
+                .osbook-stage { padding-top: 0.5rem; }
+                .osbook { --w: min(74vw, 330px); }
+            }
             .hero-front { position: relative; z-index: 1; }
 
             /* Quiet by default, violet when the arc lies on a closed loop. The
@@ -2125,7 +2725,7 @@
             .kappa-visual > *,
             .papers-grid > *,
             .doors-grid > *,
-            .oq-grid > *,
+            .q-grid > *,
             .ground-grid > *,
             .receipts-grid > * {
                 min-width: 0;
@@ -2188,5 +2788,17 @@
                 flex: none;
             }
             @media (min-width: 861px) {
-                .hero .hero-front { max-width: min(62ch, 60%); }
+                /* The 60% dates from when the hero was ONE column with the
+                   graph absolutely positioned over the right-hand side, and it
+                   kept the text clear of it. The book is a real grid column
+                   now, so the column already does that — and the cap did it a
+                   second time, leaving a measured 380px hole between the last
+                   word and the jacket. The column is the bound; the measure
+                   below is applied where reading actually needs it. */
+                .hero .hero-front { max-width: 100%; }
+                .hero h1 { max-width: 100%; }
+                /* Prose keeps its measure — a 800px line is not readable just
+                   because there is room for it. */
+                .hero .subtitle,
+                .hero .hero-front > p { max-width: 54ch; }
             }

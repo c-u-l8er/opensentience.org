@@ -20,21 +20,39 @@ const SUB = {
   temporal: "var(--rose)",
 };
 
-const GH_SVG = `<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>`;
+const GH_SVG = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>`;
 
-// The ordered spine. Single source for the left rail + section numbering.
+// The ordered spine. Single source for the left rail + section numbering, and
+// now for the approved information architecture itself (OPENSENTIENCE_SURFACE
+// §3): the front door is the HERO plus these SIX numbered sections — seven
+// units — with the references as an unnumbered appendix below them.
+//
+// Nothing was cut to reach six. Three sections FOLDED, because a front door
+// that deletes the portfolio's central concept to hit a section count has
+// bought its architecture with its content:
+//   · "The Gap" folds into the hero, whose h1 states the same thesis;
+//   · "The Loop" folds into The Stack as its spine — CLAUDE.md calls the
+//     cognition loop the spine of the whole portfolio, so it belongs inside
+//     the section that draws the stack, not deleted from the page;
+//   · "Protocols" and "The Stack" were one subject printed twice, and merge;
+//   · "References" becomes the appendix, out of the numbered count on purpose.
+// Every folded block keeps its id, so every anchor that ever worked still does.
 const SECTIONS = [
-  { id: "gap", label: "The Gap" },
-  { id: "loop", label: "The Loop" },
-  { id: "protocols", label: "Protocols" },
-  { id: "proof", label: "Proof" },
-  { id: "status", label: "Status" },
+  { id: "status", label: "What We Don't Know" },
+  { id: "questions", label: "Three Questions" },
+  { id: "proof", label: "Research That Runs" },
   { id: "stack", label: "The Stack" },
-  { id: "open-questions", label: "Open Questions" },
+  { id: "catalog", label: "The Catalog" },
   { id: "get-involved", label: "Get Involved" },
-  { id: "references", label: "References" },
 ];
 const NUM = (id) => String(SECTIONS.findIndex((s) => s.id === id) + 1).padStart(2, "0");
+// The rail and the section's own eyebrow used to be typed separately — the
+// rail said "Proof" while the page said "The Receipts", two names for one
+// section that nothing kept in agreement. One source now.
+const SecLabel = (id) => {
+  const s = SECTIONS.find((x) => x.id === id);
+  return `<div class="section-label"><span class="sec-num">${NUM(id)}</span> ${esc(s ? s.label : "UNLISTED SECTION " + id)}</div>`;
+};
 
 // ─────────────────────────────────────────────────────────────────────────
 export function Nav(site) {
@@ -80,7 +98,8 @@ export const RUNGS = ["spec", "in_tree", "live_local", "live_deployed", "externa
 // (build/idanim.js, between GRAPH-START and GRAPH-END) and hands it in. There
 // is exactly one description of where a node is and which way an arc points,
 // so the drawing and the driver cannot disagree about it.
-export function IdAnimSvg(graph) {
+export function IdAnimSvg(graph, withIds = true) {
+  const gid = (n) => (withIds ? ` id="idanim-${n}"` : "");
   const arcs = graph.arcs.map((a) => `<path class="ida" d="${a.d}"></path>`).join("\n                        ");
   const heads = graph.arcs.map((a) => `<path class="idh" d="${a.head}"></path>`).join("\n                        ");
   // The trace layer. Its dash pattern is written HERE, from the arc length the
@@ -94,17 +113,17 @@ export function IdAnimSvg(graph) {
     .map((a) => `<path class="idt" d="${a.d}" stroke-dasharray="${a.dash}" opacity="0"></path>`)
     .join("\n                        ");
   const nodes = graph.nodes.map((n) => `<circle class="idn" cx="${n.x}" cy="${n.y}" r="${graph.r}"></circle>`).join("\n                        ");
-  return `<svg viewBox="0 0 300 430" preserveAspectRatio="xMidYMid meet" focusable="false">
-                    <g id="idanim-arcs">
+  return `<svg viewBox="0 0 300 430" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+                    <g${gid("arcs")}>
                         ${arcs}
                     </g>
-                    <g id="idanim-heads">
+                    <g${gid("heads")}>
                         ${heads}
                     </g>
-                    <g id="idanim-traces">
+                    <g${gid("traces")}>
                         ${traces}
                     </g>
-                    <g id="idanim-nodes">
+                    <g${gid("nodes")}>
                         ${nodes}
                     </g>
                 </svg>`;
@@ -131,7 +150,8 @@ export function Band(surface, rung) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-export function Hero(site, surface, stats, rung, idgraph) {
+export function Hero(site, surface, stats, rung, idgraph, bookVerbs, bookOffers, cover) {
+  const H = surface.hero;
   const range = `${stats.first} → ${stats.last}`;
   const bs = stats.byStatus;
   const statusChip = [
@@ -144,22 +164,28 @@ export function Hero(site, surface, stats, rung, idgraph) {
     .map(([n, label]) => `${n} ${label}`)
     .join(" · ");
   return `<header class="hero container">
+            <!-- The identity animation is absolutely positioned with top AND
+                 bottom set, so its height is its containing block's height.
+                 When "The Gap" folded into the hero (see SECTIONS) the hero
+                 grew by a whole section and the graph stretched down over it.
+                 This stage bounds it to the hero's own first screen again. -->
+            <div class="hero-stage">
             <div class="hero-front">
-                <div class="hero-eyebrow">The question this site exists to answer</div>
-                <h1>Does the shape of a knowledge graph tell you <em>when to think harder?</em></h1>
+                <!-- The DIRECTION is a data value (surface.hero.lead), not a
+                     template fork: A leads with the mission, B with the
+                     falsifiable question. Both make the book the primary entry
+                     point and both keep the runnable proof one click away, so
+                     the only thing that varies is what a first-time visitor is
+                     asked to hold in their head first. -->
+                <div class="hero-eyebrow">${esc(H.lead === "mission" ? H.mission_eyebrow : H.question_eyebrow)}</div>
+                <h1>${H.lead === "mission" ? H.mission_headline : H.question_headline}</h1>
                 <p class="subtitle">
-                    Below, that question is answered exhaustively and in your own
-                    browser: for every directed graph on two to five nodes and
-                    every finite map on two to seven, κ&nbsp;&gt;&nbsp;0 holds
-                    exactly when the graph contains an irreducible feedback loop.
-                    <strong>The theorem is settled and the useful part is not.</strong>
-                    Routing a system's reasoning on that signal is a claim
-                    nothing here tests, and the ${stats.total} protocols on this
-                    page are honest one by one about which of the two they are.
+                    ${H.lead === "mission" ? H.mission_subtitle : H.question_subtitle}
                 </p>
                 <div class="cta-row">
-                    <a href="#proof" class="btn btn-primary">Run the proof yourself</a>
-                    <a href="#status" class="btn">What this does not establish</a>
+                    <a href="${esc(H.primary_cta.href)}" class="btn btn-primary" data-publication="${esc(H.primary_cta.publication)}"><span class="verb">${esc(bookVerbs[H.primary_cta.publication] || "")}</span>${bookOffers[H.primary_cta.publication] ? `<span class="offer">${esc(bookOffers[H.primary_cta.publication])}</span>` : ""}</a>
+                    <a href="${esc(H.secondary_cta.href)}" class="btn">${esc(H.secondary_cta.label)}</a>
+                    <a href="${esc(H.tertiary_cta.href)}" class="btn">${esc(H.tertiary_cta.label)}</a>
                     <a href="${esc(site.github)}" class="btn btn-github">${GH_SVG}Star on GitHub</a>
                 </div>
                 <div class="receipts-strip reveal">
@@ -183,9 +209,9 @@ export function Hero(site, surface, stats, rung, idgraph) {
                  figure, chip, status row and count is still here. It replaced a
                  29-rung ladder that read, on paper stock, as ruled notebook
                  paper with two stray horizontal rules. -->
-            <div class="idanim" data-identity-animation aria-hidden="true">
-                ${IdAnimSvg(idgraph)}
+            ${Book(cover, idgraph)}
             </div>
+            ${TheGap()}
         </header>`;
 }
 
@@ -196,7 +222,7 @@ export function Hero(site, surface, stats, rung, idgraph) {
 // without changing what a reader believes, it is not doing its job.
 export function StatusBlock(surface, rung) {
   return `<section id="status" class="container">
-            <div class="section-label"><span class="sec-num">${NUM("status")}</span> Status</div>
+            ${SecLabel("status")}
             <h2>What this page is <em>entitled</em> to claim.</h2>
             <p class="lead">
                 Every surface in this portfolio carries the same five rows, and
@@ -219,13 +245,18 @@ export function StatusBlock(surface, rung) {
 // ─────────────────────────────────────────────────────────────────────────
 // One CTA group per rung, never one blended group. A page may only ask a
 // visitor to do what its rung has earned; build.mjs enforces the verb table.
-export function CtaGroups(surface) {
+export function CtaGroups(surface, bookVerbs = {}) {
   const ORDER = ["external", "live_deployed", "live_local", "in_tree", "spec"];
   return ORDER.filter((r) => surface.cta[r])
     .map((r) => {
       const witnessed = ["external", "live_deployed", "live_local"].includes(r);
       const cards = surface.cta[r]
-        .map((a) => `<a href="${esc(a.href)}"><span class="verb">${esc(a.verb)}</span><span class="what">${a.what}</span></a>`)
+        // A CTA that cites a publication prints the DERIVED verb, not the one
+        // typed beside it in surface.json. PUB3 already says the verb is
+        // derived and not a writing choice; until this line said so too, the
+        // hero moved when an offer expired and this group did not — the same
+        // page asking for two different things about one book.
+        .map((a) => `<a href="${esc(a.href)}"${a.publication ? ` data-publication="${esc(a.publication)}"` : ""}><span class="verb">${esc((a.publication && bookVerbs[a.publication]) || a.verb)}</span><span class="what">${a.what}</span></a>`)
         .join("\n                    ");
       return `<div class="ctagroup">
                 <div class="tag${witnessed ? " ok" : ""}">${esc(r)} &mdash; ${esc(surface.cta._labels[r])}</div>
@@ -246,8 +277,11 @@ export function TheGap() {
                     <div class="gap-gen">${gen}</div>
                     <div class="gap-sys">${sys}<span class="gap-os">${os}</span></div>
                 </div>`;
-  return `<section id="gap" class="container">
-            <div class="section-label"><span class="sec-num">${NUM("gap")}</span> The Gap</div>
+  // Folded into the hero (see SECTIONS). It keeps its id and its heading and
+  // loses only the section number — the hero's h1 already states this thesis,
+  // and stating it twice with two numbers on it was the duplication, not the
+  // prose.
+  return `<div id="gap" class="hero-coda">
             <h2>A generator answers. A <em>system</em> accumulates.</h2>
             <p class="lead">
                 The agent ecosystem builds on a frozen model and prays. The
@@ -270,12 +304,12 @@ export function TheGap() {
                 ${row("World", "text in, text out", "perceives &amp; acts through a body; learns from surprise", "OS-011")}
                 ${row("Control", "deploy and pray", "permissions, audit, autonomy; every verdict certified", "OS-006 · box-and-box")}
             </div>
-        </section>`;
+        </div>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
 // §2 — The Cognition Loop (the spine of the whole portfolio)
-export function TheLoop(loop) {
+export function TheLoop(loop, ringName) {
   const C = 200,
     R = 130,
     LR = 132;
@@ -303,9 +337,11 @@ export function TheLoop(loop) {
         `<div class="ring-card reveal"><div class="ring-label">${esc(r.label)}</div><p>${r.note}</p><div class="ring-protos">${r.protocols.join(" · ")}</div></div>`,
     )
     .join("\n                ");
-  return `<section id="loop" class="container">
-            <div class="section-label"><span class="sec-num">${NUM("loop")}</span> The Cognition Loop</div>
-            <h2>Cognition is a loop, <em>not a prompt.</em></h2>
+  // Folded into The Stack as its spine. The loop is what every protocol in
+  // the stack runs; printing it as its own numbered section said "here is a
+  // diagram" where inside the stack it says "here is how the stack moves".
+  return `<div id="loop" class="stack-block">
+            <h3 class="stack-block-head">Cognition is a loop, <em>not a prompt.</em></h3>
             <p class="lead">
                 Every system in the [&amp;] portfolio runs the same five-phase
                 loop — the canonical PULSE phase kinds, which are exactly the
@@ -315,7 +351,8 @@ export function TheLoop(loop) {
             </p>
 
             <div class="loop-grid">
-                <svg viewBox="0 0 400 400" class="loop-ring reveal" role="img" aria-label="The five-phase cognition loop: retrieve, route, act, learn, consolidate">
+                <svg viewBox="0 0 400 400" class="loop-ring reveal" role="img" aria-labelledby="loop-ring-name">
+                    <title id="loop-ring-name">${esc(ringName)}</title>
                     <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="var(--accent-dim)" stroke-width="2" stroke-dasharray="3 7" opacity="0.55"></circle>
                     <text x="${C}" y="${C - 4}" text-anchor="middle" class="loop-center-1">↻ the</text>
                     <text x="${C}" y="${C + 16}" text-anchor="middle" class="loop-center-2">cognition loop</text>
@@ -330,13 +367,21 @@ export function TheLoop(loop) {
             <div class="ring-band">
                 ${rings}
             </div>
-        </section>`;
+        </div>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
+// The status/version chip is DERIVED. All twelve protocols used to type it as
+// the first entry of their own `tags` array — a second copy of two fields
+// sitting inches away in the same record — and OS-010 had already drifted: its
+// record said v0.1.1 while the tag it printed said v0.1.
+const STATUS_WORD = { shipped: "shipped", "spec-complete": "spec complete", "in-development": "in development", draft: "draft" };
+const STATUS_CLS = { shipped: "status-published", "spec-complete": "status-spec", "in-development": "status-spec", draft: "status-draft" };
+
 export function ProtocolCard(p) {
   const featured = p.featured ? " paper-card--featured" : "";
   const numColor = p.featured ? ' style="color: var(--accent)"' : "";
+  const statusTag = `<span class="paper-tag ${STATUS_CLS[p.status] || ""}">${p.version ? esc(p.version) + " &middot; " : ""}${esc(STATUS_WORD[p.status] || p.status)}</span>`;
   const tags = p.tags
     .map((t) => {
       const inner = t.href ? `<a href="${esc(t.href)}" style="color: inherit">${t.t}</a>` : t.t;
@@ -348,6 +393,7 @@ export function ProtocolCard(p) {
                     <h3>${p.paperTitle}</h3>
                     <p class="paper-desc">${p.paperDesc}</p>
                     <div class="paper-tags">
+                        ${statusTag}
                         ${tags}
                     </div>
                 </div>`;
@@ -370,9 +416,8 @@ export function ProtocolMap(protocols, stats) {
     .join("\n                ");
   const grounding = (color, title, desc) =>
     `<div class="ground-card reveal"><div class="ground-amp" style="color:${color}">&amp;</div><div><strong>${title}</strong><p>${desc}</p></div></div>`;
-  return `<section id="protocols" class="container">
-            <div class="section-label"><span class="sec-num">${NUM("protocols")}</span> The Protocol Map</div>
-            <h2>${stats.total} protocols. The <em>shape</em> of a mind.</h2>
+  return `<div id="protocols" class="stack-block">
+            <h3 class="stack-block-head">${stats.total} protocols. The <em>shape</em> of a mind.</h3>
             <p class="lead">
                 Not a list — a structure. <strong>Eight cognitive primitives</strong>
                 (${cognitive[0].id} → ${cognitive[cognitive.length - 1].id}), each one capability of an
@@ -402,7 +447,7 @@ export function ProtocolMap(protocols, stats) {
                 ${grounding("var(--rose)", "&amp;time → cerebellum + basal ganglia", "Temporal-difference learning; sequence timing. PULSE gives every loop a declared cadence and cross-loop signals.")}
                 ${grounding("var(--amber)", "&amp;space → entorhinal grid cells", "O'Keefe &amp; Nadel's cognitive-map theory; place &amp; grid cells. SCOPE is an N-D region algebra for shared-space coordination.")}
             </div>
-        </section>`;
+        </div>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -422,8 +467,12 @@ function ReceiptsBand(receipts) {
 export function Proof(receipts) {
   const preStyle =
     "margin-top: 1rem; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: var(--mono); font-size: 0.8rem; line-height: 1.7; color: var(--text-secondary);";
+  // Two site pages (proofs/kappa.html, docs/spec/OS-E001-…) have been linking
+  // to /#kappa, an id this page has never had — a dead anchor that scrolled
+  // nowhere. The alias costs one span and makes both links land.
   return `<section id="proof" class="container">
-            <div class="section-label"><span class="sec-num">${NUM("proof")}</span> The Receipts</div>
+            <span id="kappa" aria-hidden="true"></span>
+            ${SecLabel("proof")}
             <h2>We don't ask you to trust the thesis. <em>We ship the receipts.</em></h2>
             <p class="lead">
                 Every claim here is checkable. The headline κ proof runs
@@ -533,14 +582,51 @@ function rungCell(r) {
                 </a>`;
 }
 
-export function Stack(rungs, kernel) {
+export function Stack(rungs, kernel, stackNodes, stackEdges, states, edgesHeading, inner = "") {
   // Derived, never typed — from rungs.kernelLaws + rungs.composeLaws.
   // Deliberately no example sum in this comment: the one that used to be here
   // said "103 kernel + 15 compose/CC2" and was still saying it after the
   // compose suite reached 22, one line above the code that derives it.
   const enforcedTotal = rungs.kernelLaws + rungs.composeLaws;
-  const layer = (cls, name, role, note) =>
-    `<div class="stack-layer ${cls} reveal"><div class="stack-name">${name}</div><div class="stack-role">${role}</div><div class="stack-note">${note}</div></div>`;
+  // Every node carries its OWN status, derived. A node covering several
+  // protocols carries a per-status BREAKDOWN and never one averaged chip —
+  // twelve protocols at four statuses have no single true status word.
+  const STATUS_LABEL = { shipped: "shipped", "spec-complete": "spec-complete", "in-development": "in development", draft: "draft" };
+  const layer = (n) => {
+    const chips = n.chips.length
+      ? n.chips
+          .map((c) => `<span class="map-chip" data-status="${esc(c.status)}">${n.single ? "" : `${c.count}&nbsp;`}${esc(STATUS_LABEL[c.status] || c.status)}</span>`)
+          .join("")
+      : `<span class="map-chip map-chip-none" data-status="none" title="${esc(n.status_why || "")}">no rung on this ladder</span>`;
+    return `<div class="stack-layer l-${esc(n.id)} reveal" data-node="${esc(n.id)}">
+                    <div class="stack-name">${n.label}</div>
+                    <div class="stack-role">${esc(n.role)}</div>
+                    <div class="stack-note">${esc(n.note)}</div>
+                    <div class="stack-status">${chips}</div>
+                </div>`;
+  };
+  // An edge states its claim and the state it has EARNED. Three states, and
+  // only the strongest one is allowed the language of proof: `solid` means an
+  // integration actually ran over both ends. `dashed` means both ends merely
+  // exist — which is not a witness, and the legend says so.
+  const edge = (e) => {
+    const ends = [
+      e.producer.ok ? `produced by ${esc(e.producer.what)}` : `no producer — ${esc(e.producer.why)}`,
+      e.consumer.ok ? `consumed by ${esc(e.consumer.what)}` : `no consumer — ${esc(e.consumer.why)}`,
+    ];
+    const ran = e.integration
+      ? `<span class="edge-ran">ran: <code>${esc(e.integration.cmd || e.integration.path)}</code>${e.integration.ran ? ` · ${esc(e.integration.ran)}` : ""}</span>`
+      : "";
+    return `<div class="stack-edge edge-${esc(e.state)}" data-edge-state="${esc(e.state)}" data-from="${esc(e.from)}" data-to="${esc(e.to)}">
+                    <span class="edge-what">${esc(e.what)}</span>
+                    <span class="edge-state">${esc(states[e.state].label)}</span>
+                    <span class="edge-ends">${ends.join(" · ")}</span>
+                    ${ran}
+                </div>`;
+  };
+  const legend = ["solid", "dashed", "missing"]
+    .map((k) => `<div class="legend-row legend-${k}"><span class="legend-key">${esc(states[k].label)}</span><span class="legend-means">${esc(states[k].means)}</span></div>`)
+    .join("\n                    ");
   const cells = rungs.rungs.map(rungCell).join("\n                ");
   const play = `<a href="${esc(rungs.playground.page)}" class="rung-cell rung-play">
                     <div class="rung-modal">▸ bridge · live</div>
@@ -548,8 +634,8 @@ export function Stack(rungs, kernel) {
                     <span class="rung-desc">interactive law sandbox · ${rungs.playground.lawsWired} of ${rungs.kernelLaws} ${esc(rungs.playground.wiredScope)} laws wired</span>
                 </a>`;
   return `<section id="stack" class="container">
-            <div class="section-label"><span class="sec-num">${NUM("stack")}</span> The Stack</div>
-            <h2>Three protocols, <em>one stack.</em></h2>
+            ${SecLabel("stack")}
+            <h2>The stack, <em>status-aware.</em></h2>
             <p class="lead">
                 <strong>[&amp;] composes agents. PULSE gives them a heartbeat.
                 PRISM measures their effect.</strong> They're independent — adopt
@@ -558,12 +644,17 @@ export function Stack(rungs, kernel) {
                 un-weakenable governance floor.
             </p>
 
+            ${inner}
+
             <div class="stack-diagram reveal">
-                ${layer("l-prism", "PRISM · OS-009", "diagnostic", "measures how well a loop performs over time")}
-                ${layer("l-pulse", "PULSE · OS-010", "temporal", "declares how loops cycle, nest, and signal")}
-                ${layer("l-prim", "OS-001 … OS-008", "capability", "the eight cognitive primitives")}
-                ${layer("l-amp", "[&amp;]", "structural", "composes capabilities into agents")}
-                ${layer("l-floor", "box-and-box", "governance floor", "decides what is allowed, and what is best")}
+                ${stackNodes.map(layer).join("\n                ")}
+            </div>
+            <div class="stack-edges reveal">
+                <div class="stack-edges-head">${esc(edgesHeading)}</div>
+                ${stackEdges.map(edge).join("\n                ")}
+                <div class="stack-legend">
+                    ${legend}
+                </div>
             </div>
 
             <h3 class="map-tier" style="margin-top:3.5rem">The governance floor <span>box-and-box · ${rungs.kernelLaws} kernel laws × ${rungs.trials} trials</span></h3>
@@ -608,34 +699,184 @@ export function Stack(rungs, kernel) {
         </section>`;
 }
 
+// §3's five cards were folded into data/questions.json (see its _fold_comment)
+// and the OpenQuestions template deleted with them, so nothing can reinstate a
+// question whose status is typed rather than derived.
+
 // ─────────────────────────────────────────────────────────────────────────
-// §6 — Open Questions
-export function OpenQuestions() {
-  const q = (n, head, body) =>
-    `<div class="oq-card reveal"><div class="oq-num">Q${n}</div><div><strong>${head}</strong><p>${body}</p></div></div>`;
-  return `<section id="open-questions" class="container">
-            <div class="section-label"><span class="sec-num">${NUM("open-questions")}</span> Open Questions</div>
-            <h2>What we don't know <em>yet.</em></h2>
+// §3 — Three questions, and what would settle each.
+// Every status chip here is DERIVED from protocols.json. The five cards this
+// replaced asserted their own maturity in prose, so a protocol could be
+// re-adjudicated and the question beside it would go on describing the old one.
+export function Questions(questions, protocols) {
+  const byId = new Map(protocols.map((p) => [p.id, p]));
+  const card = (q, n) => {
+    const homes = q.lives_in
+      .map((id) => {
+        const p = byId.get(id);
+        return `<span class="q-home"><a href="#protocols">${esc(id)}</a> <span class="q-status" data-status="${esc(p.status)}">${esc(p.status)}</span></span>`;
+      })
+      .join("\n                        ");
+    return `<div class="q-card reveal">
+                    <div class="q-num">Q${n}</div>
+                    <div class="q-body">
+                        <h3>${esc(q.ask)}</h3>
+                        <div class="q-homes">${homes}</div>
+                        <p class="q-established"><strong>Established.</strong> ${q.established}</p>
+                        <p class="q-unsettled"><strong>Not established.</strong> ${q.unsettled}</p>
+                        <p class="q-settles"><strong>What would settle it.</strong> ${q.settles_it}</p>
+                    </div>
+                </div>`;
+  };
+  return `<section id="questions" class="container">
+            ${SecLabel("questions")}
+            <h2>Three questions, and what would <em>settle</em> each.</h2>
             <p class="lead">
-                A research program publishes its unknowns. These are genuine open
-                questions driving the work — the honest edge of the protocols.
+                A research programme is defined by what would change its mind.
+                Each of these names where it lives in the tree, what is already
+                established, what is not — and the specific result that would
+                move it. The status beside each protocol is read from the
+                protocol record, not written here.
             </p>
-            <div class="oq-grid">
-                ${q("1", "Does κ-routing's ROI really invert on cheap hardware?", "OS-005's hypothesis is that topological routing matters <em>more</em> on an 8B local model — because it tells you when to skip expensive inference entirely. Plausible, but unproven at scale.")}
-                ${q("2", "Can a self-evolving benchmark dodge Goodhart's law?", "PRISM rewrites its own scenarios as systems improve. If the benchmark optimizes against the system it measures, when does the score stop meaning anything?")}
-                ${q("3", "Does surprise-driven learning beat scheduled consolidation?", "OS-011 emits a SurpriseSignal (forward-model prediction error) into the memory loop. Should learning fire on surprise, on a schedule, or both — and which actually crystallizes better knowledge?")}
-                ${q("4", "Can agents coordinate over space with no central arbiter?", "SCOPE lets agents broadcast typed SpatialClaims and detect conflict pairwise. Does that converge to safe coordination, or does it need a referee after all?")}
-                ${q("5", "What does \u201cunderstanding\u201d mean for a graph?", "If a system holds the right relationships at high confidence and can navigate them to answer, does it understand the domain? This is the question OpenSentience exists to explore.")}
+            <div class="q-grid">
+                ${questions.questions.map((q, i) => card(q, i + 1)).join("\n                ")}
+            </div>
+            <p class="q-closing reveal">${questions.closing}</p>
+        </section>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// The cover. Drawn from the registry, not illustrated.
+//
+// What it deliberately is NOT: a spine, a page edge, a drop shadow under a
+// corner, a 3-D tilt. Every one of those draws a physical object, and this book
+// has no file — `delivery` is `web`. A jacket that implies something to hold is
+// the same overclaim as a Download verb, and the build refuses that verb.
+//
+// What it is: one mark per chapter, coloured by the rung that chapter's
+// evidence has earned. A reader learns the honest thing first — how much of
+// this book is witnessed — from the cover, before they open it.
+// The book, above the fold. Travis 2026-09-12: "the animation at the top of the
+// screen on the front cover of a 3d rendered box as a book" — the hero's
+// identifying graph IS the cover art, and the object it sits on is the first
+// thing a visitor sees, not something five sections down.
+//
+// This replaces the hero's ambient graph rather than joining it: two copies of
+// the same animation a hand-span apart is one copy too many, and the mark is
+// not lost — it is on the cover.
+export function Book(cover, idgraph) {
+  if (!cover) return "";
+  return `<a class="osbook-link" href="${esc(cover.home)}">
+                <span class="osbook-stage">
+                    <span class="osbook" data-osbook>
+                        <span class="osbook-face osbook-front">
+                            <span class="osbook-kicker">OpenSentience.org</span>
+                            <span class="osbook-art" data-identity-animation aria-hidden="true">
+                                ${IdAnimSvg(idgraph, false)}
+                            </span>
+                            <span class="osbook-type">
+                                <span class="osbook-title">${esc(cover.title)}</span>
+                                <span class="osbook-rule"></span>
+                                <span class="osbook-sub">${esc(cover.subtitle)}</span>
+                            </span>
+                        </span>
+                        <span class="osbook-face osbook-spine" aria-hidden="true"><span>${esc(cover.title)}</span></span>
+                        <span class="osbook-face osbook-edge" aria-hidden="true"></span>
+                        <span class="osbook-face osbook-top" aria-hidden="true"></span>
+                    </span>
+                </span>
+                <span class="osbook-cta">Read it on the web &rarr;</span>
+            </a>`;
+}
+
+export function CoverMarks(cover) {
+  if (!cover) return "";
+  // The book object, as a book. Travis's call 2026-09-12, and it overrules the
+  // first version of COV3 — which refused a spine, a page edge and a tilt on
+  // the grounds that they draw an object you could hold. That reasoning
+  // over-reached: a 3-D render is how every book on every store page is shown,
+  // web-only ones included, and it is a presentation convention rather than a
+  // claim about a file. What COV3 was RIGHT about is narrower and survives
+  // intact: the jacket may not promise a file the record has no download for.
+  //
+  // The cover art is the site's identifying graph — the same geometry the hero
+  // draws, animated by the same driver, which now mounts every root instead of
+  // the first one it finds.
+  const marks = cover.marks
+    .map((m, i) => {
+      const x = 12 + (i % 8) * 15, y = 12 + Math.floor(i / 8) * 15;
+      const fill = { external: "var(--cyan)", live_deployed: "var(--cyan)", live_local: "var(--accent)", in_tree: "var(--accent)", spec: "var(--amber)" };
+      return m
+        ? `<circle cx="${x}" cy="${y}" r="4.2" fill="${fill[m] || "var(--accent)"}" opacity="${m === "spec" ? "0.75" : "1"}"></circle>`
+        : `<circle cx="${x}" cy="${y}" r="3.8" fill="none" stroke="var(--border)" stroke-width="1.2"></circle>`;
+    })
+    .join("\n                        ");
+  const legend = cover.split
+    .map((x) => `<li><span class="cover-key" data-rung="${esc(String(x.rung))}"></span><strong>${x.n}</strong> ${esc(x.label)}</li>`)
+    .join("\n                        ");
+  return `<div class="marks-column">
+                <figure class="cover-figure">
+                    <svg class="cover-marks" viewBox="0 0 120 ${12 + Math.ceil(cover.marks.length / 8) * 15}" role="img" aria-labelledby="cover-name">
+                        <title id="cover-name">${esc(cover.name)}</title>
+                        ${marks}
+                    </svg>
+                    <figcaption>
+                        <ul class="cover-legend">
+                        ${legend}
+                        </ul>
+                        <p class="cover-note">One mark per chapter, coloured by the rung its
+                        evidence has earned &mdash; a filled mark is witnessed, an empty ring
+                        is not. Nothing here was drawn by hand. The book is read on the web;
+                        there is no file.</p>
+                    </figcaption>
+                </figure>
+            </div>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// §6 — The catalog as evidence. Ruled: /patterns is source material FOR the
+// book, not automatically the book. Every number here is re-derived from the
+// registry by PUB7 before it can be printed.
+export function Catalog(catalog, cover) {
+  const chip = (n, label) => `<span class="cat-chip"><strong>${n}</strong> ${esc(label)}</span>`;
+  const c = catalog.counts;
+  return `<section id="catalog" class="container">
+            ${SecLabel("catalog")}
+            <div class="cat-layout">
+            <div class="cat-copy">
+            <h2>The catalog as <em>evidence.</em></h2>
+            <p class="lead">
+                ${esc(catalog.title)} is a generated registry: every entry carries
+                the rung its evidence has earned, and the build refuses an entry
+                whose witness does not check out. It is the source material the
+                book is written <em>from</em> — a catalogue and an editorial
+                narrative serve different readers, and today they are the same
+                object. When an edition is written it gets its own record, and
+                the invitation above changes by itself, because nobody types it.
+            </p>
+            <div class="cat-strip reveal">
+                ${chip(c.chapters, "entries")}
+                ${chip(c.witnessed, "carry a witness rung")}
+                ${chip(c.externally_reproduced, "reproduced by someone else")}
+            </div>
+            <p class="cat-note reveal">
+                That third number is the one that matters and it is the one that
+                is hard to move. Everything else on this page is us checking our
+                own work.
+            </p>
+            <a href="${esc(catalog.home)}" class="btn">Open the catalog</a>
+            </div>
+            ${CoverMarks(cover)}
             </div>
         </section>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
 // §7 — Get Involved (three doors)
-export function GetInvolved(site, surface) {
+export function GetInvolved(site, surface, bookVerbs = {}) {
   const preStyle = "font-family: var(--mono); font-size: 0.78rem; color: var(--text); line-height: 1.6; white-space: pre-wrap; background: var(--bg-elevated); border:1px solid var(--border); border-radius:8px; padding:1rem; margin-top:1rem;";
   return `<section id="get-involved" class="container">
-            <div class="section-label"><span class="sec-num">${NUM("get-involved")}</span> Get Involved</div>
+            ${SecLabel("get-involved")}
             <h2>Three rungs, three different <em>invitations.</em></h2>
             <p class="lead">
                 A page may only ask you to do what its evidence has earned. The
@@ -647,7 +888,7 @@ export function GetInvolved(site, surface) {
                 The verbs below are not chosen; they are the ones each rung
                 allows, and the build refuses any other.
             </p>
-            ${CtaGroups(surface)}
+            ${CtaGroups(surface, bookVerbs)}
 
             <h3 class="map-tier" style="margin-top:4rem">Or come in as <span>a researcher, a builder, a skeptic</span></h3>
             <div class="doors-grid">
@@ -746,14 +987,17 @@ export function ReferencesSection(references) {
           return `<li><span class="ref-id">[${n}]</span> ${it}</li>`;
         })
         .join("\n                ");
-      return `<h4 class="ref-group">${g.group}</h4>
+      return `<h3 class="ref-group">${g.group}</h3>
             <ul class="ref-list reveal">
                 ${items}
             </ul>`;
     })
     .join("\n\n            ");
-  return `<section id="references" class="container">
-            <div class="section-label"><span class="sec-num">${NUM("references")}</span> References</div>
+  // The appendix. It keeps its id, its heading and all 28 citations, and loses
+  // only its number: the seven-section architecture is the reader's path
+  // through the argument, and a bibliography is not a step on that path.
+  return `<section id="references" class="container appendix">
+            <div class="section-label">Appendix</div>
             <h2>Standing on the work of <em>others.</em></h2>
             ${groups}
         </section>`;
@@ -807,7 +1051,7 @@ export function Footer(site, surface) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-export function Page({ site, surface, protocols, loop, receipts, rungs, references, stats, rung, assetv, idgraph }) {
+export function Page({ site, surface, protocols, loop, receipts, rungs, references, stats, rung, assetv, idgraph, stackNodes, stackEdges, bookVerbs, bookOffers, edgeStates, edgesHeading, ringName, questions, catalog, cover }) {
   return `<!doctype html>
 <html lang="en">
     <head>
@@ -816,6 +1060,7 @@ export function Page({ site, surface, protocols, loop, receipts, rungs, referenc
         <title>${esc(surface.question)} — ${esc(site.name)}</title>
         <meta name="description" content="${esc(site.description)}" />
         <meta name="falsifiable-question" content="${esc(surface.question)}" />
+        <meta name="mission" content="${esc(surface.mission)}" />
         <meta name="keywords" content="${esc(site.keywords)}" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -827,30 +1072,35 @@ export function Page({ site, surface, protocols, loop, receipts, rungs, referenc
         <script type="module" src="/amp-nav.js"></script>
     </head>
     <body>
+        <a class="skip-link" href="#main">Skip to main content</a>
         ${Band(surface, rung)}
         <amp-nav property="opensentience"></amp-nav>
         ${Nav(site)}
         ${SpineToc()}
 
-        ${Hero(site, surface, stats, rung, idgraph)}
-
-        ${TheGap()}
-
-        ${TheLoop(loop)}
-
-        ${ProtocolMap(protocols, stats)}
-
-        ${Proof(receipts)}
+        <main id="main" tabindex="-1">
+        <!-- The seven units of OPENSENTIENCE_SURFACE §3, in its order. The
+             reader meets the thesis, then immediately what it does NOT
+             establish, then the questions that would settle it, then the one
+             piece of it that runs in front of them — and only then the stack.
+             Putting the limit second is the inversion that does the most work
+             on this page, and it used to be sixth. -->
+        ${Hero(site, surface, stats, rung, idgraph, bookVerbs, bookOffers, cover)}
 
         ${StatusBlock(surface, rung)}
 
-        ${Stack(rungs, site.kernel)}
+        ${Questions(questions, protocols)}
 
-        ${OpenQuestions()}
+        ${Proof(receipts)}
 
-        ${GetInvolved(site, surface)}
+        ${Stack(rungs, site.kernel, stackNodes, stackEdges, edgeStates, edgesHeading, TheLoop(loop, ringName) + "\n\n            " + ProtocolMap(protocols, stats))}
+
+        ${Catalog(catalog, cover)}
+
+        ${GetInvolved(site, surface, bookVerbs)}
 
         ${ReferencesSection(references)}
+        </main>
 
         ${Footer(site, surface)}
 
