@@ -304,13 +304,32 @@ export function inspector(host, stage, opts = {}) {
         : '');
     return true;
   }
+  /* Whatever is stuck to the top of the page — this site's nav is — covers anything drawn under it,
+     and a card there is both unreadable and unclickable: elementFromPoint returns the nav, so the
+     click lands on the nav. surface.mjs cannot know what that element is, so it asks the document
+     what is actually at the top edge. */
+  function topInset() {
+    if (typeof document === 'undefined' || !document.elementsFromPoint) return 0;
+    let b = 0;
+    for (const el of document.elementsFromPoint(Math.round(innerWidth / 2), 2)) {
+      const p = getComputedStyle(el).position;
+      if (p === 'fixed' || p === 'sticky') b = Math.max(b, el.getBoundingClientRect().bottom);
+    }
+    return b;
+  }
   function placeAt(cx, cy) {
     const hb = host.getBoundingClientRect(), cw = card.offsetWidth, ch = card.offsetHeight;
     let x = cx - hb.left + 16, y = cy - hb.top + 16;
     if (x + cw > hb.width - 4) x = cx - hb.left - cw - 16;
     if (y + ch > hb.height - 4) y = cy - hb.top - ch - 16;
-    card.style.left = `${Math.max(4, Math.min(x, hb.width - cw - 4))}px`;
-    card.style.top = `${Math.max(4, Math.min(y, hb.height - ch - 4))}px`;
+    x = Math.max(4, Math.min(x, hb.width - cw - 4));
+    /* clamp into the host AND into the part of the viewport nothing is covering; the viewport wins,
+       because a card inside the host but under the nav cannot be used at all */
+    const lo = Math.max(4, topInset() + 6 - hb.top), hi = innerHeight - 6 - ch - hb.top;
+    y = Math.max(4, Math.min(y, hb.height - ch - 4));
+    if (hi >= lo) y = Math.max(lo, Math.min(y, hi));
+    card.style.left = `${x}px`;
+    card.style.top = `${y}px`;
   }
   const mark = (g) => { for (const o of stations()) o.classList.toggle('cursor', o === g); };
   function show(g, cx, cy) { if (!render(g)) return; card.hidden = false; placeAt(cx, cy); mark(g); }
@@ -328,16 +347,25 @@ export function inspector(host, stage, opts = {}) {
     const r = t.getBoundingClientRect();
     pinned = t.dataset.id; card.classList.add('pinned'); show(t, r.right, r.bottom);
   });
+  const inCard = (n) => !!(n && card.contains(n));
   stage.addEventListener('pointermove', (ev) => {
-    if (pinned) return;
+    if (pinned || inCard(ev.target)) return;
     const g = ev.target.closest && ev.target.closest('.sf-station[data-id], .sf-locus[data-id]');
     if (g) show(g, ev.clientX, ev.clientY); else { card.hidden = true; mark(null); }
   });
-  stage.addEventListener('pointerleave', () => { if (!pinned) { card.hidden = true; mark(null); } });
+  /* leaving the stage FOR the card is not leaving; on the players the card is a sibling of the
+     stage, so this fires the moment the pointer crosses into it */
+  stage.addEventListener('pointerleave', (ev) => { if (!pinned && !inCard(ev.relatedTarget)) { card.hidden = true; mark(null); } });
+  /* and leaving the card itself re-arms the board — sweeping across it does not strand it open */
+  card.addEventListener('pointerleave', (ev) => { if (!pinned && !stage.contains(ev.relatedTarget)) { card.hidden = true; mark(null); } });
+  /* 3. on a static board the card lives INSIDE the element panZoom captures the pointer on, so a
+     press on a link started a pan and the capture took the click with it */
+  card.addEventListener('pointerdown', (ev) => ev.stopPropagation());
   /* a tap pins it open, because a touch screen has no hover; a second tap, or Esc, lets go */
   let down = null;
   stage.addEventListener('pointerdown', (ev) => { down = { x: ev.clientX, y: ev.clientY }; });
   stage.addEventListener('pointerup', (ev) => {
+    if (inCard(ev.target)) { down = null; return; }
     if (!down || Math.hypot(ev.clientX - down.x, ev.clientY - down.y) > 5) { down = null; return; }
     down = null;
     const g = document.elementFromPoint(ev.clientX, ev.clientY);
@@ -360,7 +388,11 @@ export function inspector(host, stage, opts = {}) {
     const g = all[cursor], r = g.getBoundingClientRect();
     pinned = g.dataset.id; card.classList.add('pinned'); show(g, r.right, r.bottom);
   });
-  stage.addEventListener('blur', () => { if (card.classList.contains('pinned')) hide(); });
+  /* the stage is focusable so the arrow keys can walk it, and losing focus drops a keyboard pin.
+     But clicking a link or a peer button INSIDE the card moves focus there — which blurred the
+     stage and hid the card between mousedown and mouseup, so the click resolved to their common
+     ancestor and the link never fired. Focus moving into the card is not focus leaving. */
+  stage.addEventListener('blur', (ev) => { if (card.contains(ev.relatedTarget)) return; if (card.classList.contains('pinned')) hide(); });
 
   /* the picture is replaced wholesale on every step; re-read the object under the cursor */
   return { refresh() {
@@ -442,8 +474,8 @@ export const CSS = `
 .sf-controls{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.6rem 0 .3rem;font:13px var(--ui,system-ui)}.sf-controls button{font:600 13px var(--ui,system-ui);padding:.3rem .7rem;border:1px solid var(--fg,#1c1a17);background:var(--ink3,#fff);border-radius:6px;cursor:pointer}.sf-pos{color:var(--fg3,#555);margin-left:auto;font-family:var(--mono,monospace)}
 .sf-cap{font:15px/1.5 var(--display,Georgia,serif);min-height:1.5em;margin:.2rem 0 .6rem}
 .sf,.sf-static{position:relative}
-.sf-insp{position:absolute;z-index:5;pointer-events:none;max-width:min(26rem,92%);background:var(--ink3,#fffdf8);border:1px solid var(--fg,#1c1a17);border-radius:var(--r,8px);box-shadow:0 6px 22px rgba(0,0,0,.16);padding:.5rem .65rem;font:12.5px/1.45 var(--ui,system-ui)}
-.sf-insp.pinned{pointer-events:auto;border-width:2px}
+.sf-insp{position:absolute;z-index:5;max-width:min(26rem,92%);background:var(--ink3,#fffdf8);border:1px solid var(--fg,#1c1a17);border-radius:var(--r,8px);box-shadow:0 6px 22px rgba(0,0,0,.16);padding:.5rem .65rem;font:12.5px/1.45 var(--ui,system-ui)}
+.sf-insp.pinned{border-width:2px}
 .sf-insp-h{display:flex;gap:.4rem;align-items:baseline;flex-wrap:wrap}.sf-insp-h b{font:600 13.5px var(--mono,monospace)}
 .sf-insp-role{font:10.5px var(--mono,monospace);text-transform:uppercase;letter-spacing:.06em;color:var(--acc,#6d3bd4)}
 .sf-insp-band{font:10.5px var(--ui,system-ui);color:var(--fg3,#666)}
