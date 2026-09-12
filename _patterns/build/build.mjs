@@ -90,6 +90,24 @@ function receiptFor(w) {
   return { executed: true, receipt: r };
 }
 
+// A suite's own law index, asked of the suite rather than parsed out of it: `BB_LAW_INDEX=1 node <f>`
+// prints {enforced, gaps, suites} from the same arrays it executes and exits before running a trial,
+// so the index cannot describe a different suite than the one that runs. Suites without the hook
+// return null and the build says so rather than treating an unresolvable id as resolved.
+const lawIndexCache = new Map();
+function lawIndexFor(abs) {
+  if (lawIndexCache.has(abs)) return lawIndexCache.get(abs);
+  let idx = null;
+  try {
+    const out = execSync(`BB_LAW_INDEX=1 node ${JSON.stringify(abs)}`, { cwd: dirname(abs), encoding: 'utf8', timeout: 60000, stdio: ['ignore', 'pipe', 'ignore'] });
+    const j = JSON.parse(out);
+    if (Array.isArray(j.enforced)) idx = { enforced: j.enforced, gaps: j.gaps || [] };
+  } catch { idx = null; }
+  lawIndexCache.set(abs, idx);
+  return idx;
+}
+const cexStrength = new Map();
+
 function checkCounterexample(p) {
   const c = p.counterexample;
   if (!c) return;
@@ -108,7 +126,28 @@ function checkCounterexample(p) {
     return;
   }
   if (c.shape === 'refusal' || c.shape === 'receipt') {
-    if (!readFileSync(abs, 'utf8').includes(c.marker)) refuse('P8-COUNTEREXAMPLE', `${p.id}: marker "${c.marker}" not found in ${c.path}`);
+    const src = readFileSync(abs, 'utf8');
+    if (!src.includes(c.marker)) { refuse('P8-COUNTEREXAMPLE', `${p.id}: marker "${c.marker}" not found in ${c.path}`); return; }
+    // A GREP MARKER PROVES MENTION, NOT MEANING. v0.4 used CD2's FAILURE string as CD1's marker —
+    // a string that must NOT appear, cited as evidence that it does. A `law` id can be resolved
+    // against the suite's OWN exported index (emitted from the arrays the suite executes), and the
+    // marker can be pinned to that law's declaration line, which is where its statement lives.
+    const occurrences = src.split(c.marker).length - 1;
+    let strength = 'marker';
+    if (c.law) {
+      const idx = lawIndexFor(abs);
+      if (!idx) findings.push(`${p.id}: cites law ${c.law} but ${c.path} exports no law index (BB_LAW_INDEX) — the id cannot be resolved, only the marker was checked`);
+      else if (idx.gaps.includes(c.law)) refuse('P27-LAW', `${p.id}: law ${c.law} is a DECLARED-OPEN gap in ${c.path} — it is FALSIFIED by design and cannot be a counterexample's authority`);
+      else if (!idx.enforced.includes(c.law)) refuse('P27-LAW', `${p.id}: law ${c.law} is not in ${c.path}'s own index (${idx.enforced.length} enforced, ${idx.gaps.length} open)`);
+      else {
+        const line = src.split('\n').findIndex((l) => l.includes(`'${c.law}',`) || l.includes(`"${c.law}",`));
+        if (line < 0) refuse('P27-LAW', `${p.id}: law ${c.law} is in the index but its declaration was not located in ${c.path}`);
+        else if (!src.split('\n')[line].includes(c.marker)) refuse('P28-MARKER-SCOPE', `${p.id}: the marker is in ${c.path} but NOT on ${c.law}'s own declaration line (${line + 1}) — it may belong to a different law, which is the defect this check exists for`);
+        else strength = 'resolved';
+      }
+    }
+    if (occurrences > 1) findings.push(`${p.id}: marker "${c.marker}" occurs ${occurrences}× in ${c.path} — it does not pick out one place, so it is weaker evidence than a resolved law id`);
+    cexStrength.set(p.id, { strength, occurrences, law: c.law || null });
     return;
   }
   refuse('P8-COUNTEREXAMPLE', `${p.id}: unknown counterexample shape ${c.shape}`);
@@ -258,7 +297,7 @@ for (const p of DATA.patterns) {
   // witness and re-adjudicating them is its own pass — this records that the pass is owed.
   if (w && STAGED && PUBLISHED_IDS.has(p.id) && w.rung === 'in_tree') findings.push(`${p.id}: witness is STAGED and the page is served, yet its rung is authored in_tree — the ladder position is understated (rung re-adjudication owed)`);
 
-  derived.push({ ...p, derived: { label, CHECKABLE, RUNNABLE: RUNNABLE_, EXECUTED, STAGED, REPRODUCED, PUBLISHED: PUBLISHED_IDS.has(p.id), next_rung_name, why, live_run: LIVE_RUN ? { at: LIVE_RUN.execution_identity.finished, url: LIVE_RUN.execution_identity.url, status: LIVE_RUN.execution_identity.status, stamp: LIVE_RUN.source_identity.stamp } : null, execution: exec && exec.receipt ? { at: exec.receipt.execution_identity.started, host: exec.receipt.execution_identity.host, sha256: exec.receipt.source_identity.sha256, repo_head: exec.receipt.source_identity.repo_head } : (exec && exec.at ? { at: exec.at, note: exec.why } : null), claim_statuses: claimStatuses, cell_statuses: (p.cells || []).map((b) => ({ num: b.ref, modality: b.modality, status: CELLS.find((c) => c.num === b.ref).status })) } });
+  derived.push({ ...p, derived: { label, CHECKABLE, RUNNABLE: RUNNABLE_, EXECUTED, STAGED, REPRODUCED, PUBLISHED: PUBLISHED_IDS.has(p.id), next_rung_name, why, live_run: LIVE_RUN ? { at: LIVE_RUN.execution_identity.finished, url: LIVE_RUN.execution_identity.url, status: LIVE_RUN.execution_identity.status, stamp: LIVE_RUN.source_identity.stamp } : null, counterexample_strength: cexStrength.get(p.id) || null, execution: exec && exec.receipt ? { at: exec.receipt.execution_identity.started, host: exec.receipt.execution_identity.host, sha256: exec.receipt.source_identity.sha256, repo_head: exec.receipt.source_identity.repo_head } : (exec && exec.at ? { at: exec.at, note: exec.why } : null), claim_statuses: claimStatuses, cell_statuses: (p.cells || []).map((b) => ({ num: b.ref, modality: b.modality, status: CELLS.find((c) => c.num === b.ref).status })) } });
 }
 for (const a of DATA.anti_patterns) for (const f of ['label']) if (f in a) refuse('P0-TYPED-DERIVED', a.id);
 
@@ -271,6 +310,7 @@ const summary = {
   WITNESSED: count((p) => p.derived.label === 'WITNESSED'), STATED: count((p) => p.derived.label === 'STATED'), PROPOSED: count((p) => p.derived.label === 'PROPOSED'),
   CHECKABLE: count((p) => p.derived.CHECKABLE), RUNNABLE: count((p) => p.derived.RUNNABLE), EXECUTED: count((p) => p.derived.EXECUTED), STAGED: count((p) => p.derived.STAGED),
   PUBLISHED: count((p) => p.derived.PUBLISHED), REPRODUCED: count((p) => p.derived.REPRODUCED),
+  counterexamples_resolved: count((p) => p.derived.counterexample_strength && p.derived.counterexample_strength.strength === 'resolved'), counterexamples_marker_only: count((p) => p.derived.counterexample_strength && p.derived.counterexample_strength.strength === 'marker'),
   prior_art_works: derived.reduce((n, p) => n + ((p.prior_art && p.prior_art.works) || []).length, 0),
   prior_art_not_searched: derived.reduce((n, p) => n + ((p.prior_art && p.prior_art.works) || []).filter((w) => w.relation === 'not-searched').length, 0),
   invariant_null: count((p) => p.kind === 'pattern' && !p.invariant),
@@ -410,6 +450,9 @@ table.pa,table.basis{border-collapse:collapse;font:13px/1.5 var(--ui,system-ui);
 p.nonovelty{font:13.5px/1.6 var(--ui,system-ui);border-left:3px solid var(--warn,#96600b);background:rgba(150,96,11,.05);padding:.5rem .8rem;border-radius:0 var(--r,8px) var(--r,8px) 0}
 p.note{font:12.5px/1.55 var(--ui,system-ui);color:var(--fg3,#666)}
 p.liverun{font:13.5px/1.6 var(--ui,system-ui);border-left:3px solid var(--data,#0a7);background:var(--data-soft,#e6f7ef);padding:.5rem .8rem;border-radius:0 var(--r,8px) var(--r,8px) 0}
+p.cex-strong,p.cex-weak{font:13.5px/1.6 var(--ui,system-ui);padding:.5rem .8rem;border-radius:0 var(--r,8px) var(--r,8px) 0;border-left:3px solid}
+p.cex-strong{border-color:var(--data,#0a7);background:var(--data-soft,#e6f7ef)}
+p.cex-weak{border-color:var(--warn,#96600b);background:rgba(150,96,11,.06)}
 .take{list-style:none;padding:0;margin:0}.take li{padding:.5rem .8rem;margin:.4rem 0;border-left:3px solid var(--line2,#ccc);background:var(--ink3,#fffdf8);font:15px/1.5 var(--display,Georgia,serif)}.take li b{font:600 10px var(--ui,system-ui);letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--fg3,#666)}.take li.animation{border-color:var(--acc,#6d3bd4)}.take li.syntax{border-color:var(--fg,#1c1a17)}.take li.literature{border-color:var(--warn,#96600b)}.take li.witness{border-color:var(--data,#0a7)}
 .sink{font:13px/1.45 var(--mono,monospace);background:#1b1a17;color:#ddd;padding:.8rem;border-radius:var(--r,8px);min-height:1.5rem;max-height:28rem;overflow:auto;margin:.5rem 0;white-space:pre-wrap}.wline.good{color:#7fd}.wline.bad{color:#f88}.wline.warn{color:#fd7}.wline.group{color:#9cf;margin-top:.5rem}.wline.muted{color:#888}.wstatus.running{color:var(--warn)}.wstatus.pass{color:var(--data)}.wstatus.fail{color:var(--rose,#c02a5f)}
 code{font:.85em var(--mono,monospace);background:var(--ink2,#f2ede2);padding:0 .25rem;border-radius:3px}.warn{color:var(--warn,#96600b)}.exec{font:14px var(--ui,system-ui)}.note{font:14px var(--ui,system-ui);color:var(--fg2,#444);background:var(--ink2,#f2ede2);padding:.5rem .8rem;border-radius:var(--r,8px)}
@@ -562,7 +605,11 @@ function pageFor(p, idx) {
     ${d.STAGED ? `<p>Staged byte-identical at <code>${esc(w.staged_path)}</code> (stamp <code>${stamp}</code>). <button class="act" id="run">Run the witness here</button> <span id="wstatus" class="wstatus"></span></p><div id="wsink" class="sink"></div>`
                : `<p class="warn">Not staged on this site: the page cannot run this witness. ${d.RUNNABLE ? 'It runs from the command line: <code>' + esc(w.cmd) + '</code> in <code>' + esc(w.cwd) + '</code>.' : 'Its shape (' + w.shape + ') is a document, not a run.'}</p>`}`
     : `<p class="warn">No witness. ${p.kind === 'definition' ? 'A definition carries no evidence rung (AGENCY.md §6).' : 'This pattern is ' + (d.label || 'unlabelled') + ' — the tree has no check for its invariant.'}</p>`;
-  const cex = c ? `<p>${c.shape === 'lint' ? `A sentence the ontology gate rejects: <q>${esc(c.sentence)}</q> — expected <code>REFUSED</code>.` : c.shape === 'fixture' ? `Fixture <code>${esc(c.path)}</code>: ${c.expected_count} vectors, each expected <code>REFUSED</code>.` : `<code>${esc(c.path)}</code> — ${c.law ? `law <code>${esc(c.law)}</code>, ` : ''}marker <q>${esc(c.marker)}</q>, expected <code>${c.expected}</code>.`}</p>${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}${demo && d.STAGED ? `<p><button class="act" id="demo">Show the refusal</button> <small class="illus">illustration — imports the same staged modules; the suite above is the evidence</small></p><div id="dsink" class="sink"></div>` : ''}`
+  const cs = d.counterexample_strength;
+  const csNote = !cs ? '' : cs.strength === 'resolved'
+    ? `<p class="cex-strong"><b>Resolved, not grepped.</b> Law <code>${esc(cs.law)}</code> was looked up in the suite's own exported index — the one it prints from the arrays it executes — and is <b>enforced</b>, not one of the declared-open gaps. The marker above sits on that law's own declaration line, so it is that law's statement and not a string borrowed from another. Both are checked on every build (P27, P28).</p>`
+    : `<p class="cex-weak"><b>A marker, not a resolved law.</b> The build checked that this string is present in the file${cs.occurrences > 1 ? `, and it occurs there <b>${cs.occurrences} times</b>, so it does not pick out one place` : ''}. A string being present proves the file mentions it, not that the file refuses anything — this record cites no law id that could be resolved against a suite index. It is the weaker of the two forms this catalog uses.</p>`;
+  const cex = c ? `<p>${c.shape === 'lint' ? `A sentence the ontology gate rejects: <q>${esc(c.sentence)}</q> — expected <code>REFUSED</code>.` : c.shape === 'fixture' ? `Fixture <code>${esc(c.path)}</code>: ${c.expected_count} vectors, each expected <code>REFUSED</code>.` : `<code>${esc(c.path)}</code> — ${c.law ? `law <code>${esc(c.law)}</code>, ` : ''}marker <q>${esc(c.marker)}</q>, expected <code>${c.expected}</code>.`}</p>${csNote}${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}${demo && d.STAGED ? `<p><button class="act" id="demo">Show the refusal</button> <small class="illus">illustration — imports the same staged modules; the suite above is the evidence</small></p><div id="dsink" class="sink"></div>` : ''}`
     : `<p class="warn">No counterexample shipped${d.label === 'WITNESSED' ? ' — the build would have refused this' : ' (required only when WITNESSED)'}.</p>`;
   const structure = sc ? `<div class="sf" id="sf"><div class="sf-stage">${SF.svg(SF.computeState(sc, 0))}</div></div><p class="illus">An illustration on a compute surface: loci above, carriers below. Press Play or Step; the takeaways collect as you go. Nothing here is evidence — the witness section is.</p>` : '';
   const syntax = (p.syntax || []).map((x) => { const e = excerpt(x); return `<p class="syn-label">${esc(x.label)} <code>${esc(x.path)}:${e.from}</code></p><pre class="syn">${esc(e.text)}</pre>`; }).join('');
@@ -636,6 +683,7 @@ ${conclusionFilm ? `<h2>The same film, chapter by chapter</h2><div class="sf" id
 <details class="tech"><summary>The whole world, as WRL (${conclusionSrc ? conclusionSrc.split('\n').length : 0} lines)</summary><pre class="syn">${esc((conclusionSrc || '').trim())}</pre></details>
 <h2>The numbers this page is allowed to quote</h2><p>${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns · ${[...sealed.values()].filter((x) => x.r.ok).length} WRL worlds sealed at build and ${[...sealed.values()].filter((x) => !x.r.ok).length} refused by design · ${films.size} worlds with a Film reduced by TRVM's forge (${[...films.values()].reduce((n, r) => n + r.epochs.length, 0)} epochs) — every one derived by <code>build.mjs</code>, none typed.</p>
 <p>${summary.prior_art_works} prior-art relations are recorded, each with what it shares and where it differs, and ${summary.prior_art_not_searched} of them are marked <span class="rel not-searched">NOT SEARCHED</span> — named in this tree by someone who never opened the source. Every record also states what it does <em>not</em> establish. <b>${summary.REPRODUCED} of ${summary.patterns} have been reproduced outside this tree</b>, which is the rung above everything on this page and the one nothing here has reached.</p>
+<p>Of the ${summary.counterexamples_resolved + summary.counterexamples_marker_only} counterexamples that point at a file, <b>${summary.counterexamples_resolved} resolves a law id against the suite's own index</b> and ${summary.counterexamples_marker_only} check only that a string is present. A string being present proves a file mentions something, not that it refuses anything — this catalog once used a law's <em>failure</em> message as evidence that the failure does not happen. Each page says which of the two it has.</p>
 <div class="pn"><span><a href="${last.id}.html">← ${esc(last.name)}</a><small>${FAMILY_TITLE[last.family]}</small></span><span style="text-align:right"><a href="./">Catalog →</a></span></div>
 <footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>.</footer></main></div><script type="module">import { mount, panZoom } from '/patterns/surface/surface.mjs?v=${SF_STAMP}'; for (const el of document.querySelectorAll('.sf-static')) panZoom(el, () => el.querySelector('svg'));${conclusionFilm ? ` mount(document.getElementById('board'), ${JSON.stringify(boardScene(conclusionFilm, conclusionSeal.graph, 'The board before epoch 1.'))}); mount(document.getElementById('film'), ${JSON.stringify(filmSceneFrom(conclusionFilm, conclusionSeal.graph, 'Every chapter\'s world at once, before epoch 1.'))});` : ''}</script></body></html>`;
 const card = (p) => `<a class="card" href="${p.id}.html">${p.scene ? `<div class="thumb">${thumb(p)}</div>` : ''}<h3>${esc(p.name)} ${chip(p)}</h3><p>${esc(p.headline || p.invariant || (p.kind === 'definition' ? 'A definition.' : p.prior_art || ''))}</p></a>`;

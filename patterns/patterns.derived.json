@@ -1,9 +1,9 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-12T00:03:03.493Z",
+  "built": "2026-09-12T00:32:30.541Z",
   "inputs_heads": {
-    ".": "301168ec97f67bcd80edd5ae91ec4959096ea8c2",
-    "opensentience.org": "5ccaac433e9d4cdf5625d6d9260a49ac09f5a873",
+    ".": "95f42c94313f400c40e314debba765cd596ea43f",
+    "opensentience.org": "54992e919d7da44e5ab52cce7422f6802b3509b7",
     "WRL": "32160fec77a13ad152176fed3001b0afbdebee42",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "e41e5fab63c19a3671bf417a6949e10a27782830",
@@ -24,6 +24,8 @@
     "STAGED": 2,
     "PUBLISHED": 32,
     "REPRODUCED": 0,
+    "counterexamples_resolved": 1,
+    "counterexamples_marker_only": 7,
     "prior_art_works": 67,
     "prior_art_not_searched": 2,
     "invariant_null": 2,
@@ -50,7 +52,11 @@
       "descent-is-not-dependence"
     ]
   },
-  "findings": [],
+  "findings": [
+    "shared-observable: marker \"Law 6\" occurs 3× in TRVM/forge/binding_run3k.py — it does not pick out one place, so it is weaker evidence than a resolved law id",
+    "progress-over-utilization: marker \"fair arm\" occurs 2× in computedriven/receipts/R7-EXECUTED.md — it does not pick out one place, so it is weaker evidence than a resolved law id",
+    "carrier-multiplexing: marker \"fair arm\" occurs 2× in computedriven/receipts/R7-EXECUTED.md — it does not pick out one place, so it is weaker evidence than a resolved law id"
+  ],
   "patterns": [
     {
       "id": "active-locus",
@@ -155,6 +161,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -316,6 +323,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": {
           "at": "2026-09-11T15:27:41.066Z",
           "host": "PX13",
@@ -465,6 +473,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -632,6 +641,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": {
           "at": "2026-09-11T15:25:45.285Z",
           "host": "PX13",
@@ -813,6 +823,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": {
           "at": "2026-09-11T15:25:45.592Z",
           "host": "PX13",
@@ -1004,6 +1015,11 @@
           "status": "101 laws · 101 passing · 0 failing · 3 declared-open · 7584.4 ms",
           "stamp": "06726c3fb022f31e"
         },
+        "counterexample_strength": {
+          "strength": "resolved",
+          "occurrences": 1,
+          "law": "CD1"
+        },
         "execution": {
           "at": "2026-09-11T15:25:45.724Z",
           "host": "PX13",
@@ -1168,6 +1184,11 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": {
+          "strength": "marker",
+          "occurrences": 3,
+          "law": null
+        },
         "execution": {
           "at": "2026-07-22",
           "note": "the witness is itself an execution record"
@@ -1298,6 +1319,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1478,6 +1500,11 @@
           "status": "109 laws · 109 passing · 0 failing · 336.4 ms",
           "stamp": "51ffdf3aa3658f18"
         },
+        "counterexample_strength": {
+          "strength": "marker",
+          "occurrences": 1,
+          "law": null
+        },
         "execution": {
           "at": "2026-09-11T15:26:16.294Z",
           "host": "PX13",
@@ -1632,6 +1659,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -1794,6 +1822,11 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": {
+          "strength": "marker",
+          "occurrences": 1,
+          "law": null
+        },
         "execution": {
           "at": "2026-09-11T15:26:17.256Z",
           "host": "PX13",
@@ -1962,6 +1995,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": {
           "at": "2026-09-11T15:25:45.285Z",
           "host": "PX13",
@@ -2130,6 +2164,11 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": {
+          "strength": "marker",
+          "occurrences": 2,
+          "law": null
+        },
         "execution": {
           "at": "2026-09-05",
           "note": "the witness is itself an execution record"
@@ -2287,6 +2326,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2441,6 +2481,11 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": {
+          "strength": "marker",
+          "occurrences": 2,
+          "law": null
+        },
         "execution": {
           "at": "2026-09-05",
           "note": "the witness is itself an execution record"
@@ -2579,6 +2624,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2719,6 +2765,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -2868,6 +2915,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": [
@@ -3011,6 +3059,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3147,6 +3196,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3263,6 +3313,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3425,6 +3476,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": {
           "at": "2026-09-11T15:25:45.285Z",
           "host": "PX13",
@@ -3566,6 +3618,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3710,6 +3763,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3828,6 +3882,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -3935,6 +3990,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -4090,6 +4146,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": {
           "at": "2026-09-11T15:27:41.066Z",
           "host": "PX13",
@@ -4263,6 +4320,11 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": {
+          "strength": "marker",
+          "occurrences": 1,
+          "law": null
+        },
         "execution": {
           "at": "2026-09-11T15:26:22.369Z",
           "host": "PX13",
@@ -4405,6 +4467,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
@@ -4546,6 +4609,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": [
@@ -4719,6 +4783,11 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": {
+          "strength": "marker",
+          "occurrences": 1,
+          "law": null
+        },
         "execution": {
           "at": "2026-09-11T15:25:45.592Z",
           "host": "PX13",
@@ -4871,6 +4940,7 @@
           }
         ],
         "live_run": null,
+        "counterexample_strength": null,
         "execution": null,
         "claim_statuses": [],
         "cell_statuses": []
