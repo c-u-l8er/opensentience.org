@@ -1,9 +1,9 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-12T01:38:18.410Z",
+  "built": "2026-09-12T01:40:07.924Z",
   "inputs_heads": {
-    ".": "47eea877fc9c3bdf1d4dcd48e3fa2d334c1f588e",
-    "opensentience.org": "9cb71ee7613618738eb26ead3f6a113514ad048d",
+    ".": "bbd16695864c57ed90c8f95b58d04647bdc7c08b",
+    "opensentience.org": "b3e655e0127560376bb91948183ea054bff15390",
     "WRL": "beec04c5f75dd247dfbc595765fa75d5efe584ce",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "8a77b781c5290a3e12b09771b1d9f46a212c2d82",
