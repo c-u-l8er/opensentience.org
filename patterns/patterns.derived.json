@@ -1,9 +1,9 @@
 {
   "kind": "UNBOXED_PATTERNS_DERIVED",
-  "built": "2026-09-12T01:40:07.924Z",
+  "built": "2026-09-12T01:46:13.309Z",
   "inputs_heads": {
     ".": "bbd16695864c57ed90c8f95b58d04647bdc7c08b",
-    "opensentience.org": "b3e655e0127560376bb91948183ea054bff15390",
+    "opensentience.org": "a8609ec2daf20c9a422bb8fd9dbde3e19caab95a",
     "WRL": "beec04c5f75dd247dfbc595765fa75d5efe584ce",
     "TRVM": "bf8670d5734729403114048b2e2a424726a01720",
     "AmpersandBoxDesign": "8a77b781c5290a3e12b09771b1d9f46a212c2d82",
@@ -161,6 +161,11 @@
             "ok": null,
             "text": "kind is definition — carries no evidence rung (AGENCY.md §6)"
           }
+        ],
+        "related_closure": [
+          "established-not-known",
+          "locus-is-not-its-carrier",
+          "record-at-a-boundary"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -324,6 +329,9 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "active-locus"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": {
@@ -473,6 +481,11 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "active-locus",
+          "carrier-multiplexing",
+          "dormant-but-alive"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -641,6 +654,10 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "meaning-is-a-hash",
+          "refusable-divergence"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -823,6 +840,10 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "descent-is-not-dependence",
+          "orthogonal-persistence"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -1011,6 +1032,11 @@
             "text": "it has run from the deployed site — 101 laws · 101 passing · 0 failing · 3 declared-open · 7584.4 ms"
           }
         ],
+        "related_closure": [
+          "capability-bounded-composition",
+          "refusal-gate",
+          "three-valued-outcome"
+        ],
         "live_run": {
           "at": "2026-09-12T00:01:45.814Z",
           "url": "https://opensentience.org/patterns/refusing-join",
@@ -1185,6 +1211,10 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "projection-not-duplication",
+          "semantic-membrane"
+        ],
         "live_run": null,
         "counterexample_strength": {
           "strength": "marker",
@@ -1319,6 +1349,9 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "shared-observable"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -1498,6 +1531,11 @@
             "text": "it has run from the deployed site — 109 laws · 109 passing · 0 failing · 336.4 ms"
           }
         ],
+        "related_closure": [
+          "carrier-confinement",
+          "refusing-join",
+          "state-does-not-grant-authority"
+        ],
         "live_run": {
           "at": "2026-09-12T00:02:41.726Z",
           "url": "https://opensentience.org/patterns/capability-bounded-composition",
@@ -1662,6 +1700,9 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "capability-bounded-composition"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": null,
@@ -1824,6 +1865,10 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "refusable-divergence",
+          "shared-observable"
         ],
         "live_run": null,
         "counterexample_strength": {
@@ -1998,6 +2043,11 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "identity-is-a-seal",
+          "meaning-is-a-hash",
+          "projection-not-duplication"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": {
@@ -2167,6 +2217,10 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "carrier-multiplexing",
+          "dormant-but-alive"
+        ],
         "live_run": null,
         "counterexample_strength": {
           "strength": "marker",
@@ -2329,6 +2383,11 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "carrier-multiplexing",
+          "locus-is-not-its-carrier",
+          "progress-over-utilization"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": null,
@@ -2484,6 +2543,12 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "dormant-but-alive",
+          "locus-is-not-its-carrier",
+          "progress-aware-placement",
+          "progress-over-utilization"
+        ],
         "live_run": null,
         "counterexample_strength": {
           "strength": "marker",
@@ -2627,6 +2692,9 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "carrier-multiplexing"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": null,
@@ -2767,6 +2835,9 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "three-valued-outcome"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -2918,6 +2989,11 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "intervention-provenance",
+          "proven-quiescence",
+          "refusing-join"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": null,
@@ -3062,6 +3138,10 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "continuity-through-reconstruction",
+          "three-sizes-of-world"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": null,
@@ -3199,6 +3279,10 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "orthogonal-persistence",
+          "world-boundary"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": null,
@@ -3315,6 +3399,9 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "three-sizes-of-world"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -3479,6 +3566,12 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "confidentiality-under-content-addressing",
+          "exact-replay",
+          "identity-is-a-seal",
+          "refusable-divergence"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": {
@@ -3620,6 +3713,10 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "cross-machine-skill-replay",
+          "meaning-is-a-hash"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -3766,6 +3863,9 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "exact-replay"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": null,
@@ -3885,6 +3985,9 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "meaning-is-a-hash"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": null,
@@ -3992,6 +4095,10 @@
             "ok": null,
             "text": "kind is definition — carries no evidence rung (AGENCY.md §6)"
           }
+        ],
+        "related_closure": [
+          "active-locus",
+          "understanding-boundary"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -4148,6 +4255,9 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "capability-bounded-composition"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -4323,6 +4433,10 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "descent-is-not-dependence",
+          "refusal-gate"
+        ],
         "live_run": null,
         "counterexample_strength": {
           "strength": "marker",
@@ -4470,6 +4584,10 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "evidence-before-claim",
+          "refusing-join"
+        ],
         "live_run": null,
         "counterexample_strength": null,
         "execution": null,
@@ -4611,6 +4729,9 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "three-valued-outcome"
         ],
         "live_run": null,
         "counterexample_strength": null,
@@ -4786,6 +4907,10 @@
             "text": "not staged on this site, so it cannot run from the page"
           }
         ],
+        "related_closure": [
+          "continuity-through-reconstruction",
+          "evidence-before-claim"
+        ],
         "live_run": null,
         "counterexample_strength": {
           "strength": "marker",
@@ -4942,6 +5067,9 @@
             "ok": false,
             "text": "not staged on this site, so it cannot run from the page"
           }
+        ],
+        "related_closure": [
+          "established-not-known"
         ],
         "live_run": null,
         "counterexample_strength": null,

@@ -1,0 +1,2372 @@
+{
+ "kind": "UNBOXED_PATTERNS_GRAPH",
+ "derived_from": "data/patterns.json + cells.json + CLAIM_LEDGER.json + receipts",
+ "counts": {
+  "nodes": 166,
+  "edges": 237,
+  "by_relation": {
+   "PRIOR_ART": 67,
+   "RELATED_TO": 64,
+   "REALIZED_IN": 42,
+   "ANSWERS": 28,
+   "WITNESSED_BY": 16,
+   "REFUTED_BY": 13,
+   "CITES_CELL": 5,
+   "CITES_CLAIM": 2
+  }
+ },
+ "nodes": [
+  {
+   "id": "active-locus",
+   "type": "definition",
+   "up": "UP-001",
+   "name": "Active Locus",
+   "family": "locus",
+   "standing": null,
+   "url": "/patterns/active-locus"
+  },
+  {
+   "id": "record-at-a-boundary",
+   "type": "pattern",
+   "up": "UP-002",
+   "name": "Record at a Boundary",
+   "family": "locus",
+   "standing": "WITNESSED",
+   "url": "/patterns/record-at-a-boundary"
+  },
+  {
+   "id": "locus-is-not-its-carrier",
+   "type": "pattern",
+   "up": "UP-003",
+   "name": "Locus Is Not Its Carrier",
+   "family": "locus",
+   "standing": "STATED",
+   "url": "/patterns/locus-is-not-its-carrier"
+  },
+  {
+   "id": "identity-is-a-seal",
+   "type": "pattern",
+   "up": "UP-004",
+   "name": "Identity Is a Seal",
+   "family": "locus",
+   "standing": "WITNESSED",
+   "url": "/patterns/identity-is-a-seal"
+  },
+  {
+   "id": "continuity-through-reconstruction",
+   "type": "pattern",
+   "up": "UP-005",
+   "name": "Continuity Through Reconstruction",
+   "family": "locus",
+   "standing": "STATED",
+   "url": "/patterns/continuity-through-reconstruction"
+  },
+  {
+   "id": "refusing-join",
+   "type": "pattern",
+   "up": "UP-006",
+   "name": "Refusing Join",
+   "family": "composition",
+   "standing": "WITNESSED",
+   "url": "/patterns/refusing-join"
+  },
+  {
+   "id": "shared-observable",
+   "type": "pattern",
+   "up": "UP-007",
+   "name": "Shared Observable",
+   "family": "composition",
+   "standing": "WITNESSED",
+   "url": "/patterns/shared-observable"
+  },
+  {
+   "id": "semantic-membrane",
+   "type": "pattern",
+   "up": "UP-008",
+   "name": "Semantic Membrane",
+   "family": "composition",
+   "standing": "PROPOSED",
+   "url": "/patterns/semantic-membrane"
+  },
+  {
+   "id": "capability-bounded-composition",
+   "type": "pattern",
+   "up": "UP-009",
+   "name": "Capability-Bounded Composition",
+   "family": "composition",
+   "standing": "WITNESSED",
+   "url": "/patterns/capability-bounded-composition"
+  },
+  {
+   "id": "carrier-confinement",
+   "type": "pattern",
+   "up": "UP-010",
+   "name": "Carrier Confinement",
+   "family": "composition",
+   "standing": "STATED",
+   "url": "/patterns/carrier-confinement"
+  },
+  {
+   "id": "projection-not-duplication",
+   "type": "pattern",
+   "up": "UP-011",
+   "name": "Projection, Not Duplication",
+   "family": "composition",
+   "standing": "WITNESSED",
+   "url": "/patterns/projection-not-duplication"
+  },
+  {
+   "id": "refusable-divergence",
+   "type": "pattern",
+   "up": "UP-012",
+   "name": "Refusable Divergence",
+   "family": "composition",
+   "standing": "WITNESSED",
+   "url": "/patterns/refusable-divergence"
+  },
+  {
+   "id": "progress-over-utilization",
+   "type": "pattern",
+   "up": "UP-013",
+   "name": "Progress Over Utilization",
+   "family": "progress",
+   "standing": "WITNESSED",
+   "url": "/patterns/progress-over-utilization"
+  },
+  {
+   "id": "dormant-but-alive",
+   "type": "pattern",
+   "up": "UP-014",
+   "name": "Dormant But Alive",
+   "family": "progress",
+   "standing": "STATED",
+   "url": "/patterns/dormant-but-alive"
+  },
+  {
+   "id": "carrier-multiplexing",
+   "type": "pattern",
+   "up": "UP-015",
+   "name": "Carrier Multiplexing",
+   "family": "progress",
+   "standing": "WITNESSED",
+   "url": "/patterns/carrier-multiplexing"
+  },
+  {
+   "id": "progress-aware-placement",
+   "type": "pattern",
+   "up": "UP-016",
+   "name": "Progress-Aware Placement",
+   "family": "progress",
+   "standing": "STATED",
+   "url": "/patterns/progress-aware-placement"
+  },
+  {
+   "id": "proven-quiescence",
+   "type": "pattern",
+   "up": "UP-017",
+   "name": "Proven Quiescence",
+   "family": "progress",
+   "standing": "PROPOSED",
+   "url": "/patterns/proven-quiescence"
+  },
+  {
+   "id": "three-valued-outcome",
+   "type": "pattern",
+   "up": "UP-018",
+   "name": "Three-Valued Outcome",
+   "family": "progress",
+   "standing": "STATED",
+   "url": "/patterns/three-valued-outcome"
+  },
+  {
+   "id": "orthogonal-persistence",
+   "type": "pattern",
+   "up": "UP-019",
+   "name": "Orthogonal Persistence",
+   "family": "world",
+   "standing": "STATED",
+   "url": "/patterns/orthogonal-persistence"
+  },
+  {
+   "id": "three-sizes-of-world",
+   "type": "pattern",
+   "up": "UP-020",
+   "name": "Three Sizes of World",
+   "family": "world",
+   "standing": "STATED",
+   "url": "/patterns/three-sizes-of-world"
+  },
+  {
+   "id": "world-boundary",
+   "type": "pattern",
+   "up": "UP-021",
+   "name": "World Boundary",
+   "family": "world",
+   "standing": "PROPOSED",
+   "url": "/patterns/world-boundary"
+  },
+  {
+   "id": "meaning-is-a-hash",
+   "type": "pattern",
+   "up": "UP-022",
+   "name": "Meaning Is a Hash",
+   "family": "world",
+   "standing": "WITNESSED",
+   "url": "/patterns/meaning-is-a-hash"
+  },
+  {
+   "id": "exact-replay",
+   "type": "pattern",
+   "up": "UP-023",
+   "name": "Exact Replay",
+   "family": "world",
+   "standing": "STATED",
+   "url": "/patterns/exact-replay"
+  },
+  {
+   "id": "cross-machine-skill-replay",
+   "type": "pattern",
+   "up": "UP-024",
+   "name": "Cross-Machine Skill Replay",
+   "family": "world",
+   "standing": "STATED",
+   "url": "/patterns/cross-machine-skill-replay"
+  },
+  {
+   "id": "confidentiality-under-content-addressing",
+   "type": "pattern",
+   "up": "UP-025",
+   "name": "Confidentiality Under Content Addressing",
+   "family": "world",
+   "standing": "STATED",
+   "url": "/patterns/confidentiality-under-content-addressing"
+  },
+  {
+   "id": "established-not-known",
+   "type": "definition",
+   "up": "UP-026",
+   "name": "Established, Not Known",
+   "family": "agency",
+   "standing": null,
+   "url": "/patterns/established-not-known"
+  },
+  {
+   "id": "state-does-not-grant-authority",
+   "type": "pattern",
+   "up": "UP-027",
+   "name": "State Does Not Grant Authority",
+   "family": "agency",
+   "standing": "WITNESSED",
+   "url": "/patterns/state-does-not-grant-authority"
+  },
+  {
+   "id": "evidence-before-claim",
+   "type": "pattern",
+   "up": "UP-028",
+   "name": "Evidence Before Claim",
+   "family": "agency",
+   "standing": "WITNESSED",
+   "url": "/patterns/evidence-before-claim"
+  },
+  {
+   "id": "refusal-gate",
+   "type": "pattern",
+   "up": "UP-029",
+   "name": "Refusal Gate",
+   "family": "agency",
+   "standing": "STATED",
+   "url": "/patterns/refusal-gate"
+  },
+  {
+   "id": "intervention-provenance",
+   "type": "pattern",
+   "up": "UP-030",
+   "name": "Intervention Provenance",
+   "family": "agency",
+   "standing": "STATED",
+   "url": "/patterns/intervention-provenance"
+  },
+  {
+   "id": "descent-is-not-dependence",
+   "type": "pattern",
+   "up": "UP-031",
+   "name": "Descent Is Not Dependence",
+   "family": "agency",
+   "standing": "WITNESSED",
+   "url": "/patterns/descent-is-not-dependence"
+  },
+  {
+   "id": "understanding-boundary",
+   "type": "pattern",
+   "up": "UP-032",
+   "name": "Understanding Boundary",
+   "family": "agency",
+   "standing": "STATED",
+   "url": "/patterns/understanding-boundary"
+  },
+  {
+   "id": "anti:carrier-identity",
+   "type": "anti_pattern",
+   "name": "Carrier Identity"
+  },
+  {
+   "id": "anti:location-leak",
+   "type": "anti_pattern",
+   "name": "Location Leak"
+  },
+  {
+   "id": "anti:false-quiescence",
+   "type": "anti_pattern",
+   "name": "False Quiescence"
+  },
+  {
+   "id": "anti:invisible-state",
+   "type": "anti_pattern",
+   "name": "Invisible State"
+  },
+  {
+   "id": "anti:ambient-authority",
+   "type": "anti_pattern",
+   "name": "Ambient Authority"
+  },
+  {
+   "id": "anti:replica-theater",
+   "type": "anti_pattern",
+   "name": "Replica Theater"
+  },
+  {
+   "id": "anti:busywork-scheduling",
+   "type": "anti_pattern",
+   "name": "Busywork Scheduling"
+  },
+  {
+   "id": "anti:agent-omniscience",
+   "type": "anti_pattern",
+   "name": "Agent Omniscience"
+  },
+  {
+   "id": "anti:number-in-two-places",
+   "type": "anti_pattern",
+   "name": "A Number in Two Places"
+  },
+  {
+   "id": "anti:record-is-locus",
+   "type": "anti_pattern",
+   "name": "Record Is Locus"
+  },
+  {
+   "id": "anti:provenance-as-support",
+   "type": "anti_pattern",
+   "name": "Provenance as Support"
+  },
+  {
+   "id": "anti:quiet-correction",
+   "type": "anti_pattern",
+   "name": "The Quiet Correction"
+  },
+  {
+   "id": "work:hewitt-actor-model-1973",
+   "type": "prior_art",
+   "work": "Hewitt, Actor model (1973)"
+  },
+  {
+   "id": "work:anthropic-project-self-model-2026-locus-of-agency-alignment-",
+   "type": "prior_art",
+   "work": "Anthropic, Project Self-Model 2026 — 'locus of agency' (alignment.anthropic.com/2026/psm/)"
+  },
+  {
+   "id": "impl:AGENCY.md §1",
+   "type": "realization",
+   "at": "AGENCY.md §1"
+  },
+  {
+   "id": "work:parnas-information-hiding-1972",
+   "type": "prior_art",
+   "work": "Parnas, information hiding (1972)"
+  },
+  {
+   "id": "work:korzybski-map-territory",
+   "type": "prior_art",
+   "work": "Korzybski, map ≠ territory"
+  },
+  {
+   "id": "impl:AGENCY.md §1 corollary",
+   "type": "realization",
+   "at": "AGENCY.md §1 corollary"
+  },
+  {
+   "id": "impl:AmpersandBoxDesign/site/index.html §02",
+   "type": "realization",
+   "at": "AmpersandBoxDesign/site/index.html §02"
+  },
+  {
+   "id": "witness:scripts/check-messaging-language.mjs",
+   "type": "witness",
+   "shape": "lint",
+   "rung": "in_tree"
+  },
+  {
+   "id": "work:m-n-scheduling-green-threads",
+   "type": "prior_art",
+   "work": "M:N scheduling; green threads"
+  },
+  {
+   "id": "work:beam-processes",
+   "type": "prior_art",
+   "work": "BEAM processes"
+  },
+  {
+   "id": "impl:computedriven/receipts/R7-OPEN.md:18",
+   "type": "realization",
+   "at": "computedriven/receipts/R7-OPEN.md:18"
+  },
+  {
+   "id": "work:merkle-1979",
+   "type": "prior_art",
+   "work": "Merkle (1979)"
+  },
+  {
+   "id": "work:unison-every-definition-identified-by-the-hash-of-its-syntax",
+   "type": "prior_art",
+   "work": "Unison — every definition identified by the hash of its syntax tree"
+  },
+  {
+   "id": "work:nix-store-paths",
+   "type": "prior_art",
+   "work": "Nix store paths"
+  },
+  {
+   "id": "impl:WRL/README.md:17-27",
+   "type": "realization",
+   "at": "WRL/README.md:17-27"
+  },
+  {
+   "id": "witness:WRL/test/conformance.mjs",
+   "type": "witness",
+   "shape": "side-effect",
+   "rung": "in_tree"
+  },
+  {
+   "id": "cell:30",
+   "type": "cell",
+   "status": "missing"
+  },
+  {
+   "id": "claim:EMB-SUPPORT-GRAPH",
+   "type": "claim",
+   "status": "OPEN"
+  },
+  {
+   "id": "claim:EMB-KERNEL-LOCATION",
+   "type": "claim",
+   "status": "OPEN"
+  },
+  {
+   "id": "work:atkinson-morrison-orthogonal-persistence-persistence-indepen",
+   "type": "prior_art",
+   "work": "Atkinson & Morrison, orthogonal persistence — persistence independence"
+  },
+  {
+   "id": "work:erlang-code-change-hot-code-loading",
+   "type": "prior_art",
+   "work": "Erlang code change (hot code loading)"
+  },
+  {
+   "id": "work:distillation-as-successor",
+   "type": "prior_art",
+   "work": "Distillation as successor"
+  },
+  {
+   "id": "impl:AGENCY.md §5b",
+   "type": "realization",
+   "at": "AGENCY.md §5b"
+  },
+  {
+   "id": "impl:mosaic/embodiment.json",
+   "type": "realization",
+   "at": "mosaic/embodiment.json"
+  },
+  {
+   "id": "witness:scripts/emb-support.mjs",
+   "type": "witness",
+   "shape": "side-effect",
+   "rung": "in_tree"
+  },
+  {
+   "id": "work:monoid-laws-associativity-identity",
+   "type": "prior_art",
+   "work": "Monoid laws (associativity, identity)"
+  },
+  {
+   "id": "work:the-2026-a-literature-theorem-5-7",
+   "type": "prior_art",
+   "work": "'the 2026 λA literature, Theorem 5.7'"
+  },
+  {
+   "id": "impl:FACTORY_REVIEW_BUNDLE.md:460",
+   "type": "realization",
+   "at": "FACTORY_REVIEW_BUNDLE.md:460"
+  },
+  {
+   "id": "impl:FACTORY_REVIEW_BUNDLE.md:507",
+   "type": "realization",
+   "at": "FACTORY_REVIEW_BUNDLE.md:507"
+  },
+  {
+   "id": "impl:amp-nav.js:297",
+   "type": "realization",
+   "at": "amp-nav.js:297"
+  },
+  {
+   "id": "witness:AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
+   "type": "witness",
+   "shape": "suite",
+   "rung": "live_deployed"
+  },
+  {
+   "id": "work:nerode-quotient-psr-sufficient-statistic",
+   "type": "prior_art",
+   "work": "Nerode quotient; PSR sufficient statistic"
+  },
+  {
+   "id": "work:markov-condition",
+   "type": "prior_art",
+   "work": "Markov condition"
+  },
+  {
+   "id": "impl:TRVM/LAWS.md:80",
+   "type": "realization",
+   "at": "TRVM/LAWS.md:80"
+  },
+  {
+   "id": "witness:TRVM/forge/FORGE_BINDING_RESULTS.md",
+   "type": "witness",
+   "shape": "receipt",
+   "rung": "in_tree"
+  },
+  {
+   "id": "cell:16",
+   "type": "cell",
+   "status": "proved"
+  },
+  {
+   "id": "work:dennis-van-horn-1966",
+   "type": "prior_art",
+   "work": "Dennis & Van Horn (1966)"
+  },
+  {
+   "id": "work:miller-capability-myths-demolished-2003-ambient-authority",
+   "type": "prior_art",
+   "work": "Miller, Capability Myths Demolished (2003) — 'ambient authority'"
+  },
+  {
+   "id": "work:object-capability-discipline",
+   "type": "prior_art",
+   "work": "Object-capability discipline"
+  },
+  {
+   "id": "impl:opensentience.org/box-and-box/README.md deontic rung",
+   "type": "realization",
+   "at": "opensentience.org/box-and-box/README.md deontic rung"
+  },
+  {
+   "id": "impl:opensentience.org/deontic-arithmetic.html",
+   "type": "realization",
+   "at": "opensentience.org/deontic-arithmetic.html"
+  },
+  {
+   "id": "witness:AmpersandBoxDesign/box-and-box/test/laws.mjs",
+   "type": "witness",
+   "shape": "suite",
+   "rung": "live_deployed"
+  },
+  {
+   "id": "work:landlock",
+   "type": "prior_art",
+   "work": "Landlock"
+  },
+  {
+   "id": "work:capsicum",
+   "type": "prior_art",
+   "work": "Capsicum"
+  },
+  {
+   "id": "work:the-e-language-s-confinement",
+   "type": "prior_art",
+   "work": "The E language's confinement"
+  },
+  {
+   "id": "impl:super/docs/reviews/D_1_3B_2F.md:114",
+   "type": "realization",
+   "at": "super/docs/reviews/D_1_3B_2F.md:114"
+  },
+  {
+   "id": "work:cqrs-read-models-materialized-views",
+   "type": "prior_art",
+   "work": "CQRS read models; materialized views"
+  },
+  {
+   "id": "work:unison-s-hash-addressed-definitions",
+   "type": "prior_art",
+   "work": "Unison's hash-addressed definitions"
+  },
+  {
+   "id": "impl:WRL/HANDOFF_D8_PATH_B.md §D8.18-D8.19",
+   "type": "realization",
+   "at": "WRL/HANDOFF_D8_PATH_B.md §D8.18-D8.19"
+  },
+  {
+   "id": "impl:graphonomous/v2/contracts/projection.v1.json",
+   "type": "realization",
+   "at": "graphonomous/v2/contracts/projection.v1.json"
+  },
+  {
+   "id": "witness:graphonomous/v2/test/projection_v1.test.mjs",
+   "type": "witness",
+   "shape": "side-effect",
+   "rung": "in_tree"
+  },
+  {
+   "id": "work:content-addressing-nix",
+   "type": "prior_art",
+   "work": "Content addressing; Nix"
+  },
+  {
+   "id": "work:wrl-packet-readme-md-109-refused-by-both-sides",
+   "type": "prior_art",
+   "work": "WRL/PACKET_README.md:109 — 'refused by BOTH sides'"
+  },
+  {
+   "id": "impl:WRL/relation-v2.js:2363 deriveRuntimeProjection",
+   "type": "realization",
+   "at": "WRL/relation-v2.js:2363 deriveRuntimeProjection"
+  },
+  {
+   "id": "work:erlang-reductions-as-the-scheduling-unit",
+   "type": "prior_art",
+   "work": "Erlang reductions as the scheduling unit"
+  },
+  {
+   "id": "work:little-s-law-utilization-vs-throughput-in-queueing-theory",
+   "type": "prior_art",
+   "work": "Little's law; utilization vs throughput in queueing theory"
+  },
+  {
+   "id": "impl:computedriven/docs/progress-model.md",
+   "type": "realization",
+   "at": "computedriven/docs/progress-model.md"
+  },
+  {
+   "id": "impl:computedriven/receipts/KERNELLET-R1.md:33",
+   "type": "realization",
+   "at": "computedriven/receipts/KERNELLET-R1.md:33"
+  },
+  {
+   "id": "witness:computedriven/receipts/R7-EXECUTED.md",
+   "type": "witness",
+   "shape": "receipt",
+   "rung": "in_tree"
+  },
+  {
+   "id": "work:durable-execution-temporal-restate",
+   "type": "prior_art",
+   "work": "Durable execution (Temporal, Restate)"
+  },
+  {
+   "id": "work:delimited-continuations",
+   "type": "prior_art",
+   "work": "Delimited continuations"
+  },
+  {
+   "id": "impl:computedriven/receipts/R7.1-OPEN.md:42",
+   "type": "realization",
+   "at": "computedriven/receipts/R7.1-OPEN.md:42"
+  },
+  {
+   "id": "impl:FPLA/DESIGN_NOTES_2026-09-06.md design A",
+   "type": "realization",
+   "at": "FPLA/DESIGN_NOTES_2026-09-06.md design A"
+  },
+  {
+   "id": "witness:computedriven/receipts/R7.1-OPEN.md",
+   "type": "witness",
+   "shape": "spec",
+   "rung": "spec"
+  },
+  {
+   "id": "work:m-n-threading-go-s-scheduler-erlang-schedulers",
+   "type": "prior_art",
+   "work": "M:N threading; Go's scheduler; Erlang schedulers"
+  },
+  {
+   "id": "impl:computedriven/receipts/R7-EXECUTED.md:101",
+   "type": "realization",
+   "at": "computedriven/receipts/R7-EXECUTED.md:101"
+  },
+  {
+   "id": "work:work-stealing",
+   "type": "prior_art",
+   "work": "Work stealing"
+  },
+  {
+   "id": "work:numa-aware-placement",
+   "type": "prior_art",
+   "work": "NUMA-aware placement"
+  },
+  {
+   "id": "impl:computedriven/receipts/R7.2.1D-OPEN.md",
+   "type": "realization",
+   "at": "computedriven/receipts/R7.2.1D-OPEN.md"
+  },
+  {
+   "id": "work:dijkstra-scholten-termination-detection-1980",
+   "type": "prior_art",
+   "work": "Dijkstra–Scholten termination detection (1980)"
+  },
+  {
+   "id": "work:misra-s-ring-algorithm",
+   "type": "prior_art",
+   "work": "Misra's ring algorithm"
+  },
+  {
+   "id": "work:revision-register-md-99-completedscan-completedsweep-with-a-",
+   "type": "prior_art",
+   "work": "REVISION_REGISTER.md:99 — CompletedScan→CompletedSweep with a doesNotAssert field"
+  },
+  {
+   "id": "cell:17",
+   "type": "cell",
+   "status": "proved"
+  },
+  {
+   "id": "work:two-generals",
+   "type": "prior_art",
+   "work": "Two Generals"
+  },
+  {
+   "id": "work:at-least-once-vs-at-most-once-delivery",
+   "type": "prior_art",
+   "work": "at-least-once vs at-most-once delivery"
+  },
+  {
+   "id": "work:lamport-happened-before",
+   "type": "prior_art",
+   "work": "Lamport, 'happened before'"
+  },
+  {
+   "id": "impl:super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:210",
+   "type": "realization",
+   "at": "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:210"
+  },
+  {
+   "id": "impl:super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:723",
+   "type": "realization",
+   "at": "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:723"
+  },
+  {
+   "id": "work:atkinson-morrison-type-orthogonality-persistence-by-reachabi",
+   "type": "prior_art",
+   "work": "Atkinson & Morrison — type orthogonality, persistence by reachability, persistence independence (PS-algol, Napier88; VLDB J. 4, 1995)"
+  },
+  {
+   "id": "impl:studbook/docs/spec/README.md",
+   "type": "realization",
+   "at": "studbook/docs/spec/README.md"
+  },
+  {
+   "id": "work:git-s-object-ref-worktree-split",
+   "type": "prior_art",
+   "work": "Git's object / ref / worktree split"
+  },
+  {
+   "id": "impl:CLOUD_V1.md:37",
+   "type": "realization",
+   "at": "CLOUD_V1.md:37"
+  },
+  {
+   "id": "work:gpt-2026-09-11-a-coherent-authority-state-observation-domain",
+   "type": "prior_art",
+   "work": "GPT, 2026-09-11 — 'a coherent authority/state/observation domain that need not be an OS process, VM or machine'"
+  },
+  {
+   "id": "work:unison-content-addressed-definitions",
+   "type": "prior_art",
+   "work": "Unison (content-addressed definitions)"
+  },
+  {
+   "id": "work:ipfs-nix",
+   "type": "prior_art",
+   "work": "IPFS; Nix"
+  },
+  {
+   "id": "impl:WRL/README.md:1-40",
+   "type": "realization",
+   "at": "WRL/README.md:1-40"
+  },
+  {
+   "id": "work:deterministic-replay-rr",
+   "type": "prior_art",
+   "work": "Deterministic replay; rr"
+  },
+  {
+   "id": "work:event-sourcing",
+   "type": "prior_art",
+   "work": "Event sourcing"
+  },
+  {
+   "id": "impl:TRVM/LAWS.md Law 4",
+   "type": "realization",
+   "at": "TRVM/LAWS.md Law 4"
+  },
+  {
+   "id": "work:os-011-embodiment",
+   "type": "prior_art",
+   "work": "OS-011 Embodiment"
+  },
+  {
+   "id": "work:record-and-replay-in-rpa",
+   "type": "prior_art",
+   "work": "Record-and-replay in RPA"
+  },
+  {
+   "id": "impl:opensentience.org/_rebuild/data/receipts.json",
+   "type": "realization",
+   "at": "opensentience.org/_rebuild/data/receipts.json"
+  },
+  {
+   "id": "witness:opensentience.org/_rebuild/data/receipts.json",
+   "type": "witness",
+   "shape": "card",
+   "rung": "in_tree"
+  },
+  {
+   "id": "work:convergent-encryption-and-its-known-leaks",
+   "type": "prior_art",
+   "work": "Convergent encryption and its known leaks"
+  },
+  {
+   "id": "impl:studbook/docs/spec/README.md:260",
+   "type": "realization",
+   "at": "studbook/docs/spec/README.md:260"
+  },
+  {
+   "id": "work:byzantine-observation",
+   "type": "prior_art",
+   "work": "Byzantine observation"
+  },
+  {
+   "id": "work:super-bot-spec-stale-unestablished",
+   "type": "prior_art",
+   "work": "Super bot spec — STALE ≠ UNESTABLISHED"
+  },
+  {
+   "id": "impl:AGENCY.md §4",
+   "type": "realization",
+   "at": "AGENCY.md §4"
+  },
+  {
+   "id": "work:object-capability-discipline-miller",
+   "type": "prior_art",
+   "work": "Object-capability discipline (Miller)"
+  },
+  {
+   "id": "impl:scripts/messaging-rules.json STATE_DOES_NOT_ISSUE_AUTHORITY",
+   "type": "realization",
+   "at": "scripts/messaging-rules.json STATE_DOES_NOT_ISSUE_AUTHORITY"
+  },
+  {
+   "id": "work:toulmin-warrant-and-backing",
+   "type": "prior_art",
+   "work": "Toulmin — warrant and backing"
+  },
+  {
+   "id": "work:pollock-defeaters",
+   "type": "prior_art",
+   "work": "Pollock, defeaters"
+  },
+  {
+   "id": "work:assurance-cases-gsn",
+   "type": "prior_art",
+   "work": "Assurance cases (GSN)"
+  },
+  {
+   "id": "impl:DOCTRINE.md rule 4",
+   "type": "realization",
+   "at": "DOCTRINE.md rule 4"
+  },
+  {
+   "id": "impl:CLAIM_LEDGER.json",
+   "type": "realization",
+   "at": "CLAIM_LEDGER.json"
+  },
+  {
+   "id": "witness:scripts/check-claim-ledger.mjs",
+   "type": "witness",
+   "shape": "side-effect",
+   "rung": "in_tree"
+  },
+  {
+   "id": "work:fail-closed-defaults",
+   "type": "prior_art",
+   "work": "Fail-closed defaults"
+  },
+  {
+   "id": "work:popperian-falsifiability-as-an-admission-rule",
+   "type": "prior_art",
+   "work": "Popperian falsifiability as an admission rule"
+  },
+  {
+   "id": "impl:ACADEMY.md §Read",
+   "type": "realization",
+   "at": "ACADEMY.md §Read"
+  },
+  {
+   "id": "impl:alkeyword.com/docs/spec/README.md §3.2",
+   "type": "realization",
+   "at": "alkeyword.com/docs/spec/README.md §3.2"
+  },
+  {
+   "id": "work:w3c-prov",
+   "type": "prior_art",
+   "work": "W3C PROV"
+  },
+  {
+   "id": "work:audit-logs",
+   "type": "prior_art",
+   "work": "Audit logs"
+  },
+  {
+   "id": "impl:super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md",
+   "type": "realization",
+   "at": "super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md"
+  },
+  {
+   "id": "cell:44",
+   "type": "cell",
+   "status": "proved"
+  },
+  {
+   "id": "work:pearl-s-ladder-of-causation",
+   "type": "prior_art",
+   "work": "Pearl's ladder of causation"
+  },
+  {
+   "id": "work:ablation-studies",
+   "type": "prior_art",
+   "work": "Ablation studies"
+  },
+  {
+   "id": "work:non-laundering-cell-44",
+   "type": "prior_art",
+   "work": "Λ non-laundering (cell 44)"
+  },
+  {
+   "id": "impl:scripts/emb-support.mjs",
+   "type": "realization",
+   "at": "scripts/emb-support.mjs"
+  },
+  {
+   "id": "work:hintikka-epistemic-logic",
+   "type": "prior_art",
+   "work": "Hintikka, epistemic logic"
+  },
+  {
+   "id": "work:the-box-and-box-ladder-s-epistemic-rung",
+   "type": "prior_art",
+   "work": "The box-and-box ladder's epistemic rung"
+  },
+  {
+   "id": "work:graphonomous-bot-spec-a-bot-knows-its-projection-not-the-wor",
+   "type": "prior_art",
+   "work": "Graphonomous Bot spec — 'a Bot knows its projection, not the world'"
+  },
+  {
+   "id": "impl:opensentience.org/epistemic-arithmetic.html",
+   "type": "realization",
+   "at": "opensentience.org/epistemic-arithmetic.html"
+  }
+ ],
+ "edges": [
+  {
+   "from": "active-locus",
+   "rel": "PRIOR_ART",
+   "to": "work:hewitt-actor-model-1973",
+   "relation": "antecedent"
+  },
+  {
+   "from": "active-locus",
+   "rel": "PRIOR_ART",
+   "to": "work:anthropic-project-self-model-2026-locus-of-agency-alignment-",
+   "relation": "terminology-precedent"
+  },
+  {
+   "from": "active-locus",
+   "rel": "RELATED_TO",
+   "to": "established-not-known",
+   "authored_here": false
+  },
+  {
+   "from": "active-locus",
+   "rel": "RELATED_TO",
+   "to": "locus-is-not-its-carrier",
+   "authored_here": true
+  },
+  {
+   "from": "active-locus",
+   "rel": "RELATED_TO",
+   "to": "record-at-a-boundary",
+   "authored_here": true
+  },
+  {
+   "from": "active-locus",
+   "rel": "REALIZED_IN",
+   "to": "impl:AGENCY.md §1"
+  },
+  {
+   "from": "record-at-a-boundary",
+   "rel": "PRIOR_ART",
+   "to": "work:parnas-information-hiding-1972",
+   "relation": "antecedent"
+  },
+  {
+   "from": "record-at-a-boundary",
+   "rel": "PRIOR_ART",
+   "to": "work:korzybski-map-territory",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "record-at-a-boundary",
+   "rel": "RELATED_TO",
+   "to": "active-locus",
+   "authored_here": true
+  },
+  {
+   "from": "record-at-a-boundary",
+   "rel": "REALIZED_IN",
+   "to": "impl:AGENCY.md §1 corollary"
+  },
+  {
+   "from": "record-at-a-boundary",
+   "rel": "REALIZED_IN",
+   "to": "impl:AmpersandBoxDesign/site/index.html §02"
+  },
+  {
+   "from": "record-at-a-boundary",
+   "rel": "ANSWERS",
+   "to": "anti:record-is-locus"
+  },
+  {
+   "from": "record-at-a-boundary",
+   "rel": "WITNESSED_BY",
+   "to": "witness:scripts/check-messaging-language.mjs",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "record-at-a-boundary",
+   "rel": "REFUTED_BY",
+   "to": "cex:record-at-a-boundary",
+   "strength": "none",
+   "law": null
+  },
+  {
+   "from": "locus-is-not-its-carrier",
+   "rel": "PRIOR_ART",
+   "to": "work:m-n-scheduling-green-threads",
+   "relation": "realization"
+  },
+  {
+   "from": "locus-is-not-its-carrier",
+   "rel": "PRIOR_ART",
+   "to": "work:beam-processes",
+   "relation": "realization"
+  },
+  {
+   "from": "locus-is-not-its-carrier",
+   "rel": "RELATED_TO",
+   "to": "active-locus",
+   "authored_here": false
+  },
+  {
+   "from": "locus-is-not-its-carrier",
+   "rel": "RELATED_TO",
+   "to": "carrier-multiplexing",
+   "authored_here": true
+  },
+  {
+   "from": "locus-is-not-its-carrier",
+   "rel": "RELATED_TO",
+   "to": "dormant-but-alive",
+   "authored_here": true
+  },
+  {
+   "from": "locus-is-not-its-carrier",
+   "rel": "REALIZED_IN",
+   "to": "impl:computedriven/receipts/R7-OPEN.md:18"
+  },
+  {
+   "from": "locus-is-not-its-carrier",
+   "rel": "ANSWERS",
+   "to": "anti:carrier-identity"
+  },
+  {
+   "from": "identity-is-a-seal",
+   "rel": "PRIOR_ART",
+   "to": "work:merkle-1979",
+   "relation": "antecedent"
+  },
+  {
+   "from": "identity-is-a-seal",
+   "rel": "PRIOR_ART",
+   "to": "work:unison-every-definition-identified-by-the-hash-of-its-syntax",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "identity-is-a-seal",
+   "rel": "PRIOR_ART",
+   "to": "work:nix-store-paths",
+   "relation": "realization"
+  },
+  {
+   "from": "identity-is-a-seal",
+   "rel": "RELATED_TO",
+   "to": "meaning-is-a-hash",
+   "authored_here": true
+  },
+  {
+   "from": "identity-is-a-seal",
+   "rel": "RELATED_TO",
+   "to": "refusable-divergence",
+   "authored_here": true
+  },
+  {
+   "from": "identity-is-a-seal",
+   "rel": "REALIZED_IN",
+   "to": "impl:WRL/README.md:17-27"
+  },
+  {
+   "from": "identity-is-a-seal",
+   "rel": "ANSWERS",
+   "to": "anti:location-leak"
+  },
+  {
+   "from": "identity-is-a-seal",
+   "rel": "WITNESSED_BY",
+   "to": "witness:WRL/test/conformance.mjs",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "identity-is-a-seal",
+   "rel": "REFUTED_BY",
+   "to": "cex:identity-is-a-seal",
+   "strength": "none",
+   "law": null
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "CITES_CELL",
+   "to": "cell:30",
+   "modality": "necessary"
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "CITES_CLAIM",
+   "to": "claim:EMB-SUPPORT-GRAPH",
+   "modality": "not_sufficient"
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "CITES_CLAIM",
+   "to": "claim:EMB-KERNEL-LOCATION",
+   "modality": "not_sufficient"
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "PRIOR_ART",
+   "to": "work:atkinson-morrison-orthogonal-persistence-persistence-indepen",
+   "relation": "antecedent"
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "PRIOR_ART",
+   "to": "work:erlang-code-change-hot-code-loading",
+   "relation": "realization"
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "PRIOR_ART",
+   "to": "work:distillation-as-successor",
+   "relation": "contrasting-solution"
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "RELATED_TO",
+   "to": "descent-is-not-dependence",
+   "authored_here": true
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "RELATED_TO",
+   "to": "orthogonal-persistence",
+   "authored_here": true
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "REALIZED_IN",
+   "to": "impl:AGENCY.md §5b"
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "REALIZED_IN",
+   "to": "impl:mosaic/embodiment.json"
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "ANSWERS",
+   "to": "anti:replica-theater"
+  },
+  {
+   "from": "continuity-through-reconstruction",
+   "rel": "WITNESSED_BY",
+   "to": "witness:scripts/emb-support.mjs",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "refusing-join",
+   "rel": "PRIOR_ART",
+   "to": "work:monoid-laws-associativity-identity",
+   "relation": "antecedent"
+  },
+  {
+   "from": "refusing-join",
+   "rel": "PRIOR_ART",
+   "to": "work:the-2026-a-literature-theorem-5-7",
+   "relation": "not-searched"
+  },
+  {
+   "from": "refusing-join",
+   "rel": "RELATED_TO",
+   "to": "capability-bounded-composition",
+   "authored_here": true
+  },
+  {
+   "from": "refusing-join",
+   "rel": "RELATED_TO",
+   "to": "refusal-gate",
+   "authored_here": false
+  },
+  {
+   "from": "refusing-join",
+   "rel": "RELATED_TO",
+   "to": "three-valued-outcome",
+   "authored_here": true
+  },
+  {
+   "from": "refusing-join",
+   "rel": "REALIZED_IN",
+   "to": "impl:FACTORY_REVIEW_BUNDLE.md:460"
+  },
+  {
+   "from": "refusing-join",
+   "rel": "REALIZED_IN",
+   "to": "impl:FACTORY_REVIEW_BUNDLE.md:507"
+  },
+  {
+   "from": "refusing-join",
+   "rel": "REALIZED_IN",
+   "to": "impl:amp-nav.js:297"
+  },
+  {
+   "from": "refusing-join",
+   "rel": "ANSWERS",
+   "to": "anti:invisible-state"
+  },
+  {
+   "from": "refusing-join",
+   "rel": "WITNESSED_BY",
+   "to": "witness:AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
+   "executed": true,
+   "live_run": true
+  },
+  {
+   "from": "refusing-join",
+   "rel": "REFUTED_BY",
+   "to": "cex:refusing-join",
+   "strength": "resolved",
+   "law": "CD1"
+  },
+  {
+   "from": "shared-observable",
+   "rel": "PRIOR_ART",
+   "to": "work:nerode-quotient-psr-sufficient-statistic",
+   "relation": "antecedent"
+  },
+  {
+   "from": "shared-observable",
+   "rel": "PRIOR_ART",
+   "to": "work:markov-condition",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "shared-observable",
+   "rel": "RELATED_TO",
+   "to": "projection-not-duplication",
+   "authored_here": true
+  },
+  {
+   "from": "shared-observable",
+   "rel": "RELATED_TO",
+   "to": "semantic-membrane",
+   "authored_here": true
+  },
+  {
+   "from": "shared-observable",
+   "rel": "REALIZED_IN",
+   "to": "impl:TRVM/LAWS.md:80"
+  },
+  {
+   "from": "shared-observable",
+   "rel": "ANSWERS",
+   "to": "anti:invisible-state"
+  },
+  {
+   "from": "shared-observable",
+   "rel": "WITNESSED_BY",
+   "to": "witness:TRVM/forge/FORGE_BINDING_RESULTS.md",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "shared-observable",
+   "rel": "REFUTED_BY",
+   "to": "cex:shared-observable",
+   "strength": "marker",
+   "law": null
+  },
+  {
+   "from": "semantic-membrane",
+   "rel": "PRIOR_ART",
+   "to": "work:parnas-information-hiding-1972",
+   "relation": "antecedent"
+  },
+  {
+   "from": "semantic-membrane",
+   "rel": "RELATED_TO",
+   "to": "shared-observable",
+   "authored_here": true
+  },
+  {
+   "from": "semantic-membrane",
+   "rel": "ANSWERS",
+   "to": "anti:invisible-state"
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "CITES_CELL",
+   "to": "cell:16",
+   "modality": "necessary"
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "PRIOR_ART",
+   "to": "work:dennis-van-horn-1966",
+   "relation": "antecedent"
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "PRIOR_ART",
+   "to": "work:miller-capability-myths-demolished-2003-ambient-authority",
+   "relation": "terminology-precedent"
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "PRIOR_ART",
+   "to": "work:object-capability-discipline",
+   "relation": "antecedent"
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "RELATED_TO",
+   "to": "carrier-confinement",
+   "authored_here": true
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "RELATED_TO",
+   "to": "refusing-join",
+   "authored_here": false
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "RELATED_TO",
+   "to": "state-does-not-grant-authority",
+   "authored_here": true
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "REALIZED_IN",
+   "to": "impl:opensentience.org/box-and-box/README.md deontic rung"
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "REALIZED_IN",
+   "to": "impl:opensentience.org/deontic-arithmetic.html"
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "ANSWERS",
+   "to": "anti:ambient-authority"
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "WITNESSED_BY",
+   "to": "witness:AmpersandBoxDesign/box-and-box/test/laws.mjs",
+   "executed": true,
+   "live_run": true
+  },
+  {
+   "from": "capability-bounded-composition",
+   "rel": "REFUTED_BY",
+   "to": "cex:capability-bounded-composition",
+   "strength": "scoped",
+   "law": "L10"
+  },
+  {
+   "from": "carrier-confinement",
+   "rel": "PRIOR_ART",
+   "to": "work:landlock",
+   "relation": "realization"
+  },
+  {
+   "from": "carrier-confinement",
+   "rel": "PRIOR_ART",
+   "to": "work:capsicum",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "carrier-confinement",
+   "rel": "PRIOR_ART",
+   "to": "work:the-e-language-s-confinement",
+   "relation": "antecedent"
+  },
+  {
+   "from": "carrier-confinement",
+   "rel": "RELATED_TO",
+   "to": "capability-bounded-composition",
+   "authored_here": true
+  },
+  {
+   "from": "carrier-confinement",
+   "rel": "REALIZED_IN",
+   "to": "impl:super/docs/reviews/D_1_3B_2F.md:114"
+  },
+  {
+   "from": "carrier-confinement",
+   "rel": "ANSWERS",
+   "to": "anti:ambient-authority"
+  },
+  {
+   "from": "projection-not-duplication",
+   "rel": "PRIOR_ART",
+   "to": "work:cqrs-read-models-materialized-views",
+   "relation": "antecedent"
+  },
+  {
+   "from": "projection-not-duplication",
+   "rel": "PRIOR_ART",
+   "to": "work:unison-s-hash-addressed-definitions",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "projection-not-duplication",
+   "rel": "RELATED_TO",
+   "to": "refusable-divergence",
+   "authored_here": true
+  },
+  {
+   "from": "projection-not-duplication",
+   "rel": "RELATED_TO",
+   "to": "shared-observable",
+   "authored_here": true
+  },
+  {
+   "from": "projection-not-duplication",
+   "rel": "REALIZED_IN",
+   "to": "impl:WRL/HANDOFF_D8_PATH_B.md §D8.18-D8.19"
+  },
+  {
+   "from": "projection-not-duplication",
+   "rel": "REALIZED_IN",
+   "to": "impl:graphonomous/v2/contracts/projection.v1.json"
+  },
+  {
+   "from": "projection-not-duplication",
+   "rel": "ANSWERS",
+   "to": "anti:replica-theater"
+  },
+  {
+   "from": "projection-not-duplication",
+   "rel": "WITNESSED_BY",
+   "to": "witness:graphonomous/v2/test/projection_v1.test.mjs",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "projection-not-duplication",
+   "rel": "REFUTED_BY",
+   "to": "cex:projection-not-duplication",
+   "strength": "marker",
+   "law": null
+  },
+  {
+   "from": "refusable-divergence",
+   "rel": "PRIOR_ART",
+   "to": "work:content-addressing-nix",
+   "relation": "antecedent"
+  },
+  {
+   "from": "refusable-divergence",
+   "rel": "PRIOR_ART",
+   "to": "work:wrl-packet-readme-md-109-refused-by-both-sides",
+   "relation": "partial-overlap"
+  },
+  {
+   "from": "refusable-divergence",
+   "rel": "RELATED_TO",
+   "to": "identity-is-a-seal",
+   "authored_here": true
+  },
+  {
+   "from": "refusable-divergence",
+   "rel": "RELATED_TO",
+   "to": "meaning-is-a-hash",
+   "authored_here": true
+  },
+  {
+   "from": "refusable-divergence",
+   "rel": "RELATED_TO",
+   "to": "projection-not-duplication",
+   "authored_here": true
+  },
+  {
+   "from": "refusable-divergence",
+   "rel": "REALIZED_IN",
+   "to": "impl:WRL/relation-v2.js:2363 deriveRuntimeProjection"
+  },
+  {
+   "from": "refusable-divergence",
+   "rel": "ANSWERS",
+   "to": "anti:replica-theater"
+  },
+  {
+   "from": "refusable-divergence",
+   "rel": "WITNESSED_BY",
+   "to": "witness:WRL/test/conformance.mjs",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "refusable-divergence",
+   "rel": "REFUTED_BY",
+   "to": "cex:refusable-divergence",
+   "strength": "none",
+   "law": null
+  },
+  {
+   "from": "progress-over-utilization",
+   "rel": "PRIOR_ART",
+   "to": "work:erlang-reductions-as-the-scheduling-unit",
+   "relation": "realization"
+  },
+  {
+   "from": "progress-over-utilization",
+   "rel": "PRIOR_ART",
+   "to": "work:little-s-law-utilization-vs-throughput-in-queueing-theory",
+   "relation": "antecedent"
+  },
+  {
+   "from": "progress-over-utilization",
+   "rel": "RELATED_TO",
+   "to": "carrier-multiplexing",
+   "authored_here": true
+  },
+  {
+   "from": "progress-over-utilization",
+   "rel": "RELATED_TO",
+   "to": "dormant-but-alive",
+   "authored_here": true
+  },
+  {
+   "from": "progress-over-utilization",
+   "rel": "REALIZED_IN",
+   "to": "impl:computedriven/docs/progress-model.md"
+  },
+  {
+   "from": "progress-over-utilization",
+   "rel": "REALIZED_IN",
+   "to": "impl:computedriven/receipts/KERNELLET-R1.md:33"
+  },
+  {
+   "from": "progress-over-utilization",
+   "rel": "ANSWERS",
+   "to": "anti:busywork-scheduling"
+  },
+  {
+   "from": "progress-over-utilization",
+   "rel": "WITNESSED_BY",
+   "to": "witness:computedriven/receipts/R7-EXECUTED.md",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "progress-over-utilization",
+   "rel": "REFUTED_BY",
+   "to": "cex:progress-over-utilization",
+   "strength": "marker",
+   "law": null
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "PRIOR_ART",
+   "to": "work:beam-processes",
+   "relation": "realization"
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "PRIOR_ART",
+   "to": "work:durable-execution-temporal-restate",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "PRIOR_ART",
+   "to": "work:delimited-continuations",
+   "relation": "antecedent"
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "RELATED_TO",
+   "to": "carrier-multiplexing",
+   "authored_here": true
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "RELATED_TO",
+   "to": "locus-is-not-its-carrier",
+   "authored_here": true
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "RELATED_TO",
+   "to": "progress-over-utilization",
+   "authored_here": false
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "REALIZED_IN",
+   "to": "impl:computedriven/receipts/R7.1-OPEN.md:42"
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "REALIZED_IN",
+   "to": "impl:FPLA/DESIGN_NOTES_2026-09-06.md design A"
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "ANSWERS",
+   "to": "anti:busywork-scheduling"
+  },
+  {
+   "from": "dormant-but-alive",
+   "rel": "WITNESSED_BY",
+   "to": "witness:computedriven/receipts/R7.1-OPEN.md",
+   "executed": false,
+   "live_run": false
+  },
+  {
+   "from": "carrier-multiplexing",
+   "rel": "PRIOR_ART",
+   "to": "work:m-n-threading-go-s-scheduler-erlang-schedulers",
+   "relation": "realization"
+  },
+  {
+   "from": "carrier-multiplexing",
+   "rel": "RELATED_TO",
+   "to": "dormant-but-alive",
+   "authored_here": false
+  },
+  {
+   "from": "carrier-multiplexing",
+   "rel": "RELATED_TO",
+   "to": "locus-is-not-its-carrier",
+   "authored_here": true
+  },
+  {
+   "from": "carrier-multiplexing",
+   "rel": "RELATED_TO",
+   "to": "progress-aware-placement",
+   "authored_here": true
+  },
+  {
+   "from": "carrier-multiplexing",
+   "rel": "RELATED_TO",
+   "to": "progress-over-utilization",
+   "authored_here": false
+  },
+  {
+   "from": "carrier-multiplexing",
+   "rel": "REALIZED_IN",
+   "to": "impl:computedriven/receipts/R7-EXECUTED.md:101"
+  },
+  {
+   "from": "carrier-multiplexing",
+   "rel": "ANSWERS",
+   "to": "anti:carrier-identity"
+  },
+  {
+   "from": "carrier-multiplexing",
+   "rel": "WITNESSED_BY",
+   "to": "witness:computedriven/receipts/R7-EXECUTED.md",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "carrier-multiplexing",
+   "rel": "REFUTED_BY",
+   "to": "cex:carrier-multiplexing",
+   "strength": "marker",
+   "law": null
+  },
+  {
+   "from": "progress-aware-placement",
+   "rel": "PRIOR_ART",
+   "to": "work:work-stealing",
+   "relation": "antecedent"
+  },
+  {
+   "from": "progress-aware-placement",
+   "rel": "PRIOR_ART",
+   "to": "work:numa-aware-placement",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "progress-aware-placement",
+   "rel": "RELATED_TO",
+   "to": "carrier-multiplexing",
+   "authored_here": true
+  },
+  {
+   "from": "progress-aware-placement",
+   "rel": "REALIZED_IN",
+   "to": "impl:computedriven/receipts/R7.2.1D-OPEN.md"
+  },
+  {
+   "from": "progress-aware-placement",
+   "rel": "ANSWERS",
+   "to": "anti:busywork-scheduling"
+  },
+  {
+   "from": "proven-quiescence",
+   "rel": "PRIOR_ART",
+   "to": "work:dijkstra-scholten-termination-detection-1980",
+   "relation": "antecedent"
+  },
+  {
+   "from": "proven-quiescence",
+   "rel": "PRIOR_ART",
+   "to": "work:misra-s-ring-algorithm",
+   "relation": "antecedent"
+  },
+  {
+   "from": "proven-quiescence",
+   "rel": "PRIOR_ART",
+   "to": "work:revision-register-md-99-completedscan-completedsweep-with-a-",
+   "relation": "partial-overlap"
+  },
+  {
+   "from": "proven-quiescence",
+   "rel": "RELATED_TO",
+   "to": "three-valued-outcome",
+   "authored_here": true
+  },
+  {
+   "from": "proven-quiescence",
+   "rel": "ANSWERS",
+   "to": "anti:false-quiescence"
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "CITES_CELL",
+   "to": "cell:17",
+   "modality": "necessary"
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "PRIOR_ART",
+   "to": "work:two-generals",
+   "relation": "antecedent"
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "PRIOR_ART",
+   "to": "work:at-least-once-vs-at-most-once-delivery",
+   "relation": "antecedent"
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "PRIOR_ART",
+   "to": "work:lamport-happened-before",
+   "relation": "antecedent"
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "RELATED_TO",
+   "to": "intervention-provenance",
+   "authored_here": true
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "RELATED_TO",
+   "to": "proven-quiescence",
+   "authored_here": false
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "RELATED_TO",
+   "to": "refusing-join",
+   "authored_here": true
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "REALIZED_IN",
+   "to": "impl:super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:210"
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "REALIZED_IN",
+   "to": "impl:super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md:723"
+  },
+  {
+   "from": "three-valued-outcome",
+   "rel": "ANSWERS",
+   "to": "anti:false-quiescence"
+  },
+  {
+   "from": "orthogonal-persistence",
+   "rel": "PRIOR_ART",
+   "to": "work:atkinson-morrison-type-orthogonality-persistence-by-reachabi",
+   "relation": "terminology-precedent"
+  },
+  {
+   "from": "orthogonal-persistence",
+   "rel": "RELATED_TO",
+   "to": "continuity-through-reconstruction",
+   "authored_here": true
+  },
+  {
+   "from": "orthogonal-persistence",
+   "rel": "RELATED_TO",
+   "to": "three-sizes-of-world",
+   "authored_here": true
+  },
+  {
+   "from": "orthogonal-persistence",
+   "rel": "REALIZED_IN",
+   "to": "impl:studbook/docs/spec/README.md"
+  },
+  {
+   "from": "orthogonal-persistence",
+   "rel": "ANSWERS",
+   "to": "anti:location-leak"
+  },
+  {
+   "from": "three-sizes-of-world",
+   "rel": "PRIOR_ART",
+   "to": "work:git-s-object-ref-worktree-split",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "three-sizes-of-world",
+   "rel": "RELATED_TO",
+   "to": "orthogonal-persistence",
+   "authored_here": true
+  },
+  {
+   "from": "three-sizes-of-world",
+   "rel": "RELATED_TO",
+   "to": "world-boundary",
+   "authored_here": true
+  },
+  {
+   "from": "three-sizes-of-world",
+   "rel": "REALIZED_IN",
+   "to": "impl:CLOUD_V1.md:37"
+  },
+  {
+   "from": "three-sizes-of-world",
+   "rel": "ANSWERS",
+   "to": "anti:number-in-two-places"
+  },
+  {
+   "from": "world-boundary",
+   "rel": "PRIOR_ART",
+   "to": "work:gpt-2026-09-11-a-coherent-authority-state-observation-domain",
+   "relation": "not-searched"
+  },
+  {
+   "from": "world-boundary",
+   "rel": "RELATED_TO",
+   "to": "three-sizes-of-world",
+   "authored_here": true
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "PRIOR_ART",
+   "to": "work:unison-content-addressed-definitions",
+   "relation": "antecedent"
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "PRIOR_ART",
+   "to": "work:ipfs-nix",
+   "relation": "antecedent"
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "RELATED_TO",
+   "to": "confidentiality-under-content-addressing",
+   "authored_here": false
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "RELATED_TO",
+   "to": "exact-replay",
+   "authored_here": false
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "RELATED_TO",
+   "to": "identity-is-a-seal",
+   "authored_here": true
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "RELATED_TO",
+   "to": "refusable-divergence",
+   "authored_here": true
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "REALIZED_IN",
+   "to": "impl:WRL/README.md:1-40"
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "ANSWERS",
+   "to": "anti:replica-theater"
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "WITNESSED_BY",
+   "to": "witness:WRL/test/conformance.mjs",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "meaning-is-a-hash",
+   "rel": "REFUTED_BY",
+   "to": "cex:meaning-is-a-hash",
+   "strength": "none",
+   "law": null
+  },
+  {
+   "from": "exact-replay",
+   "rel": "PRIOR_ART",
+   "to": "work:deterministic-replay-rr",
+   "relation": "antecedent"
+  },
+  {
+   "from": "exact-replay",
+   "rel": "PRIOR_ART",
+   "to": "work:event-sourcing",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "exact-replay",
+   "rel": "RELATED_TO",
+   "to": "cross-machine-skill-replay",
+   "authored_here": true
+  },
+  {
+   "from": "exact-replay",
+   "rel": "RELATED_TO",
+   "to": "meaning-is-a-hash",
+   "authored_here": true
+  },
+  {
+   "from": "exact-replay",
+   "rel": "REALIZED_IN",
+   "to": "impl:TRVM/LAWS.md Law 4"
+  },
+  {
+   "from": "exact-replay",
+   "rel": "ANSWERS",
+   "to": "anti:replica-theater"
+  },
+  {
+   "from": "cross-machine-skill-replay",
+   "rel": "PRIOR_ART",
+   "to": "work:os-011-embodiment",
+   "relation": "partial-overlap"
+  },
+  {
+   "from": "cross-machine-skill-replay",
+   "rel": "PRIOR_ART",
+   "to": "work:record-and-replay-in-rpa",
+   "relation": "contrasting-solution"
+  },
+  {
+   "from": "cross-machine-skill-replay",
+   "rel": "RELATED_TO",
+   "to": "exact-replay",
+   "authored_here": true
+  },
+  {
+   "from": "cross-machine-skill-replay",
+   "rel": "REALIZED_IN",
+   "to": "impl:opensentience.org/_rebuild/data/receipts.json"
+  },
+  {
+   "from": "cross-machine-skill-replay",
+   "rel": "ANSWERS",
+   "to": "anti:replica-theater"
+  },
+  {
+   "from": "cross-machine-skill-replay",
+   "rel": "WITNESSED_BY",
+   "to": "witness:opensentience.org/_rebuild/data/receipts.json",
+   "executed": false,
+   "live_run": false
+  },
+  {
+   "from": "confidentiality-under-content-addressing",
+   "rel": "PRIOR_ART",
+   "to": "work:convergent-encryption-and-its-known-leaks",
+   "relation": "antecedent"
+  },
+  {
+   "from": "confidentiality-under-content-addressing",
+   "rel": "RELATED_TO",
+   "to": "meaning-is-a-hash",
+   "authored_here": true
+  },
+  {
+   "from": "confidentiality-under-content-addressing",
+   "rel": "REALIZED_IN",
+   "to": "impl:studbook/docs/spec/README.md:260"
+  },
+  {
+   "from": "established-not-known",
+   "rel": "PRIOR_ART",
+   "to": "work:byzantine-observation",
+   "relation": "antecedent"
+  },
+  {
+   "from": "established-not-known",
+   "rel": "PRIOR_ART",
+   "to": "work:super-bot-spec-stale-unestablished",
+   "relation": "partial-overlap"
+  },
+  {
+   "from": "established-not-known",
+   "rel": "RELATED_TO",
+   "to": "active-locus",
+   "authored_here": true
+  },
+  {
+   "from": "established-not-known",
+   "rel": "RELATED_TO",
+   "to": "understanding-boundary",
+   "authored_here": true
+  },
+  {
+   "from": "established-not-known",
+   "rel": "REALIZED_IN",
+   "to": "impl:AGENCY.md §4"
+  },
+  {
+   "from": "state-does-not-grant-authority",
+   "rel": "PRIOR_ART",
+   "to": "work:object-capability-discipline-miller",
+   "relation": "antecedent"
+  },
+  {
+   "from": "state-does-not-grant-authority",
+   "rel": "RELATED_TO",
+   "to": "capability-bounded-composition",
+   "authored_here": true
+  },
+  {
+   "from": "state-does-not-grant-authority",
+   "rel": "REALIZED_IN",
+   "to": "impl:AGENCY.md §4"
+  },
+  {
+   "from": "state-does-not-grant-authority",
+   "rel": "REALIZED_IN",
+   "to": "impl:scripts/messaging-rules.json STATE_DOES_NOT_ISSUE_AUTHORITY"
+  },
+  {
+   "from": "state-does-not-grant-authority",
+   "rel": "ANSWERS",
+   "to": "anti:ambient-authority"
+  },
+  {
+   "from": "state-does-not-grant-authority",
+   "rel": "WITNESSED_BY",
+   "to": "witness:scripts/check-messaging-language.mjs",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "state-does-not-grant-authority",
+   "rel": "REFUTED_BY",
+   "to": "cex:state-does-not-grant-authority",
+   "strength": "none",
+   "law": null
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "PRIOR_ART",
+   "to": "work:toulmin-warrant-and-backing",
+   "relation": "antecedent"
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "PRIOR_ART",
+   "to": "work:pollock-defeaters",
+   "relation": "antecedent"
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "PRIOR_ART",
+   "to": "work:assurance-cases-gsn",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "RELATED_TO",
+   "to": "descent-is-not-dependence",
+   "authored_here": true
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "RELATED_TO",
+   "to": "refusal-gate",
+   "authored_here": true
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "REALIZED_IN",
+   "to": "impl:DOCTRINE.md rule 4"
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "REALIZED_IN",
+   "to": "impl:CLAIM_LEDGER.json"
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "ANSWERS",
+   "to": "anti:agent-omniscience"
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "WITNESSED_BY",
+   "to": "witness:scripts/check-claim-ledger.mjs",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "evidence-before-claim",
+   "rel": "REFUTED_BY",
+   "to": "cex:evidence-before-claim",
+   "strength": "marker",
+   "law": null
+  },
+  {
+   "from": "refusal-gate",
+   "rel": "PRIOR_ART",
+   "to": "work:fail-closed-defaults",
+   "relation": "antecedent"
+  },
+  {
+   "from": "refusal-gate",
+   "rel": "PRIOR_ART",
+   "to": "work:popperian-falsifiability-as-an-admission-rule",
+   "relation": "close-analogue"
+  },
+  {
+   "from": "refusal-gate",
+   "rel": "RELATED_TO",
+   "to": "evidence-before-claim",
+   "authored_here": true
+  },
+  {
+   "from": "refusal-gate",
+   "rel": "RELATED_TO",
+   "to": "refusing-join",
+   "authored_here": true
+  },
+  {
+   "from": "refusal-gate",
+   "rel": "REALIZED_IN",
+   "to": "impl:ACADEMY.md §Read"
+  },
+  {
+   "from": "refusal-gate",
+   "rel": "REALIZED_IN",
+   "to": "impl:alkeyword.com/docs/spec/README.md §3.2"
+  },
+  {
+   "from": "refusal-gate",
+   "rel": "ANSWERS",
+   "to": "anti:agent-omniscience"
+  },
+  {
+   "from": "intervention-provenance",
+   "rel": "CITES_CELL",
+   "to": "cell:17",
+   "modality": "necessary"
+  },
+  {
+   "from": "intervention-provenance",
+   "rel": "PRIOR_ART",
+   "to": "work:w3c-prov",
+   "relation": "antecedent"
+  },
+  {
+   "from": "intervention-provenance",
+   "rel": "PRIOR_ART",
+   "to": "work:audit-logs",
+   "relation": "realization"
+  },
+  {
+   "from": "intervention-provenance",
+   "rel": "RELATED_TO",
+   "to": "three-valued-outcome",
+   "authored_here": true
+  },
+  {
+   "from": "intervention-provenance",
+   "rel": "REALIZED_IN",
+   "to": "impl:super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md"
+  },
+  {
+   "from": "intervention-provenance",
+   "rel": "ANSWERS",
+   "to": "anti:agent-omniscience"
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "CITES_CELL",
+   "to": "cell:44",
+   "modality": "stronger_than_needed"
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "PRIOR_ART",
+   "to": "work:pearl-s-ladder-of-causation",
+   "relation": "antecedent"
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "PRIOR_ART",
+   "to": "work:ablation-studies",
+   "relation": "realization"
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "PRIOR_ART",
+   "to": "work:non-laundering-cell-44",
+   "relation": "partial-overlap"
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "RELATED_TO",
+   "to": "continuity-through-reconstruction",
+   "authored_here": true
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "RELATED_TO",
+   "to": "evidence-before-claim",
+   "authored_here": true
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "REALIZED_IN",
+   "to": "impl:mosaic/embodiment.json"
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "REALIZED_IN",
+   "to": "impl:scripts/emb-support.mjs"
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "ANSWERS",
+   "to": "anti:provenance-as-support"
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "WITNESSED_BY",
+   "to": "witness:scripts/emb-support.mjs",
+   "executed": true,
+   "live_run": false
+  },
+  {
+   "from": "descent-is-not-dependence",
+   "rel": "REFUTED_BY",
+   "to": "cex:descent-is-not-dependence",
+   "strength": "marker",
+   "law": null
+  },
+  {
+   "from": "understanding-boundary",
+   "rel": "PRIOR_ART",
+   "to": "work:hintikka-epistemic-logic",
+   "relation": "antecedent"
+  },
+  {
+   "from": "understanding-boundary",
+   "rel": "PRIOR_ART",
+   "to": "work:the-box-and-box-ladder-s-epistemic-rung",
+   "relation": "realization"
+  },
+  {
+   "from": "understanding-boundary",
+   "rel": "PRIOR_ART",
+   "to": "work:graphonomous-bot-spec-a-bot-knows-its-projection-not-the-wor",
+   "relation": "partial-overlap"
+  },
+  {
+   "from": "understanding-boundary",
+   "rel": "RELATED_TO",
+   "to": "established-not-known",
+   "authored_here": true
+  },
+  {
+   "from": "understanding-boundary",
+   "rel": "REALIZED_IN",
+   "to": "impl:opensentience.org/epistemic-arithmetic.html"
+  },
+  {
+   "from": "understanding-boundary",
+   "rel": "ANSWERS",
+   "to": "anti:agent-omniscience"
+  }
+ ]
+}

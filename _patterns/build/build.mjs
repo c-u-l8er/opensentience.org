@@ -185,6 +185,14 @@ const PUBLISHED_IDS = new Set(Object.keys((PRIOR_ARTIFACT && PRIOR_ARTIFACT.outp
   }
 }
 
+// `related` reads as symmetric — "Relations with other patterns" — but it was authored on one side
+// only, and 10 of the edges pointed one way: a reader on locus-is-not-its-carrier was never told that
+// active-locus points at it. Requiring both sides to be typed is a second place for the same fact, so
+// the closure is DERIVED and the authored field stays a single mention. P29 guards the one case the
+// closure cannot fix: a related id that does not resolve.
+const RELATED_CLOSURE = new Map(DATA.patterns.map((p) => [p.id, new Set(p.related || [])]));
+for (const p of DATA.patterns) for (const r of p.related || []) if (RELATED_CLOSURE.has(r)) RELATED_CLOSURE.get(r).add(p.id);
+
 const ups = new Map();
 const derived = [];
 for (const p of DATA.patterns) {
@@ -305,11 +313,72 @@ for (const p of DATA.patterns) {
   // witness and re-adjudicating them is its own pass — this records that the pass is owed.
   if (w && STAGED && PUBLISHED_IDS.has(p.id) && w.rung === 'in_tree') findings.push(`${p.id}: witness is STAGED and the page is served, yet its rung is authored in_tree — the ladder position is understated (rung re-adjudication owed)`);
 
-  derived.push({ ...p, derived: { label, CHECKABLE, RUNNABLE: RUNNABLE_, EXECUTED, STAGED, REPRODUCED, PUBLISHED: PUBLISHED_IDS.has(p.id), next_rung_name, why, live_run: LIVE_RUN ? { at: LIVE_RUN.execution_identity.finished, url: LIVE_RUN.execution_identity.url, status: LIVE_RUN.execution_identity.status, stamp: LIVE_RUN.source_identity.stamp } : null, counterexample_strength: cexStrength.get(p.id) || null, execution: exec && exec.receipt ? { at: exec.receipt.execution_identity.started, host: exec.receipt.execution_identity.host, sha256: exec.receipt.source_identity.sha256, repo_head: exec.receipt.source_identity.repo_head } : (exec && exec.at ? { at: exec.at, note: exec.why } : null), claim_statuses: claimStatuses, cell_statuses: (p.cells || []).map((b) => ({ num: b.ref, modality: b.modality, status: CELLS.find((c) => c.num === b.ref).status })) } });
+  derived.push({ ...p, derived: { label, CHECKABLE, RUNNABLE: RUNNABLE_, EXECUTED, STAGED, REPRODUCED, PUBLISHED: PUBLISHED_IDS.has(p.id), next_rung_name, why, related_closure: [...RELATED_CLOSURE.get(p.id)].filter((x) => x !== p.id).sort(), live_run: LIVE_RUN ? { at: LIVE_RUN.execution_identity.finished, url: LIVE_RUN.execution_identity.url, status: LIVE_RUN.execution_identity.status, stamp: LIVE_RUN.source_identity.stamp } : null, counterexample_strength: cexStrength.get(p.id) || null, execution: exec && exec.receipt ? { at: exec.receipt.execution_identity.started, host: exec.receipt.execution_identity.host, sha256: exec.receipt.source_identity.sha256, repo_head: exec.receipt.source_identity.repo_head } : (exec && exec.at ? { at: exec.at, note: exec.why } : null), claim_statuses: claimStatuses, cell_statuses: (p.cells || []).map((b) => ({ num: b.ref, modality: b.modality, status: CELLS.find((c) => c.num === b.ref).status })) } });
 }
 for (const a of DATA.anti_patterns) for (const f of ['label']) if (f in a) refuse('P0-TYPED-DERIVED', a.id);
 
+// CROSS-RECORD CONSISTENCY. Each record was written on its own and the registry never compared them,
+// so two patterns could describe the same prior work as an antecedent and a contrasting solution, or
+// the same cell as necessary here and stronger-than-needed there. Both would be a disagreement about
+// a shared fact, which is the failure this whole catalog is built against — it just had no place to
+// show up. Both find 0 today; each was proven to refuse by injection.
+{
+  const workKey = (w) => w.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 40);
+  const works = new Map(), basis = new Map();
+  for (const p of derived) {
+    for (const w of (p.prior_art && p.prior_art.works) || []) {
+      const k = workKey(w.work);
+      if (!works.has(k)) works.set(k, []);
+      works.get(k).push({ id: p.id, relation: w.relation, work: w.work });
+    }
+    for (const [kind, list] of [['cell', p.cells || []], ['claim', p.claims || []]]) {
+      for (const b of list) {
+        const k = `${kind} ${b.ref}`;
+        if (!basis.has(k)) basis.set(k, []);
+        basis.get(k).push({ id: p.id, modality: b.modality });
+      }
+    }
+  }
+  for (const [k, v] of works) {
+    const rels = [...new Set(v.map((x) => x.relation))];
+    if (rels.length > 1) refuse('P30-PRIOR-ART-CONFLICT', `"${v[0].work}" is cited as ${rels.join(' and ')} by ${v.map((x) => x.id).join(', ')} — one work, one relation to this catalog, or the difference has to be stated`);
+  }
+  for (const [k, v] of basis) {
+    const mods = [...new Set(v.map((x) => x.modality))];
+    if (mods.length > 1) refuse('P31-BASIS-CONFLICT', `${k} bears as ${mods.join(' and ')} across ${v.map((x) => x.id).join(', ')} — the same basis cannot bear two ways without saying why`);
+  }
+}
+
 if (refusals.length) { console.error(`\n✗ ${refusals.length} refusal(s):\n  ` + refusals.join('\n  ')); process.exit(1); }
+
+// THE CORPUS AS A TYPED GRAPH. GPT's proposal, 2026-09-13: don't store the prose, represent what
+// each record is attached to, and let the book's order be one traversal of it rather than the thing
+// itself. Everything here is derived from the registry — there is no second place to author an edge,
+// and P30/P31 already refuse the two ways two records can disagree about a shared node.
+const graph = (() => {
+  const nodes = [], edges = [], seen = new Set();
+  const node = (id, type, extra = {}) => { if (seen.has(id)) return id; seen.add(id); nodes.push({ id, type, ...extra }); return id; };
+  const edge = (from, rel, to, extra = {}) => edges.push({ from, rel, to, ...extra });
+  const workId = (w) => 'work:' + w.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+  for (const p of derived) {
+    node(p.id, p.kind, { up: p.up, name: p.name, family: p.family, standing: p.derived.label, url: `/patterns/${p.id}` });
+  }
+  for (const a of DATA.anti_patterns) node('anti:' + a.id, 'anti_pattern', { name: a.name });
+  for (const p of derived) {
+    for (const b of p.cells || []) { node('cell:' + b.ref, 'cell', { status: (CELLS.find((c) => c.num === b.ref) || {}).status }); edge(p.id, 'CITES_CELL', 'cell:' + b.ref, { modality: b.modality }); }
+    for (const b of p.claims || []) { node('claim:' + b.ref, 'claim', { status: (CLAIMS.get(b.ref) || {}).status }); edge(p.id, 'CITES_CLAIM', 'claim:' + b.ref, { modality: b.modality }); }
+    for (const w of (p.prior_art && p.prior_art.works) || []) { node(workId(w.work), 'prior_art', { work: w.work }); edge(p.id, 'PRIOR_ART', workId(w.work), { relation: w.relation }); }
+    for (const r of p.derived.related_closure) edge(p.id, 'RELATED_TO', r, { authored_here: (p.related || []).includes(r) });
+    for (const r of p.realizations || []) { node('impl:' + r, 'realization', { at: r }); edge(p.id, 'REALIZED_IN', 'impl:' + r); }
+    if (p.failure_mode) edge(p.id, 'ANSWERS', 'anti:' + p.failure_mode);
+    if (p.witness) { node('witness:' + p.witness.path, 'witness', { shape: p.witness.shape, rung: p.witness.rung }); edge(p.id, 'WITNESSED_BY', 'witness:' + p.witness.path, { executed: p.derived.EXECUTED, live_run: !!p.derived.live_run }); }
+    if (p.counterexample) edge(p.id, 'REFUTED_BY', 'cex:' + p.id, { strength: (p.derived.counterexample_strength || {}).strength || 'none', law: (p.counterexample || {}).law || null });
+  }
+  const byRel = {};
+  for (const e of edges) byRel[e.rel] = (byRel[e.rel] || 0) + 1;
+  return { kind: 'UNBOXED_PATTERNS_GRAPH', derived_from: 'data/patterns.json + cells.json + CLAIM_LEDGER.json + receipts', counts: { nodes: nodes.length, edges: edges.length, by_relation: byRel }, nodes, edges };
+})();
+
 
 // ── counts, derived ────────────────────────────────────────────────────────────
 const count = (f) => derived.filter(f).length;
@@ -666,7 +735,7 @@ ${takeaways ? `<h2>What to take away</h2>${takeaways}` : ''}
 ${(p.cells || []).length || (p.claims || []).length ? `<h2>Invariant basis — and how each piece bears</h2><table class="basis"><tr><th>basis</th><th>bears</th><th>status</th></tr>${d.cell_statuses.map((x) => `<tr><td>cell <code>${x.num}</code></td><td><span class="mod ${x.modality}">${MOD_WORD[x.modality]}</span></td><td><code>${x.status}</code> <small>cells.json</small></td></tr>`).join('')}${(p.claims || []).map((b, i) => `<tr><td>claim <code>${esc(b.ref)}</code></td><td><span class="mod ${b.modality}">${MOD_WORD[b.modality]}</span></td><td><code>${d.claim_statuses[i]}</code> <small>CLAIM_LEDGER.json</small></td></tr>`).join('')}</table><p class="note">Satisfying a basis is local. Nothing here implies global adequacy unless a theorem or a composition rule says so.</p>` : ''}
 ${priorArtSection(p)}
 ${(p.realizations || []).length ? `<h2>Realizations in the tree</h2>${list(p.realizations)}` : ''}
-${(p.related || []).length ? `<h2>Relations with other patterns</h2><p>${p.related.map((id) => byId.has(id) ? `<a href="${id}.html">${esc(byId.get(id).name)}</a> ${chip(byId.get(id))}` : esc(id)).join(' · ')}</p>` : ''}
+${d.related_closure.length ? `<h2>Relations with other patterns</h2><p>${d.related_closure.map((id) => byId.has(id) ? `<a href="${id}.html">${esc(byId.get(id).name)}</a> ${chip(byId.get(id))}${(p.related || []).includes(id) ? '' : '<sup title="named on that page rather than this one; the reverse edge is derived">↩</sup>'}` : esc(id)).join(' · ')}</p>${d.related_closure.some((id) => !(p.related || []).includes(id)) ? '<p class="note">A <sup>↩</sup> marks a relation named on the other page. Relations are symmetric here and the reverse is derived, so neither side can go missing by being written once.</p>' : ''}` : ''}
 <div class="pn"><span>${prev ? `<a href="${prev.id}.html">← ${esc(prev.name)}</a><small>${FAMILY_TITLE[prev.family]}</small>` : ''}</span><span style="text-align:right">${next ? `<a href="${next.id}.html">${esc(next.name)} →</a><small>${FAMILY_TITLE[next.family]}</small>` : ''}</span></div>
 <footer class="fin">Derived ${new Date().toISOString()} by <code>opensentience.org/_patterns/build/build.mjs</code> from <code>data/patterns.json</code>, <code>_invariants/data/cells.json</code>, <code>CLAIM_LEDGER.json</code> and <code>_patterns/receipts/</code>. ${p.kind === 'pattern' && !p.problem ? 'Thin record: prose not yet authored; the invariant, witness and prior art are the record.' : ''}</footer>
 </main></div>${script}</body></html>`;
@@ -710,7 +779,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta n
 ${DATA.families.map((f) => `<h2>${FAMILY_TITLE[f]}</h2><div class="cards">${ORDER.filter((p) => p.family === f).map(card).join('')}</div>`).join('')}
 <h2 id="anti">Patterns that should disappear</h2><ol class="take">${DATA.anti_patterns.map((a) => `<li id="anti-${a.id}"><b>${esc(a.name)}</b>${esc(a.problem)}${a.paid_for ? ` <small>· paid for at ${esc(a.paid_for)}</small>` : ''}</li>`).join('')}</ol>
 ${findings.length ? `<h2>Findings from this build</h2><ul>${findings.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}
-<footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>. Machine-readable: <a href="llms.txt">llms.txt</a> · <a href="patterns.derived.json">patterns.derived.json</a> · <a href="artifact.json">artifact.json</a>.</footer>
+<footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>. Machine-readable: <a href="llms.txt">llms.txt</a> · <a href="patterns.derived.json">patterns.derived.json</a> · <a href="graph.json">graph.json</a> (${graph.counts.nodes} nodes, ${graph.counts.edges} typed edges) · <a href="artifact.json">artifact.json</a>.</footer>
 </main></div></body></html>`;
 const llms = [`# Unboxed Patterns — registry (P1, derived ${new Date().toISOString().slice(0, 10)})`, `# ${summary.patterns} records · ${summary.WITNESSED} WITNESSED · ${summary.STATED} STATED · ${summary.PROPOSED} PROPOSED · ${summary.anti_patterns} anti-patterns. Labels are derived by build.mjs, never typed. WITNESSED = a recorded run of a check on these exact bytes exists at rung ≥ in_tree.`, '', ...derived.map((p) => `- ${p.id} [${p.derived.label ?? p.kind}] (${p.family}) — ${p.invariant ?? '(no invariant)'}${p.witness ? ` — witness: ${p.witness.path} (${p.witness.shape}, ${p.witness.rung}${p.derived.EXECUTED ? ', executed' : ', NOT executed'})` : ''}`), '', '## anti-patterns', ...DATA.anti_patterns.map((a) => `- ${a.id} — ${a.problem}`)].join('\n') + '\n';
 const derivedJson = JSON.stringify({ kind: 'UNBOXED_PATTERNS_DERIVED', built: new Date().toISOString(), inputs_heads: heads, summary, findings, patterns: derived, anti_patterns: DATA.anti_patterns }, null, 2) + '\n';
@@ -729,7 +798,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 ${sitemapKeys.map((k) => `  <url><loc>${canonicalOf(k)}</loc><lastmod>${new Date().toISOString()}</lastmod><priority>${k === 'index.html' ? '1.0' : '0.7'}</priority></url>`).join('\n')}
 </urlset>
 `;
-const outputs = { 'patterns.derived.json': derivedJson, 'index.html': html, 'llms.txt': llms, 'sitemap.xml': sitemap, ...pageOutputs };
+const outputs = { 'patterns.derived.json': derivedJson, 'graph.json': JSON.stringify(graph, null, 1) + '\n', 'index.html': html, 'llms.txt': llms, 'sitemap.xml': sitemap, ...pageOutputs };
 const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])), live_receipts: Object.fromEntries([...liveReceipts.entries()].map(([id, r]) => [id, `${r.source_identity.stamp}:${r.execution_identity.passing}/${r.execution_identity.total}`])), chain: Object.fromEntries([...chain.entries()].map(([id, c]) => [id, c.cum.semanticId])), chain_films: Object.fromEntries([...chain.entries()].filter(([, c]) => c.film).map(([id, c]) => [id, c.film.source_identity.world_sha256.slice(0, 16) + ':' + c.film.epochs.length])), conclusion_film: conclusionFilm ? conclusionFilm.source_identity.world_sha256.slice(0, 16) + ':' + conclusionFilm.epochs.length : null, conclusion: conclusionSeal && conclusionSeal.ok ? conclusionSeal.semanticId : null, films: Object.fromEntries([...films.entries()].map(([f, r]) => [f, r.source_identity.world_sha256.slice(0, 16) + ':' + r.epochs.length])), 'WRL/wrl.js': WRLJS_SHA, wrl_worlds: Object.fromEntries([...sealed.entries()].map(([f, x]) => [f, x.r.ok ? x.r.semanticId : x.r.code])) };
 // the artifact excludes the timestamps so --verify compares content, not clock
 // the artifact excludes timestamps AND run durations so --verify compares content, not clock. A live
