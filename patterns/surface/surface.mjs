@@ -282,7 +282,7 @@ export function inspector(host, stage) {
         /* an illustration carries no Film line, but it does carry the step's own state and note */
         : (g.dataset.state || g.dataset.note)
         ? `${epoch ? `<div class="sf-insp-ep">${esc(epoch)}</div>` : ''}<dl>${g.dataset.state ? `<dt>state</dt><dd>${esc(g.dataset.state)}</dd>` : ''}${g.dataset.note ? `<dt>note</dt><dd>${esc(g.dataset.note)}</dd>` : ''}</dl>`
-        : `<p class="sf-insp-none">${esc(noState || (!epoch ? 'No Film drives this picture: it has a shape and no state.' : (sv && sv.dataset.step === '0') ? `${epoch} — nothing has run yet. Press Step or Play.` : `${epoch} — this object reports nothing in this one.`))}</p>`)
+        : `<p class="sf-insp-none">${esc(noState || (!epoch ? 'No Film drives this picture: it has a shape and no state.' : (sv && sv.dataset.step === '0') ? `${epoch} — nothing has run yet.${host.querySelector('.sf-controls') ? ' Press Step or Play.' : ''}` : `${epoch} — this object reports nothing in this one.`))}</p>`)
       + (sv && sv.querySelector('.sf-wire[data-from]')
         ? `<div class="sf-insp-w">${ins.length ? `in ← ${link(ins)}` : '<i>nothing reaches it</i>'}<br>${outs.length ? `out → ${link(outs)}` : '<i>it reaches nothing</i>'}</div>`
         : '');
