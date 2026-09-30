@@ -57,9 +57,17 @@ function sandbox() {
      gate defect. Real files, not stubs: a stub satisfies R24 and proves nothing. */
   const cells = JSON.parse(readFileSync(P.cells(dir), 'utf8')).cells;
   const ledger = JSON.parse(readFileSync(P.ledger(dir), 'utf8'));
+  /* The floor's reduction experiment is part of the universe too, and DERIVED
+     from floor.json rather than listed here. R42 resolves those paths on disk,
+     so a sandbox that does not mirror them refuses every run for R42's reason
+     and reports 29 unrelated breaks as failures — a fixture defect wearing the
+     costume of a gate defect, which is the same mistake round 2.1 made. */
+  const floor = JSON.parse(readFileSync(P.floor(dir), 'utf8'));
+  const rx = floor.observed_not_minted?.reduction_experiment || {};
   const universe = new Set([
     ...cells.flatMap((c) => c.witnesses || []),
     ...ledger.claims.flatMap((c) => c.witnesses || []),
+    ...[rx.witness, rx.result].filter(Boolean),
   ]);
   /* …and the TRANSITIVE CLOSURE of each, not just the named entry. Copying only
      the entries left `test/laws.mjs` in the sandbox without the eleven siblings
@@ -94,6 +102,7 @@ const P = {
   axes: (d) => join(d, 'opensentience.org/_invariants/data/axes.json'),
   copy: (d) => join(d, 'opensentience.org/_invariants/data/copy.json'),
   css: (d) => join(d, 'opensentience.org/_invariants/styles/table.css'),
+  floor: (d) => join(d, 'opensentience.org/_invariants/data/floor.json'),
   ledger: (d) => join(d, 'CLAIM_LEDGER.json'),
 };
 const edit = (path, fn) => {
@@ -102,6 +111,7 @@ const edit = (path, fn) => {
   writeFileSync(path, JSON.stringify(j, null, 2));
 };
 const cellNamed = (j, num) => j.cells.find((c) => c.num === num);
+const obl = (j, id) => j.obligations.find((o) => o.id === id);
 
 function run(dir) {
   try {
@@ -142,6 +152,77 @@ const BREAKS = [
   ['R26-ABSENCE-CONTRADICTED', 'a cell claims it has no evidence while carrying some', (d) => edit(P.cells(d), (j) => { cellNamed(j, '01').evidence_absent = 'nothing decides this'; })],
   ['R27-BROKEN-CLOSURE', "a runnable witness's import closure loses a file",
     (d) => rmSync(join(d, 'scripts/federation-kernel.mjs'), { force: true })],
+
+  /* ── the floor. Each break is the specific way this floor could rot back into
+     the taxonomy it replaced, and each must fail for ITS OWN id — a floor whose
+     nine guards all trip one shared refusal has nine names for one check. ── */
+  ['R29-VERSION-IN-PROSE', 'a cell types the page version into data instead of the placeholder',
+    (d) => edit(P.cells(d), (j) => { cellNamed(j, '30').extra = 'Rewritten at v0.9, by hand, where it will go stale.'; })],
+  ['R30-FLOOR-INCOMPLETE', 'an obligation drops the trust profile that bounds it',
+    (d) => edit(P.floor(d), (j) => { delete obl(j, 'S3').scope_profile; })],
+  ['R30-FLOOR-INCOMPLETE', 'an obligation stops declaring whether anything is open',
+    (d) => edit(P.floor(d), (j) => { delete obl(j, 'S5').open; })],
+  ['R31-FLOOR-OVERCLAIM', 'a tested obligation is promoted to proved',
+    (d) => edit(P.floor(d), (j) => { obl(j, 'S3').evidence_class = 'proved'; })],
+  ['R32-FLOOR-PROPERTIES', 'S3 keeps one enforcement property and drops the other',
+    (d) => edit(P.floor(d), (j) => { obl(j, 'S3').enforcement_properties = ['currentness / exclusivity']; })],
+  ['R32-FLOOR-PROPERTIES', 'S3 states two properties without separating them from mechanism count',
+    (d) => edit(P.floor(d), (j) => { obl(j, 'S3').properties_note = 'Two of them.'; })],
+  ['R32-FLOOR-PROPERTIES', 'S4 loses equivariance and keeps only adequacy',
+    (d) => edit(P.floor(d), (j) => { obl(j, 'S4').obligation = 'Every shared projection is adequate for the behaviour it promises to distinguish.'; })],
+  ['R32-FLOOR-PROPERTIES', 'S5 stops preserving explicit UNKNOWN',
+    (d) => edit(P.floor(d), (j) => { const o = obl(j, 'S5'); o.obligation = 'Past the irreversible boundary, replay needs proven idempotency.'; o.consequences = ['Intent and attempt and satisfaction are distinct.']; })],
+  ['R34-RESOLVED-AS-PRIMITIVE', 'S6 is promoted back to a sixth obligation to preserve a count',
+    (d) => edit(P.floor(d), (j) => { const r = j.resolved_candidates[0]; j.obligations.push({ id: r.id, name: r.name, obligation: r.why, evidence: 'x', evidence_class: 'tested', scope_profile: 'worlds', open: [] }); })],
+  ['R34-RESOLVED-AS-PRIMITIVE', 'a resolved candidate quietly changes its disposition',
+    (d) => edit(P.floor(d), (j) => { j.resolved_candidates[0].disposition = 'promoted'; })],
+  ['R35-DANGLING-REDUCTION', 'S6 reduces to an obligation that is not there',
+    (d) => edit(P.floor(d), (j) => { j.resolved_candidates[0].reduces_to = 'S9'; })],
+  ['R36-AXIS-IN-BASIS', 'the liveness candidate is folded into the safety basis',
+    (d) => edit(P.floor(d), (j) => { const a = j.separate_axes[0]; j.obligations.push({ id: a.id, name: a.name, obligation: a.statement, evidence: a.evidence, evidence_class: 'tested', scope_profile: 'loci', open: [] }); })],
+  ['R36-AXIS-IN-BASIS', 'a separate axis stops saying why it is separate',
+    (d) => edit(P.floor(d), (j) => { delete j.separate_axes[0].why_separate; })],
+  ['R37-RELATION-VOCAB', 'a cell claims a relation the vocabulary does not define',
+    (d) => edit(P.cells(d), (j) => { cellNamed(j, '15').floor_relation.relation = 'is_basically'; })],
+  ['R37-RELATION-VOCAB', 'a relation is asserted with no reason behind it',
+    (d) => edit(P.cells(d), (j) => { delete cellNamed(j, '15').floor_relation.why; })],
+  ['R38-DANGLING-RELATION', 'a cell points at an obligation that does not exist',
+    (d) => edit(P.cells(d), (j) => { cellNamed(j, '33').floor_relation.parent = ['S7']; })],
+  ['R38-DANGLING-RELATION', 'a relation with no parent at all',
+    (d) => edit(P.cells(d), (j) => { cellNamed(j, '33').floor_relation.parent = []; })],
+  ['R33-STATE-GRANTS-AUTHORITY', 'the page tells the reader a position grants authority',
+    (d) => edit(P.copy(d), (j) => { j.subtitle += ' It records what authority that position grants.'; })],
+  ['R33-STATE-GRANTS-AUTHORITY', 'a cell tells the reader persistence grants authority',
+    (d) => edit(P.cells(d), (j) => { cellNamed(j, '02').extra += ' In practice persistence grants authority to promote.'; })],
+  ['R43-BOUNDARY-READING', 'S2 reverts to the reading that lets a revoked grant be spent',
+    (d) => edit(P.floor(d), (j) => { obl(j, 'S2').obligation = 'No transition obtains authority not justified by an admitted policy, evidence or grant chain. Observation, reachability, restart, transport, model output, reconstruction and position mint nothing.'; })],
+  ['R43-BOUNDARY-READING', 'S4 reverts to the reading that lets a stale artifact be published',
+    (d) => edit(P.floor(d), (j) => { obl(j, 'S4').obligation = 'Every shared identity, receipt or projection is ADEQUATE for the future behaviour it promises to distinguish, AND quotiented over declared-irrelevant representation differences (EQUIVARIANCE).'; })],
+  ['R43-BOUNDARY-READING', 'S2 keeps the boundary but drops the note saying what it rules out',
+    (d) => edit(P.floor(d), (j) => { delete obl(j, 'S2').boundary_note; })],
+  ['R43-BOUNDARY-READING', 'S4 keeps the boundary but drops the mechanisms that preserve adequacy',
+    (d) => edit(P.floor(d), (j) => { obl(j, 'S4').boundary_note = 'It has to be right at the end.'; })],
+  ['R41-DIMENSION-MINTED', 'the cross-cutting dimension is promoted to a sixth obligation',
+    (d) => edit(P.floor(d), (j) => { const x = j.observed_not_minted; j.obligations.push({ id: x.id, name: x.name, obligation: x.statement, evidence: 'the six findings', evidence_class: 'tested', scope_profile: 'everywhere', open: [] }); })],
+  ['R41-DIMENSION-MINTED', 'a cell is given the dimension as a parent',
+    (d) => edit(P.cells(d), (j) => { cellNamed(j, '35').floor_relation.parent = ['X1']; })],
+  ['R41-DIMENSION-MINTED', 'the dimension loses its explicit non-promotion disposition',
+    (d) => edit(P.floor(d), (j) => { j.observed_not_minted.disposition = 'Recorded for the next round.'; })],
+  ['R42-DIMENSION-UNREDUCED', 'the dimension is recorded as reduced with no experiment behind it',
+    (d) => edit(P.floor(d), (j) => { delete j.observed_not_minted.reduction_experiment.finding; })],
+  ['R42-DIMENSION-UNREDUCED', 'the reduction experiment is named but is not on disk',
+    (d) => edit(P.floor(d), (j) => { j.observed_not_minted.reduction_experiment.witness = 'invariant-r10/experiments/x1_use_time_validity/does_not_exist.py'; })],
+  ['R40-EXPECTED-EMPTY', 'a cell is attached to an EXPECTED-EMPTY obligation on a `why` that only observes',
+    (d) => edit(P.cells(d), (j) => { cellNamed(j, '07').floor_relation = { relation: 'specializes', parent: ['S1'], why: 'The conflict predicate reports when incompatible claims overlap in one frame.' }; })],
+  ['R40-EXPECTED-EMPTY', 'an EXPECTED-EMPTY ruling stops naming the cells it examined',
+    (d) => edit(P.floor(d), (j) => { delete obl(j, 'S1').expected_empty.nearby_cells_examined; })],
+  ['R40-EXPECTED-EMPTY', 'an EXPECTED-EMPTY ruling drops the rule for attaching to it later',
+    (d) => edit(P.floor(d), (j) => { delete obl(j, 'S1').expected_empty.attachment_rule; })],
+  ['R39-FLOOR-NOT-RENDERED', 'the floor is in the data and never reaches the page',
+    (d) => { const t = join(d, 'opensentience.org/_invariants/build/templates.mjs'); const src = readFileSync(t, 'utf8');
+      const marker = 'export function floorBand(';
+      const i = src.indexOf(marker);
+      writeFileSync(t, src.slice(0, i) + marker + '{ floor, obligations, axes, resolved, observed, related }) { return \'\'; }\n\nfunction floorBandUnused(' + src.slice(i + marker.length)); }],
 ];
 
 /* ─────────────────────────── the probes ─────────────────────────── */
@@ -162,6 +243,18 @@ const PROBES = [
   ['a cell may carry both a proof page and witnesses', (d) => edit(P.cells(d), (j) => { cellNamed(j, '10').witnesses = ['scripts/check-federation-invariants.mjs']; })],
   ['a self-referential witness is MARKED, not refused — the ledger is another round\'s', () => {}],
   ['a node-only witness is CLASSIFIED, not refused — it just gets no Run button', () => {}],
+  ['an obligation with an empty open list is legal', (d) => edit(P.floor(d), (j) => { obl(j, 'S3').open = []; })],
+  ['an obligation with no cell relating to it is legal — S1 already has none', (d) => edit(P.cells(d), (j) => { for (const c of j.cells) delete c.floor_relation; })],
+  ['a cell may specialize two obligations at once', (d) => edit(P.cells(d), (j) => { cellNamed(j, '33').floor_relation.parent = ['S5', 'S2']; })],
+  ['a cell may be recorded ADJACENT to an obligation without deriving from it', (d) => edit(P.cells(d), (j) => { cellNamed(j, '15').floor_relation.relation = 'adjacent'; })],
+  ['a cell may relate to a separate axis rather than to an obligation', (d) => edit(P.cells(d), (j) => { cellNamed(j, '15').floor_relation.parent = ['L1']; })],
+  ['the factory rule may say PROVED because its domain is declared and finite', (d) => edit(P.floor(d), (j) => { j.separate_axes[2].status = 'PROVED / exhaustive-in-declared-domain'; })],
+  ['cell prose may reference a derived fact through its placeholder', (d) => edit(P.cells(d), (j) => { cellNamed(j, '30').extra += ' One of {{CELL_COUNT}} cells.'; })],
+  ['cell prose may name ANOTHER subject\'s version', (d) => edit(P.cells(d), (j) => { cellNamed(j, '30').extra += ' Tested against PULSE v0.1 and Graphonomous v0.4.'; })],
+  ['a cell MAY attach to an EXPECTED-EMPTY obligation when its why states what it constrains',
+    (d) => edit(P.cells(d), (j) => { cellNamed(j, '07').floor_relation = { relation: 'specializes', parent: ['S1'], why: 'Refuses the second of two conflicting claims at admission, so exactly one becomes current in the frame.' }; })],
+  ['an obligation with no boundary_note is legal where the boundary is not load-bearing',
+    (d) => edit(P.floor(d), (j) => { delete obl(j, 'S1').boundary_note; delete obl(j, 'S3').boundary_note; })],
   ['unmodified input builds', () => {}],
 ];
 

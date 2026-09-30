@@ -12,7 +12,7 @@
     "witness_note": "Optional prose beside `witnesses`: what the witness actually decides.",
     "evidence_absent": "Required on a DECIDED cell that has neither a proof page nor any witness. States why, so the absence is declared rather than silent."
   },
-  "version": "0.8",
+  "version": "0.9",
   "cells": [
     {
       "num": "01",
@@ -47,7 +47,7 @@
       "title": "β — Persistence",
       "tagline": "Which features survive the next consolidation.",
       "desc": "Normalized rank over a filtration of consolidation epochs. A feature with high β has persisted across many epochs and is durable enough to promote into semantic memory. Low β means provisional, subject to pruning.",
-      "extra": "Replaces recency- and frequency-based pruning with a principled durability measure. The formal handle on what makes memory compound rather than accumulate-and-stale.",
+      "extra": "Replaces recency- and frequency-based pruning with a principled durability measure. The formal handle on what makes memory compound rather than accumulate-and-stale. SCOPED at v{{VERSION}}: the rank is a measurement. It constrains which features a promotion policy may admit; the policy does the promoting. A durable feature is not thereby an authorized one.",
       "protocol": "OS-001 (Continual Learning) · Graphonomous",
       "protocol_group": {
         "label": "I",
@@ -55,7 +55,14 @@
         "meta": "OS-001 / OS-002 — Graphonomous"
       },
       "authority": "promote",
-      "source": "Persistent homology (bookkeeping form)"
+      "source": "Persistent homology (bookkeeping form)",
+      "floor_relation": {
+        "relation": "specializes",
+        "parent": [
+          "S2"
+        ],
+        "why": "The cell's authority consequence is `promote`. A high persistence rank is a MEASURED statistic over consolidation epochs; under S2 it constrains what a promotion policy may admit, and does not by itself mint the authority to promote."
+      }
     },
     {
       "num": "03",
@@ -259,7 +266,7 @@
       "title": "ι — Token idempotence",
       "tagline": "Replaying a token must not double-fire.",
       "desc": "Each of the five canonical cross-loop tokens (TopologyContext, DeliberationResult, OutcomeSignal, ReputationUpdate, ConsolidationEvent) is idempotent under retry. Failure-recovery without state corruption.",
-      "extra": "One of PULSE's seven invariants. Documented in conformance test #4.",
+      "extra": "One of PULSE's seven invariants. Documented in conformance test #4. QUALIFIED at v{{VERSION}}: idempotent token retry is NOT sufficient for irreversible-effect correctness. It makes replaying a MESSAGE safe. It says nothing about whether the effect on the far side of an irreversible boundary already happened — that is S5, and it needs a stable effect identity, reconciliation evidence, or freshly acknowledged duplicate risk.",
       "protocol": "OS-010 (PULSE) v0.1",
       "protocol_group": {
         "label": "III",
@@ -267,7 +274,14 @@
         "meta": "OS-010 — PULSE"
       },
       "authority": "safe retry",
-      "source": "Distributed systems / exactly-once delivery"
+      "source": "Distributed systems / exactly-once delivery",
+      "floor_relation": {
+        "relation": "supports",
+        "parent": [
+          "S5"
+        ],
+        "why": "Token idempotence is a property S5 can USE and is not sufficient for it: safe retry of a message says nothing about an irreversible external effect that may already have happened."
+      }
     },
     {
       "num": "12",
@@ -293,9 +307,9 @@
       "label": "Tempo-temporal",
       "status": "missing",
       "title": "Initiative (unnamed)",
-      "tagline": "Who advanced the loop?",
-      "desc": "Distinct from PULSE's phase ordering: this would measure who/what advanced the loop on the last cycle — agent, environment, schedule, external system.",
-      "extra": "Closely related to topological tempo but operationalized over PULSE phases rather than graph topology.",
+      "tagline": "Which locus advanced, and did anything actually progress?",
+      "desc": "Distinct from PULSE's phase ordering: this would measure who or what advanced the loop on the last cycle — agent, environment, schedule, external system — and whether the advance was SEMANTIC PROGRESS rather than utilization. A scheduler that keeps every thread busy without moving any locus forward has advanced nothing this cell would count.",
+      "extra": "Open. REFRAMED at v{{VERSION}} toward initiative and progress attribution, following runtime work that shifts scheduler evaluation from `are threads busy` to `is the locus making semantic progress`. Kept a candidate: progress-aware multiplexing is a measurement direction, and a scheduling result is not a conservation or composition law. It is not promoted, and it belongs beside the liveness axis rather than in the safety basis.",
       "protocol": "OS-010 (extension)",
       "protocol_group": {
         "label": "III",
@@ -303,7 +317,14 @@
         "meta": "OS-010 — PULSE"
       },
       "authority": "audit initiative",
-      "source": "Open"
+      "source": "Open",
+      "floor_relation": {
+        "relation": "adjacent",
+        "parent": [
+          "L1"
+        ],
+        "why": "Initiative attribution is a progress question, and progress is the liveness axis, not the safety basis. Recorded adjacent so the cell is looked for in the right place; nothing here promotes it."
+      }
     },
     {
       "num": "14",
@@ -345,7 +366,7 @@
       "title": "⊆ — Monotonic inheritance",
       "tagline": "Children cannot exceed their parents.",
       "desc": "Child contexts inherit a strict subset of parent permissions. A team cannot grant its members capabilities the team itself does not hold. Attempted privilege escalation is rejected at write time.",
-      "extra": "One of four Delegatic security invariants. Provides the structural guarantee that auditing the root tells you everything possible downstream.",
+      "extra": "One of four Delegatic security invariants. Provides the structural guarantee that auditing the root tells you everything possible downstream. SCOPED at v{{VERSION}}: this is non-amplification in the delegation tree only. It must not stand in for S2, which also refuses authority minted by observation, persistence, restart, transport, reconstruction, reachability, model output and position.",
       "protocol": "OS-006 (Delegatic) kernel",
       "protocol_group": {
         "label": "IV",
@@ -355,7 +376,14 @@
       "authority": "privilege containment",
       "source": "Lattice / subset semantics",
       "proof": "/proofs/monotonic-inheritance.html",
-      "tier": "impl"
+      "tier": "impl",
+      "floor_relation": {
+        "relation": "specializes",
+        "parent": [
+          "S2"
+        ],
+        "why": "Delegation monotonicity is non-amplification for ONE domain — the delegation tree. S2 is the general case, and covers observation, persistence, reconstruction, transport, reachability, model output and position, none of which this cell speaks for."
+      }
     },
     {
       "num": "16",
@@ -392,7 +420,7 @@
       "title": "⊕ — Append-only audit",
       "tagline": "History cannot be rewritten.",
       "desc": "Every authority decision is logged to an append-only audit stream. Past entries are immutable. Provides the structural basis for post-incident review and external compliance.",
-      "extra": "One of four Delegatic security invariants. The audit trail is the proof that the other three invariants were never violated.",
+      "extra": "One of four Delegatic security invariants. QUALIFIED at v{{VERSION}}: the audit trail is evidence that decisions were recorded, and it is not by itself canonical-history continuity. An append-only log can be copied, and both copies remain append-only while appending different futures. Establishing WHICH lineage is current is a separate enforcement property, and S3 needs both.",
       "protocol": "OS-006 (Delegatic) kernel",
       "protocol_group": {
         "label": "IV",
@@ -402,7 +430,14 @@
       "authority": "non-repudiation",
       "source": "Append-only log / Merkle chain",
       "proof": "/proofs/append-only.html",
-      "tier": "impl"
+      "tier": "impl",
+      "floor_relation": {
+        "relation": "supports",
+        "parent": [
+          "S3"
+        ],
+        "why": "An append-only history is a property S3 can use and is NOT canonical-history continuity: an immutable log of everything that happened does not by itself establish WHICH lineage is current, which is the other half S3 needs."
+      }
     },
     {
       "num": "44",
@@ -818,20 +853,27 @@
     {
       "num": "30",
       "symbol": "?",
-      "label": "Continuity",
+      "label": "Heredity",
       "status": "missing",
-      "title": "Embodiment continuity (unnamed)",
-      "tagline": "Body-state survives reload.",
-      "desc": "The agent's body-state (pose, viewport, focus, scroll, modal stack) is conserved across reload and reattachment. Without this, embodiment is just a session.",
-      "extra": "Open. Distinguishes embodiment from incarnation.",
+      "title": "Capability heredity (unnamed)",
+      "tagline": "Competence survives replacement only where its support does.",
+      "desc": "A continuity kernel is a MINIMAL CAUSALLY ESTABLISHED SUPPORT SET sufficient to retain a declared capability under a declared replacement contract. Support may span model weights, context, persistent memory, code, tools, services, cached artifacts and other descendants — so the honest model is an AND/OR support graph, not an internal-versus-external split. Provenance is NOT causal support: a lineage edge nominates a candidate support relation and does not demonstrate dependence. Support requires ablation, intervention, runtime dependency or replacement replay.",
+      "extra": "Open. REWRITTEN at v{{VERSION}}: this cell used to read `body-state survives reload` — pose, viewport, focus, scroll, modal stack conserved across reattachment. That was two questions wearing one name. The safety half — currentness, canonical history, anti-resurrection — is S3 on the floor and is not this cell. What remains here is heredity, and it is harder: persisted bytes do not establish it and neither does lineage. Competence revocation and authority revocation are also different operations, so a successor may keep a capability while losing permission to invoke it. The anti-vacuity rule: a no-op or equality capability test demonstrates nothing — the support topology must materially change and the dependence must be witnessed.",
       "protocol": "OS-011 (proposed)",
       "protocol_group": {
         "label": "IX",
         "name": "Embodiment",
         "meta": "OS-011 — body-browser, body-os"
       },
-      "authority": "reattach session",
-      "source": "Open"
+      "authority": "none — competence is not authority",
+      "source": "Open",
+      "floor_relation": {
+        "relation": "adjacent",
+        "parent": [
+          "S3"
+        ],
+        "why": "Deliberately adjacent, not derived. S3 protects authority, currentness and history. This cell asks whether COMPETENCE remains causally available after substrate replacement. They are different questions and conflating them is what the old `body-state survives reload` reading did."
+      }
     },
     {
       "num": "31",
@@ -841,7 +883,7 @@
       "title": "Affordance honesty (unnamed)",
       "tagline": "The body advertises only what it can do.",
       "desc": "Every affordance the body exposes to its driving agent must be one the body can actually execute. No phantom buttons. Prevents agents from confidently planning over fictional capabilities.",
-      "extra": "Open. Closely linked to OS-015 (Affordance Projection).",
+      "extra": "Open. Closely linked to OS-015 (Affordance Projection). STRENGTHENED at v{{VERSION}}: an advertised affordance must correspond to an EXECUTABLE installed capability under current bindings, not to a declared or intended one. And the honest advertisement stops there: a body that can do a thing has not thereby been authorized to do it. Competence is not authority.",
       "protocol": "OS-011 / OS-015",
       "protocol_group": {
         "label": "IX",
@@ -849,7 +891,15 @@
         "meta": "OS-011 — body-browser, body-os"
       },
       "authority": "advertise capability",
-      "source": "Open"
+      "source": "Open",
+      "floor_relation": {
+        "relation": "specializes",
+        "parent": [
+          "S4",
+          "S2"
+        ],
+        "why": "Advertising a capability is a claim about what the observer can rely on, so honesty of the advertisement is S4 adequacy for one domain. The S2 half is the boundary: an executable competence is still not an authority to invoke it."
+      }
     },
     {
       "num": "32",
@@ -857,9 +907,9 @@
       "label": "Sensor-actuator coherence",
       "status": "missing",
       "title": "Sensor-actuator coherence (unnamed)",
-      "tagline": "What I see is what I just did.",
-      "desc": "Following an actuator command, the next sensor reading reflects the command's effect within bounded time. Prevents drift between agent's belief and body's actual state.",
-      "extra": "Open. The robotics literature has versions of this; the agent literature does not.",
+      "tagline": "Observation and effect stay honest about what is not known.",
+      "desc": "The sensor half is S4 adequacy: the reading must expose the distinctions that determine relevant future behaviour, and must not silently omit a state variable that changes it. The actuator half is S5: after an irreversible command, unknown completion stays EXPLICIT. A bounded-time promise that the next reading reflects the command's effect holds only under a stated interface contract.",
+      "extra": "Open. NARROWED at v{{VERSION}}: this cell used to assert `what I see is what I just did` — the next sensor reading reflects the command's effect within bounded time — as universally true. It is not. Async and external systems may legitimately be UNKNOWN, delayed, reconciled, or only conditionally observable, and a page that teaches otherwise teaches an agent to treat a missing reading as a negative one. The robotics literature has versions of the bounded-latency promise; they come with an interface contract attached.",
       "protocol": "OS-011 (proposed)",
       "protocol_group": {
         "label": "IX",
@@ -867,17 +917,25 @@
         "meta": "OS-011 — body-browser, body-os"
       },
       "authority": "trust sensor",
-      "source": "Open / control theory"
+      "source": "Open / control theory",
+      "floor_relation": {
+        "relation": "specializes",
+        "parent": [
+          "S4",
+          "S5"
+        ],
+        "why": "Observation adequacy (S4) for the sensor half, effect honesty (S5) for the actuator half. The bounded-time coupling between them is an interface contract, not a law."
+      }
     },
     {
       "num": "33",
       "symbol": "?",
       "label": "Non-replay",
       "status": "missing",
-      "title": "Credential non-replay (unnamed)",
-      "tagline": "A token used twice was used wrongly.",
-      "desc": "Standard cryptographic invariant adapted to agent credentials: a token consumed once cannot be consumed again. Prevents replay attacks on agent-to-agent authority transfer.",
-      "extra": "Open at OS-013. Off-the-shelf cryptographic primitive at the implementation layer.",
+      "title": "One-shot authority non-replay (unnamed)",
+      "tagline": "What was spent once cannot be spent again.",
+      "desc": "A one-shot authority consumed once cannot be consumed again — and the general case is not only credentials. Replay of an irreversible EFFECT needs proven idempotency or a stable effect identity, reconciliation evidence, or fresh acknowledged authority accepting duplicate risk. Credential replay is the specialization where the one-shot object is a token and the mechanism is cryptographic.",
+      "extra": "Open at OS-013. BROADENED at v{{VERSION}}: the cryptographic credential case is kept and is no longer the whole cell. The distinctions S5 requires are intent, attempt, risk authorization, attempt terminal and intent satisfaction — five concepts, and a superseded attempt is not an unsatisfied intent. An off-the-shelf primitive covers the token; it does not cover an effect that may already have happened.",
       "protocol": "OS-013 (planned)",
       "protocol_group": {
         "label": "X",
@@ -885,7 +943,14 @@
         "meta": "OS-013 / OS-014 / OS-017"
       },
       "authority": "accept credential",
-      "source": "Cryptographic protocol design"
+      "source": "Cryptographic protocol design",
+      "floor_relation": {
+        "relation": "specializes",
+        "parent": [
+          "S5"
+        ],
+        "why": "Credential replay is one specialization of one-shot authority and effect replay. The cryptographic case is real and narrow; S5 is the general discipline it belongs to."
+      }
     },
     {
       "num": "34",
@@ -920,7 +985,7 @@
       "title": "Causal-order preservation (unnamed)",
       "tagline": "Aggregation does not reorder cause and effect.",
       "desc": "When telemetry from multiple agents is unified, the causal order of related events is preserved in the unified stream. Concurrent events may be interleaved arbitrarily, but causally ordered pairs are not reordered.",
-      "extra": "Open at OS-014. Standard vector-clock / Lamport-timestamp territory at the implementation layer.",
+      "extra": "Open at OS-014. Standard vector-clock / Lamport-timestamp territory at the implementation layer. BOUNDED at v{{VERSION}}: preserving causal order in a merged stream is a property of a PROJECTION and is not S3's canonical-history continuity. Both are about order and they answer different questions — one asks whether the trace reads correctly, the other asks which lineage is current. A page that conflates them invites a reader to accept a well-ordered trace as proof of identity.",
       "protocol": "OS-014 (planned)",
       "protocol_group": {
         "label": "X",
@@ -928,7 +993,14 @@
         "meta": "OS-013 / OS-014 / OS-017"
       },
       "authority": "publish trace",
-      "source": "Distributed systems / Lamport"
+      "source": "Distributed systems / Lamport",
+      "floor_relation": {
+        "relation": "adjacent",
+        "parent": [
+          "S3"
+        ],
+        "why": "Related and deliberately not derived. Preserving causal order in a merged telemetry stream is an ordering property of a projection; S3 is about identity, currentness and lineage. Conflating a stream order with a canonical history is the error this relation exists to prevent."
+      }
     },
     {
       "num": "36",
@@ -943,7 +1015,7 @@
       "title": "Aggregation fidelity (unnamed)",
       "tagline": "The federated view faithfully represents the union.",
       "desc": "Fidelity — every site locally satisfiable ⟹ the federated union satisfiable — holds whenever (i) the constraint language Γ has 1-point amalgamation: any two satisfiable Γ-instances sharing exactly one variable have a satisfiable union; and (ii) no cycle of the union carrier is split across sites — κₛ = 0 (entry 45), reading cycles as Berge cycles for n-ary constraints. The universal form, with neither hypothesis, is FALSE.",
-      "extra": "The universal claim dies on three sites holding x≠y, y≠z, z≠x: each satisfiable, every pairwise overlap consistent, union unsatisfiable. The FIRST REPAIR ALSO DIED. 'No split cycle ⟹ fidelity' was tested over 240,000 random federations with zero counterexamples and is false anyway — false even when the carrier is a TREE, so cyclicity is not the obstruction at all for a general language. Site 1 holds v = 0, site 2 holds v = 1; the carrier is a path. The sweep could not have found this because every domain it sampled used eq/neq, whose symmetry group makes the lemma a short theorem — it was measuring a theorem, not probing a conjecture. The corrected statement is exact in both directions: split-cycle sufficiency holds for EVERY Γ-federation iff Γ has 1PA, since a 1PA failure is itself two sites meeting at a cut vertex with no split cycle and no global model. NECESSITY: exact at |D| = 2 — fidelity fails iff some split cycle is unbalanced in Harary's signed-graph sense. At |D| ≥ 3 it becomes graph colouring, and there is a theorem here rather than a slogan. Call a criterion CYCLE-LOCAL if it is a predicate on a cycle's own labels and site tags and nothing else, applied as 'some cycle of the federation satisfies P'. No cycle-local criterion is both sound and complete at |D| = 3: K₄ of ≠ split into three matchings fails fidelity, so completeness forces P on one of its 7 simple cycles — but every one of those cycles, re-presented alone with the same labels and sites, HAS fidelity, so soundness then fails. The argument does not run at |D| = 2, where an unbalanced cycle stays unsatisfiable when extracted from its federation, which is exactly why a cycle-local criterion exists there. ROUND 3 — four changes. (1) THE PROPERTY HAS AN EXACT CHARACTERIZATION: Γ has the gluing property iff the CORE of (D; Γ) is automorphism-transitive, from standard finite-CSP algebra — cores, endomorphism-invariance of pp-definable relations, pp-definability of orbits in a finite core. It is decidable in |D|^|D|, and when it fails the canonical conjunctive queries at two orbit representatives BUILD the refuting two-site federation. Novelty is not claimed; no exact prior-art search has been done. (2) THE BOUNDED SEARCH WAS HIDING A CASE: successor on a 6-path fails the property while the bounded violation search reports nothing at its default bounds, because the witness needs three auxiliary variables. A miss was never evidence and now demonstrably is not. (3) THE LOCALITY THEOREM GENERALIZES TWICE — no cycle-local criterion exists at ANY |D| ≥ 3 (K_{k+1} for every k), and no bounded-size local test of any fixed size s exists either: a graph of girth > s and chromatic number > k makes every ≤s-constraint sub-federation a forest while the whole fails, and Erdős 1959 supplies one for every (s, k). For |D| ≥ 3 a fidelity failure can be irreducibly GLOBAL. (4) THERE IS A SECOND ROUTE that needs nothing from Γ — exact separator projections on the block tree (36b). Witness: scripts/check-federation-invariants.mjs §4b, §7, §9.",
+      "extra": "The universal claim dies on three sites holding x≠y, y≠z, z≠x: each satisfiable, every pairwise overlap consistent, union unsatisfiable. The FIRST REPAIR ALSO DIED. 'No split cycle ⟹ fidelity' was tested over 240,000 random federations with zero counterexamples and is false anyway — false even when the carrier is a TREE, so cyclicity is not the obstruction at all for a general language. Site 1 holds v = 0, site 2 holds v = 1; the carrier is a path. The sweep could not have found this because every domain it sampled used eq/neq, whose symmetry group makes the lemma a short theorem — it was measuring a theorem, not probing a conjecture. The corrected statement is exact in both directions: split-cycle sufficiency holds for EVERY Γ-federation iff Γ has 1PA, since a 1PA failure is itself two sites meeting at a cut vertex with no split cycle and no global model. NECESSITY: exact at |D| = 2 — fidelity fails iff some split cycle is unbalanced in Harary's signed-graph sense. At |D| ≥ 3 it becomes graph colouring, and there is a theorem here rather than a slogan. Call a criterion CYCLE-LOCAL if it is a predicate on a cycle's own labels and site tags and nothing else, applied as 'some cycle of the federation satisfies P'. No cycle-local criterion is both sound and complete at |D| = 3: K₄ of ≠ split into three matchings fails fidelity, so completeness forces P on one of its 7 simple cycles — but every one of those cycles, re-presented alone with the same labels and sites, HAS fidelity, so soundness then fails. The argument does not run at |D| = 2, where an unbalanced cycle stays unsatisfiable when extracted from its federation, which is exactly why a cycle-local criterion exists there. ROUND 3 — four changes. (1) THE PROPERTY HAS AN EXACT CHARACTERIZATION: Γ has the gluing property iff the CORE of (D; Γ) is automorphism-transitive, from standard finite-CSP algebra — cores, endomorphism-invariance of pp-definable relations, pp-definability of orbits in a finite core. It is decidable in |D|^|D|, and when it fails the canonical conjunctive queries at two orbit representatives BUILD the refuting two-site federation. Novelty is not claimed; no exact prior-art search has been done. (2) THE BOUNDED SEARCH WAS HIDING A CASE: successor on a 6-path fails the property while the bounded violation search reports nothing at its default bounds, because the witness needs three auxiliary variables. A miss was never evidence and now demonstrably is not. (3) THE LOCALITY THEOREM GENERALIZES TWICE — no cycle-local criterion exists at ANY |D| ≥ 3 (K_{k+1} for every k), and no bounded-size local test of any fixed size s exists either: a graph of girth > s and chromatic number > k makes every ≤s-constraint sub-federation a forest while the whole fails, and Erdős 1959 supplies one for every (s, k). For |D| ≥ 3 a fidelity failure can be irreducibly GLOBAL. (4) THERE IS A SECOND ROUTE that needs nothing from Γ — exact separator projections on the block tree (36b). Witness: scripts/check-federation-invariants.mjs §4b, §7, §9. DERIVED-VIEW NON-AUTHORITY, added at v{{VERSION}}: fidelity is a claim about REPRESENTATION. An aggregate that faithfully represents the union of its sources does not thereby acquire their authority to rewrite them, and a federated view that could rewrite its sources would be a different object than the one this cell is about.",
       "protocol": "OS-017 (planned) · scripts/federation-kernel.mjs",
       "protocol_group": {
         "label": "X",
@@ -952,7 +1024,14 @@
       },
       "authority": "query federated",
       "source": "Proved here (block–cut induction). Neighbouring classical results: Beeri–Fagin–Maier–Yannakakis 1983 (local-to-global consistency on α-acyclic schemes) · Fagin 1983 (acyclicity degrees) · Harary 1953 (balance, |D|=2). NOT Freuder 1982, which assumes arc consistency the antecedent does not supply. Sheaf reading: Abramsky–Brandenburger 2011.",
-      "tier": "property"
+      "tier": "property",
+      "floor_relation": {
+        "relation": "specializes",
+        "parent": [
+          "S2"
+        ],
+        "why": "A derived view can faithfully represent its sources without acquiring their authority. Fidelity of representation and authority to rewrite are separate; the aggregate gets the first and never the second by construction."
+      }
     }
   ]
 }

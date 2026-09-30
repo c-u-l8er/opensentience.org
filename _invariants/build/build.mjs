@@ -39,7 +39,19 @@ const emitToIdx = argv.indexOf('--emit-to');
 const EMIT_TO = emitToIdx >= 0 ? argv[emitToIdx + 1] : null;
 const QUIET = argv.includes('--quiet');
 
-const read = (p) => readFileSync(resolve(ROOT, p), 'utf8');
+/* Every file the build reads is recorded HERE, at the single choke point, so the
+   input set is what the build actually consumed rather than a list someone
+   maintained beside it. F-SITE-1 is what a maintained list costs: `build
+   --verify` could detect the drift in a second and nothing invoked it, because
+   nothing knew which changes should invoke it. The CI trigger is checked against
+   this set by scripts/check-invariants-ci-coverage.mjs, so a new input that the
+   workflow does not watch fails a gate instead of going quiet for eleven days. */
+const INPUTS = new Map();
+const read = (p) => {
+  const body = readFileSync(resolve(ROOT, p), 'utf8');
+  INPUTS.set(p, createHash('sha256').update(body).digest('hex'));
+  return body;
+};
 const readJson = (p) => JSON.parse(read(p));
 const sha = (s) => createHash('sha256').update(s).digest('hex');
 /* One token over the whole staged tree, so a cache-buster on an entry module
@@ -62,6 +74,7 @@ const COPY = readJson('opensentience.org/_invariants/data/copy.json');
 const LEDGER = readJson('CLAIM_LEDGER.json');
 const OCCUPANCY = readJson('mosaic/occupancy.json');
 const DEFEATERS = readJson('mosaic/defeaters.json');
+const FLOOR = readJson('opensentience.org/_invariants/data/floor.json');
 
 const cells = CELLS.cells;
 const VERSION = CELLS.version;
@@ -263,6 +276,25 @@ for (const c of cells) {
 const inReg = (id) => cells.filter((c) => c.derived.register === id);
 for (const r of AXES.registers) r.count = inReg(r.id).length;
 
+/* ───────────────────── derive: the semantic floor ─────────────────────
+   S1–S5 are NOT cells. A cell is a slot in the census; an obligation is what a
+   cell may specialize. Holding them in a separate file is what keeps the two
+   counts from contaminating each other — the floor cannot inflate the table,
+   and `reduction over accumulation` stays mechanically true rather than merely
+   intended. Every count here is derived for the same reason every other count
+   on this page is: the v0.6 page hand-typed its own and shipped them stale. */
+const FLOOR_IDS = FLOOR.obligations.map((o) => o.id);
+const AXIS_IDS = FLOOR.separate_axes.map((a) => a.id);
+const RESOLVED_IDS = FLOOR.resolved_candidates.map((r) => r.id);
+const RELATION_VOCAB = Object.keys(FLOOR.relation_vocabulary);
+const relatedCells = cells.filter((c) => c.floor_relation);
+const relatedByFloor = {};
+for (const c of relatedCells) {
+  for (const parent of c.floor_relation.parent || []) {
+    (relatedByFloor[parent] ||= []).push({ num: c.num, label: c.label, relation: c.floor_relation.relation });
+  }
+}
+
 /* ─────────────────────── derive: the facts ─────────────────────── */
 
 const kinded = cells.filter((c) => (c.kind || []).length);
@@ -287,6 +319,9 @@ const FACTS = {
   DEFEATER_COUNT: { value: DEFEATERS.defeaters.length, noun: 'defeaters' },
   ROUND: { value: LEDGER._round.id, noun: null },
   VERSION: { value: VERSION, noun: null },
+  FLOOR_COUNT: { value: FLOOR_IDS.length, noun: 'semantic obligations' },
+  FLOOR_RELATED_COUNT: { value: relatedCells.length, noun: 'related cells' },
+  SEPARATE_AXIS_COUNT: { value: AXIS_IDS.length, noun: 'separate axes' },
 };
 
 /* Every OS-NNN this table's cells actually name, derived from the protocol
@@ -317,6 +352,35 @@ function render(text, where) {
 }
 
 /* ─────────────────────────── the gate ─────────────────────────── */
+
+/* Cell prose may reference a derived fact. It could not before, so a cell that
+   wanted to say "rewritten at v0.9" had to type the page version into DATA —
+   the drift R20 refuses in the CSS and the templates, arriving by the one door
+   left open. `renderProse` substitutes the same placeholders `render` does; it
+   does NOT run R10's bare-integer check, which is calibrated for chrome copy
+   whose subject IS the derived noun, and would fire on prose that legitimately
+   counts other things (240,000 federations, three sites, 21 mutations). What it
+   adds instead is R29: the CURRENT page version, typed literally into data.
+   Other subjects' versions (PULSE v0.1, Graphonomous v0.4) are untouched. */
+const PROSE_FIELDS = ['tagline', 'desc', 'extra', 'hypothesis', 'witness_note', 'evidence_absent'];
+function renderProse(text, where) {
+  const lit = new RegExp('\\bv' + VERSION.replace('.', '\\.') + '\\b');
+  if (lit.test(text)) {
+    refuse('R29-VERSION-IN-PROSE', `${where}: page-version marker "v${VERSION}" is typed literally in data — use {{VERSION}}`);
+  }
+  return text.replace(/\{\{(\w+)\}\}/g, (m, k) => {
+    if (!(k in FACTS)) { refuse('R11-UNKNOWN-PLACEHOLDER', `${where}: {{${k}}} is not a derived fact`); return m; }
+    return String(FACTS[k].value);
+  });
+}
+for (const c of cells) {
+  for (const f of PROSE_FIELDS) {
+    if (typeof c[f] === 'string') c[f] = renderProse(c[f], `cell ${c.num}.${f}`);
+  }
+  if (c.floor_relation?.why) {
+    c.floor_relation.why = renderProse(c.floor_relation.why, `cell ${c.num}.floor_relation.why`);
+  }
+}
 
 const seen = new Set();
 for (const c of cells) {
@@ -401,10 +465,199 @@ for (const num of claimsByCell.keys()) {
 const regSum = AXES.registers.reduce((n, r) => n + r.count, 0);
 if (regSum !== cells.length) refuse('R19-REGISTER-PARTITION', `registers hold ${regSum} cells over a table of ${cells.length}`);
 
+/* ─────────────────── validate: the semantic floor ───────────────────
+   These are the assertions that stop the floor drifting back to the taxonomy it
+   replaced. They are POSITIVE — each names a thing that must be TRUE — because
+   a blacklist of forbidden phrases only catches the wordings someone already
+   thought of, and the reduction is a claim about structure, not about spelling.
+   The one negative (R33, on the rendered artifact) is the exception that earns
+   it: `grants` is the specific verb S2 exists to refuse, and the page is where
+   a reader would meet it. */
+
+const FLOOR_REQUIRED = ['id', 'name', 'obligation', 'evidence', 'evidence_class', 'scope_profile'];
+for (const o of FLOOR.obligations) {
+  const at = `floor ${o.id}`;
+  for (const f of FLOOR_REQUIRED) {
+    if (!o[f]) refuse('R30-FLOOR-INCOMPLETE', `${at}: missing \`${f}\``);
+  }
+  /* An obligation with no stated scope reads as universal, and none of these is.
+     S3 and S5 are TESTED-CONDITIONAL under a written profile, and a floor row
+     that drops the profile promotes itself by omission. */
+  if (!Array.isArray(o.open)) refuse('R30-FLOOR-INCOMPLETE', `${at}: \`open\` must be a list, empty if nothing is open`);
+  if (/\bproved\b/i.test(o.evidence_class || '') && !/domain|model/i.test(o.evidence_class || '')) {
+    refuse('R31-FLOOR-OVERCLAIM', `${at}: evidence_class "${o.evidence_class}" claims a proof the package does not carry`);
+  }
+}
+
+/* S3's two enforcement properties are a statement about OBLIGATIONS, not about
+   mechanism count. The frontier is explicit that one compound trusted mechanism
+   may supply both and that a floor census must not be forced upward by a
+   semantic decomposition — so the row must carry the note that says so. */
+const s3row = FLOOR.obligations.find((o) => o.id === 'S3');
+if (s3row) {
+  const props = (s3row.enforcement_properties || []).join(' ').toLowerCase();
+  if (!/current/.test(props) || !/canonical/.test(props)) {
+    refuse('R32-FLOOR-PROPERTIES', 'floor S3: must name currentness/exclusivity AND canonical-history continuity');
+  }
+  if (!/mechanism/i.test(s3row.properties_note || '')) {
+    refuse('R32-FLOOR-PROPERTIES', 'floor S3: names two properties without the note separating them from mechanism count');
+  }
+}
+
+/* S4 without both words is the naive reading the rewrite exists to kill. */
+const s4row = FLOOR.obligations.find((o) => o.id === 'S4');
+if (s4row && !(/adequa/i.test(s4row.obligation) && /equivarian/i.test(s4row.obligation))) {
+  refuse('R32-FLOOR-PROPERTIES', 'floor S4: the obligation must name ADEQUACY and EQUIVARIANCE');
+}
+
+/* S5 must keep uncertainty explicit and the five concepts distinct. */
+const s5row = FLOOR.obligations.find((o) => o.id === 'S5');
+if (s5row) {
+  const body = `${s5row.obligation} ${(s5row.consequences || []).join(' ')}`;
+  if (!/unknown/i.test(body)) refuse('R32-FLOOR-PROPERTIES', 'floor S5: does not preserve explicit UNKNOWN');
+  for (const w of ['intent', 'attempt', 'satisf']) {
+    if (!new RegExp(w, 'i').test(body)) refuse('R32-FLOOR-PROPERTIES', `floor S5: does not distinguish "${w}…"`);
+  }
+}
+
+/* S6 is a corollary of S1. It is recorded under resolved_candidates and must
+   appear on NO obligation row — the count is not a thing to be preserved. */
+for (const id of RESOLVED_IDS) {
+  if (FLOOR_IDS.includes(id)) refuse('R34-RESOLVED-AS-PRIMITIVE', `floor: "${id}" is a resolved candidate AND an obligation`);
+}
+for (const r of FLOOR.resolved_candidates) {
+  if (r.disposition !== 'not_promoted') refuse('R34-RESOLVED-AS-PRIMITIVE', `floor ${r.id}: resolved with disposition "${r.disposition}"`);
+  if (!FLOOR_IDS.includes(r.reduces_to)) refuse('R35-DANGLING-REDUCTION', `floor ${r.id}: reduces_to "${r.reduces_to}", which is not an obligation`);
+}
+
+/* Liveness is a separate axis. An L-row that drifted into the S-series would be
+   the exact confusion EXP-4's census was run to prevent. */
+for (const a of FLOOR.separate_axes) {
+  if (FLOOR_IDS.includes(a.id)) refuse('R36-AXIS-IN-BASIS', `floor: "${a.id}" is a separate axis AND an obligation`);
+  if (!a.why_separate) refuse('R36-AXIS-IN-BASIS', `floor ${a.id}: on a separate axis with no \`why_separate\``);
+}
+
+/* A relation that points nowhere is decoration; a vocabulary the data does not
+   use is worse, because it advertises a structure that is not there. */
+for (const c of relatedCells) {
+  const fr = c.floor_relation;
+  const at = `cell ${c.num}.floor_relation`;
+  if (!RELATION_VOCAB.includes(fr.relation)) refuse('R37-RELATION-VOCAB', `${at}: relation "${fr.relation}" is not in floor.json relation_vocabulary`);
+  if (!fr.why) refuse('R37-RELATION-VOCAB', `${at}: no \`why\` — an unexplained relation cannot be checked`);
+  if (!(fr.parent || []).length) refuse('R38-DANGLING-RELATION', `${at}: a relation with no parent`);
+  for (const parent of fr.parent || []) {
+    if (!FLOOR_IDS.includes(parent) && !AXIS_IDS.includes(parent)) {
+      refuse('R38-DANGLING-RELATION', `${at}: parent "${parent}" is neither an obligation nor a separate axis`);
+    }
+  }
+}
+
+/* THE BOUNDARY READING IS PART OF THE OBLIGATION, not a note beside it.
+   The X1 model found 537 of 537 stale traces leaving S2 (read as history) or S4
+   (read at observation) satisfied while a semantically invalid action was
+   admitted — so the reduction of X1 into these two rows depended on a reading
+   the floor did not state. It states it now, and this refuses its removal. An
+   implementer who reads S2 the weak way has an S2-conformant system that admits
+   revoked authority, which is the whole reason the wording is load-bearing. */
+const BOUNDARY_ROWS = {
+  S2: { needle: /\bconsumed\b/i, note: /revoked|superseded|exhausted/i, why: 'the boundary where authority is CONSUMED' },
+  S4: { needle: /published or consumed/i, note: /versioning|fencing|atomic|revalidat/i, why: 'the boundary where an artifact is PUBLISHED or CONSUMED' },
+};
+for (const [id, rule] of Object.entries(BOUNDARY_ROWS)) {
+  const o = FLOOR.obligations.find((x) => x.id === id);
+  if (!o) { refuse('R43-BOUNDARY-READING', `floor: ${id} is missing`); continue; }
+  if (!/boundary/i.test(o.obligation) || !rule.needle.test(o.obligation)) {
+    refuse('R43-BOUNDARY-READING', `floor ${id}: the obligation does not name ${rule.why} — the weak reading is satisfiable while an invalid action is admitted`);
+  }
+  if (!o.boundary_note || !rule.note.test(o.boundary_note)) {
+    refuse('R43-BOUNDARY-READING', `floor ${id}: no \`boundary_note\` saying what the boundary reading rules out`);
+  }
+}
+
+/* X1 is reduced, not minted. It absorbed six findings and an exhaustive model
+   showed every one of them landing on an existing row — so the one thing it must
+   never become is a sixth obligation or a 47th cell, which is exactly what a
+   pattern that explains six findings invites. The refusal is cheap and the
+   temptation is not hypothetical: this table grew by accumulation for nine
+   rounds. It must also keep its reduction experiment attached; a dimension
+   recorded without the measurement that reduced it is an opinion. */
+const X1 = FLOOR.observed_not_minted;
+if (X1) {
+  if (FLOOR_IDS.includes(X1.id)) refuse('R41-DIMENSION-MINTED', `floor: "${X1.id}" is recorded as a cross-cutting dimension AND as an obligation`);
+  if (AXIS_IDS.includes(X1.id)) refuse('R41-DIMENSION-MINTED', `floor: "${X1.id}" is a cross-cutting dimension AND a separate axis`);
+  if (cells.some((c) => (c.floor_relation?.parent || []).includes(X1.id))) {
+    refuse('R41-DIMENSION-MINTED', `a cell relates to "${X1.id}", which is a dimension the rows are read through, not an obligation a cell can specialize`);
+  }
+  if (!/NOT MINTED/i.test(X1.disposition || '')) refuse('R41-DIMENSION-MINTED', `floor ${X1.id}: recorded without an explicit non-promotion disposition`);
+  const rx = X1.reduction_experiment;
+  if (!rx?.witness || !rx?.result || !rx?.finding) {
+    refuse('R42-DIMENSION-UNREDUCED', `floor ${X1.id}: recorded as reduced with no witness, result and finding — that is an opinion, not a reduction`);
+  } else if (!existsSync(resolve(ROOT, rx.witness)) || !existsSync(resolve(ROOT, rx.result))) {
+    refuse('R42-DIMENSION-UNREDUCED', `floor ${X1.id}: the reduction experiment or its recorded result is not on disk`);
+  }
+}
+
+/* An obligation adjudicated EXPECTED-EMPTY is not waiting for a cell. S1 is the
+   case: nothing on this table specializes admission singularity, and the ruling
+   is that this is what a floor is FOR — a primitive may be more fundamental than
+   any measurement the census carries, and faking a child to make the graph look
+   symmetrical would assert something false. So attaching one later must clear a
+   bar: the relation has to say what the cell CONSTRAINS about admission or
+   currentness. Cell 07 detects conflicting claims and does not refuse either of
+   them; that is the exact shape this refusal exists to keep out. */
+for (const o of FLOOR.obligations) {
+  const ee = o.expected_empty;
+  if (!ee) continue;
+  const at = `floor ${o.id}.expected_empty`;
+  for (const f of ['classification', 'why', 'attachment_rule']) {
+    if (!ee[f]) refuse('R40-EXPECTED-EMPTY', `${at}: missing \`${f}\``);
+  }
+  if (!Array.isArray(ee.nearby_cells_examined) || !ee.nearby_cells_examined.length) {
+    refuse('R40-EXPECTED-EMPTY', `${at}: classified EXPECTED-EMPTY without naming the cells examined and rejected`);
+  }
+  for (const c of relatedByFloor[o.id] || []) {
+    const why = cells.find((x) => x.num === c.num).floor_relation.why;
+    if (!/\b(admis|current|exclusiv|refus|singular)/i.test(why)) {
+      refuse('R40-EXPECTED-EMPTY',
+        `cell ${c.num} attaches to ${o.id}, which is adjudicated EXPECTED-EMPTY, and its \`why\` does not say what it constrains about admission or currentness — observing a conflict is not admitting one of it`);
+    }
+  }
+}
+
+/* S2 is why this page may not say a state GRANTS authority. Applied to the
+   rendered artifact further down, so it covers page copy AND cell prose. */
+/* Two word orders, because the wording this refuses appears in both: "state
+   grants authority", and "what authority that position grants". The gap may not
+   cross a clause boundary — the CORRECT statement of the doctrine is "state
+   constrains what can be authorized; explicit policy and grants establish
+   authority", and a looser gap matches that sentence too, which would make the
+   gate refuse the very sentence it exists to protect. It did, on the first run. */
+const SUBJ = '(?:state|position|persistence|reachability|observation|lineage|provenance)';
+const GAP = '[^.;,:—<]{0,30}';
+/* The floor's refusals get their own checkpoint, and this is not cosmetic: the
+   rendering below reads `o.open.length` and `a.assumptions`, so an obligation
+   that dropped a required field would reach the template and die with a
+   TypeError while a stated refusal sat unread in `problems`. The gate caught
+   exactly that. A refusal that loses a race to a crash is not a refusal, and
+   the reader of the crash learns nothing about which rule was broken. */
+if (problems.length) {
+  console.error(`\n✗ invariants build REFUSED — ${problems.length} problem(s)\n`);
+  for (const p of problems) console.error(`  [${p.id}] ${p.msg}`);
+  console.error('');
+  process.exit(1);
+}
+
+const GRANTS_AUTHORITY = new RegExp(
+  `\\b${SUBJ}\\b${GAP}\\bgrants?\\b${GAP}\\bauthority\\b|\\bauthority\\b${GAP}\\b${SUBJ}\\b\\s+grants?\\b`,
+  'i',
+);
+
+
 /* ─────────────────────────── copy ─────────────────────────── */
 
 const subtitle = render(COPY.subtitle, 'copy.subtitle');
 const noteBody = render(COPY.reframe_note, 'copy.reframe_note');
+const floorNote = render(COPY.floor_note, 'copy.floor_note');
 const registerNotes = Object.fromEntries(
   AXES.registers.map((r) => [r.id, render(r.note, `axes.registers.${r.id}.note`)])
 );
@@ -497,6 +750,7 @@ const inspectorData = Object.fromEntries(cells.map((c) => [c.num, {
   kind: c.kind || null, kind_source: c.kind_source || null, kind_why: c.kind_why || null,
   relational_arity: c.relational_arity || null, hypothesis: c.hypothesis || null,
   register: c.derived.register,
+  floor_relation: c.floor_relation || null,
   records: c.derived.records, doubt: c.derived.doubt,
 }]));
 
@@ -504,6 +758,8 @@ const runtime = {
   registers: Object.fromEntries(AXES.registers.map((r) => [r.id, { name: r.name, roman: r.roman }])),
   tiers: AXES.tiers,
   cells: inspectorData,
+  floor: Object.fromEntries([...FLOOR.obligations, ...FLOOR.separate_axes].map((o) => [o.id, o.name])),
+  relations: FLOOR.relation_vocabulary,
 };
 
 const html = `<!doctype html>
@@ -528,6 +784,7 @@ ${css}
         <amp-nav property="opensentience"></amp-nav>
 ${T.masthead({ version: VERSION, subtitle })}
 ${T.reframeNote({ version: VERSION, body: noteBody })}
+${T.reframeNote({ version: VERSION, body: floorNote })}
 ${T.census(COPY.census.map((r) => ({ value: FACTS[r.fact].value, label: r.label, emphasis: !!r.emphasis })))}
 ${T.registerLegend(AXES.registers)}
 ${T.tierLegend(AXES.tiers)}
@@ -538,6 +795,14 @@ ${T.filterBar({
   statuses: Object.keys(AXES.statuses).filter((k) => k !== '_comment'),
 })}
         <main class="table-stage" id="table">
+${T.floorBand({
+  floor: FLOOR,
+  obligations: FLOOR.obligations,
+  axes: FLOOR.separate_axes,
+  resolved: FLOOR.resolved_candidates,
+  observed: FLOOR.observed_not_minted,
+  related: relatedByFloor,
+})}
 ${bands.join('\n')}
         </main>
 ${T.inspector()}
@@ -620,6 +885,18 @@ ${T.footer({ protocolRange: PROTOCOL_RANGE, citations: COPY.citations })}
                     set("i-kind", c.kind.join(" × ") + (c.kind_source === "authored" ? " (authored: " + c.kind_why + ")" : ""));
                 }
                 row("i-kind-row", !!c.kind);
+
+                /* The relation is stated with its REASON, always. An arrow from a
+                   cell to S2 with nothing behind it is a claim the reader cannot
+                   check, and the whole point of the floor is that the reduction is
+                   checkable rather than asserted. */
+                if (c.floor_relation) {
+                    const fr = c.floor_relation;
+                    const names = fr.parent.map((p) => p + " " + (TABLE.floor[p] || "")).join(" + ");
+                    set("i-floor-rel", fr.relation.replace(/_/g, " ").toUpperCase() + " → " + names);
+                    set("i-floor-why", fr.why);
+                }
+                row("i-floor-row", !!c.floor_relation);
 
                 if (c.relational_arity) {
                     set("i-arity", c.relational_arity + " — a refutation is " + (c.relational_arity > 1 ? "a PAIR of runs, not one" : "a single run"));
@@ -708,6 +985,12 @@ ${T.footer({ protocolRange: PROTOCOL_RANGE, citations: COPY.citations })}
                 el.style.animationDelay = i * 14 + "ms";
                 el.addEventListener("click", () => openInspector(el.dataset.num));
             });
+            /* The floor's own cell references open the same inspector. A relation
+               the reader can only read is worth less than one they can follow. */
+            document.querySelectorAll(".floor-cell-ref").forEach((el) => {
+                el.addEventListener("click", () => openInspector(el.dataset.num));
+            });
+
             document.getElementById("inspector-close").addEventListener("click", closeInspector);
             document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeInspector(); });
 
@@ -746,6 +1029,21 @@ else if (volV[1] !== VERSION || tagV[1] !== VERSION) {
 }
 
 if (/mailto:/i.test(html)) refuse('R21-MAILTO', 'the artifact contains a mailto: link');
+
+/* S2 on the surface. Established state constrains what can be authorized;
+   explicit policy and grants establish authority. A page that says a position
+   or a persisted byte GRANTS authority teaches the reader the one thing S2
+   exists to refuse, and it would be doing it in the subtitle — the sentence
+   most readers see and the only one some of them read. */
+const grantsHit = html.match(GRANTS_AUTHORITY);
+if (grantsHit) refuse('R33-STATE-GRANTS-AUTHORITY', `the artifact says "${grantsHit[0].trim()}" — S2 refuses it: state constrains admissibility, policy and grants establish authority`);
+
+/* The floor must actually reach the page. A band that silently failed to render
+   would leave every relation on every cell pointing at nothing a reader can
+   reach, and the build would still be green. */
+for (const id of [...FLOOR_IDS, ...AXIS_IDS, ...RESOLVED_IDS]) {
+  if (!html.includes(`id="floor-${id}"`)) refuse('R39-FLOOR-NOT-RENDERED', `floor row "${id}" is in the data and not on the page`);
+}
 
 /* Tier link text is generated from axes.json. If a tier's link_text calls a
    property test a proof, refuse — that is the R5.1 laundering, on the surface. */
@@ -820,7 +1118,7 @@ for (const info of witnessInfo.values()) {
   if (info.kind !== 'runnable') continue;
   for (const rel of info.files) {
     if (staged.some((s) => s.path === rel)) continue;
-    const src = readFileSync(join(ROOT, rel), 'utf8');
+    const src = read(rel);   // through the choke point: a staged witness IS an input
     const dest = join(WDIR, 'src', rel);
     mkdirSync(dirname(dest), { recursive: true });
     writeFileSync(dest, src);
@@ -888,12 +1186,14 @@ renameSync(stage, out);
   mkdirSync(artifactDir, { recursive: true });
   writeFileSync(join(artifactDir, 'artifact.json'), JSON.stringify({
     _comment: 'Written by _invariants/build/build.mjs. --verify re-checks invariants.html against this.',
-    built_from: 'opensentience.org/_invariants/data/{cells,axes,copy}.json + CLAIM_LEDGER.json + mosaic/{occupancy,defeaters}.json',
+    built_from: 'opensentience.org/_invariants/data/{cells,axes,copy,floor}.json + CLAIM_LEDGER.json + mosaic/{occupancy,defeaters}.json',
+    inputs: [...INPUTS.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([path, sha256]) => ({ path, sha256 })),
     version: VERSION,
     round: FACTS.ROUND.value,
     sha256: digest,
     bytes: Buffer.byteLength(html),
     cells: cells.length,
+    floor: { obligations: FLOOR_IDS.length, separate_axes: AXIS_IDS.length, resolved: RESOLVED_IDS.length, related_cells: relatedCells.length },
     registers: Object.fromEntries(AXES.registers.map((r) => [r.id, r.count])),
     facts: Object.fromEntries(Object.entries(FACTS).map(([k, v]) => [k, v.value])),
     /* The staged witness tree, hashed per file. --verify re-reads each against
@@ -933,4 +1233,19 @@ log(`   ${FACTS.UNKINDED_DECIDED_COUNT.value} decided cell(s) unassigned · ${FA
   }
 }
 log('');
+/* The floor prints its own census for the same reason the table does: a number
+   nobody re-derives is a number that drifts. `open` counts are the honest half —
+   an obligation with open findings is not a closed one, and the log says so
+   before the page does. */
+log('');
+log(`  the semantic floor — ${FLOOR_IDS.length} obligations, ${relatedCells.length} cells related`);
+log('');
+for (const o of FLOOR.obligations) {
+  const rel = (relatedByFloor[o.id] || []).length;
+  log(`   ${o.id}  ${o.name.padEnd(30)} ${o.evidence_class.padEnd(22)} ${String(rel).padStart(2)} cell(s)`
+    + (o.open.length ? `  · ${o.open.length} OPEN` : ''));
+}
+for (const r of FLOOR.resolved_candidates) log(`   ${r.id}  ${(r.name + ' →  ' + r.reduces_to).padEnd(30)} not promoted`);
+for (const a of FLOOR.separate_axes) log(`   ${a.id.length > 4 ? a.id.slice(0, 4) : a.id.padEnd(4)}${a.id.length > 4 ? '…' : ''}  ${a.name.padEnd(29)} ${a.axis} · ${a.status}`);
+
 log(`✓ invariants.html — ${Buffer.byteLength(html)} bytes, sha256 ${digest.slice(0, 16)}`);

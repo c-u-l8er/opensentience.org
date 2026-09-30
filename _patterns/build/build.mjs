@@ -27,6 +27,8 @@
  * SERVED at /patterns — ruled by Travis 2026-09-11 (R4); the title Unboxed Patterns was ruled the same day (R1).
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
+import { boardLayout } from './board-layout.mjs';
+import * as REF from './reference.mjs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve, join } from 'node:path';
@@ -526,6 +528,56 @@ if (refusals.length) { console.error(`\n✗ ${refusals.length} refusal(s):\n  ` 
 const byId = new Map(derived.map((p) => [p.id, p]));
 const antiById = new Map(DATA.anti_patterns.map((a) => [a.id, a]));
 const ORDER = DATA.families.flatMap((f) => derived.filter((p) => p.family === f));
+
+/* ── board geometry, computed here and baked into every board ───────────────────────────────────────
+   The two graph stencils used to place their own objects and route their own wires in the browser.
+   They still can — `surface.mjs` keeps that code and falls back to it — but the geometry a reader now
+   gets is ELK's, computed once per distinct graph on this machine. It can be: the geometry of a board
+   depends on the graph's structure and on nothing a Film does, so there is nothing to recompute when
+   an epoch advances, and nothing for the page to download but coordinates. (Super's cockpit runs the
+   same elkjs@0.10.0 bundle live in the app and pays 1.5 MB for it; see build/vendor/PROVENANCE.md.)
+
+   The grouping is the part ELK is not allowed to decide. `network` groups by the book's five Parts
+   and draws each as a ring; `world` groups by chapter so the film can light one at a time. A plain
+   layered run over the whole graph would pick its own layers and neither would survive, so ELK is run
+   once per group and the edges that leave a group are routed between them. */
+/* `below` is the fact line each station draws under its box (`sf-note`, baseline +38): part of what
+   the object occupies, so the layout must reserve it or wires route through the text. The network board
+   draws no notes on a static board but does under the conclusion's film, so both reserve it. */
+const NET_BOX = { w: (n) => Math.max(72, n.length * 6.6 + 14), h: 34, below: 18 };
+const WORLD_BOX = { w: (n) => Math.max(80, n.length * 7 + 16), h: 44, below: 24 };
+const NET_SHAPE = { box: NET_BOX, ring: true, gap: 16, pad: { top: 40, left: 150, right: 40, bottom: 44, ring: 34 }, minWidth: 720, spacing: { 'elk.spacing.nodeNode': '26', 'elk.layered.spacing.nodeNodeBetweenLayers': '56', 'elk.spacing.edgeNode': '12', 'elk.spacing.edgeEdge': '9' } };
+const WORLD_SHAPE = { box: WORLD_BOX, ring: false, gap: 22, pad: { top: 64, left: 110, right: 40, bottom: 44, ring: 0 }, minWidth: 640, spacing: { 'elk.spacing.nodeNode': '26', 'elk.layered.spacing.nodeNodeBetweenLayers': '90', 'elk.spacing.edgeNode': '14', 'elk.spacing.edgeEdge': '10' } };
+const pfxOf = (n) => (n.includes('_') ? n.split('_')[0] : '\u00b7');
+const LAYOUTS = new Map();
+const layoutKey = (kind, nodes, edges) => kind + ':' + sha(JSON.stringify([nodes.filter((n) => n[0] !== 'Ledger').map((n) => n[1]), edges]));
+function groupsFor(kind, names) {
+  if (kind === 'network') {
+    const present = chainBands.filter((b) => names.some((n) => chainGroups[pfxOf(n)] === b.id));
+    const home = present[0] || chainBands[0];
+    return (present.length ? present : [home]).map((b) => ({ id: b.id, label: b.label, names: names.filter((n) => (chainGroups[pfxOf(n)] || home.id) === b.id) }));
+  }
+  const order = [...new Set([...chainRowOrder, ...names.map(pfxOf)])].filter((r) => names.some((n) => pfxOf(n) === r));
+  return order.map((r) => ({ id: r, label: r, names: names.filter((n) => pfxOf(n) === r) }));
+}
+async function prepLayout(kind, nodes, edges) {
+  const names = (nodes || []).filter((n) => n[0] !== 'Ledger').map((n) => n[1]);
+  const key = layoutKey(kind, nodes || [], edges || []);
+  if (!names.length || LAYOUTS.has(key)) return;
+  const shape = kind === 'network' ? NET_SHAPE : WORLD_SHAPE;
+  LAYOUTS.set(key, await boardLayout({ groups: groupsFor(kind, names), edges: edges || [], ...shape }));
+}
+const layoutFor = (kind, nodes, edges) => LAYOUTS.get(layoutKey(kind, nodes || [], edges || []));
+{
+  const t0 = Date.now();
+  for (const c of chain.values()) {
+    if (c.cum && c.cum.graph) await prepLayout('network', c.cum.graph.nodes, c.cum.graph.edges);
+    if (c.film && c.delta && c.delta.graph) await prepLayout('world', c.delta.graph.nodes, c.delta.graph.edges);
+  }
+  for (const p of derived) { const w = p.wrl; const g = w && w.world && sealed.get(w.world); if (g && g.r && g.r.graph && films.get(w.world)) await prepLayout('world', g.r.graph.nodes, g.r.graph.edges); }
+  if (conclusionSeal && conclusionSeal.ok) { await prepLayout('network', conclusionSeal.graph.nodes, conclusionSeal.graph.edges); await prepLayout('world', conclusionSeal.graph.nodes, conclusionSeal.graph.edges); }
+  console.log(`\u2713 ${LAYOUTS.size} board layout(s) by ELK in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+}
 const FAMILY_TITLE = { locus: 'The Locus', composition: 'Composition', progress: 'Progress', world: 'Persistence and World', agency: 'Agency' };
 const sceneOf = (p) => p.scene ? JSON.parse(readFileSync(join(SCENES, p.scene + '.json'), 'utf8')) : null;
 const thumb = (p) => { const sc = sceneOf(p); return sc ? SF.svg(SF.computeState(sc, 0), { thumb: true }) : ''; };
@@ -533,7 +585,7 @@ const excerpt = (x) => { const lines = readFileSync(join(ROOT, x.path), 'utf8').
 const para = (t) => t ? `<p>${esc(t)}</p>` : '';
 const list = (xs) => xs && xs.length ? `<ul>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
 const chip = (p) => `<span class="chip ${p.derived.label || 'none'}">${p.derived.label ?? p.kind}</span>`;
-const sidebar = (cur) => `<aside class="side" role="navigation" aria-label="catalog"><a class="side-home" href="./">Unboxed Patterns</a><div class="side-fam">Front</div><ul><li><a href="./">Catalog</a></li><li class="${cur === 'conclusion' ? 'cur' : ''}"><a href="conclusion.html">Conclusion</a></li></ul>${DATA.families.map((f) => `<div class="side-fam">${FAMILY_TITLE[f]}</div><ul>${ORDER.filter((p) => p.family === f).map((p) => `<li class="${cur && p.id === cur.id ? 'cur' : ''}"><a href="${p.id}.html">${esc(p.name)}</a> ${chip(p)}</li>`).join('')}</ul>`).join('')}<div class="side-fam">Anti-patterns</div><ul>${DATA.anti_patterns.map((a) => `<li><a href="./#anti-${a.id}">${esc(a.name)}</a></li>`).join('')}</ul></aside>`;
+const sidebar = (cur) => `<aside class="side" role="navigation" aria-label="catalog"><a class="side-home" href="./">Unboxed Patterns</a><div class="side-fam">Front</div><ul><li><a href="./">Catalog</a></li><li class="${cur === 'conclusion' ? 'cur' : ''}"><a href="conclusion.html">Conclusion</a></li><li class="${cur === 'reference' ? 'cur' : ''}"><a href="reference.html">Reference</a></li></ul>${DATA.families.map((f) => `<div class="side-fam">${FAMILY_TITLE[f]}</div><ul>${ORDER.filter((p) => p.family === f).map((p) => `<li class="${cur && p.id === cur.id ? 'cur' : ''}"><a href="${p.id}.html">${esc(p.name)}</a> ${chip(p)}</li>`).join('')}</ul>`).join('')}<div class="side-fam">Anti-patterns</div><ul>${DATA.anti_patterns.map((a) => `<li><a href="./#anti-${a.id}">${esc(a.name)}</a></li>`).join('')}</ul></aside>`;
 // ─── the chapter banner ───────────────────────────────────────────────────
 // The same identifying graph the front door draws, shaped as a band across the
 // top of every page of the book. It is NOT a second drawing: the geometry is
@@ -689,10 +741,10 @@ function filmSceneFrom(rc, g, intro) {
     prev = cur;
     steps.push({ epochLabel: `epoch ${ep.t} of ${rc.epochs.length}`, caption: `epoch ${ep.t} · Film v0.7 ${ep.film_hash.slice(7, 23)}… — every line below is the forge's; the picture only colours what changed`, actions, takeaway: i === rc.epochs.length - 1 ? `${rc.epochs.length} epochs reduced by TRVM's forge; ${new Set(rc.epochs.map((e) => e.film_hash)).size} distinct film hashes; this replay is of a sealed world, not of scene data.` : undefined });
   });
-  return { stencil: 'world', interval: 2200, epoch0: 'before epoch 1', intro: intro || `The sealed world, before epoch 1. Reduced by TRVM's forge (${rc.execution_identity.reducer}) in ${rc.execution_identity.seconds}s on ${rc.execution_identity.host}.`, params: { nodes, edges: g.edges, rowOrder: chainRowOrder }, steps };
+  return { stencil: 'world', interval: 2200, epoch0: 'before epoch 1', intro: intro || `The sealed world, before epoch 1. Reduced by TRVM's forge (${rc.execution_identity.reducer}) in ${rc.execution_identity.seconds}s on ${rc.execution_identity.host}.`, params: { nodes, edges: g.edges, rowOrder: chainRowOrder, layout: layoutFor('world', nodes, g.edges) }, steps };
 }
 const NO_FILM = 'The chain through this chapter has no Film of its own: this board is a sealed shape, not a run. Every object\u2019s state epoch by epoch is on the whole board in the conclusion.';
-const boardStatic = (g) => SF.svg(SF.computeState({ stencil: 'network', noState: NO_FILM, params: { nodes: g.nodes.map(([r, n]) => [r, n, {}]), edges: g.edges, groups: chainGroups, bands: chainBands, rowOrder: chainRowOrder }, steps: [] }, 0), { caption: false });
+const boardStatic = (g) => SF.svg(SF.computeState({ stencil: 'network', noState: NO_FILM, params: { nodes: g.nodes.map(([r, n]) => [r, n, {}]), edges: g.edges, groups: chainGroups, bands: chainBands, rowOrder: chainRowOrder, layout: layoutFor('network', g.nodes, g.edges) }, steps: [] }, 0), { caption: false });
 function filmScene(p) { const w = p.wrl; if (!w || !w.world) return null; const rc = films.get(w.world); if (!rc) return null; return filmSceneFrom(rc, sealed.get(w.world).r.graph); }
 function filmSection(p) {
   const w = p.wrl; if (!w || !w.world) return '';
@@ -889,9 +941,11 @@ const CONC = readJson(join(HERE, '../data/conclusion.json'));
 const CONC_FILM_SCENE = conclusionFilm && conclusionSeal && conclusionSeal.ok
   ? filmSceneFrom(conclusionFilm, conclusionSeal.graph, 'Every chapter\u2019s world at once, before epoch 1.') : null;
 const CONC_BOARD_OVERRIDE = { stencil: 'network', intro: 'The board before epoch 1.', groups: chainGroups, bands: chainBands };
-const CONC_SCENE_JSON = CONC_FILM_SCENE ? JSON.stringify(CONC_FILM_SCENE) : null;
+const CONC_BOARD_LAYOUT = CONC_FILM_SCENE ? layoutFor('network', CONC_FILM_SCENE.params.nodes, CONC_FILM_SCENE.params.edges) : null;
+/* the page mounts this one scene twice, under both graph stencils, so it ships both geometries */
+const CONC_SCENE_JSON = CONC_FILM_SCENE ? JSON.stringify({ ...CONC_FILM_SCENE, board_layout: CONC_BOARD_LAYOUT }) : null;
 const CONC_SCENE_STAMP = CONC_SCENE_JSON ? sha(CONC_SCENE_JSON).slice(0, 16) : '';
-const concBoardScene = () => CONC_FILM_SCENE ? { ...CONC_FILM_SCENE, stencil: 'network', intro: CONC_BOARD_OVERRIDE.intro, params: { ...CONC_FILM_SCENE.params, groups: chainGroups, bands: chainBands } } : null;
+const concBoardScene = () => CONC_FILM_SCENE ? { ...CONC_FILM_SCENE, stencil: 'network', intro: CONC_BOARD_OVERRIDE.intro, params: { ...CONC_FILM_SCENE.params, groups: chainGroups, bands: chainBands, layout: CONC_BOARD_LAYOUT } } : null;
 if (CONC_SCENE_JSON) pageOutputs['conclusion.scene.json'] = CONC_SCENE_JSON + '\n';
 const last = ORDER[ORDER.length - 1];
 pageOutputs['conclusion.html'] = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(CONC.title)} · Unboxed Patterns</title><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}${BANNER_CSS}</style></head><body>
@@ -922,7 +976,7 @@ for (const el of document.querySelectorAll('.sf-static')) enliven(el);${CONC_SCE
    pictures above are rendered on the server, so they are already here if this never arrives. */
 try {
   const sc = await fetch('conclusion.scene.json?v=${CONC_SCENE_STAMP}').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
-  mount(document.getElementById('board'), { ...sc, stencil: 'network', intro: ${JSON.stringify(CONC_BOARD_OVERRIDE.intro)}, params: { ...sc.params, groups: ${JSON.stringify(chainGroups)}, bands: ${JSON.stringify(chainBands)} } }, IO);
+  mount(document.getElementById('board'), { ...sc, stencil: 'network', intro: ${JSON.stringify(CONC_BOARD_OVERRIDE.intro)}, params: { ...sc.params, groups: ${JSON.stringify(chainGroups)}, bands: ${JSON.stringify(chainBands)}, layout: sc.board_layout } }, IO);
   mount(document.getElementById('film'), sc, IO);
 } catch (e) {
   /* no player, but the sealed pictures are still here and still answer a hover */
@@ -931,7 +985,7 @@ try {
 }` : ''}
 </script></body></html>`;
 const card = (p) => `<a class="card" href="${p.id}.html">${p.scene ? `<div class="thumb">${thumb(p)}</div>` : ''}<h3>${esc(p.name)} ${chip(p)}</h3><p>${esc(p.headline || p.invariant || (p.kind === 'definition' ? 'A definition.' : p.prior_art || ''))}</p></a>`;
-const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unboxed Patterns</title><meta name="description" content="Elements of Composable Locus-Oriented Software — a pattern catalog generated from a registry, with runnable witnesses."><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}${BANNER_CSS}</style></head><body>
+let html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unboxed Patterns</title><meta name="description" content="Elements of Composable Locus-Oriented Software — a pattern catalog generated from a registry, with runnable witnesses."><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}${BANNER_CSS}</style></head><body>
 <script type="module" src="/amp-nav.js"></script><script src="/idanim.js" defer></script><amp-nav property="opensentience"></amp-nav>
 ${banner(`The catalog \u00b7 ${ORDER.length} chapters`)}
 <div class="book">${sidebar(null)}<main>
@@ -956,12 +1010,132 @@ const DIST = join(SITE, 'patterns');   // SERVED at opensentience.org/patterns/ 
 // crawler asked for /patterns on 2026-09-13 and was handed the OpenSentience root instead.
 const SITE_URL = 'https://opensentience.org';
 const canonicalOf = (k) => SITE_URL + '/patterns/' + (k === 'index.html' ? '' : k.replace(/\.html$/, ''));
-const sitemapKeys = ['index.html', ...ORDER.map((p) => `${p.id}.html`), 'conclusion.html'];
+const sitemapKeys = ['index.html', ...ORDER.map((p) => `${p.id}.html`), 'conclusion.html', 'reference.html'];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapKeys.map((k) => `  <url><loc>${canonicalOf(k)}</loc><lastmod>${new Date().toISOString()}</lastmod><priority>${k === 'index.html' ? '1.0' : '0.7'}</priority></url>`).join('\n')}
 </urlset>
 `;
+/* ── the reference apparatus ─────────────────────────────────────────────────────────────────────────
+   Runs LAST, over the pages as emitted, because it is about what the book actually says rather than what
+   the data says it should. It resolves every path the prose cites, wraps the first mention of each term
+   and each path in a link into the reference page, and inlines the cards for that page's own mentions so
+   a hover needs no fetch. R-REF-* below are refusals in the same family as P0-P33: a citation that has
+   rotted, or a definition nothing uses, is the kind of quiet drift this whole build exists to refuse. */
+const REFDATA = readJson(join(HERE, '../data/reference.json'));
+const BUILD_SRC = readFileSync(join(HERE, 'build.mjs'), 'utf8');
+const REF_LABELS = REF.derivedLabels(BUILD_SRC), REF_RUNGS = REF.ladder(BUILD_SRC);
+
+// R-REF-3: the build already defines the labels and the ladder; authoring them again is how two
+// statements of one rule start to disagree.
+for (const k of [...Object.keys(REF_LABELS), ...REF_RUNGS]) {
+  if (REFDATA.terms[k]) refuse('R-REF-3-DOUBLE-DEFINED', `reference.json defines "${k}", which build.mjs already derives — it would be a second statement of one rule`);
+}
+// R-REF-2: a definition must cite somewhere that exists.
+for (const [name, t] of Object.entries(REFDATA.terms)) {
+  if (!t.source) { if (!t.external) refuse('R-REF-2-NO-SOURCE', `${name}: neither source nor external`); continue; }
+  const rs = REF.resolveCitation(t.source, ROOT);
+  if (!rs || !rs.rel) refuse('R-REF-2-SOURCE', `${name}: source does not resolve — ${t.source}`);
+}
+if (!(REF.resolveCitation(REFDATA.outcomes._source, ROOT) || {}).rel) refuse('R-REF-2-SOURCE', `outcomes: ${REFDATA.outcomes._source}`);
+// R-REF-6: an expansion the source does not state must SAY it is not stated. An acronym is the easiest
+// thing in a book to be confidently wrong about: nobody checks four letters, and a plausible expansion
+// written as fact is indistinguishable from a recorded one. If the cited source contains the words, it
+// is a citation; if it does not, it is a recollection and has to be labelled as one.
+for (const [name, t] of Object.entries(REFDATA.terms)) {
+  if (!t.expands) continue;
+  const rs = REF.resolveCitation(t.source || '', ROOT);
+  /* a source that does not resolve is R-REF-2's defect, and one defect should raise one refusal:
+     without this, breaking a source made BOTH fire and neither message picked out the cause */
+  if (!rs || !rs.abs || rs.dir) continue;
+  const stated = readFileSync(rs.abs, 'utf8').toLowerCase().includes(t.expands.toLowerCase());
+  if (!stated && !t.expands_standing) refuse('R-REF-6-EXPANSION', `${name}: "${t.expands}" is not stated in ${t.source} — an expansion the source does not carry must declare its standing (expands_standing) rather than stand as a fact`);
+  if (stated && t.expands_standing) refuse('R-REF-6-EXPANSION', `${name}: "${t.expands}" IS stated in ${t.source}, so hedging it with expands_standing understates what the tree already says`);
+}
+
+// what a witness path is FOR, so a card can say why the book cites it
+const refWitnesses = new Map();
+for (const p of derived) {
+  const w = p.wrl && null; const wit = p.witness;
+  if (!wit) continue;
+  const rel = wit.repo === '.' ? wit.path : `${wit.repo}/${wit.path}`;
+  if (!refWitnesses.has(rel)) refWitnesses.set(rel, `${wit.shape} · cited as the witness for ${p.name}${wit.rung_source ? ` — ${wit.rung_source}` : ''}`);
+}
+// which of them the site publishes byte-identically
+const refStaged = new Map();
+for (const p of derived) {
+  const wit = p.witness;
+  if (!wit || !p.derived.STAGED) continue;
+  const rel = wit.repo === '.' ? wit.path : `${wit.repo}/${wit.path}`;
+  refStaged.set(rel, `/witness/src/${wit.path}`);
+}
+
+const refPages = [['index.html', html], ...Object.entries(pageOutputs).filter(([k]) => k.endsWith('.html'))];
+const { idx: REF_INDEX, unresolved: REF_UNRESOLVED } = REF.fileIndex(refPages, { ROOT, repos: REFDATA.repos, witnesses: refWitnesses, staged: refStaged, seeds: [...Object.values(REFDATA.terms).map((t) => t.source).filter(Boolean), REFDATA.outcomes._source], /* maxBuffer: one `ls-tree -r` of graphonomous is 1.1 MB and execSync's default cap is 1 MB,
+     which fails as ENOBUFS — a crash, not a short read, so it cannot pass silently. */
+  run: (c) => execSync(c, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 256 * 1024 * 1024 }) });
+// R-REF-4: a path in the prose that no longer resolves. This is P3 extended from the data to the text.
+/* a seeded citation is a definition's own `source`, which R-REF-2 already owns: one defect must raise
+   one refusal, or neither message picks out the cause */
+for (const u of REF_UNRESOLVED) if (!u.seeded) refuse('R-REF-4-CITATION', `${u.page} cites a path that does not resolve in the tree: ${u.raw}`);
+// R-REF-5: a repository the book cites that reference.json does not describe. Without this the page
+// falls back to "not published" for an unknown repo — which is the safe answer and therefore the one
+// that would never be noticed if it were the wrong one.
+for (const e of REF_INDEX.values()) if (!REFDATA.repos[e.repo]) refuse('R-REF-5-REPO', `the book cites ${e.path}, and reference.json does not describe the repository "${e.repo}" — a reader cannot be told whether it is published`);
+
+const REF_BY_SPELLING = new Map();
+for (const e of REF_INDEX.values()) for (const sp of e.spellings) REF_BY_SPELLING.set(sp, e);
+const refChapterName = (f) => (f === 'index.html' ? 'Catalog' : f === 'conclusion.html' ? 'Conclusion' : (ORDER.find((p) => `${p.id}.html` === f) || {}).name || f.replace(/\.html$/, ''));
+
+const GLOSS_SRC = readFileSync(join(HERE, '../surface/gloss.mjs'), 'utf8');
+const GLOSS_STAMP = sha(GLOSS_SRC).slice(0, 16);
+const GLOSS_CSS = (GLOSS_SRC.match(/export const GLOSS_CSS = `([\s\S]*?)`;/) || [, ''])[1];
+const REF_USED = { terms: new Set(), files: new Set() };
+
+function glossPage(name, htmlIn) {
+  const { html: out, used } = REF.annotate(htmlIn, { terms: REFDATA.terms, bySpelling: REF_BY_SPELLING });
+  for (const t of used.terms) REF_USED.terms.add(t);
+  for (const f of used.files) REF_USED.files.add(f);
+  if (!used.terms.size && !used.files.size) return out;
+  const cards = REF.cardsFor(used, { terms: REFDATA.terms, index: REF_INDEX, repos: REFDATA.repos });
+  const tag = `<style>${GLOSS_CSS}</style><script type="module">
+import { gloss } from '/patterns/surface/gloss.mjs?v=${GLOSS_STAMP}';
+gloss(document, ${JSON.stringify(cards)});
+</script>`;
+  return out.includes('</body>') ? out.replace('</body>', `${tag}</body>`) : out + tag;
+}
+
+const REF_BODY = REF.referenceBody({
+  terms: REFDATA.terms, outcomes: REFDATA.outcomes, faq: REFDATA.faq,
+  labels: REF_LABELS, rungs: REF_RUNGS, index: REF_INDEX, repos: REFDATA.repos, chapterName: refChapterName,
+});
+pageOutputs['reference.html'] = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reference · Unboxed Patterns</title><meta name="description" content="Definitions, the evidence labels, every file the book cites, and the questions a first reader asks."><link rel="canonical" href="https://opensentience.org/patterns/reference"><link rel="stylesheet" href="/styles/site.css"><style>${SHELL_CSS}${BANNER_CSS}${REF.REF_CSS}</style></head><body>
+<script type="module" src="/amp-nav.js"></script><script src="/idanim.js" defer></script><amp-nav property="opensentience"></amp-nav>
+${banner('Reference')}
+<div class="book">${sidebar('reference')}<main><p class="meta">Front matter, at the back</p><h1>Reference</h1>
+<p class="lede">What the words mean, what the labels are derived from, and every file these pages name — with the ones you cannot open marked as such.</p>
+${REF_BODY}
+<div class="pn"><span><a href="conclusion.html">← Conclusion</a></span><span style="text-align:right"><a href="./">Catalog →</a></span></div>
+<footer class="fin">Derived ${new Date().toISOString()} by <code>_patterns/build/build.mjs</code>.</footer></main></div>
+</body></html>`;
+
+/* The reference page is NOT glossed. It prints every term by construction, so glossing it made the
+   glossary count as its own reader: R-REF-1 could never fire, because a definition nothing in the book
+   used was still "used" — by its own entry. Found by probing the gate rather than by reading it. */
+for (const k of Object.keys(pageOutputs)) if (k.endsWith('.html') && k !== 'reference.html') pageOutputs[k] = glossPage(k, pageOutputs[k]);
+html = glossPage('index.html', html);
+pageOutputs['surface/gloss.mjs'] = GLOSS_SRC;
+
+// R-REF-1: a definition the book never uses. A glossary that outlives its text is how a book starts
+// lying slowly — the entry stays, the sentence it explained is gone, and nothing says so.
+for (const name of Object.keys(REFDATA.terms)) if (!REF_USED.terms.has(name)) refuse('R-REF-1-UNUSED', `reference.json defines "${name}" and no page uses it`);
+// The two refusal checks above this point both ran BEFORE any of it, so without this line every
+// R-REF-* refusal was collected into the array and then quietly dropped — the build stayed green with
+// four gates that could not fail. This is the defect this site's own notes record against COV1: a
+// refusal written after the exit check is not a gate, it is a comment.
+if (refusals.length) { console.error(`\n✗ ${refusals.length} refusal(s):\n  ` + refusals.join('\n  ')); process.exit(1); }
+console.log(`✓ reference: ${Object.keys(REFDATA.terms).length} term(s), ${REF_INDEX.size} cited file(s) across ${new Set([...REF_INDEX.values()].map((e) => e.repo)).size} repo(s), ${REF_UNRESOLVED.length} unresolved`);
+
 const outputs = { 'patterns.derived.json': derivedJson, 'graph.json': JSON.stringify(graph, null, 1) + '\n', 'index.html': html, 'llms.txt': llms, 'sitemap.xml': sitemap, ...pageOutputs };
 const inputs = { 'data/patterns.json': shaFile(join(HERE, '../data/patterns.json')), '_invariants/data/cells.json': shaFile(join(SITE, '_invariants/data/cells.json')), 'CLAIM_LEDGER.json': shaFile(join(ROOT, 'CLAIM_LEDGER.json')), receipts: Object.fromEntries(receipts.map((r) => [r.witness.path, r.source_identity.sha256])), live_receipts: Object.fromEntries([...liveReceipts.entries()].map(([id, r]) => [id, `${r.source_identity.stamp}:${r.execution_identity.passing}/${r.execution_identity.total}`])), chain: Object.fromEntries([...chain.entries()].map(([id, c]) => [id, c.cum.semanticId])), chain_films: Object.fromEntries([...chain.entries()].filter(([, c]) => c.film).map(([id, c]) => [id, c.film.source_identity.world_sha256.slice(0, 16) + ':' + c.film.epochs.length])), conclusion_film: conclusionFilm ? conclusionFilm.source_identity.world_sha256.slice(0, 16) + ':' + conclusionFilm.epochs.length : null, conclusion: conclusionSeal && conclusionSeal.ok ? conclusionSeal.semanticId : null, films: Object.fromEntries([...films.entries()].map(([f, r]) => [f, r.source_identity.world_sha256.slice(0, 16) + ':' + r.epochs.length])), 'WRL/wrl.js': WRLJS_SHA, wrl_worlds: Object.fromEntries([...sealed.entries()].map(([f, x]) => [f, x.r.ok ? x.r.semanticId : x.r.code])) };
 // the artifact excludes the timestamps so --verify compares content, not clock

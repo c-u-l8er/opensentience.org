@@ -1199,3 +1199,263 @@ footer a:hover {
     html { scroll-behavior: auto; }
     .inspector { transition: none; }
 }
+
+/* ═══════════════════ the Agency / Semantic Floor ═══════════════════
+   A band, not a grid. S1–S5 cut across every register below, so they are drawn
+   in a register's clothes — same rule, same head, same measure — while looking
+   nothing like a cell. The distinction is load-bearing: a reader who counts
+   these among the cells has learned the wrong thing about what the table
+   claims, and a floor drawn as five more squares invites exactly that. */
+
+.floor {
+    margin-bottom: 4.5rem;
+    padding-top: 1.5rem;
+    border-top: 3px double var(--ink);
+}
+.floor-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+.floor-roman {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-style: italic;
+    color: var(--ink);
+    padding-top: 0.1rem;
+    flex-shrink: 0;
+    width: 1.6rem;
+}
+.floor-rows {
+    margin-top: 2rem;
+    border-top: 1px solid var(--rule-soft);
+}
+.floor-row,
+.floor-axis,
+.floor-resolved,
+.floor-observed {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.6rem 0;
+    border-bottom: 1px solid var(--rule-soft);
+}
+.floor-id {
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    flex-shrink: 0;
+    width: 5.5rem;
+    padding-top: 0.15rem;
+}
+.floor-id.axis { color: var(--reg-proposed); font-size: 0.78rem; line-height: 1.5; }
+.floor-id.resolved { color: var(--ink-faint); text-decoration: line-through; }
+.floor-body { flex: 1; min-width: 0; }
+.floor-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    line-height: 1.15;
+    margin-bottom: 0.35rem;
+}
+.axis-tag,
+.reduce-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.12rem 0.4rem;
+    vertical-align: 0.22em;
+    white-space: nowrap;
+}
+.reduce-tag { color: var(--reg-decided); border-color: var(--reg-decided); }
+.floor-obligation {
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 76ch;
+}
+.floor-props {
+    margin-top: 0.7rem;
+    padding-left: 0.9rem;
+    border-left: 2px solid var(--reg-decided);
+}
+.floor-lbl {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+.floor-props ul,
+.floor-conseq {
+    list-style: none;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+}
+.floor-props li::before,
+.floor-conseq li::before {
+    content: "·";
+    color: var(--ink-faint);
+    margin-right: 0.5rem;
+}
+.floor-conseq { margin-top: 0.55rem; max-width: 76ch; }
+.floor-note {
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--ink-faint);
+    font-style: italic;
+    margin-top: 0.4rem;
+    max-width: 76ch;
+}
+.floor-meta {
+    margin-top: 0.9rem;
+    display: grid;
+    grid-template-columns: 10rem 1fr;
+    gap: 0.35rem 1rem;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+.floor-meta dt {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 0.25rem;
+}
+.floor-meta dd { color: var(--ink-soft); max-width: 78ch; }
+.floor-meta dd ul { list-style: none; }
+.floor-meta dd li::before { content: "·"; color: var(--ink-faint); margin-right: 0.5rem; }
+.floor-meta dt.open { color: var(--proved); }
+.floor-meta dd.open { color: var(--ink); }
+
+/* Evidence class is a badge, never a colour that reads as achievement. The one
+   thing this page must not do again is render `tested` and `proved` as sibling
+   solids at the same weight — that is the adjacency laundering Λ names. */
+.ev-class {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.08rem 0.35rem;
+    margin-right: 0.4rem;
+    white-space: nowrap;
+    color: var(--ink-faint);
+}
+.ev-tested { color: var(--shipped); border-color: var(--shipped); }
+.ev-tested-conditional { color: var(--conditional); border-color: var(--conditional); }
+.ev-declared { color: var(--ink-faint); border-style: dashed; }
+.ev-exhaustive-in-finite-model,
+.ev-exhaustive-in-declared-domain { color: var(--tier-property); border-color: var(--tier-property); }
+
+.floor-cells { margin-top: 0.9rem; }
+.floor-cell-ref {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.16rem 0.42rem;
+    margin: 0 0.25rem 0.3rem 0;
+    cursor: pointer;
+    color: var(--ink-soft);
+}
+.floor-cell-ref:hover { border-color: var(--ink); color: var(--ink); }
+.floor-cell-ref .rel {
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.55rem;
+    margin-right: 0.25rem;
+}
+.floor-sub { margin-top: 2.5rem; }
+.floor-subhead {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 2rem 0 0.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--rule);
+}
+.floor-observed { border-bottom: none; }
+
+/* The relation a cell bears to the floor, in the inspector. */
+.i-floor {
+    margin-top: 1rem;
+    padding: 0.7rem 0.9rem;
+    background: var(--paper-deep);
+    border-left: 2px solid var(--reg-decided);
+}
+.i-floor-head {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.3rem;
+}
+.i-floor-rel { font-size: 0.84rem; line-height: 1.6; color: var(--ink); }
+.i-floor-why { font-size: 0.78rem; line-height: 1.65; color: var(--ink-soft); margin-top: 0.35rem; }
+
+@media (max-width: 720px) {
+    .floor-row, .floor-axis, .floor-resolved { flex-direction: column; gap: 0.5rem; }
+    .floor-id { width: auto; }
+    .floor-meta { grid-template-columns: 1fr; gap: 0.15rem; }
+    .floor-meta dt { margin-top: 0.5rem; }
+}
+
+/* An obligation adjudicated EXPECTED-EMPTY says so, and says which cells were
+   examined and rejected. An empty relation list that merely looks empty invites
+   the next maintainer to fill it; one that states the ruling does not. */
+.ee-why {
+    display: block;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 78ch;
+    margin-top: 0.2rem;
+}
+.ee-examined { display: block; margin-top: 0.7rem; }
+.ee-cell {
+    display: block;
+    font-size: 0.76rem;
+    line-height: 1.6;
+    color: var(--ink-faint);
+    padding-left: 0.9rem;
+    border-left: 1px solid var(--rule);
+    margin-top: 0.25rem;
+    max-width: 78ch;
+}
+
+/* A closed finding is not an open one and is not an absence either. It stays on
+   the row because the history is the evidence: a control that went red before
+   the repair is the reason the green after it means anything. */
+.floor-meta dt.closed { color: var(--shipped); }
+.floor-meta dd.closed { color: var(--ink-soft); }
+
+/* The boundary reading sits with the obligation, not in a footnote. It is the
+   half an implementer can get wrong while remaining conformant to the sentence
+   above it, so it is set apart and kept adjacent rather than filed below. */
+.floor-boundary {
+    margin-top: 0.65rem;
+    padding-left: 0.9rem;
+    border-left: 2px solid var(--conditional);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 78ch;
+}

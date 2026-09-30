@@ -80,7 +80,16 @@ const STENCILS = {
      epoch is applied with generic `state` / `note` actions the build derives from the Film's lines. */
   world(p = {}) {
     const st = base(); const nodes = (p.nodes || []).filter((n) => n[0] !== 'Ledger'), edges = p.edges || [];
-    const names = nodes.map((n) => n[1]); const depth = Object.fromEntries(names.map((n) => [n, 0]));
+    const names = nodes.map((n) => n[1]);
+    const ledger = () => { if ((p.nodes || []).some((n) => n[0] === 'Ledger')) st.stations.push({ id: 'ledger', x: st.W - 120, y: 30, label: 'ledger · receipts', state: 'idle', note: '', role: 'Ledger', box: true, count: 0 }); };
+    if (p.layout) {
+      const role0 = Object.fromEntries(nodes.map((n) => [n[1], n[0]]));
+      baked(st, p.layout, nodes, names, role0, (n, at) => ({ id: n, x: at.x, y: at.y, label: n, state: 'idle', note: '', role: role0[n], box: true, sub: role0[n].toLowerCase(), facts: null }));
+      for (const w of st.wires) w.label = w.kind === 'SignalWire' ? 'sig' : 'socket';
+      ledger();
+      return st;
+    }
+    const depth = Object.fromEntries(names.map((n) => [n, 0]));
     for (let k = 0; k < names.length; k++) for (const [, a, b] of edges) if (depth[b] !== undefined && depth[a] !== undefined) depth[b] = Math.max(depth[b], depth[a] + 1);
     /* one row per chapter (the id prefix before the first underscore); rows in params.rowOrder if given, else
        first appearance. Within a row, objects that share a depth stack vertically so replicated members never overlap. */
@@ -116,7 +125,15 @@ const STENCILS = {
      are the routers, doors the switches, pulsers the clock domains. Bands render as rings behind the wiring. */
   network(p = {}) {
     const st = base(); const nodes = (p.nodes || []).filter((n) => n[0] !== 'Ledger'), edges = p.edges || [];
-    const names = nodes.map((n) => n[1]); const depth = Object.fromEntries(names.map((n) => [n, 0]));
+    const names = nodes.map((n) => n[1]);
+    if (p.layout) {
+      const role0 = Object.fromEntries(nodes.map((n) => [n[1], n[0]]));
+      const bandName = p.layout.bandOf || {};
+      baked(st, p.layout, nodes, names, role0, (n, at) => ({ id: n, x: at.x, y: at.y, label: n, state: 'idle', note: '', role: role0[n], box: true, sub: role0[n].toLowerCase(), compact: true, band: bandName[n] || '', facts: null }));
+      if ((p.nodes || []).some((n) => n[0] === 'Ledger')) st.stations.push({ id: 'ledger', x: st.W - 120, y: 18, label: 'ledger · receipts', state: 'idle', note: '', role: 'Ledger', box: true, count: 0 });
+      return st;
+    }
+    const depth = Object.fromEntries(names.map((n) => [n, 0]));
     for (let k = 0; k < names.length; k++) for (const [, a, b] of edges) if (depth[b] !== undefined && depth[a] !== undefined) depth[b] = Math.max(depth[b], depth[a] + 1);
     const pfx = (n) => (n.includes('_') ? n.split('_')[0] : '·'); const groups = p.groups || {};
     const bands = (p.bands || []).filter((b) => names.some((n) => groups[pfx(n)] === b.id));
@@ -157,6 +174,23 @@ const STENCILS = {
     return st;
   },
 };
+/* A layout baked at build time by build/board-layout.mjs: ELK's geometry for this exact graph, so a
+   reader downloads coordinates rather than a layout engine. Both graph stencils keep their own
+   placement below and use it whenever no layout is supplied — a scene fetched from an older build,
+   or a caller that passes only nodes and edges, still draws. See build/vendor/PROVENANCE.md. */
+function baked(st, L, nodes, names, role, mk) {
+  st.W = L.W; st.H = L.H;
+  for (const r of L.rings || []) st.rings.push({ ...r, state: 'idle', note: '' });
+  for (const n of names) if (L.pos[n]) st.stations.push(mk(n, L.pos[n]));
+  for (const w of L.wires) {
+    const p = w.points, a = p[0], b = p[p.length - 1];
+    st.wires.push({ id: `${w.a}->${w.b}`, kind: w.kind, points: p, x1: a[0], y1: a[1], x2: b[0], y2: b[1], label: '', note: '', thin: true, link: !!w.link });
+  }
+  st.anchors = Object.fromEntries(names.filter((n) => L.pos[n]).map((n) => [n, L.pos[n]]));
+  st.anchors.off = { x: -80, y: 200 };
+  return st;
+}
+
 function base() { return { slots: [], loci: [], stations: [], meters: [], wires: [], rings: [], anchors: {}, notes: [], caption: '' }; }
 function locus(l, at) { return { id: l.id, label: l.label ?? l.id, state: l.state || 'live', x: at.x, y: at.y, tag: l.tag || '', r: l.r || 16, tagAbove: !!l.tagAbove }; }
 
@@ -224,7 +258,12 @@ export function svg(st, { thumb = false, caption = true } = {}) {
       const seg = segs.sort((u, v) => Math.hypot(v[1][0] - v[0][0], v[1][1] - v[0][1]) - Math.hypot(u[1][0] - u[0][0], u[1][1] - u[0][1]))[0];
       const lx = (seg[0][0] + seg[1][0]) / 2, ly = (seg[0][1] + seg[1][1]) / 2;
       o.push(`<polyline class="${cls}" ${wireEnds(w)} points="${w.points.map((q) => q.join(',')).join(' ')}" marker-end="url(#sfar)"/>`);
-      if (w.label) o.push(`<text class="sf-label ${w.thin ? 'small' : ''}" x="${lx}" y="${ly - 6}" text-anchor="middle">${esc(w.label)}</text>`);
+      /* A wire that runs a margin trunk is not labelled. Its longest segment is the trunk, so the text
+         landed alone in an empty margin, attached to nothing and on top of unrelated boxes. The kind is
+         already carried where a reader can use it: the legend draws each kind as its own stroke and
+         names it, the stroke is on the wire, and the readout reports `data-kind` on hover. These wires
+         are drawn de-emphasised on purpose; the text was the one part of them that shouted. */
+      if (w.label && !w.link) o.push(`<text class="sf-label ${w.thin ? 'small' : ''}" x="${lx}" y="${ly - 6}" text-anchor="middle">${esc(w.label)}</text>`);
     } else {
       o.push(`<line class="${cls}" ${wireEnds(w)} x1="${w.x1}" y1="${w.y1}" x2="${w.x2}" y2="${w.y2}"/>`);
       if (w.label) o.push(`<text class="sf-label ${w.thin ? 'small' : ''}" x="${(w.x1 + w.x2) / 2}" y="${(w.y1 + w.y2) / 2 - 8}" text-anchor="middle">${esc(w.label)}</text>`);

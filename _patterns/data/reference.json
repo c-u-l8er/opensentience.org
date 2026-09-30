@@ -1,0 +1,148 @@
+{
+ "kind": "UNBOXED_PATTERNS_REFERENCE",
+ "_comment": "Authored vocabulary for the reference page and the in-prose popovers. NOTHING here may state a fact the build can derive: the evidence labels (CHECKABLE/RUNNABLE/EXECUTED/WITNESSED/STAGED/label) are parsed out of build.mjs's own header at build time and may NOT be written here (R-REF-3), the rung ladder is read from build.mjs's LADDER, and every `source` must resolve in the tree (R-REF-2). A term used in the book with no entry here is a refusal (R-REF-1); an entry no page uses is a refusal too (R-REF-4) — a glossary that outlives its text is how a book starts lying slowly. A `source_url` is a LIVE page, checked by a person and not by this build: nothing here reaches the network, because a build whose output depends on the weather is not reproducible. It is offered beside `source`, never instead of it.",
+ "repos": {
+  ".": {
+   "name": "ProjectAmp2",
+   "published": false,
+   "note": "The working monorepo. It is not published, so a path in it can be named and hashed here but not linked or quoted."
+  },
+  "opensentience.org": {
+   "name": "opensentience.org",
+   "published": true,
+   "url": "https://github.com/c-u-l8er/opensentience.org"
+  },
+  "WRL": {
+   "name": "WRL",
+   "published": true,
+   "url": "https://github.com/c-u-l8er/WRL"
+  },
+  "TRVM": {
+   "name": "TRVM",
+   "published": true,
+   "url": "https://github.com/c-u-l8er/TRVM"
+  },
+  "AmpersandBoxDesign": {
+   "name": "AmpersandBoxDesign",
+   "published": true,
+   "url": "https://github.com/c-u-l8er/AmpersandBoxDesign"
+  },
+  "graphonomous": {
+   "name": "graphonomous",
+   "published": true,
+   "url": "https://github.com/c-u-l8er/graphonomous"
+  },
+  "computedriven": {
+   "name": "computedriven",
+   "published": false,
+   "note": "Not published at the time this page was built."
+  },
+  "super": {
+   "name": "super",
+   "published": true,
+   "url": "https://github.com/c-u-l8er/super"
+  },
+  "studbook": {
+   "name": "studbook",
+   "published": false,
+   "note": "A draft spec with no implementation and no published repository. Cited for what it says, not for anything it runs."
+  },
+  "invariant-r10": {
+   "name": "invariant-r10",
+   "published": false,
+   "note": "A working directory of evidence packages, not a published repository."
+  }
+ },
+ "terms": {
+  "WRL": {
+   "expands": "WallRiderLang",
+   "is": "an executable topology language whose meaning is a hash",
+   "then": "Every board in this book is a WRL world: objects, the wires between them, and a semantic id that changes when the meaning does and not when a comment does.",
+   "source": "WRL/README.md"
+  },
+  "TRVM": {
+   "expands": "term-rewriting virtual machine",
+   "is": "a term-rewriting virtual machine on the interaction calculus — the model of computation where every step is a local graph rewrite and the result is provably independent of the schedule",
+   "then": "TRVM's forge is what reduces a sealed WRL world into the Film you can step through. When a page says a world was 'reduced by the forge', this is what ran. Its README describes the same machine from the other side: a coordination-free distributed interaction-calculus runtime.",
+   "source": "TRVM/site/index.html",
+   "source_url": "https://trvm.traaviis.com"
+  },
+  "forge": {
+   "is": "the part of TRVM that reduces a sealed world epoch by epoch and emits a Film",
+   "then": "It is the reason a board can be replayed rather than animated: the frames are a reduction's output, not scene data someone drew.",
+   "source": "TRVM/forge/film.py"
+  },
+  "Film": {
+   "is": "the forge's own record of one epoch — one line per object, every field named",
+   "then": "The boards in this book colour what a Film says changed. Hover an object and the readout shows that object's line, split into what it is doing now and how it was built.",
+   "source": "TRVM/forge/film.py"
+  },
+  "FPLA": {
+   "expands": "Floor Programmable Locus Array",
+   "is": "a locus-array direction of Travis's own, named in the foundation lane",
+   "then": "It appears here only as one of the systems a pattern would apply to, never as evidence for one.",
+   "source": "FPLA/README.md"
+  },
+  "BEAM": {
+   "is": "the Erlang virtual machine",
+   "then": "Cited as prior art: it already satisfies some of what a pattern asks for, within one node. Saying so is what keeps a pattern from claiming novelty it does not have.",
+   "external": "Prior art, outside this tree — the Erlang/OTP runtime system."
+  },
+  "PX13": {
+   "is": "the hostname of the machine the recorded runs happened on",
+   "then": "It appears in every execution identity. It is there so a run is attributable to a machine and a moment, not so the name means anything by itself.",
+   "source": "_patterns/receipts"
+  },
+  "MOCK": {
+   "is": "a stand-in that does not measure anything",
+   "then": "Marked in the open so it cannot be read as a measured log. A mock is never evidence, and a page that carries one says so at its limit.",
+   "source": "ACADEMY.md"
+  },
+  "locus": {
+   "is": "the book's word for an active thing — the unit a pattern is about",
+   "then": "It is defined by the book rather than borrowed, and the definition carries no evidence rung of its own.",
+   "source": "AGENCY.md"
+  }
+ },
+ "outcomes": {
+  "_is": "The three-valued outcome vocabulary, used where a two-valued one would lie.",
+  "_source": "computedriven/receipts/R7-EXECUTED.md",
+  "APPLIED": "The work was done, and that is established.",
+  "REFUSED": "The work was not done, deliberately, and the reason is published. A refusal is a result.",
+  "INDETERMINATE": "Whether the work was done is not established. A timeout abandons a request but not the work under it, so 'no answer' is not 'no effect'."
+ },
+ "faq": [
+  {
+   "q": "What is this book claiming?",
+   "a": "That each chapter names one invariant, and that the label under it says exactly how much of it is established. Nothing on a page is stronger than its label. A chapter labelled STATED is a claim the book has not yet witnessed, and it says so on its own face."
+  },
+  {
+   "q": "Why does a chapter say STATED when the writing sounds confident?",
+   "a": "Because the label is derived, not written. The build computes it from whether a check exists, whether a recorded run of that check exists for those exact bytes, and whether every claim the page cites is standing. An author cannot type a label in, and the build refuses a record that tries."
+  },
+  {
+   "q": "What makes a board different from a diagram?",
+   "a": "A diagram is drawn. A board is a sealed WRL world reduced by TRVM's forge, and the frames you step through are that reduction's output. The geometry is computed from the graph, and the colours come from the Film."
+  },
+  {
+   "q": "Why can I not open some of the files the book cites?",
+   "a": "They live in a repository that is not published. The book still names the path and its hash, because a citation you cannot follow is better than no citation — but it will not pretend to link you somewhere you cannot go."
+  },
+  {
+   "q": "Why are some wires unlabelled?",
+   "a": "A wire that runs a long trunk down the margin carries its kind in its stroke, which the legend names, and in the readout when you hover it. The text was removed where it would have floated in a margin attached to nothing."
+  },
+  {
+   "q": "What is the counterexample section for?",
+   "a": "A pattern that cannot fail is not a pattern. Once a record is WITNESSED the build requires a shipped counterexample — the case where the invariant does not hold — and refuses the record without one."
+  },
+  {
+   "q": "Is anything here peer-reviewed?",
+   "a": "No. The evidence is a recorded run of a named check on named bytes, on one machine. That is a lower bar than review and a higher one than assertion, and every page states which of the two it has."
+  },
+  {
+   "q": "What does 'the build refuses' mean?",
+   "a": "The build exits non-zero and emits nothing. It is not a warning that scrolls past: if a cited claim has been refuted, or a path does not resolve, or a count was typed by hand, the site does not get built at all."
+  }
+ ]
+}

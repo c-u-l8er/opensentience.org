@@ -1,0 +1,155 @@
+# The artifact that deploys must be the artifact the gates verified.
+#
+# WHY THIS LIVES HERE (F-SITE-7). This repository is the deployment root:
+# Cloudflare Pages serves it on push. Until now it had no workflow, no build
+# configuration and no package.json, which meant a change to invariants.html
+# could publish without the verification in ProjectAmp2 ever running. A green
+# workflow over there proves something about a tree; it does not prove anything
+# about the bytes that get served from here.
+#
+# The fix is to bind verification to the exact site commit that is going to
+# publish. This workflow's self identity is GITHUB_SHA — the candidate commit —
+# and `build-lock.json` beside it pins the exact commits of the three
+# repositories the artifact is built from. It regenerates invariants.html from
+# those identities and requires the result to equal the committed bytes.
+#
+# WHAT IT DOES NOT DO. It does not deploy, and it does not block deployment. That
+# requires a branch-protection or Pages setting, which is an operator action and
+# was deliberately not taken. Until such a rule exists this workflow REPORTS the
+# condition; it does not enforce it. Do not read a green run as "the boundary is
+# owned" until the required-check rule exists.
+#
+# STATUS: PREPARED, NOT ACTIVE.
+name: invariants — the served artifact is the verified artifact
+
+on:
+  push:
+    paths:
+      - '_invariants/**'
+      - 'invariants.html'
+      - 'build-lock.json'
+      - '.github/workflows/verify-invariants.yml'
+  pull_request:
+    paths:
+      - '_invariants/**'
+      - 'invariants.html'
+      - 'build-lock.json'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      # The candidate commit — the one that would publish. Checked out into the
+      # position the build expects it to occupy inside the host tree.
+      - uses: actions/checkout@v4
+        with:
+          path: site-candidate
+
+      - name: read the pinned dependency identities
+        id: lock
+        run: |
+          node -e '
+            const l = require("./site-candidate/build-lock.json");
+            for (const d of l.dependencies) {
+              console.log(`${d.repository.split("/")[1]}_sha=${d.commit}`);
+            }
+          ' >> "$GITHUB_OUTPUT"
+          echo "self_sha=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+
+      # Every dependency at its EXACT pinned commit. Not a branch head: a branch
+      # head means an old site commit can verify differently tomorrow, which is
+      # the whole of F-SITE-6.
+      - uses: actions/checkout@v4
+        with:
+          repository: c-u-l8er/ProjectAmp2
+          ref: ${{ steps.lock.outputs.ProjectAmp2_sha }}
+          path: host
+          token: ${{ secrets.MULTIREPO_TOKEN }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: c-u-l8er/mosaic
+          ref: ${{ steps.lock.outputs.mosaic_sha }}
+          path: host/mosaic
+          token: ${{ secrets.MULTIREPO_TOKEN }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: c-u-l8er/AmpersandBoxDesign
+          ref: ${{ steps.lock.outputs.AmpersandBoxDesign_sha }}
+          path: host/AmpersandBoxDesign
+          token: ${{ secrets.MULTIREPO_TOKEN }}
+
+      - name: place the candidate where the build expects it
+        run: |
+          rm -rf host/opensentience.org
+          cp -r site-candidate host/opensentience.org
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Every gate runs THROUGH the ledger, which records the exit status it
+      # actually observed. The receipt then consumes the ledger. Nothing infers a
+      # PASS from having reached a later step — that is how a release receipt
+      # ends up asserting gates nobody watched.
+      - name: initialise the gate ledger
+        working-directory: host
+        run: node scripts/gate-ledger.mjs init ../gate-ledger.json
+
+      - name: every declared input survived the checkout
+        working-directory: host
+        run: node scripts/gate-ledger.mjs run ../gate-ledger.json ci_inputs -- node scripts/check-invariants-ci-inputs.mjs
+
+      - name: the candidate artifact is what its data builds
+        working-directory: host
+        run: node scripts/gate-ledger.mjs run ../gate-ledger.json build_verify -- node opensentience.org/_invariants/build/build.mjs --verify
+
+      - name: the build refuses what it claims to refuse
+        working-directory: host
+        run: node scripts/gate-ledger.mjs run ../gate-ledger.json prove_gate -- node opensentience.org/_invariants/build/prove-gate.mjs
+
+      - name: registries resolve and the receipt verifies
+        working-directory: host
+        run: node scripts/gate-ledger.mjs run ../gate-ledger.json mosaic -- node scripts/check-mosaic.mjs
+
+      - name: every claim names a witness that exists
+        working-directory: host
+        run: node scripts/gate-ledger.mjs run ../gate-ledger.json claim_ledger -- node scripts/check-claim-ledger.mjs
+
+      - name: the lineage chain composes
+        working-directory: host
+        run: node scripts/gate-ledger.mjs run ../gate-ledger.json lineage -- node scripts/check-lineage.mjs
+
+      - name: no page says a state grants authority
+        working-directory: host
+        run: node scripts/gate-ledger.mjs run ../gate-ledger.json authority_language -- node scripts/check-authority-language.mjs
+
+      - name: the canonical finding record is coherent
+        working-directory: host
+        run: node scripts/gate-ledger.mjs run ../gate-ledger.json site_findings -- node scripts/check-site-findings.mjs
+
+      - name: the release identity graph is acyclic
+        working-directory: host
+        run: node scripts/gate-ledger.mjs run ../gate-ledger.json release_graph -- node scripts/check-release-graph.mjs
+
+      # Refuses to call the ledger complete if a required gate was never observed
+      # or did not pass. This is the completeness check on the ledger itself.
+      - name: every required gate was observed and passed
+        working-directory: host
+        run: node scripts/gate-ledger.mjs verify ../gate-ledger.json
+
+      # The complete build identity, emitted AFTER checkout when the self SHA is
+      # known, consuming the ledger the runner wrote. Not committed — a receipt
+      # inside the commit it records is the recursion this design avoids.
+      - name: emit the build receipt
+        working-directory: host
+        run: node scripts/make-build-identity.mjs --receipt ../build-receipt.json --gates ../gate-ledger.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: invariants-release-evidence-${{ github.sha }}
+          path: |
+            build-receipt.json
+            gate-ledger.json

@@ -1,11 +1,147 @@
 {
   "_comment": "Written by _invariants/build/build.mjs. --verify re-checks invariants.html against this.",
-  "built_from": "opensentience.org/_invariants/data/{cells,axes,copy}.json + CLAIM_LEDGER.json + mosaic/{occupancy,defeaters}.json",
-  "version": "0.8",
-  "round": "INV-R7.6",
-  "sha256": "40af287ea38cb67ff0496f0abbebbbb80e3ffa611c86702542c657e59b912962",
-  "bytes": 171226,
+  "built_from": "opensentience.org/_invariants/data/{cells,axes,copy,floor}.json + CLAIM_LEDGER.json + mosaic/{occupancy,defeaters}.json",
+  "inputs": [
+    {
+      "path": "AmpersandBoxDesign/box-and-box/bridge.mjs",
+      "sha256": "5fc04a507349885bbf5165ee4a62c89d2c5a5d2c787451b9e3e20193a1a47745"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/compose.mjs",
+      "sha256": "2dfcdff22406a41e8f99fd126f12b104ef683309f7aee8bc9c8749e0e0b37054"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/epistemic.mjs",
+      "sha256": "d9ab7f345235be371146ed31632da5d4fd28e92bc72e606146d10f53b9532a3f"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/evolution.mjs",
+      "sha256": "b16a825ca3cfd578aef47366439c83ae11a9fde7504e152500c9e8f6567ad541"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/govern.mjs",
+      "sha256": "3f545dc66d60c6f465bb8e4b5b7e6124d0ef8be5e34b27650bc0762aa176c7a2"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/norm.mjs",
+      "sha256": "3dab00bc000d31825bd2d7d9ae9116555cad80034e82a5347f4448ebbfaf79e4"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/numerics.mjs",
+      "sha256": "fe106eef03762da57de18b9056848839cafc886131cd18fdafcc1d3f10d67b56"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/reflexive.mjs",
+      "sha256": "848eeaafe5ad16b5ab78fe7a8b562add07884bddd04dcaa51f5734ce7ec6a248"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/resource.mjs",
+      "sha256": "8c6a6c6ffc469ae90cadfde0483cb19e7e2088bf90de718c9c67c21ebf2c2c8f"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/score.mjs",
+      "sha256": "8bf19dd794c4320a5a95959329c1336bacced6b0abe3f0a1e848354942cb5bfb"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/strategic.mjs",
+      "sha256": "895c56d065bcadb5f058e6e5864ffd433305d1e94122ccc9fb086384bfc4ce19"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/supervise.mjs",
+      "sha256": "061a8ca0cc84bee6649b9249d420f8e2c1e09771611a872123b5dfef6f2486f7"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/temporal.mjs",
+      "sha256": "d1e3211f178d3a7380a8ee4ba4c0433ae2965ca094c97df4fe3debfddf8f9dc3"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/test/compose-laws.mjs",
+      "sha256": "06726c3fb022f31e7b27eb7159c731fd9ecd349405dbc698e84090914856a19b"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/test/laws.mjs",
+      "sha256": "51ffdf3aa3658f1858bae427772f4f776140c3539c2347d0fb847aea2d13c22d"
+    },
+    {
+      "path": "AmpersandBoxDesign/box-and-box/value.mjs",
+      "sha256": "de3e2cdcc9d0704ef6668d27ffdf8b1cc3ff8230a00738e8bae793a382c599d8"
+    },
+    {
+      "path": "CLAIM_LEDGER.json",
+      "sha256": "615145f306f5dbcd38b536feb22750d5315bb296d77189b63e8a748005e6eef1"
+    },
+    {
+      "path": "mosaic/arguments.json",
+      "sha256": "41c0fa0d3bf9519baad8f8b37ba199aed20346a9412daa7f3ce2503e9380f764"
+    },
+    {
+      "path": "mosaic/defeaters.json",
+      "sha256": "8f7dc0dd7aab8cdaebb4b1453e97735e1d30b271179b1690052ddf8d2a726977"
+    },
+    {
+      "path": "mosaic/occupancy.json",
+      "sha256": "2b7df7cbdabf3656b7c79e54e65112b3a1144a8c231fe9da5745c3351f8c56bd"
+    },
+    {
+      "path": "opensentience.org/_invariants/build/templates.mjs",
+      "sha256": "ca75b10b96162dedad6aff59bac72e225c6d20d25b26893e1a71dbb7188ae58e"
+    },
+    {
+      "path": "opensentience.org/_invariants/build/witness-runner.js",
+      "sha256": "fd75a888aee3efd54c5e1f6738b12f9e380490b03f0d1fff247ea7a16ac0efc6"
+    },
+    {
+      "path": "opensentience.org/_invariants/data/axes.json",
+      "sha256": "5bed9223522d8a0da9a55d6a55d837b4d435d37f83cf31ef180a6d89f6ce6096"
+    },
+    {
+      "path": "opensentience.org/_invariants/data/cells.json",
+      "sha256": "6dbe984074bbbcf96ce1381e1d19473b22b6f8f788fd40b1a1e8e993aa8e01d2"
+    },
+    {
+      "path": "opensentience.org/_invariants/data/copy.json",
+      "sha256": "632c2b3702b0232a497a723e05d112bc248bc8bc8519e962fcef611e25d136ba"
+    },
+    {
+      "path": "opensentience.org/_invariants/data/floor.json",
+      "sha256": "66723d7441a576605e2815b306125690715d71ef551041b0970974ed5d8503e6"
+    },
+    {
+      "path": "opensentience.org/_invariants/styles/table.css",
+      "sha256": "38235f44ab560ba51b8eddccfbea63e938918ac3f1c235b44f13dad871fbde0f"
+    },
+    {
+      "path": "opensentience.org/_invariants/styles/witness.css",
+      "sha256": "2143436c197480484ef6ce245f607491f96a8e6a4475d5cbfb03b602ece27a74"
+    },
+    {
+      "path": "scripts/check-escalation-claims.mjs",
+      "sha256": "2ba55e7f0734ceed9a9c101f9bf890f643afe36c8fcdd6b3db6b3178fe589dda"
+    },
+    {
+      "path": "scripts/check-federation-invariants.mjs",
+      "sha256": "33263750e513ec76b1efbd52f690424298e91a4cca326dcd6f70fa29cd9651ef"
+    },
+    {
+      "path": "scripts/check-irreversible-ledger.mjs",
+      "sha256": "a497c84e865fc4dad3e386611aeee6a7ec6850dd443ef672eff939b3ad5aa098"
+    },
+    {
+      "path": "scripts/federation-kernel.mjs",
+      "sha256": "9536497092fd3e72222846e7e5323dfeea4d64de57a3ae0fac3e2734f42c50ef"
+    }
+  ],
+  "version": "0.9",
+  "round": "INV-R7.8",
+  "sha256": "b864e6a74535754001cb48b7f76d2fa6232af30ba9dabe0f9fac3bf8ad680a34",
+  "bytes": 221525,
   "cells": 46,
+  "floor": {
+    "obligations": 5,
+    "separate_axes": 4,
+    "resolved": 1,
+    "related_cells": 11
+  },
   "registers": {
     "decided": 13,
     "built": 4,
@@ -22,7 +158,7 @@
     "BOUND_CLAIM_COUNT": 54,
     "BOUND_CELL_COUNT": 7,
     "REFUTED_CLAIM_COUNT": 14,
-    "LEDGER_CLAIM_COUNT": 182,
+    "LEDGER_CLAIM_COUNT": 190,
     "KIND_COUNT": 13,
     "KIND_AUTHORED_COUNT": 6,
     "KIND_DECLARED_COUNT": 7,
@@ -31,8 +167,11 @@
     "TIER_COUNT": 12,
     "ACTIVE_DOUBT_COUNT": 6,
     "DEFEATER_COUNT": 44,
-    "ROUND": "INV-R7.6",
-    "VERSION": "0.8"
+    "ROUND": "INV-R7.8",
+    "VERSION": "0.9",
+    "FLOOR_COUNT": 5,
+    "FLOOR_RELATED_COUNT": 11,
+    "SEPARATE_AXIS_COUNT": 4
   },
   "witness_stamp": "48a67957dd9ea29e",
   "witness_modules": [

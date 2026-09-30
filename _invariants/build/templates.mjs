@@ -203,6 +203,106 @@ export function registerBand({ reg, note, groups }) {
         </section>`;
 }
 
+/* ──────────────────────── the semantic floor ────────────────────────
+   Rendered as a band ABOVE the registers, because S1–S5 cut across every one of
+   them and forcing them into Governance or Embodiment — the two groups they sit
+   nearest — would assert a containment that is false. The band is deliberately
+   not a grid of cells: these are not cells, and drawing them as cells is how a
+   reader would come to count them among the census. */
+
+export function floorBand({ floor, obligations, axes, resolved, observed, related }) {
+  const row = (o) => `
+                <article class="floor-row" id="floor-${esc(o.id)}">
+                    <div class="floor-id">${esc(o.id)}</div>
+                    <div class="floor-body">
+                        <h3 class="floor-name">${esc(o.name)}</h3>
+                        <p class="floor-obligation">${esc(o.obligation)}</p>
+                        ${o.enforcement_properties ? `<div class="floor-props"><span class="floor-lbl">Enforcement properties</span><ul>${o.enforcement_properties.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>${o.properties_note ? `<p class="floor-note">${esc(o.properties_note)}</p>` : ''}</div>` : ''}
+                        ${o.boundary_note ? `<div class="floor-boundary"><span class="floor-lbl">The boundary</span>${esc(o.boundary_note)}</div>` : ''}
+                        ${(o.consequences || []).length ? `<ul class="floor-conseq">${o.consequences.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+                        <dl class="floor-meta">
+                            <dt>Evidence</dt><dd><span class="ev-class ev-${esc(o.evidence_class)}">${esc(o.evidence_class)}</span> ${esc(o.evidence)}</dd>
+                            <dt>Scope / trust profile</dt><dd>${esc(o.scope_profile)}</dd>
+                            ${o.open.length ? `<dt class="open">Open</dt><dd class="open"><ul>${o.open.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></dd>` : ''}
+                            ${(o.closed || []).length ? `<dt class="closed">Closed this round</dt><dd class="closed"><ul>${o.closed.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></dd>` : ''}
+                        </dl>
+                        <p class="floor-cells">${(related[o.id] || []).length
+                          ? `<span class="floor-lbl">Cells that ${esc(o.id)} covers</span> ` + related[o.id].map((r) => `<button class="floor-cell-ref" data-num="${esc(r.num)}"><span class="rel">${esc(r.relation)}</span> ${esc(r.num)} ${esc(r.label)}</button>`).join(' ')
+                          : (o.expected_empty
+                            ? `<span class="floor-lbl">${esc(o.expected_empty.classification)}</span><span class="ee-why">${esc(o.expected_empty.why)}</span><span class="ee-examined"><span class="floor-lbl">Cells examined and rejected</span>${o.expected_empty.nearby_cells_examined.map((x) => `<span class="ee-cell">${esc(x)}</span>`).join('')}</span>`
+                            : '<span class="floor-lbl">No cell on this table specializes it yet.</span>')}</p>
+                    </div>
+                </article>`;
+
+  const axis = (a) => `
+                <article class="floor-axis" id="floor-${esc(a.id)}">
+                    <div class="floor-id axis">${esc(a.id)}</div>
+                    <div class="floor-body">
+                        <h3 class="floor-name">${esc(a.name)} <span class="axis-tag">${esc(a.axis.replace(/_/g, ' '))} · ${esc(a.status)}</span></h3>
+                        <p class="floor-obligation">${esc(a.statement)}</p>
+                        <dl class="floor-meta">
+                            <dt>Why it is not an S-row</dt><dd>${esc(a.why_separate)}</dd>
+                            ${a.assumptions ? `<dt>Assumptions</dt><dd><ul>${a.assumptions.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></dd>` : ''}
+                            <dt>Evidence</dt><dd><span class="ev-class ev-${esc(a.evidence_class)}">${esc(a.evidence_class)}</span> ${esc(a.evidence)}</dd>
+                            ${a.caution ? `<dt class="open">Caution</dt><dd class="open">${esc(a.caution)}</dd>` : ''}
+                            ${(related[a.id] || []).length ? `<dt>Cells recorded beside it</dt><dd>${related[a.id].map((r) => `<button class="floor-cell-ref" data-num="${esc(r.num)}"><span class="rel">${esc(r.relation)}</span> ${esc(r.num)} ${esc(r.label)}</button>`).join(' ')}</dd>` : ''}
+                        </dl>
+                    </div>
+                </article>`;
+
+  const res = (r) => `
+                <article class="floor-resolved" id="floor-${esc(r.id)}">
+                    <div class="floor-id resolved">${esc(r.id)}</div>
+                    <div class="floor-body">
+                        <h3 class="floor-name">${esc(r.name)} <span class="reduce-tag">reduces to ${esc(r.reduces_to)}</span></h3>
+                        <p class="floor-obligation">Recorded as <code>${esc(r.scoped_as)}</code>. Not a primitive.</p>
+                        <dl class="floor-meta">
+                            <dt>Why</dt><dd>${esc(r.why)}</dd>
+                            <dt>Witness</dt><dd><code>${esc(r.witness)}</code></dd>
+                            <dt class="open">Note</dt><dd class="open">${esc(r.note)}</dd>
+                        </dl>
+                    </div>
+                </article>`;
+
+  return `
+        <section class="floor" id="floor">
+            <div class="floor-head">
+                <span class="floor-roman">S</span>
+                <div class="register-titles">
+                    <h2 class="register-name">Agency / Semantic Floor</h2>
+                    <p class="register-claim">${esc(floor.basis_claim)}</p>
+                </div>
+                <span class="register-n">${esc(obligations.length)}<small>obligations</small></span>
+            </div>
+            <p class="register-note">${esc(floor.source.note)} Source: <code>${esc(floor.source.frontier)}</code>, ${esc(floor.source.adjudication)}.</p>
+            <div class="floor-rows">${obligations.map(row).join('')}</div>
+            <div class="floor-sub">
+                <h4 class="floor-subhead">Resolved candidates — reduced, not counted</h4>
+                ${resolved.map(res).join('')}
+                <h4 class="floor-subhead">Separate axes — not in the safety basis</h4>
+                ${axes.map(axis).join('')}
+                <h4 class="floor-subhead">Reduced, not minted</h4>
+                <article class="floor-observed" id="floor-${esc(observed.id)}">
+                    <div class="floor-id resolved">${esc(observed.id)}</div>
+                    <div class="floor-body">
+                        <h3 class="floor-name">${esc(observed.name)} <span class="reduce-tag">${esc(observed.status)}</span></h3>
+                        <p class="floor-obligation">${esc(observed.statement)}</p>
+                        ${(observed.not_this || []).length ? `<div class="floor-props"><span class="floor-lbl">What it is not</span><ul>${observed.not_this.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
+                        <dl class="floor-meta">
+                            <dt>Observed in</dt><dd>${esc(observed.observed_in)}</dd>
+                            ${observed.reduction_experiment ? `
+                            <dt>Reduction</dt><dd><span class="ev-class ev-${esc(observed.reduction_experiment.class.toLowerCase())}">${esc(observed.reduction_experiment.class)}</span> ${esc(observed.reduction_experiment.scope)}<br /><code>${esc(observed.reduction_experiment.witness)}</code></dd>
+                            <dt>Finding</dt><dd>${esc(observed.reduction_experiment.finding)}</dd>
+                            <dt>Reading</dt><dd>${esc(observed.reduction_experiment.interpretation)}</dd>` : ''}
+                            <dt>Prior art</dt><dd>${esc(observed.prior_art)}</dd>
+                            <dt class="open">Disposition</dt><dd class="open">${esc(observed.disposition)}</dd>
+                        </dl>
+                    </div>
+                </article>
+            </div>
+        </section>`;
+}
+
 /* ────────────────────────── inspector ────────────────────────── */
 
 export function inspector() {
@@ -252,6 +352,16 @@ export function inspector() {
                     <div id="i-kind-row" style="display: none">
                         <dt>Semantic kind</dt>
                         <dd id="i-kind">—</dd>
+                    </div>
+                    <div id="i-floor-row" style="display: none">
+                        <dt>Semantic floor</dt>
+                        <dd>
+                            <div class="i-floor">
+                                <div class="i-floor-head">Relation to the floor</div>
+                                <div class="i-floor-rel" id="i-floor-rel">—</div>
+                                <div class="i-floor-why" id="i-floor-why">—</div>
+                            </div>
+                        </dd>
                     </div>
                     <div id="i-arity-row" style="display: none">
                         <dt>Run arity</dt>

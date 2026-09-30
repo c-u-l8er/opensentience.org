@@ -1,0 +1,230 @@
+{
+  "_comment": "The Agency / Semantic Floor: S1-S5, the cross-cutting semantic obligations the R10-pre reduction programme left standing. These are NOT cells. A cell is a slot in the census; an obligation is what a cell may specialize. Keeping them in a separate file is what stops the floor from inflating the cell count — the census stays a census, and `reduction over accumulation` stays mechanically true rather than merely intended. Every row's evidence and scope is carried from invariant-r10/package-v2.8/INV_FRONTIER_R10_PRE.md section 1; none of it is restated more strongly here than it is there.",
+  "source": {
+    "package": "invariant-r10/package-v2.8",
+    "frontier": "invariant-r10/package-v2.8/INV_FRONTIER_R10_PRE.md",
+    "crosswalk": "invariant-r10/package-v2.8/CROSS_REGISTRY_CLAIM_MAP.json",
+    "adjudication": "GPT-5.6 v5 execution adjudication, 2026-09-02",
+    "note": "The package states `No promoted primitives.` S1-S5 are the working basis carried from the v1 candidate set through five adjudications, not a frozen irreducible set. This file must not say otherwise."
+  },
+  "basis_claim": "S1-S5 are the semantic obligations that survived the reduction programme. The programme reduced: S6 collapsed into S1, liveness separated onto its own axis, and factory epistemics separated into the assurance layer. It has NOT proved that five is irreducible, and no row here is universally proved.",
+  "levels": {
+    "_comment": "The five-level ontology every row is read through (frontier section 1b). Irreducibility belongs first to semantic obligations, NOT to the count of implementation mechanisms.",
+    "obligation": "what must be true",
+    "enforcement_property": "what capability the trusted substrate must provide",
+    "mechanism": "the implementation used on this profile",
+    "witness": "falsifier / proof / test",
+    "trust_profile": "the assumptions under which the mechanism earns the property"
+  },
+  "relation_vocabulary": {
+    "specializes": "The cell states this obligation for one narrower domain. The obligation is the general case.",
+    "corollary_of": "The cell follows from the obligation in a scoped application. It adds no independent content.",
+    "supports": "The cell contributes a property the obligation needs, and is NOT sufficient for it on its own.",
+    "refines": "The cell adds a distinction the obligation leaves open.",
+    "reduces_to": "A candidate obligation shown to be an instance of an existing one. Reserved for resolved candidates.",
+    "adjacent": "Related subject, no derivation claimed."
+  },
+  "obligations": [
+    {
+      "id": "S1",
+      "name": "Admission singularity",
+      "obligation": "Within a declared exclusivity domain or generation, conflicting authority-bearing transitions cannot both become current.",
+      "consequences": [
+        "Stale state must not remain action-authoritative merely because it is reachable or persisted.",
+        "Admission is checked at action time and consumption time, not only at proposal time."
+      ],
+      "mechanisms": "in-process: a linear token (LifecycleAdmission, !Clone, consuming API) · OTP: writer serialization under a total order · terminal layer: attachment_epoch · distributed: a fencing token checked at every mutation target",
+      "evidence": "cd-core 21 compile-fail gates + R0.7 (TESTED); ampd linearization tests (in_tree); Super 279 checks (live_local); Model 2.",
+      "evidence_class": "tested",
+      "scope_profile": "All declared exclusivity domains / single-current authority families. Some systems intentionally admit concurrent non-conflicting authority. Single log as executed; cross-log is UNKNOWN.",
+      "open": [],
+      "expected_empty": {
+        "classification": "EXPECTED-EMPTY / no current public-cell specialization",
+        "adjudicated": "GPT-5.6, 2026-09-05",
+        "why": "Not a gap to be filled. The floor exists so that a primitive obligation need not be faked into the cell partition, and S1 is the case that demonstrates it: something can be more fundamental than any measurement the table currently carries. Inventing or relabelling a cell so that S1 has a child would make the relation graph look symmetrical and would say something false.",
+        "nearby_cells_examined": [
+          "07 Conflict — detects incompatible overlapping claims in SCOPE. Detecting a conflict is not admitting exactly one of them; the predicate reports, it does not refuse.",
+          "16 Deny by default — requires an explicit grant, which is S2 authority discipline rather than S1 currentness.",
+          "17 Append-only audit — supports S3, not S1."
+        ],
+        "attachment_rule": "A future cell may attach to S1 only if its `why` says what it CONSTRAINS about admission or currentness — not what it observes. Enforced by R40."
+      }
+    },
+    {
+      "id": "S2",
+      "name": "Authority non-amplification",
+      "obligation": "No transition may obtain or exercise authority unless, AT THE SEMANTIC BOUNDARY WHERE THAT AUTHORITY IS CONSUMED, the transition is justified by an admitted policy, evidence or grant chain that is valid for that transition. Observation, reachability, restart, transport, model output, reconstruction and position mint nothing.",
+      "consequences": [
+        "Established state constrains what can be authorized; explicit policy and grants establish authority.",
+        "A derived projection may explain and link authoritative sources without acquiring their authority to rewrite them.",
+        "A history reading — `some grant existed at some point` — is NOT this obligation. The X1 model found 537 of 537 stale-authorization traces leaving that reading satisfied while a revoked grant was spent."
+      ],
+      "mechanisms": "cd-core `reconstruct` (a route-free evidence family; LossBasis without reachability) · ampd four-state recovery, install is not authorize · WRL /gate has no ambient authority · TRVM support-soundness",
+      "evidence": "R0.7 21/21 (TESTED); ampd crash falsifiers; Model 3.",
+      "evidence_class": "tested",
+      "scope_profile": "All agents, all scopes examined.",
+      "open": [],
+      "boundary_note": "A grant that was once valid but has been revoked, superseded, exhausted or invalidated does not authorize a later use merely because it existed in history. This is not S1 or S3 currentness: the subject is whether the authority THIS transition consumes is justified at THIS transition, not which of several transitions is current."
+    },
+    {
+      "id": "S3",
+      "name": "Continuity / anti-resurrection",
+      "obligation": "Replay, restore, copy, migration or reconstruction cannot resurrect superseded single-use authority, or create two current descendants of one lineage.",
+      "enforcement_properties": [
+        "currentness / exclusivity",
+        "canonical-history continuity"
+      ],
+      "properties_note": "Two enforcement properties, independently necessary on copyable or restorable substrates (Model 1). This is a statement at the obligation and property levels and says NOTHING about mechanism count: one compound trusted mechanism may supply both, and a floor census or an MCU design must not be forced upward by a semantic decomposition.",
+      "mechanisms": "root-sidecar OS lock + epoch AND a SHA-256 history commitment under injective encoding (two mechanisms) · one linearizable witnessed root {generation, holder/fence, history digest} under one CAS (one compound mechanism) · TPM/NV-backed state machine · quorum register · MCU RAM-only: S3 is vacuous, single incarnation, claim nothing",
+      "evidence": "R0.8.3 PX13 lab EXECUTED 21/21 (2026-09-01). R0.8.4 through R0.8.8 closed F22, F23, F24, F30, F31, F32, F33, F34, F35, F36, F37 under the declared profile, each by falsify-then-repair. EXP-1 ARM A: a copied world forks without an anchor; ARM B: exactly one competing advance is admitted under a single correct available witness, the other refused by name and quarantined.",
+      "evidence_class": "tested-conditional",
+      "scope_profile": "Persistent agents; single host as executed. TESTED on a two-controller, two-filesystem-namespace copied-world topology. SUPPORTED by mechanism shape but not tested: cross-machine under the same witness assumptions. UNTESTED: partition- or failure-tolerant (quorum) witnessing, and witness crash or failover during competing admission.",
+      "open": [
+        "R0.8 remains OPEN. The safety mechanism is READY FOR FREEZE and the freeze is PROPOSED within the explicit profile, not asserted.",
+        "S3-PHASE-COMPLETE-PROVENANCE is a corollary of S3, not a primitive: the successor must be authorized exactly and phase-completely where the profile uses successor handoff."
+      ]
+    },
+    {
+      "id": "S4",
+      "name": "Semantic observability",
+      "obligation": "Every shared identity, receipt, observation or projection must be ADEQUATE, AT THE BOUNDARY WHERE IT IS PUBLISHED OR CONSUMED, for the future behaviour it promises to distinguish, AND quotiented over declared-irrelevant representation differences (EQUIVARIANCE). Side-effecting observations are transitions.",
+      "consequences": [
+        "Byte-for-byte state identity is not required and must not be demanded.",
+        "An observation must not silently omit a state variable that changes relevant future behaviour.",
+        "An observation-time reading — `it was true when sampled` — is NOT this obligation. The X1 model found 537 of 537 stale-publication traces leaving that reading satisfied while a stale artifact was published as current."
+      ],
+      "mechanisms": "TRVM world.write-mediated@1, the ADEQUACY and EQUIVARIANCE meta-laws, exec-vs-semantic identity · Super `rendered world = f(last frame)` · ampd snapshot-at-entry",
+      "evidence": "TRVM property tests; Model 5; the alias witness. EXP-3: observation-as-write TESTED and holds on live v0.12.0 — a side-effecting observation is version-advancing and lock-guarded.",
+      "evidence_class": "tested",
+      "scope_profile": "All worlds.",
+      "open": [
+        "E-43: scope (re)definition is unversioned. KEPT RED.",
+        "E-42: a fork splits the verifiers. KEPT RED."
+      ],
+      "closed": [
+        "E-53 (F38): the trusted recovery report stayed silent about the trusted anchor it had just repaired. CLOSED 2026-09-05 as TESTED-CONDITIONAL under the cd-durable R0.8 profile — process crash/restart, single host, protected deployment anchor, the report surface only. The control that closed it went 16-FAIL before the repair and 0-FAIL after, so it demonstrably could say FAIL about this subject. Provenance retained: falsification 89adeb3, repair e42cc88."
+      ],
+      "boundary_note": "Correctness when sampled is insufficient if the artifact claims to characterize a state that can change before publication or use. Versioning, fencing, atomic binding or revalidation may preserve adequacy — this does not demand byte identity, and it does not demand checking everything twice: an immutable fact, and an observation atomically bound or fenced to its boundary, are already adequate."
+    },
+    {
+      "id": "S5",
+      "name": "External-effect honesty",
+      "obligation": "Past the irreversible-effect boundary, unknown completion stays explicit. Replay needs proven idempotency or stable effect identity, reconciliation evidence, or fresh acknowledged authority accepting duplicate risk.",
+      "consequences": [
+        "Intent, attempt, risk authorization, attempt terminal and intent satisfaction are five distinct concepts.",
+        "A superseded or cancelled attempt is not the same as an unsatisfied intent.",
+        "An effect that may have happened must not be silently replayed as if it definitely did not."
+      ],
+      "mechanisms": "cd-durable effect boundary (roll-forward stops) · ampd journal-before-act, effect_key, UNKNOWN to RECONCILE · WEK INDETERMINATE to RESOLVE, RISK_REAUTHORIZE, DUPLICATED_ACKNOWLEDGED",
+      "evidence": "EXP-6 (E-48), the first real adapter run — TESTED: UNKNOWN reached live under process- and node-level crashes; a re-claim refused by name; the naive adapter DUPLICATES on a re-authorized replay while the keyed far side deduplicates. E-51 effect-identity model 27/27 with E-52 effect-time revalidation.",
+      "evidence_class": "tested-conditional",
+      "scope_profile": "Worlds with irreversible external effects only; absent in effect-free worlds. TESTED under the exact profile: a real adapter, a same-machine separate durable far-side process and store, a process crash after the side effect, a BEAM SIGKILL after the side effect, keyed dedup, far-side reconciliation evidence. NOT TESTED: network partition, a third-party far side, remote outage, a kill during a DETS mutation, exactly-once across an unreliable boundary.",
+      "open": [
+        "E-50a: replay-risk authorization by stable intent identity. KEPT RED for the Super lane.",
+        "E-50b: attempt supersession and reconciliation attribution. A key names the intent, not the attempt; ampd today COMMITs an already-applied replay. KEPT RED."
+      ]
+    }
+  ],
+  "resolved_candidates": [
+    {
+      "id": "S6",
+      "name": "World / Locus birth uniqueness",
+      "disposition": "not_promoted",
+      "relation": "corollary_of",
+      "reduces_to": "S1",
+      "scoped_as": "S1(domain = world locus-birth / currentness)",
+      "why": "The falsifier was EXECUTED 2026-09-02 against frozen cd-core: the double-birth state is reachable and both lineages act, and the FinalityWarden minted by birth A finalizes birth B's live attachment. The remedy — a linear WorldAdmission consumed by create_locus, refusing LocusAlreadyBorn — has S1's shape property by property. The promotion rule required a counterexample demonstrating a property NOT expressible as S1 scoped to world locus-birth. None was found.",
+      "witness": "invariant-r10/package-v2.8/experiments/rust/results/S6_locus_birth.md (E-44)",
+      "note": "Do not resurrect S6 as a sixth floor obligation to preserve a count. What it leaves open is not new: durability of the World admission is S3; cross-world id collisions are representation."
+    }
+  ],
+  "separate_axes": [
+    {
+      "id": "L1",
+      "name": "Recoverable succession / explicit terminalization",
+      "axis": "liveness",
+      "status": "candidate — NOT promoted",
+      "statement": "For a Locus whose policy declares continued service, if the current holder becomes permanently unavailable and sufficient admissible loss evidence is eventually established, the system eventually either admits exactly one successor in a later generation, or moves the Locus to an explicit terminal or quarantined state — and never remains silently ambiguous forever.",
+      "why_separate": "S1-S5 are safety and integrity obligations. EXP-4's census found the one Locus dimension none of them speaks for: what guarantees PROGRESS when the current holder becomes permanently unavailable. A safety basis cannot answer it, so it is recorded on its own axis and never as an S-row.",
+      "constraint": "L1 must not weaken S1 or S2. A profile may choose halt-on-loss and promise only the terminal clause.",
+      "assumptions": [
+        "ENV-SUCCESSOR-AVAILABILITY — an eligible, willing candidate exists and is offered. This is the environment; it is not manufacturable.",
+        "SYS-SUCCESSOR-ENABLEMENT — the system makes the offered attachment admissible. ONE obligation: authority evidence, policy admission, finality proof and resource compatibility are mechanisms that DISCHARGE it, not separate liveness obligations.",
+        "SYS-ATTACH-FAIRNESS — an admissible, enabled attachment is not postponed forever."
+      ],
+      "evidence": "witnesses/liveness_l1.py is L1-PRE / resolution availability (EXHAUSTIVE-IN-FINITE-MODEL, 6/6): from every evidenced state a safety-preserving resolution path EXISTS. witnesses/liveness_l1_fair.py is the temporal witness under a declared fairness policy (21/21). Under no fairness, every evidenced state is resolvable yet admits a non-resolving stuttering execution. Under WF(finality), L1-closed holds. L1-service-succession holds ONLY under all three assumptions; omit any one and a fair non-resolving execution exists.",
+      "evidence_class": "exhaustive-in-finite-model",
+      "caution": "A resolution path EXISTING is not the same as eventual resolution being GUARANTEED. The BFS witness proves resolvability, not temporal eventuality. A state with a fair non-resolving execution is `eventuality-failing`, never `unresolvable`."
+    },
+    {
+      "id": "FAC-CONTROL-SENSITIVITY",
+      "name": "Control sensitivity",
+      "axis": "factory_epistemics",
+      "status": "DECLARED",
+      "statement": "A control may promote an evidence class only if its sensitivity to the claimed forbidden state is itself evidenced — by a pre-fix or injected-fault FAIL, by an independent witness that the control reaches its subject and discriminates the forbidden state, or by a mutation / negative-control pair whose verdict flips when the target mechanism is removed.",
+      "why_separate": "This is not a runtime invariant and not a liveness rule. It is an evidence-admission rule of the FACTORY — a rule about how claims get promoted, not about what is true of an agent. A green check that cannot go red is not strong evidence.",
+      "corollary": "The runner and receipt machinery must itself have a negative control able to fail the aggregate.",
+      "evidence": "R0.8.4's seven `PASS that could not have said FAIL` instances are the negative examples. The falsify-then-repair receipts, the two drift-gate negative controls, the L1 temporal checker's self-mutations, and EXP-6's own mis-attributing first reconcile run are the witness families.",
+      "evidence_class": "declared",
+      "caution": "Stays DECLARED: the factory kit proves the mechanical requirements over its declared domain, not that a control REACHES its subject or what a receipt MEANS. Those are adjudicative."
+    },
+    {
+      "id": "FAC-EVIDENCE-TRANSITION-SCHEMA-CLOSED",
+      "name": "Evidence-transition schema closure",
+      "axis": "factory_epistemics",
+      "status": "PROVED / exhaustive-in-declared-domain",
+      "statement": "The evidence-transition validator is total for the schema obligations it declares, and refuses every registered mutation.",
+      "why_separate": "Same layer as FAC-CONTROL-SENSITIVITY: a rule about evidence, not about agents. Its proof is real and it is narrow — exhaustive INSIDE its declared finite evidence-state domain, which is not a proof of the factory.",
+      "evidence": "Over evidence-state@1 union evidence-state@2: 21 mutations, 37 applications, counts derived and never typed. A station receipt binds the input registry to generator to evidence-transition set to projection to validator to result to subject identity, and its selftest refuses every single-binding mutation.",
+      "evidence_class": "exhaustive-in-declared-domain",
+      "caution": "The v2.7 claim text hand-typed a count one higher than the list it described — exactly the class of error this whole derivation discipline exists to prevent."
+    },
+    {
+      "id": "FAC-CONTROL-SCOPE-ADEQUACY",
+      "name": "Control scope adequacy",
+      "axis": "factory_epistemics",
+      "status": "FACTORY SPECIALIZATION / COROLLARY OF S4",
+      "statement": "A control may claim coverage only over a subject set derived from, or proved closed over, the load-bearing dependency set of the thing it evaluates. Omission of a relevant subject from the control's observation domain must itself be detectable.",
+      "why_separate": "Recorded on the factory axis because it is a rule about controls, not about agents. It is NOT an independent factory primitive: it reduces to S4 applied to the verifier as a system that itself publishes observations.",
+      "distinct_from_sensitivity": "A control can be failure-sensitive, have passing negative controls, and still be confidently wrong, because the subject set it observes is incomplete. That is not hypothetical: this lane's retrievability checker hardcoded three repositories in a five-repository workspace, reported files owned by the fourth as belonging to none, and a high-severity finding (F-SITE-5) was opened on that output and later withdrawn.",
+      "distinct_from_schema_closure": "Not reducible to FAC-EVIDENCE-TRANSITION-SCHEMA-CLOSED either. That rule is total over a finite evidence-transition VOCABULARY; a validator can be total over its schema while observing half its subjects.",
+      "evidence": "invariant-r10/experiments/fac_scope_adequacy/scope_adequacy.mjs — 14/14, EXHAUSTIVE-IN-FINITE-MODEL over the enumerated worlds. Independence shown in BOTH directions: a declared-scope control is red on what it sees and green on a bad subject outside its scope; a control observing every subject that always returns GREEN is scope-adequate and not sensitive. Step 6 adds a new container with no control edited: the declared-scope control stays green, the derived-scope control goes red.",
+      "evidence_class": "exhaustive-in-finite-model",
+      "caution": "Keep the executable controls: the specialization is operationally useful and has TWO live falsifiers in this lane — a retrievability checker with a hardcoded repository universe, and a --check that dropped untracked paths. Do NOT call it an independent factory primitive. Do NOT strengthen S4's evidence class from this: the model shows these coincide, not that S4 is more proved than it was. No cell.",
+      "reduces_to": "S4",
+      "reduction": {
+        "witness": "invariant-r10/experiments/fac_scope_adequacy/scope_vs_s4.mjs",
+        "class": "EXHAUSTIVE-IN-FINITE-MODEL",
+        "result": "All 1352 scope-adequacy failures in the model are also S4 adequacy failures at the publication boundary. Zero worlds separate them with a misleading published verdict. The reduction is PROPER, not an alias: S4 fails in 5634 worlds where scope adequacy holds — the insensitive control that observes everything and never changes its verdict — so scope adequacy is the narrower rule.",
+        "sharpening": "The model corrected an assumption this lane held: REPORTING an omission repairs scope adequacy (the gap becomes detectable) and does NOT repair S4, because the CLAIM still spans the unobserved subject. Detectability is weaker than adequacy. What repairs S4 is NARROWING THE CLAIM to what was observed. Worth carrying operationally — 'we disclosed the gap' is the natural move and is not sufficient.",
+        "still_separate": "FAC-CONTROL-SENSITIVITY does not reduce with it. A control observing every subject that always returns GREEN is scope-adequate and insensitive, so sensitivity remains its own factory concern."
+      }
+    }
+  ],
+  "observed_not_minted": {
+    "id": "X1",
+    "name": "Use-time validity",
+    "alias": "BOUNDARY-CURRENTNESS",
+    "status": "CROSS-CUTTING ENFORCEMENT DIMENSION — reduced, NOT minted",
+    "class": "enforcement_geometry",
+    "statement": "Any authority, evidence, identity, scope, state or effect predicate whose truth can change between proposal and semantic use must either be revalidated at the use/commit boundary, or be atomically bound to it by a mechanism proving the consumed predicate is the one that was admitted.",
+    "not_this": [
+      "It is not `check everything twice`. An immutable fact needs no revalidation — the model shows X1 is vacuous where the predicate cannot change.",
+      "A linearizable or transactional mechanism may bind check and use into one operation and discharge it without a second check.",
+      "A version, fence, digest or capability token may carry the proof of currentness.",
+      "The subject is the consumed validity predicate, not wall-clock freshness."
+    ],
+    "observed_in": "F35 (S3) · F36 (S3, S2 by cross-reference) · F37 (S3) · F38/E-53 (S4) · E-52 (S5) · EXP-7 v6 (S4, TRVM). Every S3/S4/S5 finding since v2.5 has this shape.",
+    "reduction_experiment": {
+      "witness": "invariant-r10/experiments/x1_use_time_validity/x1_reduction.py",
+      "result": "invariant-r10/experiments/x1_use_time_validity/x1_reduction.output.txt",
+      "class": "EXHAUSTIVE-IN-FINITE-MODEL",
+      "scope": "every interleaving of check / mutate / use / competing-use up to depth 7, per row, under four disciplines; 33/33 checks; four control mutations each flip a verdict. EXHAUSTIVE-IN-FINITE-MODEL — a statement about the model, not about any real system.",
+      "finding": "Under the STRONG boundary readings now canonical in S2 and S4, this model exhaustively found NO independent X1 obligation: S1, S3 and S5 absorb every X1 violation unconditionally on their own structural bad states, and S2 and S4 absorb it too. Under the WEAK readings the model exhibited independence — 537 of 537 X1-violating traces leave S2 (history) or S4 (at-observation) satisfied while a semantically invalid action is admitted. That is a result about THIS FINITE MODEL. It is not a proof that X1 is universally reducible.",
+      "interpretation": "The reduction is real and it is not free. S2 and S4 already do X1's work internally, which is why they absorb it; the geometry is what they are read through, not a further thing to be true. Recording it as a dimension makes that reading explicit instead of load-bearing and unstated."
+    },
+    "disposition": "NOT MINTED. No obligation row, no census cell, no S6/S7. Adjudicated GPT-5.6 2026-09-05; reduction executed by this lane 2026-09-05.",
+    "prior_art": "The check/use race (Bishop and Dilger 1996), fencing tokens, and ARIES' rule that recovery's own actions are logged.",
+    "closed_by": "X1-READING is CLOSED: the boundary reading the reduction depended on is now stated in S2's and S4's own obligations and their boundary_note, not left implicit beside them. The weak readings are refused by name in invariant-r10/experiments/x1_use_time_validity/s2_s4_boundary_falsifiers.py."
+  }
+}
