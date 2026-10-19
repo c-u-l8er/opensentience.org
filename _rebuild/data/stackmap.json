@@ -23,7 +23,7 @@
     },
     {
       "id": "embodiment",
-      "label": "Embodiment",
+      "label": "GRASP",
       "role": "sensorimotor",
       "note": "the typed perceive/act loop for &body.*",
       "protocols": [
@@ -128,9 +128,9 @@
     {
       "from": "embodiment",
       "to": "primitives",
-      "what": "OS-011 emits a SurpriseSignal into the loop vocabulary",
+      "what": "GRASP emits a SurpriseSignal into the loop vocabulary",
       "producer": {
-        "what": "the Embodiment spec",
+        "what": "the GRASP spec",
         "path": "docs/spec/OS-011-EMBODIMENT.md"
       },
       "consumer": null,

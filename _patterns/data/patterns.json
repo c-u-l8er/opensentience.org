@@ -2319,7 +2319,7 @@
    "scene": "exact-replay",
    "headline": "A run of a sealed world is a film that replays byte-identically; a divergence on replay is the world's, not the player's.",
    "explanatory": "When identity is a seal and the observable is complete, a run is reproducible: the film of one run replays to the same bytes on another player. If it does not, the world hid state or the seal lied, and the replay has found a bug in the world, not in the player.",
-   "technical": "TRVM film replay. Law 4: every reported reduction cost must name the reduction strategy under which it was measured. Law 6 is the completeness condition replay depends on. No receipt in the tree states a fidelity percentage for TRVM film replay; the v0.2 review of this book's plan looked for one and did not find it, so this page carries a '?' where a number would be. Not to be confused with Cross-Machine Skill Replay, which is about OS-011 traces.",
+   "technical": "TRVM film replay. Law 4: every reported reduction cost must name the reduction strategy under which it was measured. Law 6 is the completeness condition replay depends on. No receipt in the tree states a fidelity percentage for TRVM film replay; the v0.2 review of this book's plan looked for one and did not find it, so this page carries a '?' where a number would be. Not to be confused with Cross-Machine Skill Replay, which is about GRASP traces.",
    "problem": "Reproducibility is claimed and rarely measured. 'It replayed' usually means a log was read back, not that a second player produced the same bytes from the same sealed world. When two players disagree, the player is blamed, because the world was never sealed to begin with.",
    "forces": "Exact replay needs everything Shared Observable demands and a cost model that names its strategy, since a replay that takes a different reduction path is a different run. The number that would witness it is a receipt this tree does not yet hold.",
    "construction": "Seal the world. Record the film with its reduction strategy. Replay on a second player. Compare bytes. Publish the fidelity with the method, or publish '?'.",
@@ -2390,10 +2390,10 @@
    "prior_art": {
     "works": [
      {
-      "work": "OS-011 Embodiment",
+      "work": "GRASP",
       "relation": "partial-overlap",
       "overlap": "the tree's own protocol for a skill that crosses bodies",
-      "difference": "OS-011 is a protocol at the spec rung; this pattern is the shape it would need"
+      "difference": "GRASP is a protocol at the spec rung; this pattern is the shape it would need"
      },
      {
       "work": "Record-and-replay in RPA",
@@ -2403,7 +2403,7 @@
      }
     ],
     "novelty_not_claimed": "Nothing is claimed as achieved. v0.1 of this plan conflated this with exact-replay; they are different chapters and the conflation is recorded so it is not repeated.",
-    "prose": "OS-011 Embodiment; record-and-replay in RPA. v0.1 conflated this with exact-replay."
+    "prose": "GRASP; record-and-replay in RPA. v0.1 conflated this with exact-replay."
    },
    "realizations": [
     "opensentience.org/_rebuild/data/receipts.json"
@@ -2415,7 +2415,7 @@
    "scene": "cross-machine-skill-replay",
    "headline": "A skill taught on machine A replays on machine B with the declared fidelity; the InteractionTrace is the unit of transfer.",
    "explanatory": "An embodied skill — a sequence of observations and actions against a body — is recorded as a trace and replayed elsewhere. What crosses machines is the trace, not the machine. The homepage carries a receipt card for this at 100 % fidelity; this build reports the card and did not open the run behind it.",
-   "technical": "OS-011 Embodiment: InteractionTrace → replay; the receipt card in opensentience.org/_rebuild/data/receipts.json reads 'Cross-machine replay · 100 % fidelity · teach a skill on machine A, replay it on machine B'. STATED: a card is a claim about a receipt, and the receipt was not opened by the patterns build. Distinct from Exact Replay (a film of a world).",
+   "technical": "GRASP: InteractionTrace → replay; the receipt card in opensentience.org/_rebuild/data/receipts.json reads 'Cross-machine replay · 100 % fidelity · teach a skill on machine A, replay it on machine B'. STATED: a card is a claim about a receipt, and the receipt was not opened by the patterns build. Distinct from Exact Replay (a film of a world).",
    "problem": "Skills are taught to one body and die with it. Robotic process automation records screen coordinates and breaks on the next monitor. The unit of transfer is either too low (pixels) or too high (a prose description) to replay.",
    "forces": "A trace must be body-independent enough to replay and body-specific enough to act. Fidelity has to be declared before it is measured, or the measurement decides what fidelity meant. And a card on a homepage is not a receipt, however green.",
    "construction": "Record observations and actions as a trace with the body's affordances named. Declare fidelity. Replay on a second body. Publish the run, not only the card.",
@@ -2451,7 +2451,7 @@
     },
     {
      "from": "literature",
-     "text": "OS-011 Embodiment; RPA's record-and-replay is the failure mode being answered."
+     "text": "GRASP; RPA's record-and-replay is the failure mode being answered."
     },
     {
      "from": "witness",
@@ -2459,10 +2459,10 @@
     }
    ],
    "wrl": {
-    "note": "No core-role encoding: an InteractionTrace is OS-011's artifact, not a WRL world."
+    "note": "No core-role encoding: an InteractionTrace is GRASP's artifact, not a WRL world."
    },
    "up": "UP-024",
-   "limit": "Nothing is achieved. OS-011 Embodiment is at the spec rung; this pattern is the shape that protocol would need, written before any of it exists.",
+   "limit": "Nothing is achieved. GRASP is at the spec rung; this pattern is the shape that protocol would need, written before any of it exists.",
    "next_rung": "live_local: one skill recorded on one machine and re-performed on another, played back here, with both bodies described well enough that the difference between them is visible rather than asserted."
   },
   {

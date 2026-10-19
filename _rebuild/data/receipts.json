@@ -36,7 +36,7 @@
     "metric": "Cross-machine replay",
     "value": "100%",
     "unit": "fidelity",
-    "note": "teach a skill on machine A, replay it on machine B (OS-011 Embodiment)",
+    "note": "teach a skill on machine A, replay it on machine B (GRASP)",
     "href": "#protocols"
   }
 ]

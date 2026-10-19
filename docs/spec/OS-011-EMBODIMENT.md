@@ -1,4 +1,4 @@
-# OS-011 — Embodiment Protocol
+# GRASP — Grounded Readings, Actions and State Protocol
 
 **OpenSentience Specification OS-011 v0.1**
 
@@ -11,7 +11,7 @@
 **Implements:** `&body.*` (new sensorimotor primitive in [&] Protocol draft v0.1.0)
 **Depends on:** OS-001 (Continual Learning), OS-004 (Attention), OS-006 (Agent Governance), OS-008 (Harness), OS-010 (PULSE)
 
-> "[&] composes agents. PRISM measures them. PULSE gives them a heartbeat. OS-011 gives them a body."
+> "[&] composes agents. PRISM measures them. PULSE gives them a heartbeat. GRASP gives them a body."
 
 ---
 
@@ -38,7 +38,7 @@
 
 ## 0. One-Paragraph Summary
 
-OS-011 is the behavioral protocol for embodied agents in the OpenSentience stack. It defines how an agent's `&body.*` provider perceives its environment, enumerates currently-available typed actions (affordances), commits typed actions, encodes state deterministically, and records the result as an `InteractionTrace` — a canonical schema that `&memory.episodic` consumes for continual learning and FleetPrompt consumes for cross-machine skill transfer. OS-011 also defines the `SurpriseSignal` PULSE token, which agents emit when actual observations diverge from their forward-model predictions. Together, these close the perception-action gap in the first ten OpenSentience protocols and give the [&] stack a principled answer to the computer-use category (OpenClaw, Claude Computer Use, Pi.dev-based agents).
+GRASP is the behavioral protocol for embodied agents in the OpenSentience stack. It defines how an agent's `&body.*` provider perceives its environment, enumerates currently-available typed actions (affordances), commits typed actions, encodes state deterministically, and records the result as an `InteractionTrace` — a canonical schema that `&memory.episodic` consumes for continual learning and FleetPrompt consumes for cross-machine skill transfer. GRASP also defines the `SurpriseSignal` PULSE token, which agents emit when actual observations diverge from their forward-model predictions. Together, these close the perception-action gap in the first ten OpenSentience protocols and give the [&] stack a principled answer to the computer-use category (OpenClaw, Claude Computer Use, Pi.dev-based agents).
 
 ---
 
@@ -54,7 +54,7 @@ In the original formulation, action was implicit:
 - `&reason.plan` produces abstract plans. The plans are text; execution is left to the caller.
 - `&memory.episodic.replay` reconstructs past traces. But without a typed schema for what a "trace step" *is*, replay is prose.
 
-The absence was a modeling hole, not a design choice. OS-011 fills it.
+The absence was a modeling hole, not a design choice. GRASP fills it.
 
 ### 1.2 The Category the Stack Must Compete In
 
@@ -71,7 +71,7 @@ None of them have a typed capability contract for embodiment. Each reinvents:
 - "Did the action succeed?"
 - "Can this trace replay on another machine?"
 
-OS-011 provides the typed contract. `&body.*` becomes the composition-layer primitive; OS-011 becomes the behavioral loop; PULSE's new `SurpriseSignal` becomes the learning signal; FleetPrompt's skill marketplace becomes the distribution layer; PRISM measures the result.
+GRASP provides the typed contract. `&body.*` becomes the composition-layer primitive; GRASP becomes the behavioral loop; PULSE's new `SurpriseSignal` becomes the learning signal; FleetPrompt's skill marketplace becomes the distribution layer; PRISM measures the result.
 
 ### 1.3 Why Not Extend `&reason` or `&space`?
 
@@ -81,12 +81,12 @@ OS-011 provides the typed contract. `&body.*` becomes the composition-layer prim
 
 ### 1.4 The Dark-Factory Vision
 
-The strategic motivation for OS-011 is the dark-factory thesis: networks of machine-hosted agents that continually learn, share crystallized skills, and operate autonomously under measurable governance. Without OS-011, the loop is open at two points:
+The strategic motivation for GRASP is the dark-factory thesis: networks of machine-hosted agents that continually learn, share crystallized skills, and operate autonomously under measurable governance. Without GRASP, the loop is open at two points:
 
 - **No standard trace format** → skills cannot be shared across machines without bespoke integration
 - **No forward-model signal** → learning collapses to binary success/failure
 
-With OS-011, the loop closes:
+With GRASP, the loop closes:
 
 ```
 Machine A: perceive → affordances → plan → act → InteractionTrace → SurpriseSignal → learn
@@ -102,19 +102,19 @@ Machine B: install → body.replay(trace) → re-authorize destructive actions �
 
 ## 2. Related Work
 
-| System / Standard | Relationship to OS-011 |
+| System / Standard | Relationship to GRASP |
 |---|---|
-| **OS-001 (Continual Learning)** | OS-011's `InteractionTrace` is a canonical payload for `&memory.episodic`. Graphonomous's novelty detection is the consumer of `SurpriseSignal`. |
+| **OS-001 (Continual Learning)** | GRASP's `InteractionTrace` is a canonical payload for `&memory.episodic`. Graphonomous's novelty detection is the consumer of `SurpriseSignal`. |
 | **OS-004 (Attention)** | Affordance enumeration feeds the attention engine's triage — the agent cannot attend to actions outside its affordance set. |
 | **OS-006 (Governance)** | Delegatic policies filter affordances at enumeration time (policy-filtered affordance sets are normative). Destructive actions require re-authorization at replay. |
-| **OS-007 (Adversarial Robustness)** | Body actions are the largest blast-radius attack surface. OS-011's hard constraints are the protocol defense boundary against embodied-agent exploits. |
+| **OS-007 (Adversarial Robustness)** | Body actions are the largest blast-radius attack surface. GRASP's hard constraints are the protocol defense boundary against embodied-agent exploits. |
 | **OS-008 (Harness)** | The harness enforces that actions are bounded by affordances, that `perceive` precedes `act`, and that learning events receive typed outcomes. |
-| **OS-010 (PULSE)** | OS-011 introduces `SurpriseSignal` as a sixth canonical token (schema bump to v0.1.1). |
+| **OS-010 (PULSE)** | GRASP introduces `SurpriseSignal` as a sixth canonical token (schema bump to v0.1.1). |
 | **OS-009 (PRISM)** | Embodiment fidelity becomes a benchmarkable dimension. Cross-machine replay success rate is a first-class metric. |
-| **OpenClaw** | Reference implementation target. A conforming OpenClaw installation implements `&body.os` + `&body.browser` and emits OS-011 `InteractionTrace` records. |
-| **Claude Computer Use** | Satisfies `&body.os` via coordinate-based `act`. Existing implementation; OS-011 adapter wraps it. |
+| **OpenClaw** | Reference implementation target. A conforming OpenClaw installation implements `&body.os` + `&body.browser` and emits GRASP `InteractionTrace` records. |
+| **Claude Computer Use** | Satisfies `&body.os` via coordinate-based `act`. Existing implementation; GRASP adapter wraps it. |
 | **agent-browser** | Canonical `&body.browser` provider. Snapshot-and-ref model maps directly to `perceive` + `encode_state`. |
-| **Pi.dev** | Extension-based harness; OS-011 reference extension provides `&body.os` + `&body.browser` implementations. |
+| **Pi.dev** | Extension-based harness; GRASP reference extension provides `&body.os` + `&body.browser` implementations. |
 | **Gibson (1977), Gibson (1979)** | Affordances as first-class environmental properties — not agent-computed, but environment-provided. |
 | **Smith & Gasser (2005)** | Six lessons from babies: embodiment as ground for abstract cognition. |
 | **ACT-R/E (Trafton et al., 2013)** | Cognitive architecture with embodied spatial module distinct from visual/spatial module — precedent for `&body` peer to `&space`. |
@@ -127,7 +127,7 @@ Machine B: install → body.replay(trace) → re-authorize destructive actions �
 
 ### 3.1 Body
 
-An agent's **body** is its typed sensorimotor interface to an environment. In OS-011, a body is an implementation of `&body.*` that provides five standard operations: `perceive`, `act`, `affordances`, `encode_state`, `replay`. Canonical subtypes:
+An agent's **body** is its typed sensorimotor interface to an environment. In GRASP, a body is an implementation of `&body.*` that provides five standard operations: `perceive`, `act`, `affordances`, `encode_state`, `replay`. Canonical subtypes:
 
 - `&body.browser` — browser DOM (reference provider: agent-browser)
 - `&body.os` — operating system (reference providers: OpenClaw, Claude Computer Use, Pi.dev extensions)
@@ -182,11 +182,11 @@ A PULSE canonical token emitted when an observation diverges from a forward-mode
 
 ### 3.8 FSM (Finite State Machine)
 
-The set of `{StateHash, TypedAction, StateHash}` triples over all recorded traces constitutes an implicit FSM. States are unique `StateHash` values; transitions are `TypedAction` labels on edges. OS-011 does not require agents to materialize this FSM explicitly, but it underpins replay determinism and affordance prediction.
+The set of `{StateHash, TypedAction, StateHash}` triples over all recorded traces constitutes an implicit FSM. States are unique `StateHash` values; transitions are `TypedAction` labels on edges. GRASP does not require agents to materialize this FSM explicitly, but it underpins replay determinism and affordance prediction.
 
 ### 3.9 Environment
 
-The world the body perceives and acts upon. For `&body.browser`, the environment is a browser session. For `&body.os`, the environment is an operating system instance. OS-011 is environment-agnostic — the same protocol works for web, OS, voice, vision, and future embodiments.
+The world the body perceives and acts upon. For `&body.browser`, the environment is a browser session. For `&body.os`, the environment is an operating system instance. GRASP is environment-agnostic — the same protocol works for web, OS, voice, vision, and future embodiments.
 
 ---
 
@@ -294,7 +294,7 @@ For hashing purposes, TraceEdges and InteractionTraces use canonical JSON (RFC 8
 
 ## 5. Embodiment Loop Semantics (Normative)
 
-This section is normative. A conforming OS-011 implementation MUST honor all requirements herein.
+This section is normative. A conforming GRASP implementation MUST honor all requirements herein.
 
 ### 5.1 Perceive-Before-Act
 
@@ -492,7 +492,7 @@ The `policy_filtered_out` field surfaces the count of actions that would be envi
 
 ## 7. The Five Invariants
 
-A conforming OS-011 runtime MUST satisfy all five invariants at all times.
+A conforming GRASP runtime MUST satisfy all five invariants at all times.
 
 ### 7.1 Perceive-Before-Act (I1)
 
@@ -524,7 +524,7 @@ These five invariants together give the stack: verifiable perception-action coup
 
 An agent with a body MAY maintain a forward model: a prediction of what observation will result from a given typed action applied to the current state. Formally: `fm(state, action) → predicted_next_state`.
 
-Forward models are OPTIONAL in OS-011 v0.1 — an agent can act without predicting. But agents that do predict gain a strictly richer learning signal: `surprise = distance(predicted_next_state, actual_next_state)`.
+Forward models are OPTIONAL in GRASP v0.1 — an agent can act without predicting. But agents that do predict gain a strictly richer learning signal: `surprise = distance(predicted_next_state, actual_next_state)`.
 
 ### 8.2 The SurpriseSignal Token (PULSE v0.1.1)
 
@@ -581,7 +581,7 @@ Providers SHOULD support `act(action, dry_run=true)`. In dry-run mode, the provi
 
 ## 9. Conformance Test Suite
 
-A runtime claims OS-011 v0.1 conformance only if it passes all twelve conformance tests. The full test suite ships at `opensentience.org/conformance/os-011/v0.1/`.
+A runtime claims GRASP v0.1 conformance only if it passes all twelve conformance tests. The full test suite ships at `opensentience.org/conformance/os-011/v0.1/`.
 
 | # | Test Name | What It Verifies |
 |---|---|---|
@@ -598,7 +598,7 @@ A runtime claims OS-011 v0.1 conformance only if it passes all twelve conformanc
 | 11 | `replay_re_authorizes_destructive_edges` | Replay of destructive actions requires fresh authorization; prior authorization does not transfer. |
 | 12 | `surprise_signal_conforms_to_pulse_v0.1.1` | Emitted `SurpriseSignal` tokens validate against the PULSE v0.1.1 schema. |
 
-Conformance reports are signed and submitted to `opensentience.org/conformance/os-011/reports/`. The report includes: provider name, body_subtype set, OS-011 version, test results per subtype, and attestation signature.
+Conformance reports are signed and submitted to `opensentience.org/conformance/os-011/reports/`. The report includes: provider name, body_subtype set, GRASP version, test results per subtype, and attestation signature.
 
 ---
 
@@ -625,18 +625,18 @@ Destructive actions require `delegatic.authorize(action, agent, policy) → auth
 
 ### 10.3 OS-008 (Harness)
 
-The harness enforces OS-011 invariants at runtime:
+The harness enforces GRASP invariants at runtime:
 
 - **Prerequisite chain**: `act` requires a preceding `perceive` from the current state (I1)
 - **Quality gate**: action preconditions must match affordances (I2)
 - **Context management**: long action sequences within a sprint respect the 60% context rule
 - **Audit trail**: every TraceEdge and SurpriseSignal logged
 
-Pipeline enforcer test suite (OS-008) SHOULD include OS-011-specific tests for the above.
+Pipeline enforcer test suite (OS-008) SHOULD include GRASP-specific tests for the above.
 
 ### 10.4 FleetPrompt
 
-A `SkillCandidate` payload for an OS-011 skill contains:
+A `SkillCandidate` payload for a GRASP skill contains:
 
 - A representative `InteractionTrace` (the "golden" recording)
 - Preconditions: initial state_hash, affordance requirements, environment requirements
@@ -651,7 +651,7 @@ When installed on a new machine, FleetPrompt's install engine:
 
 ### 10.5 PRISM (OS-009)
 
-OS-011 adds three benchmarkable dimensions to PRISM (or refines existing dimensions):
+GRASP adds three benchmarkable dimensions to PRISM (or refines existing dimensions):
 
 - **Embodiment fidelity**: replay success rate on held-out environments
 - **Forward-model calibration**: surprise_magnitude distribution; lower is better
@@ -661,17 +661,17 @@ These are weighted into the 9 CL dimensions or proposed as new sub-dimensions in
 
 ### 10.6 [&] Protocol
 
-OS-011 is the normative behavioral spec for the new `&body.*` primitive family introduced in [&] Protocol draft v0.1.0. The two specifications MUST remain synchronized; when OS-011 adds new body subtypes, [&] updates its subtype enumeration accordingly.
+GRASP is the normative behavioral spec for the new `&body.*` primitive family introduced in [&] Protocol draft v0.1.0. The two specifications MUST remain synchronized; when GRASP adds new body subtypes, [&] updates its subtype enumeration accordingly.
 
 ### 10.7 OpenClaw / Pi.dev / Claude Computer Use
 
-These are adoption targets, not dependencies. A conforming OpenClaw build satisfies `&body.os` + `&body.browser` and emits OS-011 traces. A Pi.dev extension authored against OS-011 produces traces consumable by Graphonomous. Claude Computer Use, adapted through an OS-011 wrapper, becomes a conforming `&body.os` provider.
+These are adoption targets, not dependencies. A conforming OpenClaw build satisfies `&body.os` + `&body.browser` and emits GRASP traces. A Pi.dev extension authored against GRASP produces traces consumable by Graphonomous. Claude Computer Use, adapted through a GRASP wrapper, becomes a conforming `&body.os` provider.
 
 ---
 
 ## 11. MCP Integration
 
-OS-011 operations compile to MCP tools per provider. Reference tool surface for a conforming `&body.browser` MCP server:
+GRASP operations compile to MCP tools per provider. Reference tool surface for a conforming `&body.browser` MCP server:
 
 - `body_browser_perceive(perception_query) → browser_observation`
 - `body_browser_act(typed_action) → action_outcome`
@@ -695,7 +695,7 @@ Tool names are provider-namespaced in practice (e.g., `agent_browser_perceive`, 
 
 ## 12. PULSE Manifest
 
-Embodied agents SHOULD declare an OS-011 loop manifest alongside their OS-001 continual-learning loop. Reference manifest:
+Embodied agents SHOULD declare a GRASP loop manifest alongside their OS-001 continual-learning loop. Reference manifest:
 
 ```jsonc
 {
@@ -877,9 +877,9 @@ Goal: Agent predicts action outcome; prediction diverges; learns from surprise.
 
 - **Proprioception** (muscle spindles, Golgi tendon organs, joint receptors): the body's sense of its own configuration. The protocol's `encode_state` operation is the computational analog — the body knows its own state with deterministic precision.
 
-- **Affordance perception** (Gibson 1977, 1979): "affordances are what the environment offers the animal." Not computed by the agent, but perceived from the environment-agent relationship. OS-011's `affordances` operation makes this explicit: the environment + governance policy determine what's available, the agent discovers it.
+- **Affordance perception** (Gibson 1977, 1979): "affordances are what the environment offers the animal." Not computed by the agent, but perceived from the environment-agent relationship. GRASP's `affordances` operation makes this explicit: the environment + governance policy determine what's available, the agent discovers it.
 
-- **Forward models in motor control** (Wolpert, Miall, Kawato 1998): the cerebellum maintains internal forward models that predict sensory consequences of motor commands. The discrepancy between predicted and actual sensation drives learning. OS-011's `SurpriseSignal` is this exact mechanism at the protocol layer.
+- **Forward models in motor control** (Wolpert, Miall, Kawato 1998): the cerebellum maintains internal forward models that predict sensory consequences of motor commands. The discrepancy between predicted and actual sensation drives learning. GRASP's `SurpriseSignal` is this exact mechanism at the protocol layer.
 
 - **ACT-R/E** (Trafton et al., 2013): extends ACT-R with dedicated embodied spatial + motor modules separate from visual/spatial module. Precedent for `&body` as peer to `&space`, not subsumed by it.
 
@@ -906,7 +906,7 @@ Test additions: ~60 tests mapping to the 12 conformance scenarios across browser
 
 ### 15.2 Agent-Browser Adapter (TypeScript)
 
-Wraps existing agent-browser CLI to emit OS-011 traces. Required:
+Wraps existing agent-browser CLI to emit GRASP traces. Required:
 
 - `@ampersand/body-browser` npm package
 - `osEmit(trace)` — emit InteractionTrace to a configured endpoint
@@ -917,15 +917,15 @@ Wraps existing agent-browser CLI to emit OS-011 traces. Required:
 
 Pull request to OpenClaw adding:
 
-- OS-011 trace emission as an opt-in skill plugin
+- GRASP trace emission as an opt-in skill plugin
 - `&body.os` + `&body.browser` contract advertisement
 - PULSE manifest declaration
 
 ### 15.4 Claude Computer Use Adapter
 
-Thin wrapper converting Computer Use's screenshot-click API into OS-011 typed actions. Runs as an MCP server.
+Thin wrapper converting Computer Use's screenshot-click API into GRASP typed actions. Runs as an MCP server.
 
-### 15.5 PRISM OS-011 Scenarios
+### 15.5 PRISM GRASP Scenarios
 
 Add to PRISM scenario compose:
 
@@ -938,7 +938,7 @@ Add to PRISM scenario compose:
 
 ## Versioning Policy
 
-OS-011 v0.1 is draft. Breaking changes permitted in minor versions within v0.1.x. v0.2 signals schema-breaking changes requiring implementation updates. SurpriseSignal as a PULSE token is tied to PULSE v0.1.1; OS-011 v0.1 requires PULSE ≥ 0.1.1.
+GRASP v0.1 is draft. Breaking changes permitted in minor versions within v0.1.x. v0.2 signals schema-breaking changes requiring implementation updates. SurpriseSignal as a PULSE token is tied to PULSE v0.1.1; GRASP v0.1 requires PULSE ≥ 0.1.1.
 
 ---
 

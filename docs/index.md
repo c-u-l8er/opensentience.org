@@ -187,7 +187,7 @@ Linked index of every page in this set (renders on GitHub and in the docs atlas;
 
 **Specifications**
 
-- [OS-011 — Embodiment Protocol](spec/OS-011-EMBODIMENT.md)
+- [OS-011 — GRASP: Grounded Readings, Actions and State Protocol](spec/OS-011-EMBODIMENT.md)
 - [OS-E001 — Empirical Evaluation of Topology-Aware Continual Learning](spec/OS-E001-EMPIRICAL-EVALUATION.md)
 
 **UX & build prompts**

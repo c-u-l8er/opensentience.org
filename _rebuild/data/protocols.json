@@ -239,7 +239,7 @@
   },
   {
     "id": "OS-011",
-    "name": "Embodiment",
+    "name": "GRASP",
     "primitive": "&body.*",
     "status": "draft",
     "version": "v0.1",
@@ -248,8 +248,8 @@
     "group": "cross-cutting",
     "dataPrimitive": "body",
     "tagline": "The sensorimotor loop: perceive → act → affordances → encode_state → replay. Emits SurpriseSignal into PULSE.",
-    "paperNumber": "OS-011 · Embodiment",
-    "paperTitle": "The Sensorimotor Loop for <code>&amp;body.*</code>",
+    "paperNumber": "OS-011 · GRASP",
+    "paperTitle": "Grounded Readings, Actions and State Protocol",
     "paperDesc": "Closes the perception-action gap. Defines the typed <code>perceive → act → affordances → encode_state → replay</code> loop that any <code>&amp;body</code> provider implements — the agent's instantiation in an environment. Emits a <strong>SurpriseSignal</strong> (forward-model prediction error) into PULSE, so embodiment loops can drive learning in the memory loop. InteractionTrace schema, five invariants, twelve conformance tests.",
     "tags": [
       {

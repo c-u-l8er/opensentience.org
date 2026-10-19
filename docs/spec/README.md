@@ -16,7 +16,7 @@ OpenSentience is the **research arm and runtime governance layer** of the [&] Pr
 OpenSentience is **not a product**. It is a research organization that produces:
 1. **Eight cognitive primitives** (OS-001 through OS-008) — each defining one cognitive capability
 2. **Two cross-cutting protocols** (OS-009 PRISM, OS-010 PULSE) — sibling diagnostic + temporal layers above the primitives
-3. **One sensorimotor protocol** (OS-011 Embodiment) — behavioral loop for `&body.*` providers (browser, OS, future vision/voice/motor)
+3. **One sensorimotor protocol** (GRASP) — behavioral loop for `&body.*` providers (browser, OS, future vision/voice/motor)
 4. **One runtime artifact** — the governance shim hex package (`open_sentience`) implementing OS-006
 5. **Published research** — cognitive science grounding for all eleven protocols, empirical benchmarks, open questions
 
@@ -513,7 +513,7 @@ PULSE is the **temporal** layer of the three-protocol stack. It is a manifest st
 
 Key properties:
 - **Five canonical phase kinds:** `retrieve`, `route`, `act`, `learn`, `consolidate` (plus `custom` with required `custom_kind`)
-- **Six canonical cross-loop tokens:** `TopologyContext`, `DeliberationResult`, `OutcomeSignal`, `ReputationUpdate`, `ConsolidationEvent`, `SurpriseSignal` (v0.1.1, added for OS-011 Embodiment)
+- **Six canonical cross-loop tokens:** `TopologyContext`, `DeliberationResult`, `OutcomeSignal`, `ReputationUpdate`, `ConsolidationEvent`, `SurpriseSignal` (v0.1.1, added for GRASP)
 - **Six cadence types:** `event`, `periodic`, `streaming`, `idle`, `cross_loop_signal`, `manual` (with optional fallback)
 - **Six substrate slots:** `memory`, `policy`, `audit`, `auth`, `transport`, `time` (canonical substrates: Graphonomous for memory, Delegatic for policy/audit, OpenSentience for auth)
 - **Seven invariants:** `phase_atomicity`, `feedback_immutability`, `append_only_audit`, `kappa_routing`, `quorum_before_commit`, `outcome_grounding`, `trace_id_propagation`
@@ -525,7 +525,7 @@ A loop is **PULSE-conforming** if its manifest validates against the v0.1 schema
 
 See `docs/spec/OS-010-PULSE-SPECIFICATION.md` for the full specification, and `/PULSE/manifests/` for reference manifests.
 
-### 4.11 OS-011: Embodiment Protocol
+### 4.11 OS-011: GRASP — Grounded Readings, Actions and State Protocol
 
 **Status:** v0.1 draft (canonical URL `embodiment.opensentience.org`)
 **Implements:** `&body.*` (new sensorimotor primitive in [&] Protocol draft v0.1.0)
@@ -533,7 +533,7 @@ See `docs/spec/OS-010-PULSE-SPECIFICATION.md` for the full specification, and `/
 **Cognitive Grounding:** Motor cortex + cerebellum + proprioception (neuroscience); Gibson's affordances (1977, 1979); Smith & Gasser sensorimotor grounding (2005); ACT-R/E embodied spatial module (Trafton 2013); Wolpert forward models in motor control (1998)
 **Depends on:** OS-001 (Continual Learning), OS-004 (Attention), OS-006 (Agent Governance), OS-008 (Harness), OS-010 (PULSE v0.1.1+)
 
-OS-011 closes the perception-action gap in the first ten protocols. Before OS-011, perception and action were smeared across `&reason` (implicit action generation), MCP tool calls (implicit perception), and `&memory.episodic` (retrospective trace recall). OS-011 defines the typed behavioral loop — `perceive → affordances → act → encode_state → trace → surprise → learn` — that every `&body.*` provider implements.
+GRASP closes the perception-action gap in the first ten protocols. Before GRASP, perception and action were smeared across `&reason` (implicit action generation), MCP tool calls (implicit perception), and `&memory.episodic` (retrospective trace recall). GRASP defines the typed behavioral loop — `perceive → affordances → act → encode_state → trace → surprise → learn` — that every `&body.*` provider implements.
 
 Key properties:
 - **Five standard operations per body subtype:** `perceive`, `act`, `affordances`, `encode_state`, `replay`
@@ -544,7 +544,7 @@ Key properties:
 - **Forward models + SurpriseSignal:** agents that predict action outcomes emit SurpriseSignal when predictions diverge; consumed by `&memory.episodic`, PRISM, and FleetPrompt
 - **Twelve conformance tests** validate perceive-before-act, affordance boundedness, deterministic encoding, and replay fail-fast
 
-OS-011 is the protocol foundation for the computer-use agent category — a typed contract that OpenClaw, Claude Computer Use, Pi.dev agents, and agent-browser users can all satisfy to gain interoperable continual learning, cross-machine skill transfer via FleetPrompt, and benchmarkable embodiment fidelity via PRISM.
+GRASP is the protocol foundation for the computer-use agent category — a typed contract that OpenClaw, Claude Computer Use, Pi.dev agents, and agent-browser users can all satisfy to gain interoperable continual learning, cross-machine skill transfer via FleetPrompt, and benchmarkable embodiment fidelity via PRISM.
 
 See `docs/spec/OS-011-EMBODIMENT.md` for the full specification.
 

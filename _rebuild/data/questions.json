@@ -17,7 +17,7 @@
       "lives_in": ["OS-001", "OS-009"],
       "established": "One system runs the loop and another measures it, end to end.",
       "unsettled": "The instrument and the subject are both ours. A benchmark we wrote, scoring a system we wrote, is not evidence about either — and PRISM rewrites its own scenarios as systems improve, so if the benchmark optimises against the system it measures, the score stops meaning anything at some point nobody has located.",
-      "settles_it": "Someone who is not us, running the benchmark against a system that is not ours. Beneath it a narrower question we can answer in-house: should consolidation fire on surprise (OS-011 emits prediction error into the loop) or on a schedule — and which actually crystallises better knowledge?"
+      "settles_it": "Someone who is not us, running the benchmark against a system that is not ours. Beneath it a narrower question we can answer in-house: should consolidation fire on surprise (GRASP emits prediction error into the loop) or on a schedule — and which actually crystallises better knowledge?"
     },
     {
       "id": "coordination",

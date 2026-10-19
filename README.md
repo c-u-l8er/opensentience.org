@@ -14,7 +14,7 @@ Published by [Ampersand Box Design](https://ampersandboxdesign.com) under the [&
 ---
 
 > **Re-checked against the tree 2026-08-16.** This file had not been touched since
-> 2026-04-12. It said **ten** protocols. There are **twelve** — OS-011 Embodiment
+> 2026-04-12. It said **ten** protocols. There are **twelve** — GRASP
 > and OS-012 SCOPE both landed as drafts and neither reached this page.
 > Graphonomous was listed at v0.3.3 and is **v0.4.3**. PULSE was listed with five
 > cross-loop tokens and has **six** since v0.1.1.
@@ -50,7 +50,7 @@ Other [&] portfolio products implement the protocols. OpenSentience defines them
 
 ## The Twelve Protocols
 
-Eight **cognitive primitives** (OS-001–OS-008), two **cross-cutting protocols** (OS-009, OS-010), one that closes the loop to the world (OS-011), and one for space (OS-012).
+Eight **cognitive primitives** (OS-001–OS-008), two **cross-cutting protocols** (OS-009, OS-010), one that closes the loop to the world (GRASP), and one for space (OS-012).
 
 **This table is hand-maintained and the homepage's is not.** `_rebuild/data/protocols.json` is the source of truth — the homepage derives its count and range from `protocols.length`, which is why the site has said twelve while this file said ten. Check the JSON, not this table:
 
@@ -66,7 +66,7 @@ Eight **cognitive primitives** (OS-001–OS-008), two **cross-cutting protocols*
 | OS-008 | Agent Harness | `&govern.harness` | Draft | OpenSentience harness module |
 | **OS-009** | **PRISM** (Rating Iterative System Memory) | `&memory + &reason` | v3.0 in development | [`/PRISM/`](../PRISM/) — Fly.io deploy |
 | **OS-010** | **PULSE** (Uniform Loop State Exchange) | `&memory + &govern + &time` | v0.1 draft | [`/PULSE/`](../PULSE/) — manifest standard |
-| OS-011 | Embodiment Protocol | `&body.*` | v0.1 draft (2026-04-21) | [spec](docs/spec/OS-011-EMBODIMENT.md) — closes the perception-action gap in OS-001…OS-010 |
+| OS-011 | **GRASP** (Grounded Readings, Actions and State) | `&body.*` | v0.1 draft (2026-04-21) | [spec](docs/spec/OS-011-EMBODIMENT.md) — closes the perception-action gap in OS-001…OS-010 |
 | OS-012 | **SCOPE** (Spatial Claims & Coordination) | `&space.region + &space.claim` | v0.1 draft | [`scope.html`](scope.html) — **no spec document in `docs/spec/` yet** |
 
 ### The Three-Protocol Stack
@@ -121,7 +121,7 @@ Pipeline enforcement above governance. Two enforced pipelines (reactive: `query 
 **Protocol for Rating Iterative System Memory.** The first self-improving continual learning benchmark. Measures 9 CL dimensions (retrieval, transfer, uncertainty, feedback integration, forgetting, consolidation, temporal reasoning, multi-agent deliberation, composition). Four-phase evaluation loop: compose → interact → observe → reflect → diagnose. Features BYOR (Bring Your Own Repo), IRT calibration, three-layer judging, closed-loop verification, leaderboards, and actionable diagnostics.
 
 ### OS-010: PULSE
-**Protocol for Uniform Loop State Exchange.** Temporal algebra declaring how loops cycle, nest, and signal. Five canonical phase kinds (retrieve, route, act, learn, consolidate). Six cadence types (event, periodic, streaming, idle, cross_loop_signal, manual). Six canonical cross-loop tokens via CloudEvents v1.0 envelopes (`SurpriseSignal` was added in v0.1.1 for OS-011; counted from `PULSE/schemas/pulse-loop-manifest.v0.1.json`). BYOL (Bring Your Own Loop) — any system publishing a conforming manifest is automatically PRISM-evaluable.
+**Protocol for Uniform Loop State Exchange.** Temporal algebra declaring how loops cycle, nest, and signal. Five canonical phase kinds (retrieve, route, act, learn, consolidate). Six cadence types (event, periodic, streaming, idle, cross_loop_signal, manual). Six canonical cross-loop tokens via CloudEvents v1.0 envelopes (`SurpriseSignal` was added in v0.1.1 for GRASP; counted from `PULSE/schemas/pulse-loop-manifest.v0.1.json`). BYOL (Bring Your Own Loop) — any system publishing a conforming manifest is automatically PRISM-evaluable.
 
 ---
 

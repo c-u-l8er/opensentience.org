@@ -482,7 +482,7 @@ been compressed, merged, or promoted across timescales.
 
 ### 6.6 SurpriseSignal
 
-Added in **v0.1.1** for OS-011 (Embodiment Protocol). Emitted by a `&body.*`
+Added in **v0.1.1** for GRASP. Emitted by a `&body.*`
 provider when an actual environment observation after `act()` diverges
 materially from the forward model's prediction. Full payload shape and
 consumers are defined in `OS-011-EMBODIMENT.md`; the canonical token name is
@@ -1059,7 +1059,7 @@ PULSE follows semantic versioning with **explicit stability guarantees**:
   cadence types, new invariants opt-in by default. Backward compatible.
 - **PATCH** (0.1.0 → 0.1.1): Clarifications, conformance test
   improvements, additive backward-compatible schema extensions. v0.1.1 added
-  the `SurpriseSignal` canonical token (OS-011); v0.1.2 added the
+  the `SurpriseSignal` canonical token (GRASP); v0.1.2 added the
   vendor-namespaced token mechanism (§6.7).
 
 Manifests **must** declare `pulse_protocol_version`. Runtimes **must**

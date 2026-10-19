@@ -1,8 +1,8 @@
 # Embodiment (body-browser + body-os) — User Stories
 
-Canonical user-story catalog covering both `body-browser/` and `body-os/` (shared OS-011 Embodiment Protocol). Used for Playwright tests + Claude Design input.
+Canonical user-story catalog covering both `body-browser/` and `body-os/` (shared GRASP). Used for Playwright tests + Claude Design input.
 
-**Scope:** OS-011 — `&body.*` reference implementations. Browser via `agent-browser` CLI; OS via `body-os-shim` / OpenClaw / Claude Computer Use.
+**Scope:** GRASP — `&body.*` reference implementations. Browser via `agent-browser` CLI; OS via `body-os-shim` / OpenClaw / Claude Computer Use.
 **Unit-test surface covered:** `body-browser/test/**` (41 tests) + `body-os/test/**` (41 tests). Both have Simulator + live backends.
 
 ---
