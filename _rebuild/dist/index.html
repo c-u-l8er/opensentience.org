@@ -449,7 +449,7 @@
                         <span class="q-home"><a href="#protocols">OS-009</a> <span class="q-status" data-status="in-development">in-development</span></span></div>
                         <p class="q-established"><strong>Established.</strong> One system runs the loop and another measures it, end to end.</p>
                         <p class="q-unsettled"><strong>Not established.</strong> The instrument and the subject are both ours. A benchmark we wrote, scoring a system we wrote, is not evidence about either — and PRISM rewrites its own scenarios as systems improve, so if the benchmark optimises against the system it measures, the score stops meaning anything at some point nobody has located.</p>
-                        <p class="q-settles"><strong>What would settle it.</strong> Someone who is not us, running the benchmark against a system that is not ours. Beneath it a narrower question we can answer in-house: should consolidation fire on surprise (OS-011 emits prediction error into the loop) or on a schedule — and which actually crystallises better knowledge?</p>
+                        <p class="q-settles"><strong>What would settle it.</strong> Someone who is not us, running the benchmark against a system that is not ours. Beneath it a narrower question we can answer in-house: should consolidation fire on surprise (GRASP emits prediction error into the loop) or on a schedule — and which actually crystallises better knowledge?</p>
                     </div>
                 </div>
                 <div class="q-card reveal">
@@ -481,7 +481,7 @@
                 <a class="receipt-card reveal" href="#proof"><div class="receipt-metric">κ invariant</div><div class="receipt-value">1,926,351<span class="receipt-unit">systems proved</span></div><p>0 counterexamples · exhaustive, and it runs in your browser below</p></a>
                 <a class="receipt-card reveal" href="#stack"><div class="receipt-metric">box-and-box kernel</div><div class="receipt-value">109 kernel laws<span class="receipt-unit">× 2,000 trials</span></div><p>the governance floor, property-tested — this is the KERNEL scope; the compose/CC2 suite is counted separately and the enforced total is derived under the stack, not typed here</p></a>
                 <a class="receipt-card reveal" href="https://prism.opensentience.org"><div class="receipt-metric">PRISM self-benchmark</div><div class="receipt-value">0.10 → 0.99<span class="receipt-unit">4 cycles</span></div><p>then adversarial testing crashed it to 0.45 and surfaced real bugs we fixed</p></a>
-                <a class="receipt-card reveal" href="#protocols"><div class="receipt-metric">Cross-machine replay</div><div class="receipt-value">100%<span class="receipt-unit">fidelity</span></div><p>teach a skill on machine A, replay it on machine B (OS-011 Embodiment)</p></a>
+                <a class="receipt-card reveal" href="#protocols"><div class="receipt-metric">Cross-machine replay</div><div class="receipt-value">100%<span class="receipt-unit">fidelity</span></div><p>teach a skill on machine A, replay it on machine B (GRASP)</p></a>
             </div>
 
             <h3 class="map-tier" style="margin-top:4rem">The κ invariant <span>OS-002 · topology as a cognition signal</span></h3>
@@ -776,8 +776,8 @@ MCP tools used: store_node × 4, then edge creation</pre>
                 </div>
 
                 <div class="paper-card reveal paper-card--featured" data-primitive="body">
-                    <div class="paper-number" style="color: var(--accent)">OS-011 · Embodiment</div>
-                    <h3>The Sensorimotor Loop for <code>&amp;body.*</code></h3>
+                    <div class="paper-number" style="color: var(--accent)">OS-011 · GRASP</div>
+                    <h3>Grounded Readings, Actions and State Protocol</h3>
                     <p class="paper-desc">Closes the perception-action gap. Defines the typed <code>perceive → act → affordances → encode_state → replay</code> loop that any <code>&amp;body</code> provider implements — the agent's instantiation in an environment. Emits a <strong>SurpriseSignal</strong> (forward-model prediction error) into PULSE, so embodiment loops can drive learning in the memory loop. InteractionTrace schema, five invariants, twelve conformance tests.</p>
                     <div class="paper-tags">
                         <span class="paper-tag status-draft">v0.1 &middot; draft</span>
@@ -823,7 +823,7 @@ MCP tools used: store_node × 4, then edge creation</pre>
                     <div class="stack-status"><span class="map-chip" data-status="draft">draft</span></div>
                 </div>
                 <div class="stack-layer l-embodiment reveal" data-node="embodiment">
-                    <div class="stack-name">Embodiment</div>
+                    <div class="stack-name">GRASP</div>
                     <div class="stack-role">sensorimotor</div>
                     <div class="stack-note">the typed perceive/act loop for &amp;body.*</div>
                     <div class="stack-status"><span class="map-chip" data-status="draft">draft</span></div>
@@ -880,9 +880,9 @@ MCP tools used: store_node × 4, then edge creation</pre>
                     
                 </div>
                 <div class="stack-edge edge-missing" data-edge-state="missing" data-from="embodiment" data-to="primitives">
-                    <span class="edge-what">OS-011 emits a SurpriseSignal into the loop vocabulary</span>
+                    <span class="edge-what">GRASP emits a SurpriseSignal into the loop vocabulary</span>
                     <span class="edge-state">endpoint absent</span>
-                    <span class="edge-ends">produced by the Embodiment spec · no consumer — no implementation consumes it. The SurpriseSignal token exists in PULSE v0.1.1 and nothing emits one, so this end is absent.</span>
+                    <span class="edge-ends">produced by the GRASP spec · no consumer — no implementation consumes it. The SurpriseSignal token exists in PULSE v0.1.1 and nothing emits one, so this end is absent.</span>
                     
                 </div>
                 <div class="stack-edge edge-missing" data-edge-state="missing" data-from="scope" data-to="primitives">

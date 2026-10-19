@@ -52,7 +52,7 @@
       "_price_comment": "Free to read on the web. This is the price of the CURRENT delivery, not a promise about a future downloadable edition.",
       "free_offer": null,
       "_free_offer_comment": "null, and prospective if it ever is not. The schema is {starts, ends, price_during, price_after, state_after, delivery_after, expiry_check{kind, cadence, how, workflow, receipt}} - this comment used to describe an `until`/`condition` schema that no version of build.mjs has ever read. PUB2 checks the record; PUB2E decides whether it may reach the page. What PUB2E does NOT do, stated plainly: it verifies that a scheduled mechanism EXISTS and has once been exercised across the boundary. It cannot guarantee that mechanism runs on any particular night, and no build-time check can. That is why an unenforced offer publishes nothing at all rather than publishing with a caveat.",
-      "verified_at": "2026-09-11",
+      "verified_at": "2026-10-19",
       "verified_what": "Route table, not page copy: /patterns/ 200 · /patterns/refusing-join 200 · /patterns/conclusion 200 · /patterns/sitemap.xml 200.",
       "verified_max_age_days": 30,
       "_verified_comment": "PUB4 refuses a record whose verified_at is older than verified_max_age_days. A 'last verified' date that is never checked for staleness is decoration."

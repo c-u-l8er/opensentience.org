@@ -1,13 +1,13 @@
 {
   "_comment": "Written by build/build.mjs at emit. Every file listed was hashed before it was written and re-hashed after being read back off disk; the build refuses if they differ. `node build/build.mjs --verify` re-checks these against what is on disk right now, which is how a deploy step proves it is shipping the artifact that was gated rather than whatever survived the last failed build.",
-  "built_at": "2026-09-12T14:58:27.174Z",
+  "built_at": "2026-10-19T23:16:20.641Z",
   "shell_revision": "shell-r10",
-  "artifact_sha256": "dfd2639922a1ed7046a7cf6a87535263a5456c4613c0199c2bfe0777a4b90729",
+  "artifact_sha256": "e3df48214a6631f1ff23a32e8e837987b20db49cd27672922d6ec559a63e9bc3",
   "files": [
     {
       "path": "_rebuild/dist/index.html",
-      "sha256": "dfd2639922a1ed7046a7cf6a87535263a5456c4613c0199c2bfe0777a4b90729",
-      "bytes": 110946
+      "sha256": "e3df48214a6631f1ff23a32e8e837987b20db49cd27672922d6ec559a63e9bc3",
+      "bytes": 110912
     },
     {
       "path": "_rebuild/dist/styles/site.css",
@@ -26,8 +26,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "dfd2639922a1ed7046a7cf6a87535263a5456c4613c0199c2bfe0777a4b90729",
-      "bytes": 110946
+      "sha256": "e3df48214a6631f1ff23a32e8e837987b20db49cd27672922d6ec559a63e9bc3",
+      "bytes": 110912
     },
     {
       "path": "styles/site.css",
