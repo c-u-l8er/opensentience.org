@@ -819,9 +819,9 @@
    "at": "TRVM/LAWS.md Law 4"
   },
   {
-   "id": "work:os-011-embodiment",
+   "id": "work:grasp",
    "type": "prior_art",
-   "work": "OS-011 Embodiment"
+   "work": "GRASP"
   },
   {
    "id": "work:record-and-replay-in-rpa",
@@ -2018,7 +2018,7 @@
   {
    "from": "cross-machine-skill-replay",
    "rel": "PRIOR_ART",
-   "to": "work:os-011-embodiment",
+   "to": "work:grasp",
    "relation": "partial-overlap"
   },
   {
